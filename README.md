@@ -1,12 +1,13 @@
 Quiz.module [![Build Status](https://travis-ci.org/atdrupal/quiz.module.svg?branch=7.x-6.x)](https://travis-ci.org/atdrupal/quiz.module)
 ====
 
+[![Gitter chat](https://badges.gitter.im/atdrupal/quiz.module.png)](https://gitter.im/atdrupal/quiz.module)
+
 Overview
 --------
 The quiz.module is a framework which allows you to create interactive quizzes 
 for your visitors. It allows for the creation of questions of varying types, and
 to collect those questions into quizzes. 
-
 
 Requirements
 ------------
