@@ -1,7 +1,5 @@
-Quiz.module [![Build Status](https://travis-ci.org/atdrupal/quiz.module.svg?branch=7.x-6.x)](https://travis-ci.org/atdrupal/quiz.module)
+Quiz.module [![Build Status](https://travis-ci.org/atdrupal/quiz.module.svg?branch=7.x-6.x)](https://travis-ci.org/atdrupal/quiz.module) [![Gitter chat](https://badges.gitter.im/atdrupal/quiz.module.png)](https://gitter.im/atdrupal/quiz.module)
 ====
-
-[![Gitter chat](https://badges.gitter.im/atdrupal/quiz.module.png)](https://gitter.im/atdrupal/quiz.module)
 
 Overview
 --------
@@ -17,7 +15,6 @@ The module consists of two types of modules: the Quiz module itself
 main Quiz module, the Quiz Question module and at least one question type module 
 are required to be both installed and enabled for this module to function properly.
 
-
 Features
 --------
 This list isn't complete (not even close)
@@ -32,37 +29,11 @@ This list isn't complete (not even close)
     o Assign only specific questions from the question bank
 
  - User features:
-   o Can create/edit own quizzes if have 'create quizzes' permission
+   o Can create/edit own quizzes.
    o Can take a quiz if have 'view quizzes' permissions, and receive score
-
-
-Installation
-------------
-Please refer to the INSTALL file for installation directions.
-
-Support
--------
-- Visit the Quiz group at http://groups.drupal.org/quiz
 
 Credits
 -------
 - Specification:      Robert Douglass
 - Original author:    Károly Négyesi
-- Update to Drupal 5: Wim Mostrey and riverfr0zen
-- Maintainers: Angela Byron, westwesterson, mbutcher, sivaji, turadg, falcon
-
-Acknowledgements
-----------------
-I'd like to extend a heart-felt thank you to the folks at Google for their 
-Summer of Code program, without which my working on this module would not have 
-been possible. I'd also like to extend my thanks to Robert Douglass as my mentor 
-on this project, for his tireless patience and faith in my abilities, and the 
-entire Drupal development community for their support while I struggled with
-foreign concepts like 'node' and 'taxonomy.' You guys all provided me with 
-support, encouragement, and fun times and I sincerely hope to remain a part of 
-the Drupal community for a long time to come!
-
-Also huge thanks go to Ejovi Nuwere of http://www.securitylab.net/ for 
-sponsoring further module development after Summer of Code.
-
--Angela Byron/'webchick'
+- Update to Drupal 5: Wim Mostrey & riverfr0zen
