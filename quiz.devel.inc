@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Helper\Quiz\Generator;
+use Drupal\quiz\Generator\Generator;
 
 function quiz_generate_form($form, $form_state) {
   foreach (quiz_get_types() as $name => $quiz_type) {
@@ -8,9 +8,10 @@ function quiz_generate_form($form, $form_state) {
   }
 
   $form['quiz_types'] = array(
-      '#type'    => 'checkboxes',
-      '#title'   => t('Quiz types'),
-      '#options' => $quiz_options,
+      '#type'          => 'checkboxes',
+      '#title'         => t('Quiz types'),
+      '#options'       => $quiz_options,
+      '#default_value' => array('quiz'),
   );
 
   $question_options = array();
@@ -19,11 +20,10 @@ function quiz_generate_form($form, $form_state) {
   }
 
   $form['quiz_question_types'] = array(
-      '#type'          => 'checkboxes',
-      '#title'         => t('Question types'),
-      '#options'       => $question_options,
-      '#default_value' => array('quiz'),
-      '#required'      => TRUE,
+      '#type'     => 'checkboxes',
+      '#title'    => t('Question types'),
+      '#options'  => $question_options,
+      '#required' => TRUE,
   );
 
   $form['quiz_limit'] = array(
