@@ -71,6 +71,9 @@ before_script:
 
 script:
   - drush test-run --dirty --field-labels=0 'Quiz'  --uri=http://localhost:80
+  # This is passed on local, but not on Travis per warnings in contributed
+  # modules. We may go back and provide custom php.ini for Travis CI.
+  # drush test-run --dirty --field-labels=0 'Quiz upgrade'  --uri=http://localhost:80
 
 notifications:
   email: false

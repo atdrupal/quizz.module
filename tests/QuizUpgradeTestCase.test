@@ -27,7 +27,7 @@ class QuizUpgradeFrom7x4xBeta2TestCase extends QuizUpgradeBaseTestCase {
     return array(
         'name'        => 'Quiz upgrade from 7.x-4.x',
         'description' => static::$testDescription,
-        'group'       => t('Quiz'),
+        'group'       => 'Quiz upgrade',
     );
   }
 
@@ -41,7 +41,7 @@ class QuizUpgradeFrom7x5xTestCase extends QuizUpgradeBaseTestCase {
     return array(
         'name'        => 'Quiz upgrade from 7.x-5.x',
         'description' => static::$testDescription,
-        'group'       => t('Quiz'),
+        'group'       => 'Quiz upgrade',
     );
   }
 
