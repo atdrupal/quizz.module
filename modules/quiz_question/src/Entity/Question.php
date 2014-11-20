@@ -24,6 +24,9 @@ class Question extends Entity {
   /** @var QuestionPlugin */
   private $plugin;
 
+  /** @var string */
+  public $language = LANGUAGE_NONE;
+
   /** @var bool */
   public $status = 1;
 
