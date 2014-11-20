@@ -3,9 +3,9 @@
 namespace Drupal\quiz\Form;
 
 use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Helper\Quiz\BaseForm;
+use Drupal\quiz\Form\QuizQuestionsBaseForm;
 
-class QuizQuestionsForm extends BaseForm {
+class QuizQuestionsForm extends QuizQuestionsBaseForm {
 
   /**
    * Handles "manage questions" tab.

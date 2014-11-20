@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Helper\Quiz;
+namespace Drupal\quiz\Form;
 
-abstract class BaseForm {
+abstract class QuizQuestionsBaseForm {
 
   /**
    * Adds checkbox for creating new revision. Checks it by default if answers exists.

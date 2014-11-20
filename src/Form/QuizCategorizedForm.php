@@ -3,9 +3,9 @@
 namespace Drupal\quiz\Form;
 
 use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Helper\Quiz\BaseForm;
+use Drupal\quiz\Form\QuizQuestionsBaseForm;
 
-class QuizCategorizedForm extends BaseForm {
+class QuizCategorizedForm extends QuizQuestionsBaseForm {
 
   /**
    * Form for managing what questions should be added to a quiz with categorized random questions.
