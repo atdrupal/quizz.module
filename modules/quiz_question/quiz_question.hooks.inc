@@ -12,6 +12,45 @@ function quiz_question_help($path, $args) {
 }
 
 /**
+ * Implements hook_permission()
+ */
+function quiz_question_permission() {
+  $perms = array();
+
+  $perms['administer quiz questions'] = array(
+      'title'           => t('Administer quiz questions'),
+      'description'     => t('Have all permissions on all questions.'),
+      'restrict access' => TRUE,
+  );
+
+  $perms['view any questions'] = array(
+      'title' => t('View any questions'),
+  );
+
+  foreach (quiz_question_get_types() as $name => $info) {
+    $perms += array(
+        "create $name question"     => array(
+            'title' => t('%type_name: Create new question', array('%type_name' => $info->label)),
+        ),
+        "edit own $name question"   => array(
+            'title' => t('%type_name: Edit own question', array('%type_name' => $info->label)),
+        ),
+        "edit any $name question"   => array(
+            'title' => t('%type_name: Edit any question', array('%type_name' => $info->label)),
+        ),
+        "delete own $name question" => array(
+            'title' => t('%type_name: Delete own question', array('%type_name' => $info->label)),
+        ),
+        "delete any $name question" => array(
+            'title' => t('%type_name: Delete any question', array('%type_name' => $info->label)),
+        ),
+    );
+  }
+
+  return $perms;
+}
+
+/**
  * Implements hook_theme().
  */
 function quiz_question_theme() {
