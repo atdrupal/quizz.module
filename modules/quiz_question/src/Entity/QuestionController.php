@@ -25,6 +25,14 @@ class QuestionController extends EntityAPIController {
     $question->feedback = !empty($question->feedback) ? $question->feedback : '';
     $question->feedback_format = !empty($question->feedback_format) ? $question->feedback_format : filter_default_format();
 
+    // Auto title
+    if (!drupal_strlen($question->title) || !user_access('edit question titles')) {
+      // Notice: String offset cast occurred in _field_invoke_multiple() (line 325 of …/modules/field/field.attach.inc).
+      $body = @field_view_field('quiz_question', $question, 'quiz_question_body');
+      $max_length = variable_get('quiz_autotitle_length', 50);
+      $question->title = truncate_utf8(strip_tags($body[0]['#markup']), $max_length, TRUE, TRUE);
+    }
+
     return parent::save($question, $transaction);
   }
 

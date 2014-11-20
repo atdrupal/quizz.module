@@ -41,14 +41,6 @@ function quiz_node_presave($node) {
  * Implements hook_node_presave().
  */
 function quiz_question_node_presave($node) {
-  foreach (array_keys(quiz_question_get_plugin_info()) as $question_type) {
-    if (($node->type === $question_type) && (!drupal_strlen($node->title) || !user_access('edit question titles'))) {
-      $body = field_view_field('node', $node, 'body');
-      $max_length = variable_get('quiz_autotitle_length', 50);
-      $node->title = truncate_utf8(strip_tags(drupal_render($body)), $max_length, TRUE, TRUE);
-    }
-  }
-
   if (isset($node->is_quiz_question) && variable_get('quiz_auto_revisioning', 1)) {
     $node->revision = 0;
     if (($plugin = quiz_question_get_provider($node, TRUE)) && $plugin->hasBeenAnswered()) {
