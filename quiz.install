@@ -320,9 +320,15 @@ function quiz_update_7509() {
  * Update schema for quiz when it becomes entity.
  */
 function quiz_update_7600() {
-  db_create_table('quiz_type', $table);
-  db_create_table('quiz_entity', $table);
-  db_create_table('quiz_entity_revision', $table);
+  require_once dirname(__FILE__) . '/src/Helper/HookImplementation/Schema/Schema7060.php';
+  $schema = new Schema7060();
+  $tables = $schema->get();
+
+  db_create_table('quiz_type', $tables['quiz_type']);
+  db_create_table('quiz_entity', $table['quiz_entity']);
+  db_create_table('quiz_entity_revision', $table['quiz_entity_revision']);
+
+  return 'Create tables: ';
 }
 
 /**
