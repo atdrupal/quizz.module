@@ -27,9 +27,10 @@ class QuestionUIController extends EntityDefaultUIController {
 
     // Change path from /admin/content/quiz/add -> /quizz/add
     $items['quiz-question/add'] = array(
-        'file path'     => drupal_get_path('module', 'quiz_question'),
-        'file'          => 'quiz_question.pages.inc',
-        'page callback' => 'quiz_question_adding_landing_page',
+        'file path'      => drupal_get_path('module', 'quiz_question'),
+        'file'           => 'quiz_question.pages.inc',
+        'page callback'  => 'quiz_question_adding_landing_page',
+        'page arguments' => array(),
       ) + $items['admin/content/quiz-questions/add'];
 
     // Remove unneeded menu items
@@ -58,7 +59,7 @@ class QuestionUIController extends EntityDefaultUIController {
           'title callback'   => 'entity_ui_get_action_title',
           'title arguments'  => array('add', 'quiz_question'),
           'access callback'  => 'user_access',
-          'access arguments' => array('create '. $name .' question'),
+          'access arguments' => array('create ' . $name . ' question'),
           'page callback'    => 'quiz_question_adding_page',
           'page arguments'   => array($name),
           'file path'        => drupal_get_path('module', 'quiz_question'),
