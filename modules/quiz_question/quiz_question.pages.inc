@@ -44,6 +44,41 @@ function quiz_question_adding_page($question_type_name) {
 }
 
 /**
+ * Define quiz-entity editing form.
+ *
+ * @param array $form
+ * @param array $form_state
+ * @param Question $question
+ * @param string $op
+ * @return array
+ */
+function quiz_question_form($form, &$form_state, $question, $op = 'edit') {
+  $form += $question->getPlugin()->getEntityForm($form_state);
+
+  // question body is required.
+  $form['quiz_question_body'][LANGUAGE_NONE][0]['#required'] = TRUE;
+
+  return $form;
+}
+
+function quiz_question_form_validate($form, &$form_state) {
+  /* @var $question Question */
+  $question = entity_ui_controller('quiz_question')->entityFormSubmitBuildEntity($form, $form_state);
+  $question->getPlugin()->validate($form);
+}
+
+function quiz_question_form_submit($form, &$form_state) {
+  /* @var $question Question */
+  $question = entity_ui_controller('quiz_question')->entityFormSubmitBuildEntity($form, $form_state);
+  $question->save();
+  $form_state['redirect'] = 'quiz-question/' . $question->qid;
+}
+
+function quiz_question_form_submit_delete($form, &$form_state) {
+  $form_state['redirect'] = 'quiz-question/' . $form_state['quiz_question']->internalIdentifier() . '/delete';
+}
+
+/**
  * Get the configuration form for all enabled question types.
  */
 function quiz_question_config($form) {
