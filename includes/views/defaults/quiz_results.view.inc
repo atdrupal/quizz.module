@@ -131,7 +131,7 @@ $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
 $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
 $handler->display->display_options['fields']['nothing']['alter']['text'] = 'View';
 $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
-$handler->display->display_options['fields']['nothing']['alter']['path'] = 'node/[nid]/quiz/results/[result_id]/view';
+$handler->display->display_options['fields']['nothing']['alter']['path'] = 'quiz-result/[result_id]';
 /* Contextual filter: Quiz result: Quiz result ID */
 $handler->display->display_options['arguments']['result_id']['id'] = 'result_id';
 $handler->display->display_options['arguments']['result_id']['table'] = 'quiz_results';
