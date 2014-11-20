@@ -5,23 +5,6 @@
 # ---------------------------------------------------------------
 
 /**
- * Implements hook_node_info().
- */
-function quiz_question_node_info() {
-  $node_info = array();
-
-  foreach (quiz_question_get_plugin_info() as $type => $definition) {
-    $node_info[$type] = array(
-        'name'        => $definition['name'],
-        'base'        => 'quiz_question',
-        'description' => $definition['description']
-    );
-  }
-
-  return $node_info;
-}
-
-/**
  * Implements hook_node_presave().
  */
 function quiz_question_node_presave($node) {
@@ -49,17 +32,6 @@ function quiz_question_node_prepare($node) {
     $node->revision = 0;
     if (($plugin = quiz_question_get_provider($node, TRUE)) && $plugin->hasBeenAnswered()) {
       $node->revision = 1;
-    }
-  }
-}
-
-/**
- * Implements hook_node_revision_delete().
- */
-function quiz_question_node_revision_delete($node) {
-  foreach (array_keys(quiz_question_get_plugin_info()) as $question_type) {
-    if ($node->type === $question_type) {
-      _quiz_delete_question($node, TRUE); // true for only this version
     }
   }
 }
@@ -120,8 +92,9 @@ function quiz_question_view($node, $view_mode) {
         '#weight' => -100,
     );
   }
-  else {
-    // normal node view
+
+  // normal node view
+  if ($view_mode !== 'teaser') {
     $node->content += quiz_question_get_provider($node, TRUE)->getEntityView();
   }
 
@@ -142,7 +115,7 @@ function quiz_question_validate($question, &$form) {
 /**
  * Implements hook_form_alter().
  */
-function quiz_question_form_alter(&$form, $form_state, $form_id) {
+function quiz_question_form_alter(&$form, $form_state) {
   if (!isset($form['#quiz_check_revision_access'])) {
     return;
   }
@@ -155,8 +128,6 @@ function quiz_question_form_alter(&$form, $form_state, $form_id) {
     $form['revision_information']['log']['#value'] = $form['revision_information']['log']['#default_value'];
     $form['revision_information']['#access'] = FALSE;
   }
-  unset($form['actions']['preview'], $form['actions']['preview_changes']);
-  $form['actions']['submit']['#access'] = TRUE;
 
   // Quiz questions might want to add a cancel button.
   if (isset($form['#cancel_button'])) {
