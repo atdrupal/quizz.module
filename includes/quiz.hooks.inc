@@ -210,39 +210,6 @@ function quiz_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_validate().
- */
-function quiz_validate($node) {
-  quiz()->getNodeHelper()->validate($node);
-}
-
-/**
- * Implements hook_insert().
- */
-function quiz_insert($node) {
-  quiz()->getNodeHelper()->insert($node);
-}
-
-/**
- * Implements hook_update().
- */
-function quiz_update($node) {
-  quiz()->getNodeHelper()->update($node);
-}
-
-/**
- * Implements hook_node_presave().
- */
-function quiz_node_presave($node) {
-  // Convert the action id to the actual id from the MD5 hash.
-  // Why the actions module does this I do not know? Maybe to prevent
-  // invalid values put into the options value="" field.
-  if (($node->type === 'quiz') && !empty($node->aid) && $aid = actions_function_lookup($node->aid)) {
-    $node->aid = $aid;
-  }
-}
-
-/**
  * Implements hook_user_cancel().
  */
 function quiz_user_cancel($edit, $account, $method) {
