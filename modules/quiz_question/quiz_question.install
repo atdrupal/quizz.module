@@ -254,7 +254,7 @@ function quiz_question_update_7609() {
 /**
  * Clean up migration's temp data.
  */
-function quiz_question_update_76010() {
+function quiz_question_update_7610() {
   db_drop_index('quiz_question', 'question_node');
   db_drop_index('quiz_question_revision', 'question_node');
   db_drop_field('quiz_question', 'node_nid');
@@ -265,7 +265,7 @@ function quiz_question_update_76010() {
 /**
  * Drop {quiz_question_properties} table.
  */
-function quiz_question_update_76011() {
+function quiz_question_update_7611() {
   db_drop_table('quiz_question_properties');
   return 'Dropped {quiz_question_properties} table.';
 }
