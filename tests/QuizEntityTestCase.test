@@ -24,7 +24,7 @@ class QuizEntityTestCase extends QuizTestCase {
   /**
    * Reduce runtime from 1m to ~30s.
    */
-  public function __testQuizEntityWrapper() {
+  public function testQuizEntityWrapper() {
     $this->checkInitQuizEntityType();
     $this->checkQuizEntity();
     $this->checkQuizMethods();

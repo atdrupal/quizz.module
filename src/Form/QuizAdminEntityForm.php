@@ -2,7 +2,8 @@
 
 namespace Drupal\quiz\Form;
 
-use stdClass;
+use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quiz\Form\QuizEntityForm\FormValidation;
 
 class QuizAdminEntityForm {
 
@@ -39,19 +40,18 @@ class QuizAdminEntityForm {
   }
 
   public function validateForm($form, &$form_state) {
-    /* @var $quiz \Drupal\quiz\Entity\QuizEntity */
     $quiz = entity_create('quiz_entity', array(
         'qid'               => $form['#quiz']->qid,
         'vid'               => $form['#quiz']->vid,
         'remember_settings' => 0,
         'remember_global'   => 1,
       ) + $form_state['values']);
-
-    quiz_validate($quiz);
+    $validator = new FormValidation($form, $form_state, $quiz);
+    $validator->validate();
   }
 
   public function submitForm($form, &$form_state) {
-    /* @var $quiz \Drupal\quiz\Entity\QuizEntity */
+    /* @var $quiz QuizEntity */
     $quiz = entity_create('quiz_entity', array(
         'qid'               => $form['#quiz']->qid,
         'vid'               => $form['#quiz']->vid,

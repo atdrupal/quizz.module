@@ -15,10 +15,16 @@ class FormValidation {
   /** @var array */
   private $form_state;
 
-  public function __construct($form, &$form_state) {
+  public function __construct($form, &$form_state, QuizEntity $quiz = NULL) {
     $this->form = $form;
     $this->form_state = &$form_state;
-    $this->quiz = entity_ui_controller('quiz_entity')->entityFormSubmitBuildEntity($form, $form_state);
+
+    if (NULL !== $quiz) {
+      $this->quiz = $quiz;
+    }
+    else {
+      $this->quiz = entity_ui_controller('quiz_entity')->entityFormSubmitBuildEntity($form, $form_state);
+    }
   }
 
   public function validate() {
