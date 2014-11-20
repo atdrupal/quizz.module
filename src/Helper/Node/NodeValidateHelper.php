@@ -85,11 +85,8 @@ class NodeValidateHelper {
    *
    * Solves a problem with some wysiwyg editors inserting spaces and tags without content.
    *
-   * @param $html
-   *   The html to evaluate
-   *
-   * @return
-   *   TRUE if the field is empty(can still be tags there) false otherwise.
+   * @param string $html
+   * @return bool
    */
   private function isEmptyHTML($html) {
     return drupal_strlen(trim(str_replace('&nbsp;', '', strip_tags($html, '<img><object><embed>')))) == 0;

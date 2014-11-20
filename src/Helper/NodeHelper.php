@@ -22,11 +22,6 @@ class NodeHelper {
     return $this->nodeValidateHelper;
   }
 
-  public function setNodeValidateHelper($nodeValidateHelper) {
-    $this->nodeValidateHelper = $nodeValidateHelper;
-    return $this;
-  }
-
   /**
    * @return NodeInsertHelper
    */
@@ -37,11 +32,6 @@ class NodeHelper {
     return $this->nodeInsertHelper;
   }
 
-  public function setNodeInsertHelper($nodeInsertHelper) {
-    $this->nodeInsertHelper = $nodeInsertHelper;
-    return $this;
-  }
-
   /**
    * @return NodeUpdateHelper
    */
@@ -50,23 +40,6 @@ class NodeHelper {
       $this->nodeUpdateHelper = new NodeUpdateHelper();
     }
     return $this->nodeUpdateHelper;
-  }
-
-  public function setNodeUpdateHelper($nodeUpdateHelper) {
-    $this->nodeUpdateHelper = $nodeUpdateHelper;
-    return $this;
-  }
-
-  public function validate($node) {
-    $this->getNodeValidateHelper()->execute($node);
-  }
-
-  public function insert($node) {
-    $this->getNodeInsertHelper()->execute($node);
-  }
-
-  public function update($node) {
-    $this->getNodeUpdateHelper()->execute($node);
   }
 
 }

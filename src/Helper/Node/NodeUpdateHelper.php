@@ -14,7 +14,6 @@ class NodeUpdateHelper extends NodeHelper {
     }
 
     $this->presaveActions($quiz);
-    quiz_controller()->getSettingIO()->updateUserDefaultSettings($quiz);
 
     $this->checkNumRandom($quiz);
     $this->checkNumAlways($quiz);
@@ -27,13 +26,10 @@ class NodeUpdateHelper extends NodeHelper {
    * from an old version of a quiz to a new.
    *
    * @param int $old_quiz_vid
-   *   The quiz vid prior to a new revision.
-   * @param int $new_quiz_vid
-   *   The quiz vid of the latest revision.
+   * @param int $quiz_vid
    * @param int $quiz_qid
-   *   The quiz id.
    */
-  private function updateQuestionRelationship($old_quiz_vid, $new_quiz_vid, $quiz_qid) {
+  private function updateQuestionRelationship($old_quiz_vid, $quiz_vid, $quiz_qid) {
     // query for questions in previous version
     $result = db_select('quiz_relationship', 'qnr')
       ->fields('qnr', array('quiz_qid', 'question_nid', 'question_vid', 'question_status', 'weight', 'max_score', 'auto_update_max_score', 'qr_id', 'qr_pid'))
@@ -48,7 +44,7 @@ class NodeUpdateHelper extends NodeHelper {
       foreach ($questions as &$quiz_question) {
         $quiz_question['old_qr_id'] = $quiz_question['qr_id'];
         $quiz_question['quiz_qid'] = $quiz_qid;
-        $quiz_question['quiz_vid'] = $new_quiz_vid;
+        $quiz_question['quiz_vid'] = $quiz_vid;
         unset($quiz_question['qr_id']);
         drupal_write_record('quiz_relationship', $quiz_question);
       }
@@ -59,7 +55,7 @@ class NodeUpdateHelper extends NodeHelper {
         db_update('quiz_relationship')
           ->condition('qr_pid', $question['old_qr_id'])
           ->condition('quiz_qid', $quiz_qid)
-          ->condition('quiz_vid', $new_quiz_vid)
+          ->condition('quiz_vid', $quiz_vid)
           ->fields(array('qr_pid' => $question['qr_id']))
           ->execute();
       }
@@ -78,7 +74,7 @@ class NodeUpdateHelper extends NodeHelper {
       while ($quiz_term = $result->fetchAssoc()) {
         $insert_query->values(array(
             'nid'       => $quiz_qid,
-            'vid'       => $new_quiz_vid,
+            'vid'       => $quiz_vid,
             'tid'       => $quiz_term['tid'],
             'weight'    => $quiz_term['weight'],
             'max_score' => $quiz_term['max_score'],

@@ -5,27 +5,6 @@
 # ---------------------------------------------------------------
 
 /**
- * Implements hook_validate().
- */
-function quiz_validate($node) {
-  quiz()->getNodeHelper()->validate($node);
-}
-
-/**
- * Implements hook_insert().
- */
-function quiz_insert($node) {
-  quiz()->getNodeHelper()->insert($node);
-}
-
-/**
- * Implements hook_update().
- */
-function quiz_update($node) {
-  quiz()->getNodeHelper()->update($node);
-}
-
-/**
  * Implements hook_node_presave().
  */
 function quiz_node_presave($node) {

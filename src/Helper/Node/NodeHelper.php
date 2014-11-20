@@ -2,15 +2,16 @@
 
 namespace Drupal\quiz\Helper\Node;
 
+use Drupal\quiz\Entity\QuizEntity;
+
 abstract class NodeHelper {
 
   /**
    * Common actions that need to be done before a quiz is inserted or updated
    *
-   * @param $quiz
-   *   Quiz entity
+   * @param QuizEntity $quiz
    */
-  protected function presaveActions(&$quiz) {
+  protected function presaveActions(QuizEntity $quiz) {
     if (empty($quiz->pass_rate)) {
       $quiz->pass_rate = 0;
     }
@@ -24,7 +25,7 @@ abstract class NodeHelper {
    * If a quiz is saved as not randomized we should make sure all random questions
    * are converted to always.
    *
-   * @param \Drupal\quiz\Entity\QuizEntity $quiz
+   * @param QuizEntity $quiz
    */
   protected function checkNumRandom(&$quiz) {
     if ($quiz->randomization == 2) {
@@ -41,7 +42,7 @@ abstract class NodeHelper {
    * If a quiz is saved with random categories we should make sure all questions
    * are removed from the quiz
    *
-   * @param \Drupal\quiz\Entity\QuizEntity $quiz
+   * @param QuizEntity $quiz
    */
   protected function checkNumAlways($quiz) {
     if ($quiz->randomization != 3) {
