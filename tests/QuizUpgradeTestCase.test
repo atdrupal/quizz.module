@@ -8,8 +8,11 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
   public function setUp() {
     $this->databaseDumpFiles = array(drupal_get_path('module', 'quiz') . '/tests/upgrade/' . static::$testDumpFile);
+    module_enable(static::$dependencies);
+    drupal_flush_all_caches();
     parent::setUp();
     module_enable(static::$dependencies);
+    registry_rebuild();
     $this->loadedModules = module_list();
   }
 
