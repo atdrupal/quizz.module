@@ -2,15 +2,12 @@
 
 namespace Drupal\quiz\Helper;
 
-use Drupal\quiz\Entity\QuizEntity;
 use Drupal\quiz\Helper\Quiz\AccessHelper;
-use Drupal\quiz\Helper\Quiz\FeedbackHelper;
 use Drupal\quiz\Helper\Quiz\TakeJumperHelper;
 
 class QuizHelper {
 
   private $accessHelper;
-  private $feedbackHelper;
   private $takeJumperHelper;
 
   /**
@@ -29,21 +26,6 @@ class QuizHelper {
   }
 
   /**
-   * @return FeedbackHelper
-   */
-  public function getFeedbackHelper() {
-    if (null === $this->feedbackHelper) {
-      $this->feedbackHelper = new FeedbackHelper();
-    }
-    return $this->feedbackHelper;
-  }
-
-  public function setFeedbackHelper($feedbackHelper) {
-    $this->feedbackHelper = $feedbackHelper;
-    return $this;
-  }
-
-  /**
    * @return TakeJumperHelper
    */
   public function getTakeJumperHelper($quiz, $total, $siblings, $current) {
@@ -56,38 +38,6 @@ class QuizHelper {
   public function setTakeJumperHelper($takeJumperHelper) {
     $this->takeJumperHelper = $takeJumperHelper;
     return $this;
-  }
-
-  /**
-   * Find out if a quiz is available for taking or not
-   *
-   * @param QuizEntity $quiz
-   * @return
-   *  TRUE if available
-   *  Error message(String) if not available
-   */
-  public function isAvailable(QuizEntity $quiz) {
-    global $user;
-
-    if (!$user->uid && $quiz->takes > 0) {
-      return t('This @quiz only allows %num_attempts attempts. Anonymous users can only access quizzes that allows an unlimited number of attempts.', array(
-          '%num_attempts' => $quiz->takes,
-          '@quiz'         => QUIZ_NAME
-      ));
-    }
-
-    $user_is_admin = entity_access('update', 'quiz_entity', $quiz);
-    if ($user_is_admin || $quiz->quiz_always) {
-      return TRUE;
-    }
-
-    // Compare current GMT time to the open and close dates (which should still be
-    // in GMT time).
-    if ((REQUEST_TIME >= $quiz->quiz_close) || (REQUEST_TIME < $quiz->quiz_open)) {
-      return t('This @quiz is closed.', array('@quiz' => QUIZ_NAME));
-    }
-
-    return TRUE;
   }
 
   /**
