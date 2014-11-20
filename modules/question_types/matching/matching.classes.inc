@@ -103,7 +103,7 @@ class MatchingQuestion extends QuestionPlugin {
    *
    * @see QuizQuestion#validateNode($form)
    */
-  public function validateNode(array &$form) {
+  public function validate(array &$form) {
     // No validation is required
     // The first two pairs are required in the form, if there are other errors we forgive them
   }

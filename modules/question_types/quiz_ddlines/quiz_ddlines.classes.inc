@@ -258,7 +258,7 @@ class DDLinesQuestion extends QuestionPlugin {
    * @param $form
    *  The processed form.
    */
-  public function validateNode(array &$form) {
+  public function validate(array &$form) {
     // Nothing todo here
   }
 

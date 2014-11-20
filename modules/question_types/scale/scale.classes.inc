@@ -269,7 +269,7 @@ class ScaleQuestion extends QuestionPlugin {
    *
    * @see QuizQuestion#validate()
    */
-  public function validateNode(array &$form) {
+  public function validate(array &$form) {
 
   }
 

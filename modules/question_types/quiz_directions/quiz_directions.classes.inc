@@ -28,7 +28,7 @@ class QuizDirectionsQuestion extends QuestionPlugin {
    *
    * @see QuizQuestion#validateNode($form)
    */
-  public function validateNode(array &$form) {
+  public function validate(array &$form) {
 
   }
 

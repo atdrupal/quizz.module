@@ -62,7 +62,7 @@ class ShortAnswerQuestion extends QuestionPlugin {
    *
    * @see QuizQuestion#validateNode($form)
    */
-  public function validateNode(array &$form) {
+  public function validate(array &$form) {
     if ($this->question->correct_answer_evaluation != self::ANSWER_MANUAL && empty($this->question->correct_answer)) {
       form_set_error('correct_answer', t('An answer must be specified for any evaluation type other than manual scoring.'));
     }

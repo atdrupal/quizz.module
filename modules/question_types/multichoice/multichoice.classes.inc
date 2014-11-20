@@ -279,7 +279,7 @@ class MultichoiceQuestion extends QuestionPlugin {
    *
    * QuizQuestion#validate()
    */
-  public function validateNode(array &$form) {
+  public function validate(array &$form) {
     if ($this->question->choice_multi == 0) {
       $found_one_correct = FALSE;
       for ($i = 0; (isset($this->question->alternatives[$i]) && is_array($this->question->alternatives[$i])); $i++) {

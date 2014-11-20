@@ -127,17 +127,6 @@ function quiz_question_view($node, $view_mode) {
 }
 
 /**
- * Implements hook_validate().
- */
-function quiz_question_validate($question, &$form) {
-  // Check to make sure that there is a question.
-  if (empty($question->body)) {
-    form_set_error('body', t('Question text is empty.'));
-  }
-  quiz_question_get_provider($question)->validateNode($form);
-}
-
-/**
  * Implements hook_form_alter().
  */
 function quiz_question_form_alter(&$form, $form_state) {

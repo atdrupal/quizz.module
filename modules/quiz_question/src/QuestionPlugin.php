@@ -279,7 +279,7 @@ abstract class QuestionPlugin {
    * @param $form
    *  The processed form.
    */
-  abstract public function validateNode(array &$form);
+  abstract public function validate(array &$form);
 
   /**
    * Get the form through which the user will answer the question.
