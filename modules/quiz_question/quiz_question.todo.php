@@ -14,6 +14,7 @@ function quiz_question_type_access() {
  * @param string $op
  * @param Question|null $question
  * @param stdClass $account
+ * @return bool
  */
 function quiz_question_access_callback($op, $question = NULL, $account = NULL, $entity_type = '') {
   switch ($op) {
