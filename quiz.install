@@ -382,7 +382,7 @@ function quiz_update_7602() {
   $select = db_select('node', 'n');
   $select->innerJoin('node_revision', 'r', 'n.nid = r.nid');
   $select->fields('r', array('nid', 'vid', 'uid', 'title', 'log', 'timestamp', 'status'));
-  $select->fields('n', array('created', 'type'));
+  $select->fields('n', array('created', 'type', 'language'));
   $select->condition('n.type', 'quiz');
   $select->orderBy('r.vid', 'ASC');
   $results = $select->execute()->fetchAll();
@@ -407,6 +407,7 @@ function _quiz_update_7602($row) {
         'type'     => 'quiz',
         'status'   => $row->status,
         'uid'      => $row->uid,
+        'language' => $row->language,
         'title'    => $row->title,
         'created'  => $row->created,
         'changed'  => $row->timestamp,

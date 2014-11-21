@@ -25,6 +25,9 @@ class QuizEntity extends Entity {
    */
   public $status;
 
+  /** @var string */
+  public $language = LANGUAGE_NONE;
+
   /** @var string The name of the quiz type. */
   public $type = 'quiz';
 
