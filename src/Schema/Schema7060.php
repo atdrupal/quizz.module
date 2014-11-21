@@ -38,16 +38,24 @@ class Schema7060 {
     $schema['quiz_entity'] = array(
         'description' => 'Store quiz items',
         'fields'      => array(
-            'qid'     => array('type' => 'serial', 'not null' => TRUE, 'description' => 'Primary Key: Unique quiz item ID.'),
-            'vid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-            'type'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_type}.type of this quiz.'),
-            'status'  => array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'description' => 'Boolean indicating whether the quiz is published (visible to non-administrators).'),
-            'title'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The title of this quiz, always treated as non-markup plain text.'),
-            'created' => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the quiz was created.'),
-            'changed' => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the quiz was most recently saved.'),
-            'uid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of the quiz.'),
+            'qid'      => array('type' => 'serial', 'not null' => TRUE, 'description' => 'Primary Key: Unique quiz item ID.'),
+            'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+            'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_type}.type of this quiz.'),
+            'language' => array('type' => 'varchar', 'description' => 'The {languages}.language of this quiz.', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+            'status'   => array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'description' => 'Boolean indicating whether the quiz is published (visible to non-administrators).'),
+            'title'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The title of this quiz, always treated as non-markup plain text.'),
+            'created'  => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the quiz was created.'),
+            'changed'  => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the quiz was most recently saved.'),
+            'uid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of the quiz.'),
         ),
         'primary key' => array('qid'),
+        'unique keys' => array('vid' => array('vid')),
+        'indexes'     => array(
+            'quiz_created'     => array('created'),
+            'quiz_changed'     => array('changed'),
+            'quiz_status_type' => array('status', 'type', 'qid'),
+            'language'         => array('language'),
+        ),
     );
 
     $schema['quiz_entity_revision'] = array(
