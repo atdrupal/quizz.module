@@ -130,3 +130,10 @@ function quiz_question_revision_actions_submit($form, &$form_state) {
 function quiz_question_page(Question $question, $view_mode = 'default', $langcode = NULL) {
   return entity_view('quiz_entity', array($question), $view_mode, $langcode);
 }
+
+/**
+ * Callback for /quiz-question/%/revisions
+ */
+function quiz_question_revisions_page(Question $question) {
+  return '…';
+}
