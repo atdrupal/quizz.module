@@ -6,7 +6,13 @@ class Schema7060 {
 
   public function get() {
     $schema = array();
+    $schema += $this->getQuestionSchema();
+    $schema += $this->getQuestionRevisionSchema();
+    $schema += $this->getQuestionTypeSchema();
+    return $schema;
+  }
 
+  private function getQuestionSchema() {
     $schema['quiz_question'] = array(
         'description' => 'Store quiz questions',
         'fields'      => array(
@@ -21,7 +27,10 @@ class Schema7060 {
         ),
         'primary key' => array('qid'),
     );
+    return $schema;
+  }
 
+  private function getQuestionRevisionSchema() {
     $schema['quiz_question_revision'] = array(
         'description' => 'Entity revision table for question content with fields.',
         'fields'      => array(
@@ -39,6 +48,10 @@ class Schema7060 {
         'indexes'     => array(),
     );
 
+    return $schema;
+  }
+
+  private function getQuestionTypeSchema() {
     $schema['quiz_question_type'] = array(
         'description' => 'Stores information about all defined question types.',
         'fields'      => array(
@@ -61,7 +74,6 @@ class Schema7060 {
             'is_disabled' => array('disabled')
         ),
     );
-
     return $schema;
   }
 
