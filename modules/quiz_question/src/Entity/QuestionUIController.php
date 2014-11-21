@@ -54,7 +54,7 @@ class QuestionUIController extends EntityDefaultUIController {
   private function getExtraMenuItems() {
     $items = array();
 
-    $items['quiz/%quiz/revisions'] = array(
+    $items['quiz-question/%quiz_question_entity/revisions'] = array(
         'title'            => 'Revisions',
         'type'             => MENU_LOCAL_ACTION,
         'access callback'  => 'entity_access',

@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\quiz_question\Controller\QuestionRevisionsController;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\Form\QuestionTypeForm;
 use Drupal\quiz_question\Form\RevisionActionsForm;
@@ -135,5 +136,6 @@ function quiz_question_page(Question $question, $view_mode = 'default', $langcod
  * Callback for /quiz-question/%/revisions
  */
 function quiz_question_revisions_page(Question $question) {
-  return '…';
+  $obj = new QuestionRevisionsController();
+  return $obj->render($question);
 }
