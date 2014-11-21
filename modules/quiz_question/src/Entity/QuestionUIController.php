@@ -54,6 +54,17 @@ class QuestionUIController extends EntityDefaultUIController {
   private function getExtraMenuItems() {
     $items = array();
 
+    $items['quiz-question/%quiz_question_entity/revisions'] = array(
+        'title'            => 'Revisions',
+        'type'             => MENU_LOCAL_ACTION,
+        'access callback'  => 'entity_access',
+        'access arguments' => array('update', 'quiz_question', 1),
+        'file path'        => drupal_get_path('module', 'quiz_question'),
+        'file'             => 'quiz_question.pages.inc',
+        'page callback'    => 'quiz_question_revisions_page',
+        'page arguments'   => array(1),
+    );
+
     foreach (array_keys(quiz_question_get_types()) as $name) {
       $items['quiz-question/add/' . str_replace('_', '-', $name)] = array(
           'title callback'   => 'entity_ui_get_action_title',
