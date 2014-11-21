@@ -16,14 +16,15 @@ class Schema7060 {
     $schema['quiz_question'] = array(
         'description' => 'Store quiz questions',
         'fields'      => array(
-            'qid'     => array('type' => 'serial', 'not null' => TRUE, 'description' => 'Primary Key: Unique question item ID.'),
-            'vid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-            'type'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this quiz.'),
-            'status'  => array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'description' => 'Boolean indicating whether the quiz is published (visible to non-administrators).'),
-            'title'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The title of this question, always treated as non-markup plain text.'),
-            'created' => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the question was created.'),
-            'changed' => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the question was most recently saved.'),
-            'uid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of question.'),
+            'qid'      => array('type' => 'serial', 'not null' => TRUE, 'description' => 'Primary Key: Unique question item ID.'),
+            'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+            'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this quiz.'),
+            'language' => array('type' => 'varchar', 'description' => 'The {languages}.language of this question.', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+            'status'   => array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'description' => 'Boolean indicating whether the quiz is published (visible to non-administrators).'),
+            'title'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The title of this question, always treated as non-markup plain text.'),
+            'created'  => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the question was created.'),
+            'changed'  => array('type' => 'int', 'not null' => FALSE, 'description' => 'The Unix timestamp when the question was most recently saved.'),
+            'uid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of question.'),
         ),
         'primary key' => array('qid'),
     );
