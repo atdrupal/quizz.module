@@ -38,6 +38,18 @@ class QuestionController extends EntityAPIController {
     return parent::save($question, $transaction);
   }
 
+  /**
+   * Force save revision author ID.
+   * 
+   * @global \stdClass $user
+   * @param \Drupal\quiz_question\Entity\Question $question
+   */
+  protected function saveRevision($question) {
+    global $user;
+    $question->revision_uid = $user->uid;
+    return parent::saveRevision($question);
+  }
+
   public function load($ids = array(), $conditions = array()) {
     $questions = parent::load($ids, $conditions);
 
