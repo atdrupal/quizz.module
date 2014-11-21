@@ -75,20 +75,6 @@ class FormDefinition extends FormHelper {
       );
     }
 
-    $form['actions'] = array(
-        '#type'   => 'action',
-        '#weight' => 50,
-        'submit'  => array('#type' => 'submit', '#value' => t('Save')),
-    );
-
-    if (!empty($this->quiz->qid)) {
-      $form['actions']['delete'] = array(
-          '#type'   => 'submit',
-          '#value'  => t('Delete'),
-          '#suffix' => l(t('Cancel'), 'admin' === arg(0) ? 'admin/content/quiz' : 'quiz/' . $this->quiz->qid),
-      );
-    }
-
     // Provides details in vertical tabs.
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->defineTakingOptions($form);
@@ -102,6 +88,20 @@ class FormDefinition extends FormHelper {
     // Attach custom fields by admin
     if (0 <= $this->quiz->status) {
       field_attach_form('quiz_entity', $this->quiz, $form, $form_state);
+    }
+
+    $form['actions'] = array(
+        '#type'   => 'action',
+        '#weight' => 100,
+        'submit'  => array('#type' => 'submit', '#value' => t('Save')),
+    );
+
+    if (!empty($this->quiz->qid)) {
+      $form['actions']['delete'] = array(
+          '#type'   => 'submit',
+          '#value'  => t('Delete'),
+          '#suffix' => l(t('Cancel'), 'admin' === arg(0) ? 'admin/content/quiz' : 'quiz/' . $this->quiz->qid),
+      );
     }
 
     return $form;
