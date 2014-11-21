@@ -12,6 +12,9 @@ class QuizType extends Entity {
   public $help;
   public $weight = 0;
 
+  /** @var mixed[] Extra info for quiz type. */
+  public $data;
+
   public function __construct(array $values = array()) {
     parent::__construct($values, 'quiz_type');
   }

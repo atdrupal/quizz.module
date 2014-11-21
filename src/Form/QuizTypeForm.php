@@ -19,6 +19,15 @@ class QuizTypeForm {
         '#size'          => 30,
     );
 
+    // Multilingual support
+    $form['multilingual'] = array(
+        '#type'          => 'radios',
+        '#title'         => t('Multilingual support'),
+        '#default_value' => isset($quiz_type->data['multilingual']) ? $quiz_type->data['multilingual'] : 0,
+        '#options'       => array(t('Disabled'), t('Enabled')),
+        '#description'   => t('Enable multilingual support for this quiz type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language'))),
+    );
+
     $form['description'] = array(
         '#type'          => 'textarea',
         '#title'         => t('Description'),
@@ -66,6 +75,12 @@ class QuizTypeForm {
     $quiz_type = entity_ui_form_submit_build_entity($form, $form_state);
     $quiz_type->description = filter_xss_admin($quiz_type->description);
     $quiz_type->help = filter_xss_admin($quiz_type->help);
+
+    if (isset($quiz_type->multilingual)) {
+      $quiz_type->data['multilingual'] = (int) $quiz_type->multilingual;
+      unset($quiz_type->multilingual);
+    }
+
     $quiz_type->save();
     $form_state['redirect'] = 'admin/structure/quiz';
   }
