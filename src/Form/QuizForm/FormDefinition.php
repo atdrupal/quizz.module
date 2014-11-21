@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Form\QuizEntityForm;
+namespace Drupal\quiz\Form\QuizForm;
 
 use Drupal\quiz\Entity\QuizEntity;
 use Drupal\quiz\Helper\FormHelper;
@@ -37,6 +37,8 @@ class FormDefinition extends FormHelper {
    * @return array
    */
   public function get($form, &$form_state, $op) {
+    global $language;
+
     $quiz_type = quiz_type_load($this->quiz->type);
 
     if (!empty($quiz_type->help)) {
@@ -59,6 +61,20 @@ class FormDefinition extends FormHelper {
         '#weight'        => -20,
     );
 
+    if (module_exists('locale') && $quiz_type->data['multilingual']) {
+      $language_options = array();
+      foreach (language_list() as $langcode => $lang) {
+        $language_options[$langcode] = $lang->name;
+      }
+
+      $form['language'] = array(
+          '#type'          => count($language_options) < 5 ? 'radios' : 'select',
+          '#title'         => t('Language'),
+          '#options'       => $language_options,
+          '#default_value' => isset($this->quiz->language) ? $this->quiz->language : $language->language,
+      );
+    }
+
     $form['actions'] = array(
         '#type'   => 'action',
         '#weight' => 50,
@@ -74,7 +90,7 @@ class FormDefinition extends FormHelper {
     }
 
     // Provides details in vertical tabs.
-    $form['vtabs'] = array('#type' => 'vertical_tabs');
+    $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->defineTakingOptions($form);
     $this->defineUserPointOptionsFields($form);
     $this->defineAvailabilityOptionsFields($form);

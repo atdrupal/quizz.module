@@ -3,10 +3,10 @@
 namespace Drupal\quiz\Form;
 
 use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Form\QuizEntityForm\FormDefinition;
-use Drupal\quiz\Form\QuizEntityForm\FormValidation;
+use Drupal\quiz\Form\QuizForm\FormDefinition;
+use Drupal\quiz\Form\QuizForm\FormValidation;
 
-class QuizEntityForm {
+class QuizForm {
 
   /** @var QuizEntity */
   private $quiz;
