@@ -20,13 +20,15 @@ class QuizTypeForm {
     );
 
     // Multilingual support
-    $form['multilingual'] = array(
-        '#type'          => 'radios',
-        '#title'         => t('Multilingual support'),
-        '#default_value' => isset($quiz_type->data['multilingual']) ? $quiz_type->data['multilingual'] : 0,
-        '#options'       => array(t('Disabled'), t('Enabled')),
-        '#description'   => t('Enable multilingual support for this quiz type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language'))),
-    );
+    if (module_exists('locale')) {
+      $form['multilingual'] = array(
+          '#type'          => 'radios',
+          '#title'         => t('Multilingual support'),
+          '#default_value' => isset($quiz_type->data['multilingual']) ? $quiz_type->data['multilingual'] : 0,
+          '#options'       => array(t('Disabled'), t('Enabled')),
+          '#description'   => t('Enable multilingual support for this quiz type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language'))),
+      );
+    }
 
     $form['description'] = array(
         '#type'          => 'textarea',

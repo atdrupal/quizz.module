@@ -25,6 +25,17 @@ class QuestionTypeForm {
         '#default_value' => $question_type->plugin,
     );
 
+    // Multilingual support
+    if (module_exists('locale')) {
+      $form['multilingual'] = array(
+          '#type'          => 'radios',
+          '#title'         => t('Multilingual support'),
+          '#default_value' => isset($question_type->data['multilingual']) ? $question_type->data['multilingual'] : 0,
+          '#options'       => array(t('Disabled'), t('Enabled')),
+          '#description'   => t('Enable multilingual support for this quiz type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language'))),
+      );
+    }
+
     $form['label'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Label'),
@@ -78,6 +89,12 @@ class QuestionTypeForm {
     $question_type = entity_ui_form_submit_build_entity($form, $form_state);
     $question_type->description = filter_xss_admin($question_type->description);
     $question_type->help = filter_xss_admin($question_type->help);
+
+    if (isset($question_type->multilingual)) {
+      $question_type->data['multilingual'] = (int) $question_type->multilingual;
+      unset($question_type->multilingual);
+    }
+
     $question_type->save();
     $form_state['redirect'] = 'admin/structure/quiz-questions';
   }
