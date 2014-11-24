@@ -91,6 +91,9 @@ function quiz_question_update_7601() {
         'description' => $node_type->description,
         'help'        => $node_type->help,
         'plugin'      => $node_type->type,
+        'data'        => array(
+            'multilingual' => (int) variable_get('language_content_type_' . $node_type->type, 0)
+        )
     ));
     $question_type->save();
   }

@@ -112,7 +112,14 @@ function quiz_update_7602() {
   db_add_field('quiz_entity_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
 
   // create default quiz type
-  $quiz_type = entity_create('quiz_type', array('type' => 'quiz', 'label' => t('Quiz'), 'weight' => 0));
+  $quiz_type = entity_create('quiz_type', array(
+      'type'   => 'quiz',
+      'label'  => t('Quiz'),
+      'weight' => 0,
+      'data'   => array(
+          'multilingual' => (int) variable_get('language_content_type_quiz', 0)
+      )
+  ));
   $quiz_type->save();
 
   // migrate basic quiz
