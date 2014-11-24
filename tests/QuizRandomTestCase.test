@@ -65,10 +65,10 @@ class QuizRandomTestCase extends QuizTestCase {
     $this->linkQuestionToQuiz($question_5, $quiz);
 
     // Set up one required question.
-    $result = entity_load('quiz_question_relationship', FALSE, array('question_vid' => $question_1->qid));
+    $result = entity_load('quiz_relationship', FALSE, array('question_vid' => $question_1->qid));
     $relationship = reset($result);
     $relationship->question_status = 1;
-    entity_save('quiz_question_relationship', $relationship);
+    entity_save('quiz_relationship', $relationship);
 
     for ($i = 1; $i <= 5; $i++) {
       $questions = $quiz->getQuestionIO()->getQuestionList();

@@ -11,7 +11,7 @@ class MultichoiceTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('Multichoice'),
         'description' => t('Unit test for the multichoice question type.'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 

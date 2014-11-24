@@ -138,7 +138,7 @@ function quiz_result_load($result_id) {
  * @return \Drupal\quiz\Entity\Relationship
  */
 function quiz_relationship_load($relationship_id) {
-  return entity_load_single('quiz_question_relationship', $relationship_id);
+  return entity_load_single('quiz_relationship', $relationship_id);
 }
 
 /**

@@ -14,7 +14,7 @@ class HookEntityInfo {
     return array(
         'quiz_type'                  => $this->getQuizEntityTypeInfo(),
         'quiz_entity'                => $this->getQuizEntityInfo(),
-        'quiz_question_relationship' => $this->getQuizQuestionRelationshipInfo(),
+        'quiz_relationship' => $this->getQuizQuestionRelationshipInfo(),
         'quiz_result'                => $this->getQuizResultInfo(),
         'quiz_result_answer'         => $this->getQuizResultAnswerInfo(),
     );
