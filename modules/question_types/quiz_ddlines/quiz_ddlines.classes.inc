@@ -87,9 +87,7 @@ class DDLinesQuestion extends QuestionPlugin {
     $default_settings['mode'] = 'edit';
     $default_settings['editmode'] = isset($this->question->qid) ? 'update' : 'add';
     $form['#attached']['js'][] = array(
-        'data' => array(
-            'quiz_ddlines' => $default_settings
-        ),
+        'data' => array('quiz_ddlines' => $default_settings),
         'type' => 'setting'
     );
 
