@@ -29,7 +29,7 @@ class QuizQuestionFeedbackController {
   }
 
   public function buildRenderArray(Question $question) {
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'quizz') . '/quiz.pages.inc';
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
 
     // Invoke hook_get_report().
     if ($report = module_invoke($question->getModule(), 'get_report', $question->qid, $question->vid, $this->result->result_id)) {

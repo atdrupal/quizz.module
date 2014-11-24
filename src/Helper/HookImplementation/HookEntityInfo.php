@@ -36,7 +36,7 @@ class HookEntityInfo {
         'module'           => 'quiz',
         'admin ui'         => array(
             'path'             => 'admin/structure/quiz',
-            'file'             => 'quiz.pages.inc',
+            'file'             => 'quizz.pages.inc',
             'controller class' => 'Drupal\quizz\Entity\QuizTypeUIController',
         ),
     );
@@ -65,7 +65,7 @@ class HookEntityInfo {
         ),
         'admin ui'                  => array(
             'path'             => 'admin/content/quiz',
-            'file'             => 'quiz.pages.inc',
+            'file'             => 'quizz.pages.inc',
             'controller class' => 'Drupal\quizz\Entity\QuizUIController',
         ),
     );

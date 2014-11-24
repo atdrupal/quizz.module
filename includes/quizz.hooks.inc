@@ -153,11 +153,11 @@ function quizz_theme($existing, $type, $theme, $path) {
   return array(
       'quiz_view_stats'          => array(
           'variables' => array('quiz' => NULL),
-          'file'      => 'quiz.pages.inc'
+          'file'      => 'quizz.pages.inc'
       ),
       'quiz_categorized_form'    => array(
           'render element' => 'form',
-          'file'           => 'quiz.pages.inc'
+          'file'           => 'quizz.pages.inc'
       ),
       'quiz_result'              => array(
           'variables' => array(
@@ -166,7 +166,7 @@ function quizz_theme($existing, $type, $theme, $path) {
               'score'     => NULL,
               'summary'   => NULL,
               'result_id' => NULL),
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
       ),
       'quiz_progress'            => array(
           'variables' => array(
@@ -175,18 +175,18 @@ function quizz_theme($existing, $type, $theme, $path) {
               'num_questions'   => NULL,
               'allow_jumping'   => NULL,
               'time_limit'      => NULL),
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
       ),
       'quiz_no_feedback'         => array(
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
           'variables' => array(),
       ),
       'question_selection_table' => array(
-          'file'           => 'quiz.pages.inc',
+          'file'           => 'quizz.pages.inc',
           'render element' => 'form',
       ),
       'quiz_answer_result'       => array(
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
           'variables' => array(),
       ),
       'quiz_report_form'         => array(
@@ -196,7 +196,7 @@ function quizz_theme($existing, $type, $theme, $path) {
       ),
       'quiz_browser'             => array(
           'render element' => 'form',
-          'file'           => 'quiz.pages.inc',
+          'file'           => 'quizz.pages.inc',
       ),
       'quiz_question_score'      => array(
           'variables' => array('score' => NULL, 'max_score' => NULL),

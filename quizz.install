@@ -6,7 +6,7 @@ use Drupal\quizz\Schema\Schema7060;
  * @file
  * Quiz install schema for installing the quiz module
  */
-require_once dirname(__FILE__) . '/includes/update/quiz.update_before_7600.inc';
+require_once dirname(__FILE__) . '/includes/update/quizz.update_before_7600.inc';
 
 /**
  * Implements hook_install().
