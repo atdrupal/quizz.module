@@ -247,3 +247,11 @@ function quizz_update_7605() {
   db_drop_field('quiz_entity', 'node_nid');
   db_drop_field('quiz_entity_revision', 'node_vid');
 }
+
+/**
+ * Add {quiz_results}.current.
+ */
+function quizz_update_7606() {
+  db_add_field('quiz_results', 'current', array('type' => 'int', 'unsigned' => TRUE, 'default' => 0, 'description' => 'Current item in questions layout.'));
+  return 'Created {quiz_results}.current';
+}

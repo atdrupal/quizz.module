@@ -121,6 +121,7 @@ class Schema7060 {
             'is_invalid'   => array('type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
             'is_evaluated' => array('type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
             'time_left'    => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0),
+            'current'      => array('type' => 'int', 'unsigned' => TRUE, 'default' => 0, 'description' => 'Current item in questions layout.'),
         ),
         'primary key' => array('result_id'),
         'indexes'     => array(

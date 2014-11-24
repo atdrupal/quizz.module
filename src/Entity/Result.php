@@ -45,6 +45,9 @@ class Result extends Entity {
   /** @var array */
   public $layout = array();
 
+  /** @var int Current item in questions layout. */
+  public $current;
+
   /**
    * Get quiz entity.
    *
