@@ -384,7 +384,7 @@ abstract class QuestionPlugin {
     // @TODO: Do not need extra query here
     $values['weight'] = 1 + db_query('SELECT MAX(weight) FROM {quiz_relationship} WHERE quiz_vid = :vid', array(':vid' => $quiz->vid))->fetchField();
     $values['question_status'] = $quiz->randomization == 2 ? QUIZ_QUESTION_RANDOM : QUIZ_QUESTION_ALWAYS;
-    entity_create('quiz_question_relationship', $values)->save();
+    entity_create('quiz_relationship', $values)->save();
 
     // Update max_score for relationships if auto update max score is enabled
     // for question

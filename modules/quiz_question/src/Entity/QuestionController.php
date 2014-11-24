@@ -123,7 +123,7 @@ class QuestionController extends EntityAPIController {
    */
   public function findRelationship(QuizEntity $quiz, Question $question) {
     $conds = array('quiz_vid' => $quiz->vid, 'question_vid' => $question->vid);
-    if ($relationships = entity_load('quiz_question_relationship', FALSE, $conds)) {
+    if ($relationships = entity_load('quiz_relationship', FALSE, $conds)) {
       return reset($relationships);
     }
   }

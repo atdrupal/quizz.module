@@ -461,7 +461,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       }
 
       list($question_qid, $question_vid) = explode('-', $id, 2);
-      $relationship = entity_create('quiz_question_relationship', array(
+      $relationship = entity_create('quiz_relationship', array(
           'quiz_qid'              => $quiz->qid,
           'quiz_vid'              => $quiz->vid,
           'qid'                   => (int) $question_qid,

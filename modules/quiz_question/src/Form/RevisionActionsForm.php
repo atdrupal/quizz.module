@@ -264,7 +264,7 @@ class RevisionActionsForm {
             'question_status'       => $question_status,
             'auto_update_max_score' => $auto_update_max_score,
       );
-      entity_save('quiz_question_relationship', $relationship);
+      entity_save('quiz_relationship', $relationship);
     }
   }
 

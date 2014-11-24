@@ -269,9 +269,9 @@ class QuestionIO {
     }
 
     // Update the parentage when a new revision is created.
-    // @todo this is copy pasta from quiz_update_quiz_question_relationship
+    // @todo this is copy pasta from quiz_update_quiz_relationship
     foreach ($relationships as $relationship) {
-      $_relationships = entity_load('quiz_question_relationship', FALSE, array(
+      $_relationships = entity_load('quiz_relationship', FALSE, array(
           'qr_pid'   => $relationship->old_qr_id,
           'quiz_vid' => $this->quiz->vid,
           'quiz_qid' => $this->quiz->qid,
