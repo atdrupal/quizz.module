@@ -33,7 +33,7 @@ class HookEntityInfo {
         'exportable'       => TRUE,
         'entity keys'      => array('id' => 'id', 'name' => 'type', 'label' => 'label'),
         'access callback'  => 'quiz_type_access',
-        'module'           => 'quiz',
+        'module'           => 'quizz',
         'admin ui'         => array(
             'path'             => 'admin/structure/quiz',
             'file'             => 'quizz.pages.inc',
@@ -58,7 +58,7 @@ class HookEntityInfo {
         'access callback'           => 'quiz_entity_access_callback',
         'label callback'            => 'entity_class_label',
         'uri callback'              => 'entity_class_uri',
-        'module'                    => 'quiz',
+        'module'                    => 'quizz',
         'bundles'                   => array(),
         'view modes'                => array(
             'question' => array('label' => t('Question'), 'custom settings' => TRUE),

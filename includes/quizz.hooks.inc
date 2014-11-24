@@ -255,7 +255,7 @@ function question_number_to_arg() {
 /**
  * Result_id, menu argument loader.
  */
-function quizz_rid_load($result_id) {
+function quiz_rid_load($result_id) {
   if ($result_id > 0) {
     return $result_id;
   }
@@ -265,7 +265,7 @@ function quizz_rid_load($result_id) {
 /**
  * Workaround for a _menu_translate() bug.
  */
-function quizz_rid_to_arg() {
+function quiz_rid_to_arg() {
   return 0;
 }
 
@@ -277,7 +277,7 @@ function quizz_rid_to_arg() {
  * @return
  *   TRUE if the user has access to any of the arguments given.
  */
-function quizz_access_multi_or() {
+function quiz_access_multi_or() {
   foreach (func_get_args() as $perm) {
     if (user_access($perm)) {
       return TRUE;
@@ -292,7 +292,7 @@ function quizz_access_multi_or() {
  * @return boolean
  *  True if access, false otherwise
  */
-function quizz_access_my_result($result) {
+function quiz_access_my_result($result) {
   global $user;
 
   if (is_numeric($result) && !$result = quiz_result_load($result)) {
@@ -313,7 +313,7 @@ function quizz_access_my_result($result) {
  * @return boolean
  *   TRUE if user has permission.
  */
-function quizz_access_results($quiz, $result_id = NULL) {
+function quiz_access_results($quiz, $result_id = NULL) {
   global $user;
   return quiz()->getQuizHelper()->getAccessHelper()->canAccessResults($user, $quiz, $result_id);
 }
@@ -324,7 +324,7 @@ function quizz_access_results($quiz, $result_id = NULL) {
  * @param object $quiz
  *  The Quiz entity
  */
-function quizz_access_my_results($quiz) {
+function quiz_access_my_results($quiz) {
   global $user;
   return quiz()->getQuizHelper()->getAccessHelper()->canAccessMyResults($quiz, $user);
 }
@@ -332,10 +332,9 @@ function quizz_access_my_results($quiz) {
 /**
  * Does the current user have access to take the quiz?
  *
- * @param $quiz
- *  The quiz entity
+ * @param QuizEntity $quiz
  */
-function quizz_take_access($quiz) {
+function quiz_take_access($quiz) {
   global $user;
   return quiz()->getQuizHelper()->getAccessHelper()->canTakeQuiz($quiz, $user);
 }
@@ -343,7 +342,7 @@ function quizz_take_access($quiz) {
 /**
  * Menu check to see if user has access to take this question.
  */
-function quizz_access_question($quiz, $page_number) {
+function quiz_access_question($quiz, $page_number) {
   return quiz()->getQuizHelper()->getAccessHelper()->canAccessQuestion($quiz, $page_number);
 }
 
@@ -354,7 +353,7 @@ function quizz_access_question($quiz, $page_number) {
  * @param string $type
  * @param stdClass $account
  */
-function quizz_type_access($op, $type = NULL, $account = NULL) {
+function quiz_type_access($op, $type = NULL, $account = NULL) {
   return user_access('administer quiz configuration', $account);
 }
 
@@ -364,7 +363,7 @@ function quizz_type_access($op, $type = NULL, $account = NULL) {
  * @param string $type
  * @param stdClass $account
  */
-function quizz_entity_access_callback($op, $type = NULL, $account = NULL) {
+function quiz_entity_access_callback($op, $type = NULL, $account = NULL) {
   switch ($op) {
     case 'create':
       return user_access('create quiz content', $account);
@@ -384,7 +383,7 @@ function quizz_entity_access_callback($op, $type = NULL, $account = NULL) {
  * @param string $op
  * @return bool
  */
-function quizz_type_confirm($node, $op = NULL) {
+function quiz_type_confirm($node, $op = NULL) {
   if ($node->type !== 'quiz') {
     return FALSE;
   }
@@ -405,7 +404,7 @@ function quizz_type_confirm($node, $op = NULL) {
  * @param int $page_number
  * @return boolean
  */
-function quizz_question_feedback_access(QuizEntity $quiz, $page_number) {
+function quiz_question_feedback_access(QuizEntity $quiz, $page_number) {
   if (($page_number <= 0) || !array_filter($quiz->review_options['question'])) {
     return FALSE;
   }
