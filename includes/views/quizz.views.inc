@@ -12,7 +12,7 @@
  * @todo use hook_views_data_alter to assign these field/filter handlers to the
  * automatically generated Entity API views definitions.
  */
-function quiz_views_handlers() {
+function quizz_views_handlers() {
   return array(
       'info'     => array('path' => QUIZ_VIEWS_DIR . '/handlers'),
       'handlers' => array(
@@ -76,7 +76,7 @@ function quiz_views_handlers() {
 /**
  * Implements hook_views_data_alter().
  */
-function quiz_views_data_alter(&$data) {
+function quizz_views_data_alter(&$data) {
   // Join the quiz properties table to quiz entities.
   $data['quiz_entity_revision']['table']['join'] = array(
       'quiz_entity' => array('left_field' => 'vid', 'field' => 'vid', 'type' => 'INNER'),
