@@ -26,6 +26,17 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     module_enable(static::$dependencies);
     drupal_flush_all_caches();
     parent::setUp();
+
+    // Module renamed from quiz to quizz
+    db_update('system')
+      ->fields(array(
+          'name'     => 'quizz',
+          'filename' => drupal_get_path('module', 'quizz'),
+      ))
+      ->condition('name', 'quiz')
+      ->execute()
+    ;
+
     module_enable(static::$dependencies);
     registry_rebuild();
     $this->loadedModules = module_list();
