@@ -8,7 +8,7 @@ dependencies[] = entity
 dependencies[] = filter
 dependencies[] = views
 dependencies[] = views_bulk_operations
-dependencies[] = xautoload (>= 7.x-4.0)
+dependencies[] = xautoload
 
 test_dependencies[] = taxonomy
 test_dependencies[] = views

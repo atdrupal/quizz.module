@@ -72,7 +72,7 @@ class QuizUIController extends EntityDefaultUIController {
     // Define menu structure for /quiz/%/questions
     $items['quiz/%quiz/questions'] = $base + array(
         'title'            => 'Manage questions',
-        'type'             => MENU_LOCAL_ACTION,
+        'type'             => MENU_LOCAL_TASK,
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_entity', 1),
         'page callback'    => 'quiz_question_admin_page',
