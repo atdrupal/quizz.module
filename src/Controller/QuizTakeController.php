@@ -2,15 +2,21 @@
 
 namespace Drupal\quizz\Controller;
 
-use Drupal\quizz\Controller\Legacy\QuizTakeLegacyController;
+use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 use RuntimeException;
 use stdClass;
 
-class QuizTakeController extends QuizTakeLegacyController {
+class QuizTakeController {
 
   /** @var Result */
   private $result;
+
+  /** @var int */
+  protected $result_id;
+
+  /** @var QuizEntity */
+  protected $quiz;
 
   /** @var stdClass */
   private $account;
@@ -27,7 +33,7 @@ class QuizTakeController extends QuizTakeLegacyController {
       }
 
       $this->initQuizResult();
-      if ($this->getResultId()) {
+      if ($this->result_id) {
         drupal_goto($this->getQuestionTakePath());
       }
     }
@@ -42,16 +48,21 @@ class QuizTakeController extends QuizTakeLegacyController {
     }
   }
 
+  private function getQuestionTakePath() {
+    $current = $_SESSION['quiz'][$this->quiz->qid]['current'];
+    return "quiz/{$this->quiz->qid}/take/{$current}";
+  }
+
   public function initQuizResult() {
     // Inject result from user's session
-    if (!empty($_SESSION['quiz'][$this->getQuizId()]['result_id'])) {
-      $this->result_id = $_SESSION['quiz'][$this->getQuizId()]['result_id'];
+    if (!empty($_SESSION['quiz'][$this->quiz->qid]['result_id'])) {
+      $this->result_id = $_SESSION['quiz'][$this->quiz->qid]['result_id'];
       $this->result = quiz_result_load($this->result_id);
     }
 
     // Enforce that we have the same quiz version.
     if (($this->result) && ($this->quiz->vid != $this->result->quiz_vid)) {
-      $this->quiz = quiz_load($this->getQuizId(), $this->quiz->vid);
+      $this->quiz = quiz_load($this->quiz->qid, $this->quiz->vid);
     }
 
     // Resume quiz progress
@@ -67,8 +78,8 @@ class QuizTakeController extends QuizTakeLegacyController {
 
       $this->result = quiz_controller()->getResultGenerator()->generate($this->quiz, $this->account);
       $this->result_id = $this->result->result_id;
-      $_SESSION['quiz'][$this->getQuizId()]['result_id'] = $this->result->result_id;
-      $_SESSION['quiz'][$this->getQuizId()]['current'] = 1;
+      $_SESSION['quiz'][$this->quiz->qid]['result_id'] = $this->result->result_id;
+      $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
 
       module_invoke_all('quiz_begin', $this->quiz, $this->result->result_id);
     }
@@ -86,14 +97,47 @@ class QuizTakeController extends QuizTakeLegacyController {
       return FALSE;
     }
 
-    $_SESSION['quiz'][$this->getQuizId()]['result_id'] = $result_id;
-    $_SESSION['quiz'][$this->getQuizId()]['current'] = 1;
+    $_SESSION['quiz'][$this->quiz->qid]['result_id'] = $result_id;
+    $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
     $this->result = quiz_result_load($result_id);
     $this->quiz = quiz_load($this->result->quiz_qid, $this->result->quiz_vid);
     $this->result_id = $result_id;
 
     // Resume a quiz from the database.
     drupal_set_message(t('Resuming a previous @quiz in-progress.', array('@quiz' => QUIZ_NAME)), 'status');
+  }
+
+  /**
+   * Returns the result ID for any current result set for the given quiz.
+   *
+   * @param int $uid
+   * @param int $qid Quiz version ID
+   * @param int $now
+   *   Timestamp used to check whether the quiz is still open. Default: current
+   *   time.
+   *
+   * @return int
+   *   If a quiz is still open and the user has not finished the quiz,
+   *   return the result set ID so that the user can continue. If no quiz is in
+   *   progress, this will return 0.
+   */
+  private function activeResultId($uid, $qid, $now = NULL) {
+    $sql = 'SELECT result.result_id'
+      . ' FROM {quiz_results} result'
+      . '   INNER JOIN {quiz_entity_revision} quiz ON result.quiz_vid = quiz.vid'
+      . ' WHERE'
+      . '   (quiz.quiz_always = :quiz_always OR (:between BETWEEN quiz.quiz_open AND quiz.quiz_close))'
+      . '   AND result.quiz_qid = :qid '
+      . '   AND result.uid = :uid '
+      . '   AND result.time_end IS NULL';
+
+    // Get any quiz that is open, for this user, and has not already been completed.
+    return (int) db_query($sql, array(
+          ':quiz_always' => 1,
+          ':between'     => $now ? $now : REQUEST_TIME,
+          ':qid'         => $qid,
+          ':uid'         => $uid
+      ))->fetchField();
   }
 
   /**
@@ -131,7 +175,7 @@ class QuizTakeController extends QuizTakeLegacyController {
     if ($this->quiz->takes > 0) {
       $taken = db_query("SELECT COUNT(*) AS takes FROM {quiz_results} WHERE uid = :uid AND quiz_qid = :qid", array(
           ':uid' => $this->account->uid,
-          ':qid' => $this->getQuizId()
+          ':qid' => $this->quiz->qid
         ))->fetchField();
       $allowed_times = format_plural($this->quiz->takes, '1 time', '@count times');
       $taken_times = format_plural($taken, '1 time', '@count times');
@@ -158,7 +202,7 @@ class QuizTakeController extends QuizTakeLegacyController {
     }
 
     // Check to see if the user is registered, and user alredy passed this quiz.
-    if ($this->quiz->show_passed && $this->account->uid && quiz()->getQuizHelper()->isPassed($this->account->uid, $this->getQuizId(), $this->quiz->vid)) {
+    if ($this->quiz->show_passed && $this->account->uid && quiz()->getQuizHelper()->isPassed($this->account->uid, $this->quiz->qid, $this->quiz->vid)) {
       $msg = t('You have already passed this @quiz.', array('@quiz' => QUIZ_NAME));
       drupal_set_message($msg, 'status');
     }
