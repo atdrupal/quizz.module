@@ -1,4 +1,4 @@
-Quiz.module [![Build Status](https://travis-ci.org/atdrupal/quiz.module.svg?branch=7.x-6.x)](https://travis-ci.org/atdrupal/quiz.module) [![Gitter chat](https://badges.gitter.im/atdrupal/quiz.module.png)](https://gitter.im/atdrupal/quiz.module)
+Quiz.module [![Build Status](https://travis-ci.org/atdrupal/quizz.module.svg?branch=7.x-6.x)](https://travis-ci.org/atdrupal/quizz.module) [![Gitter chat](https://badges.gitter.im/atdrupal/quizz.module.png)](https://gitter.im/atdrupal/quizz.module)
 ====
 
 Overview
