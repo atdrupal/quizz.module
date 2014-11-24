@@ -132,5 +132,5 @@ function scale_update_7600() {
   db_change_field('quiz_scale_properties', 'nid', 'qid', $spec_1);
 
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_scale_user_answers', 'question_nid', 'question_vid', $spec_2);
+  db_change_field('quiz_scale_user_answers', 'question_nid', 'question_qid', $spec_2);
 }
