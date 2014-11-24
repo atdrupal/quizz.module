@@ -11,7 +11,7 @@ class ShortAnswerTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('Short answer'),
         'description' => t('Unit test for Short answers question type.'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 

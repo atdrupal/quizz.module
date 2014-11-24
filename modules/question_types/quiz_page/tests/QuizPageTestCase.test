@@ -8,7 +8,7 @@ class QuizPageTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('Quiz page'),
         'description' => t('Unit test for quiz pages'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 

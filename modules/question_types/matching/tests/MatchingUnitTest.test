@@ -11,7 +11,7 @@ class MatchingTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('Matching'),
         'description' => t('Unit test for matching question type.'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 

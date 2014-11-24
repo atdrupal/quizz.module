@@ -11,7 +11,7 @@ class LongAnswerTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('Long answer'),
         'description' => t('Unit test for Long answers question type.'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 

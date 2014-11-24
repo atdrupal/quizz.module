@@ -11,7 +11,7 @@ class TrueFalseTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('True/False'),
         'description' => t('Unit test for true or false question type.'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 
