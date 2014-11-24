@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\quiz\Entity;
+namespace Drupal\quizz\Entity;
 
 use DatabaseTransaction;
-use Drupal\quiz\Entity\Result\Maintainer;
-use Drupal\quiz\Entity\Result\ScoreIO;
-use Drupal\quiz\Entity\Result\Writer;
+use Drupal\quizz\Entity\Result\Maintainer;
+use Drupal\quizz\Entity\Result\ScoreIO;
+use Drupal\quizz\Entity\Result\Writer;
 use EntityAPIController;
 
 class ResultController extends EntityAPIController {

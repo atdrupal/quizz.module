@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Controller\Legacy;
+namespace Drupal\quizz\Controller\Legacy;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 class QuizTakeLegacyController {
 

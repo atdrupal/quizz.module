@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Generator;
+namespace Drupal\quizz\Generator;
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Result;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 
 class ResultGenerator {
 

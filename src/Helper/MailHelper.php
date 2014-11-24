@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Helper;
+namespace Drupal\quizz\Helper;
 
 class MailHelper {
 

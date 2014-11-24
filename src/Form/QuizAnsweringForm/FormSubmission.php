@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\quiz\Form\QuizAnsweringForm;
+namespace Drupal\quizz\Form\QuizAnsweringForm;
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Result;
-use Drupal\quiz\Controller\QuizTakeBaseController;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
+use Drupal\quizz\Controller\QuizTakeBaseController;
 
 class FormSubmission extends QuizTakeBaseController {
 

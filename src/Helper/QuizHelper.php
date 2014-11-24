@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Helper;
+namespace Drupal\quizz\Helper;
 
-use Drupal\quiz\Helper\Quiz\AccessHelper;
-use Drupal\quiz\Helper\Quiz\TakeJumperHelper;
+use Drupal\quizz\Helper\Quiz\AccessHelper;
+use Drupal\quizz\Helper\Quiz\TakeJumperHelper;
 
 class QuizHelper {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Controller\Admin;
+namespace Drupal\quizz\Controller\Admin;
 
 class QuizAdminSettingsController {
 

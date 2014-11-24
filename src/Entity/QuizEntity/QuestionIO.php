@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Entity\QuizEntity;
+namespace Drupal\quizz\Entity\QuizEntity;
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Relationship;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Relationship;
 use PDO;
 
 class QuestionIO {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Controller;
+namespace Drupal\quizz\Controller;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 class QuizTakeBaseController {
 

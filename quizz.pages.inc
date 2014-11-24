@@ -7,21 +7,21 @@
  * This file contains function callbacks for forms and pages. Long or complex
  * functions are moved to classes.
  */
-use Drupal\quiz\Controller\Admin\QuizAdminSettingsController;
-use Drupal\quiz\Controller\Admin\QuizRevisionsAdminController;
-use Drupal\quiz\Controller\QuizQuestionFeedbackController;
-use Drupal\quiz\Controller\QuizTakeController;
-use Drupal\quiz\Controller\QuizTakeQuestionController;
-use Drupal\quiz\Controller\QuizUserResultController;
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Result;
-use Drupal\quiz\Form\QuizAdminEntityForm;
-use Drupal\quiz\Form\QuizAnsweringForm;
-use Drupal\quiz\Form\QuizCategorizedForm;
-use Drupal\quiz\Form\QuizForm;
-use Drupal\quiz\Form\QuizQuestionsForm;
-use Drupal\quiz\Form\QuizReportForm;
-use Drupal\quiz\Form\QuizTypeForm;
+use Drupal\quizz\Controller\Admin\QuizAdminSettingsController;
+use Drupal\quizz\Controller\Admin\QuizRevisionsAdminController;
+use Drupal\quizz\Controller\QuizQuestionFeedbackController;
+use Drupal\quizz\Controller\QuizTakeController;
+use Drupal\quizz\Controller\QuizTakeQuestionController;
+use Drupal\quizz\Controller\QuizUserResultController;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
+use Drupal\quizz\Form\QuizAdminEntityForm;
+use Drupal\quizz\Form\QuizAnsweringForm;
+use Drupal\quizz\Form\QuizCategorizedForm;
+use Drupal\quizz\Form\QuizForm;
+use Drupal\quizz\Form\QuizQuestionsForm;
+use Drupal\quizz\Form\QuizReportForm;
+use Drupal\quizz\Form\QuizTypeForm;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionPlugin;
 
@@ -80,7 +80,7 @@ function quiz_type_form_submit($form, &$form_state) {
  * @return string
  */
 function quiz_entity_adding_landing_page() {
-  return theme_render_template(drupal_get_path('module', 'quiz') . '/theme/quiz-adding-landing.tpl.php', array(
+  return theme_render_template(drupal_get_path('module', 'quizz') . '/theme/quiz-adding-landing.tpl.php', array(
       'quiz_types' => quiz_get_types()
   ));
 }
@@ -235,7 +235,7 @@ function quiz_question_take_page(QuizEntity $quiz, $page_number) {
  * Jumper form.
  */
 function quiz_jumper_form($form, $form_state, $questions, $current) {
-  $form['#attached']['js'][] = drupal_get_path('module', 'quiz') . '/misc/js/quiz.jumper.js';
+  $form['#attached']['js'][] = drupal_get_path('module', 'quizz') . '/misc/js/quiz.jumper.js';
   $form['question_number'] = array(
       '#type'          => 'select',
       '#options'       => $questions,
@@ -684,7 +684,7 @@ function _quiz_get_question_row($sub_form, $id, $item_type) {
 function theme_quiz_categorized_form($variables) {
   $form = $variables['form'];
 
-  drupal_add_js(drupal_get_path('module', 'quiz') . '/misc/js/quiz.admin.categorized-form.js');
+  drupal_add_js(drupal_get_path('module', 'quizz') . '/misc/js/quiz.admin.categorized-form.js');
 
   $rows = array();
   foreach ($form as $key => &$existing) {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Entity;
+namespace Drupal\quizz\Entity;
 
-use Drupal\quiz\Entity\QuizEntity\QuestionIO;
+use Drupal\quizz\Entity\QuizEntity\QuestionIO;
 use Drupal\quiz_question\Entity\Question;
 use Entity;
 
@@ -23,7 +23,7 @@ class QuizEntity extends Entity {
    * If status is -1, quiz is used as default properties when user uses quiz
    *  creating form.
    *
-   * @see \Drupal\quiz\Entity\QuizEntity\DefaultPropertiesIO.
+   * @see \Drupal\quizz\Entity\QuizEntity\DefaultPropertiesIO.
    * @var int
    */
   public $status;
@@ -76,7 +76,7 @@ class QuizEntity extends Entity {
   }
 
   /**
-   * @return \Drupal\quiz\Entity\QuizController
+   * @return \Drupal\quizz\Entity\QuizController
    */
   public function getController() {
     return quiz_controller();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Helper;
+namespace Drupal\quizz\Helper;
 
 /**
  * Date and time routines for use with quiz module.

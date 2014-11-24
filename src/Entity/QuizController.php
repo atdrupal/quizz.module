@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\quiz\Entity;
+namespace Drupal\quizz\Entity;
 
 use DatabaseTransaction;
-use Drupal\quiz\Entity\QuizEntity\DefaultPropertiesIO;
-use Drupal\quiz\Entity\QuizEntity\MaxScoreWriter;
-use Drupal\quiz\Entity\QuizEntity\ResultGenerator;
-use Drupal\quiz\Entity\QuizEntity\Stats;
+use Drupal\quizz\Entity\QuizEntity\DefaultPropertiesIO;
+use Drupal\quizz\Entity\QuizEntity\MaxScoreWriter;
+use Drupal\quizz\Entity\QuizEntity\ResultGenerator;
+use Drupal\quizz\Entity\QuizEntity\Stats;
 use EntityAPIController;
 use stdClass;
 

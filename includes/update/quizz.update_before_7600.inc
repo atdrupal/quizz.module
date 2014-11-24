@@ -1,7 +1,7 @@
 <?php
 
 // should have been named quiz_update_7401
-function quiz_update_7101(&$sandbox) {
+function quizz_update_7101(&$sandbox) {
   db_add_field('quiz_user_settings', 'show_passed', array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'size' => 'tiny'));
   return t('Done !');
 }
@@ -9,7 +9,7 @@ function quiz_update_7101(&$sandbox) {
 /**
  * Implements hook_update_N
  */
-function quiz_update_7402(&$sandbox) {
+function quizz_update_7402(&$sandbox) {
   if (!db_field_exists('quiz_node_properties', 'summary_pass_format')) {
     db_add_field('quiz_node_properties', 'summary_pass_format', array('type' => 'varchar', 'length' => 255));
     db_add_field('quiz_node_properties', 'summary_default_format', array('type' => 'varchar', 'length' => 255));
@@ -24,7 +24,7 @@ function quiz_update_7402(&$sandbox) {
  * Adds index on vid column to the quiz_node_results table and on child_vid to
  * the quiz_node_relationship table.
  */
-function quiz_update_7403() {
+function quizz_update_7403() {
   db_add_index('quiz_node_results', 'vid', array('vid'));
   db_add_index('quiz_node_relationship', 'child_id', array('child_vid'));
 }
@@ -32,7 +32,7 @@ function quiz_update_7403() {
 /**
  * Increase the maximum quiz size
  */
-function quiz_update_7404() {
+function quizz_update_7404() {
   db_change_field('quiz_node_properties', 'number_of_random_questions', 'number_of_random_questions', array(
       'type'     => 'int',
       'size'     => 'small',
@@ -53,12 +53,8 @@ function quiz_update_7404() {
 /**
  * Remove unsigned attribute from field time_start and time_end in quiz_node_results table.
  */
-function quiz_update_7405() {
-  $spec = array(
-      'type'     => 'int',
-      'unsigned' => FALSE,
-      'default'  => 0,
-  );
+function quizz_update_7405() {
+  $spec = array('type' => 'int', 'unsigned' => FALSE, 'default' => 0);
   db_change_field('quiz_node_results', 'time_start', 'time_start', $spec);
   db_change_field('quiz_node_results', 'time_end', 'time_end', $spec);
   return t('Removed unsigned attribute from field time_start and time_end in quiz_node_results table');
@@ -67,13 +63,8 @@ function quiz_update_7405() {
 /**
  * Adding columns mark answers as doubtful
  */
-function quiz_update_7406(&$sandbox) {
-  $spec = array(
-      'type'     => 'int',
-      'not null' => TRUE,
-      'default'  => 0,
-      'size'     => 'tiny'
-  );
+function quizz_update_7406(&$sandbox) {
+  $spec = array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny');
   db_add_field('quiz_node_results_answers', 'is_doubtful', $spec);
   db_add_field('quiz_node_properties', 'mark_doubtful', $spec);
   return t('Added new format fields to the tables');
@@ -82,7 +73,7 @@ function quiz_update_7406(&$sandbox) {
 /**
  * Adding auto update max score
  */
-function quiz_update_7407(&$sandbox) {
+function quizz_update_7407(&$sandbox) {
   $spec = array(
       'type'     => 'int',
       'size'     => 'tiny',
@@ -96,7 +87,7 @@ function quiz_update_7407(&$sandbox) {
 /**
  * Adding userpoints tid column
  */
-function quiz_update_7409(&$sandbox) {
+function quizz_update_7409(&$sandbox) {
   $table = 'quiz_node_properties';
   $schema = drupal_get_schema_unprocessed('quiz', $table);
   foreach (array('userpoints_tid') as $field) {
@@ -108,7 +99,7 @@ function quiz_update_7409(&$sandbox) {
 /**
  * Add new layout field to the quiz_node_results table.
  */
-function quiz_update_7500() {
+function quizz_update_7500() {
   $spec = array(
       'serialize'   => TRUE,
       'type'        => 'text',
@@ -122,7 +113,7 @@ function quiz_update_7500() {
 /**
  * Add new result_answer_id field to the quiz_node_results_answers table.
  */
-function quiz_update_7501() {
+function quizz_update_7501() {
   db_drop_primary_key('quiz_node_results_answers');
   db_add_unique_key('quiz_node_results_answers', 'result_answer', array('result_id', 'question_nid', 'question_vid'));
   $spec = array(
@@ -138,7 +129,7 @@ function quiz_update_7501() {
 /**
  * Add new qnr_id field to the quiz_node_relationship table.
  */
-function quiz_update_7502() {
+function quizz_update_7502() {
   db_drop_primary_key('quiz_node_relationship');
   db_add_unique_key('quiz_node_relationship', 'parent_child', array('parent_nid', 'parent_vid', 'child_nid', 'child_vid'));
   $spec = array(
@@ -154,7 +145,7 @@ function quiz_update_7502() {
 /**
  * Add new qnr_pid field to the quiz_node_relationship table.
  */
-function quiz_update_7503() {
+function quizz_update_7503() {
   $spec = array(
       'type'     => 'int',
       'size'     => 'normal',
@@ -170,7 +161,7 @@ function quiz_update_7503() {
  * Allow time_start and time_end to be NULL. The time "0" is still a valid time.
  * This lets us do better filtering in Views (where NULL).
  */
-function quiz_update_7504() {
+function quizz_update_7504() {
   $spec = array(
       'type'     => 'int',
       'unsigned' => FALSE,
@@ -184,7 +175,7 @@ function quiz_update_7504() {
 /**
  * Revamping quiz feedback options.
  */
-function quiz_update_7505() {
+function quizz_update_7505() {
   db_add_field('quiz_node_properties', 'review_options', array(
       'type'      => 'text',
       'serialize' => TRUE,
@@ -220,7 +211,7 @@ function quiz_update_7505() {
 /**
  * Add qnp_id and uid so we can have better quiz node defaults.
  */
-function quiz_update_7506() {
+function quizz_update_7506() {
   db_drop_primary_key('quiz_node_properties');
   db_add_field('quiz_node_properties', 'qnp_id', array(
       'type' => 'serial',
@@ -241,7 +232,7 @@ function quiz_update_7506() {
 /**
  * Add allow_change to restrict users from changing answers.
  */
-function quiz_update_7507() {
+function quizz_update_7507() {
   db_add_field('quiz_node_properties', 'allow_change', array(
       'type'     => 'int',
       'size'     => 'small',
@@ -254,7 +245,7 @@ function quiz_update_7507() {
  * Make our answer_timestamp field NULLable for storing the attempt layout in
  * the database.
  */
-function quiz_update_7509() {
+function quizz_update_7509() {
   db_change_field('quiz_node_results_answers', 'answer_timestamp', 'answer_timestamp', array(
       'type'     => 'int',
       'unsigned' => TRUE,

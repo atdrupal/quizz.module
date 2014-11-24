@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Form;
+namespace Drupal\quizz\Form;
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Form\QuizForm\FormValidation;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Form\QuizForm\FormValidation;
 
 class QuizAdminEntityForm {
 

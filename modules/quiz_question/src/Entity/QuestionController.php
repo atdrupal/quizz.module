@@ -3,8 +3,8 @@
 namespace Drupal\quiz_question\Entity;
 
 use DatabaseTransaction;
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Relationship;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Relationship;
 use EntityAPIController;
 
 class QuestionController extends EntityAPIController {

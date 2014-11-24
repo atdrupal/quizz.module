@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Controller;
+namespace Drupal\quizz\Controller;
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Result;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 
 abstract class QuizResultBaseController {
 

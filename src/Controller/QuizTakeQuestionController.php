@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Controller;
+namespace Drupal\quizz\Controller;
 
-use Drupal\quiz\Entity\Result;
-use Drupal\quiz\Controller\QuizTakeBaseController;
+use Drupal\quizz\Entity\Result;
+use Drupal\quizz\Controller\QuizTakeBaseController;
 
 class QuizTakeQuestionController extends QuizTakeBaseController {
 
@@ -84,7 +84,7 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
     // These are the two button op values that are accepted for answering questions.
     $vars = array('quiz_button_1' => t('Finish'), 'quiz_button_2' => t('Next'));
     drupal_add_js($vars, array('type' => 'setting'));
-    drupal_add_js(drupal_get_path('module', 'quiz') . '/misc/js/quiz.take.count-down.js');
+    drupal_add_js(drupal_get_path('module', 'quizz') . '/misc/js/quiz.take.count-down.js');
   }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quiz_question\Entity\Question;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Entity\QuizEntity;
+namespace Drupal\quizz\Entity\QuizEntity;
 
 class MaxScoreWriter {
 

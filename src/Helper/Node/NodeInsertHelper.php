@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Helper\Node;
+namespace Drupal\quizz\Helper\Node;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 class NodeInsertHelper extends NodeHelper {
 

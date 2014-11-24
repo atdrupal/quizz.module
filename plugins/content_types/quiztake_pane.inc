@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Controller\QuizTakeController;
+use Drupal\quizz\Controller\QuizTakeController;
 
 /**
  * This plugin array is more or less self documenting

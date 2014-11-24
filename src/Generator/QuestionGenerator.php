@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Generator;
+namespace Drupal\quizz\Generator;
 
 use Drupal\quiz_question\Entity\Question;
 use RuntimeException;

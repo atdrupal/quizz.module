@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Generator;
+namespace Drupal\quizz\Generator;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 class Generator {
 

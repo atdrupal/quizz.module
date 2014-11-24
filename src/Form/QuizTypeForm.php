@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Form;
+namespace Drupal\quizz\Form;
 
 class QuizTypeForm {
 

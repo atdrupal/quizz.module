@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Entity\Result;
+namespace Drupal\quizz\Entity\Result;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 use stdClass;
 
 class Writer {

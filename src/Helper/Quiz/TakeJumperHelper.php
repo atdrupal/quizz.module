@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Helper\Quiz;
+namespace Drupal\quizz\Helper\Quiz;
 
 class TakeJumperHelper {
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Entity\QuizEntity;
+namespace Drupal\quizz\Entity\QuizEntity;
 
-use Drupal\quiz\Helper\FormHelper;
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Helper\FormHelper;
+use Drupal\quizz\Entity\QuizEntity;
 
 /**
  * Read and write default properties for quiz entity.

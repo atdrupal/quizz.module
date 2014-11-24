@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Generator;
+namespace Drupal\quizz\Generator;
 
 class QuizGenerator {
 

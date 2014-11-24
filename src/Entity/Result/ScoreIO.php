@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Entity\Result;
+namespace Drupal\quizz\Entity\Result;
 
-use Drupal\quiz\Entity\Result;
+use Drupal\quizz\Entity\Result;
 use stdClass;
 
 class ScoreIO {

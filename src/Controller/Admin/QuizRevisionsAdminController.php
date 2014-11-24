@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\quiz\Controller\Admin;
+namespace Drupal\quizz\Controller\Admin;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 class QuizRevisionsAdminController {
 

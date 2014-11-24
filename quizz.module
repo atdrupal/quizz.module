@@ -1,8 +1,8 @@
 <?php
 
-use Drupal\quiz\Entity\QuizType;
-use Drupal\quiz\Entity\Result;
-use Drupal\quiz\Quiz;
+use Drupal\quizz\Entity\QuizType;
+use Drupal\quizz\Entity\Result;
+use Drupal\quizz\Quiz;
 
 /**
  * @file
@@ -20,7 +20,7 @@ use Drupal\quiz\Quiz;
  *
  * Views support is included in includes/views/quiz.views.inc
  */
-define('QUIZ_VIEWS_DIR', drupal_get_path('module', 'quiz') . '/includes/views');
+define('QUIZ_VIEWS_DIR', drupal_get_path('module', 'quizz') . '/includes/views');
 
 /**
  * Include hook implementations.
@@ -54,9 +54,9 @@ define('QUIZ_KEEP_ALL', 2);
  *
  * @staticvar Quiz $quiz
  * @param string $className
- * @return \Drupal\quiz\Quiz
+ * @return \Drupal\quizz\Quiz
  */
-function quiz($className = 'Drupal\quiz\Quiz') {
+function quiz($className = 'Drupal\quizz\Quiz') {
   if (!$obj = &drupal_static(__FUNCTION__)) {
     $obj = new $className;
   }
@@ -66,7 +66,7 @@ function quiz($className = 'Drupal\quiz\Quiz') {
 /**
  * Get controller for quiz entity.
  *
- * @return \Drupal\quiz\Entity\QuizController
+ * @return \Drupal\quizz\Entity\QuizController
  */
 function quiz_controller() {
   return entity_get_controller('quiz_entity');
@@ -75,7 +75,7 @@ function quiz_controller() {
 /**
  * Get controller for quiz result entity.
  *
- * @return \Drupal\quiz\Entity\ResultController
+ * @return \Drupal\quizz\Entity\ResultController
  */
 function quiz_result_controller() {
   return entity_get_controller('quiz_result');
@@ -84,7 +84,7 @@ function quiz_result_controller() {
 /**
  * Get controller for answer entity.
  *
- * @return \Drupal\quiz\Entity\AnswerController
+ * @return \Drupal\quizz\Entity\AnswerController
  */
 function quiz_answer_controller() {
   return entity_get_controller('quiz_result_answer');
@@ -93,7 +93,7 @@ function quiz_answer_controller() {
 /**
  * Gets an array of all quiz types, keyed by the type name.
  *
- * @return \Drupal\quiz\Entity\QuizType[]
+ * @return \Drupal\quizz\Entity\QuizType[]
  */
 function quiz_get_types() {
   return entity_load_multiple_by_name('quiz_type');
@@ -103,7 +103,7 @@ function quiz_get_types() {
  * Get quiz-type by machine name.
  *
  * @param string $name
- * @return \Drupal\quiz\Entity\QuizType
+ * @return \Drupal\quizz\Entity\QuizType
  */
 function quiz_type_load($name) {
   $type = entity_load_multiple_by_name('quiz_type', array($name));
@@ -113,7 +113,7 @@ function quiz_type_load($name) {
 /**
  * Load quiz entity
  *
- * @return \Drupal\quiz\Entity\QuizEntity
+ * @return \Drupal\quizz\Entity\QuizEntity
  */
 function quiz_load($id = NULL, $vid = NULL, $reset = FALSE) {
   $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
@@ -125,7 +125,7 @@ function quiz_load($id = NULL, $vid = NULL, $reset = FALSE) {
 /**
  * Shortcut to entity_load_single().
  *
- * @return \Drupal\quiz\Entity\Result
+ * @return \Drupal\quizz\Entity\Result
  */
 function quiz_result_load($result_id) {
   return entity_load_single('quiz_result', $result_id);
@@ -135,7 +135,7 @@ function quiz_result_load($result_id) {
  * Get relationship entity.
  *
  * @param int $relationship_id
- * @return \Drupal\quiz\Entity\Relationship
+ * @return \Drupal\quizz\Entity\Relationship
  */
 function quiz_relationship_load($relationship_id) {
   return entity_load_single('quiz_relationship', $relationship_id);
