@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\quiz\Helper;
+namespace Drupal\quizz\Helper;
 
-use Drupal\quiz\Helper\Node\NodeInsertHelper;
-use Drupal\quiz\Helper\Node\NodeUpdateHelper;
-use Drupal\quiz\Helper\Node\NodeValidateHelper;
+use Drupal\quizz\Helper\Node\NodeInsertHelper;
+use Drupal\quizz\Helper\Node\NodeUpdateHelper;
+use Drupal\quizz\Helper\Node\NodeValidateHelper;
 
 class NodeHelper {
 

@@ -12,7 +12,7 @@ use stdClass;
  */
 abstract class QuizQuestionResponse {
 
-  /** @var \Drupal\quiz\Entity\Result */
+  /** @var \Drupal\quizz\Entity\Result */
   protected $result;
   protected $result_id = 0;
   protected $is_correct = FALSE;

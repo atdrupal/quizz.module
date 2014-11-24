@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_stats\Controller;
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 class RevisionListingController {
 

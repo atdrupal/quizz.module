@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Entity;
+namespace Drupal\quizz\Entity;
 
 use EntityDefaultMetadataController;
 

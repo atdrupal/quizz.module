@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Form;
+namespace Drupal\quizz\Form;
 
 use Drupal\quiz_question\Entity\Question;
 
@@ -11,11 +11,11 @@ class QuizReportForm {
    *
    * @param array $form
    * @param array $form_state
-   * @param \Drupal\quiz\Entity\Result $result
+   * @param \Drupal\quizz\Entity\Result $result
    * @param Question[] $questions
    * @return array
    */
-  public function getForm($form, $form_state, \Drupal\quiz\Entity\Result $result, $questions) {
+  public function getForm($form, $form_state, \Drupal\quizz\Entity\Result $result, $questions) {
     $form['#tree'] = TRUE;
 
     foreach ($questions as $question) {

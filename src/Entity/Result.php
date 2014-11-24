@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Entity;
+namespace Drupal\quizz\Entity;
 
 use Entity;
 
@@ -9,7 +9,7 @@ class Result extends Entity {
   /** @var int */
   public $result_id;
 
-  /** @var \Drupal\quiz\Entity\QuizEntity */
+  /** @var \Drupal\quizz\Entity\QuizEntity */
   private $quiz;
 
   /** @var int */
@@ -48,7 +48,7 @@ class Result extends Entity {
   /**
    * Get quiz entity.
    *
-   * @return \Drupal\quiz\Entity\QuizEntity
+   * @return \Drupal\quizz\Entity\QuizEntity
    */
   public function getQuiz() {
     if (NULL == $this->quiz) {

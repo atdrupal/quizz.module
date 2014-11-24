@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Helper\HookImplementation;
+namespace Drupal\quizz\Helper\HookImplementation;
 
 class HookPermission {
 

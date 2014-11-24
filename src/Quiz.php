@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\quiz;
+namespace Drupal\quizz;
 
-use Drupal\quiz\Helper\HookImplementation;
-use Drupal\quiz\Helper\MailHelper;
-use Drupal\quiz\Helper\NodeHelper;
-use Drupal\quiz\Helper\QuizHelper;
+use Drupal\quizz\Helper\HookImplementation;
+use Drupal\quizz\Helper\MailHelper;
+use Drupal\quizz\Helper\NodeHelper;
+use Drupal\quizz\Helper\QuizHelper;
 
 /**
  * Wrapper for helper classes. We just use classes to organise functions, make

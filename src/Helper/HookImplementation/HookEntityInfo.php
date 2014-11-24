@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Helper\HookImplementation;
+namespace Drupal\quizz\Helper\HookImplementation;
 
 class HookEntityInfo {
 
@@ -25,19 +25,19 @@ class HookEntityInfo {
         'label'            => t('!quiz type', array('!quiz' => QUIZ_NAME)),
         'plural label'     => t('!quiz types', array('!quiz' => QUIZ_NAME)),
         'description'      => t('Types of !quiz.', array('!quiz' => QUIZ_NAME)),
-        'entity class'     => 'Drupal\quiz\Entity\QuizType',
-        'controller class' => 'Drupal\quiz\Entity\QuizTypeController',
+        'entity class'     => 'Drupal\quizz\Entity\QuizType',
+        'controller class' => 'Drupal\quizz\Entity\QuizTypeController',
         'base table'       => 'quiz_type',
         'fieldable'        => FALSE,
         'bundle of'        => 'quiz_entity',
         'exportable'       => TRUE,
         'entity keys'      => array('id' => 'id', 'name' => 'type', 'label' => 'label'),
         'access callback'  => 'quiz_type_access',
-        'module'           => 'quiz',
+        'module'           => 'quizz',
         'admin ui'         => array(
             'path'             => 'admin/structure/quiz',
-            'file'             => 'quiz.pages.inc',
-            'controller class' => 'Drupal\quiz\Entity\QuizTypeUIController',
+            'file'             => 'quizz.pages.inc',
+            'controller class' => 'Drupal\quizz\Entity\QuizTypeUIController',
         ),
     );
   }
@@ -46,10 +46,10 @@ class HookEntityInfo {
     $entity_info = array(
         'label'                     => QUIZ_NAME,
         'description'               => t('!quiz entity', array('!quiz' => QUIZ_NAME)),
-        'entity class'              => 'Drupal\quiz\Entity\QuizEntity',
-        'controller class'          => 'Drupal\quiz\Entity\QuizController',
-        'metadata controller class' => 'Drupal\quiz\Entity\QuizMetadataController',
-        'views controller class'    => 'Drupal\quiz\Entity\QuizViewsController',
+        'entity class'              => 'Drupal\quizz\Entity\QuizEntity',
+        'controller class'          => 'Drupal\quizz\Entity\QuizController',
+        'metadata controller class' => 'Drupal\quizz\Entity\QuizMetadataController',
+        'views controller class'    => 'Drupal\quizz\Entity\QuizViewsController',
         'base table'                => 'quiz_entity',
         'revision table'            => 'quiz_entity_revision',
         'fieldable'                 => TRUE,
@@ -58,15 +58,15 @@ class HookEntityInfo {
         'access callback'           => 'quiz_entity_access_callback',
         'label callback'            => 'entity_class_label',
         'uri callback'              => 'entity_class_uri',
-        'module'                    => 'quiz',
+        'module'                    => 'quizz',
         'bundles'                   => array(),
         'view modes'                => array(
             'question' => array('label' => t('Question'), 'custom settings' => TRUE),
         ),
         'admin ui'                  => array(
             'path'             => 'admin/content/quiz',
-            'file'             => 'quiz.pages.inc',
-            'controller class' => 'Drupal\quiz\Entity\QuizUIController',
+            'file'             => 'quizz.pages.inc',
+            'controller class' => 'Drupal\quizz\Entity\QuizUIController',
         ),
     );
 
@@ -98,36 +98,36 @@ class HookEntityInfo {
   private function getQuizQuestionRelationshipInfo() {
     return array(
         'label'                     => t('Quiz question relationship'),
-        'entity class'              => 'Drupal\quiz\Entity\Relationship',
+        'entity class'              => 'Drupal\quizz\Entity\Relationship',
         'controller class'          => 'EntityAPIController',
         'base table'                => 'quiz_relationship',
         'entity keys'               => array('id' => 'qr_id'),
         'views controller class'    => 'EntityDefaultViewsController',
-        'metadata controller class' => 'Drupal\quiz\Entity\RelationshipMetadataController',
+        'metadata controller class' => 'Drupal\quizz\Entity\RelationshipMetadataController',
     );
   }
 
   private function getQuizResultInfo() {
     return array(
         'label'                     => t('Quiz result'),
-        'entity class'              => 'Drupal\quiz\Entity\Result',
-        'controller class'          => 'Drupal\quiz\Entity\ResultController',
+        'entity class'              => 'Drupal\quizz\Entity\Result',
+        'controller class'          => 'Drupal\quizz\Entity\ResultController',
         'base table'                => 'quiz_results',
         'entity keys'               => array('id' => 'result_id'),
         'views controller class'    => 'EntityDefaultViewsController',
-        'metadata controller class' => 'Drupal\quiz\Entity\ResultMetadataController',
+        'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
     );
   }
 
   private function getQuizResultAnswerInfo() {
     return array(
         'label'                     => t('Quiz result answer'),
-        'entity class'              => 'Drupal\quiz\Entity\Answer',
-        'controller class'          => 'Drupal\quiz\Entity\AnswerController',
+        'entity class'              => 'Drupal\quizz\Entity\Answer',
+        'controller class'          => 'Drupal\quizz\Entity\AnswerController',
         'base table'                => 'quiz_results_answers',
         'entity keys'               => array('id' => 'result_answer_id'),
         'views controller class'    => 'EntityDefaultViewsController',
-        'metadata controller class' => 'Drupal\quiz\Entity\AnswerMetadataController',
+        'metadata controller class' => 'Drupal\quizz\Entity\AnswerMetadataController',
     );
   }
 

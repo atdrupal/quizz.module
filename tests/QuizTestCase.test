@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quiz_question\Entity\Question;
 
 /**
@@ -24,7 +24,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
    *   Array of user permissions to add.
    */
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'quiz';
+    $modules[] = 'quizz';
     $modules[] = 'quiz_question';
     foreach ($this->extraModules as $module) {
       if (!in_array($module, $modules)) {

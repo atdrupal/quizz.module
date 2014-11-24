@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Entity\Views;
+namespace Drupal\quizz\Entity\Views;
 
 class QuizEntityEditLink extends QuizEntityLink {
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Form\QuizForm;
+namespace Drupal\quizz\Form\QuizForm;
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Helper\FormHelper;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Helper\FormHelper;
 
 class FormDefinition extends FormHelper {
 
@@ -50,7 +50,7 @@ class FormDefinition extends FormHelper {
     }
 
     $form['#quiz'] = $this->quiz;
-    $form['#attached']['js'][] = drupal_get_path('module', 'quiz') . '/misc/js/quiz.entity-form.js';
+    $form['#attached']['js'][] = drupal_get_path('module', 'quizz') . '/misc/js/quiz.entity-form.js';
 
     $form['title'] = array(
         '#type'          => 'textfield',

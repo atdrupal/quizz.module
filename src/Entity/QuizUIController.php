@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Entity;
+namespace Drupal\quizz\Entity;
 
 use EntityDefaultUIController;
 
@@ -11,8 +11,8 @@ class QuizUIController extends EntityDefaultUIController {
     $items['admin/content/quiz']['type'] = MENU_LOCAL_TASK;
 
     $base = array(
-        'file path' => drupal_get_path('module', 'quiz'),
-        'file'      => 'quiz.pages.inc',
+        'file path' => drupal_get_path('module', 'quizz'),
+        'file'      => 'quizz.pages.inc',
     );
 
     $this->addQuizAddLinks($items, $base);
@@ -106,7 +106,7 @@ class QuizUIController extends EntityDefaultUIController {
         'type'             => MENU_CALLBACK,
         'access callback'  => 'entity_access',
         'access arguments' => array('create', 'quiz_entity', 1),
-        'page callback'    => 'Drupal\quiz\Form\QuizCategorizedForm::categorizedTermAhah',
+        'page callback'    => 'Drupal\quizz\Form\QuizCategorizedForm::categorizedTermAhah',
     );
 
     if (module_exists('devel')) {
@@ -134,8 +134,8 @@ class QuizUIController extends EntityDefaultUIController {
           'title arguments'  => array('@quiz' => QUIZ_NAME),
           'access callback'  => 'entity_access',
           'access arguments' => array('create', 'quiz_entity'),
-          'file path'        => drupal_get_path('module', 'quiz'),
-          'file'             => 'quiz.pages.inc',
+          'file path'        => drupal_get_path('module', 'quizz'),
+          'file'             => 'quizz.pages.inc',
           'page callback'    => 'quiz_entity_adding_landing_page',
       );
 
@@ -147,8 +147,8 @@ class QuizUIController extends EntityDefaultUIController {
             'access arguments' => array('create', 'quiz_entity'),
             'page callback'    => 'quiz_entity_adding_page',
             'page arguments'   => array($name),
-            'file path'        => drupal_get_path('module', 'quiz'),
-            'file'             => 'quiz.pages.inc',
+            'file path'        => drupal_get_path('module', 'quizz'),
+            'file'             => 'quizz.pages.inc',
         );
       }
     }
@@ -166,16 +166,16 @@ class QuizUIController extends EntityDefaultUIController {
     $items['quiz/%quiz/take/%question_number'] = $base + array(
         'access callback'  => 'quiz_access_question',
         'access arguments' => array(1, 3),
-        'file path'        => drupal_get_path('module', 'quiz'),
-        'file'             => 'quiz.pages.inc',
+        'file path'        => drupal_get_path('module', 'quizz'),
+        'file'             => 'quizz.pages.inc',
         'page callback'    => 'quiz_question_take_page',
         'page arguments'   => array(1, 3),
     );
 
     $items['quiz/%quiz/take/%question_number/feedback'] = array(
         'title'            => 'Feedback',
-        'file path'        => drupal_get_path('module', 'quiz'),
-        'file'             => 'quiz.pages.inc',
+        'file path'        => drupal_get_path('module', 'quizz'),
+        'file'             => 'quizz.pages.inc',
         'page callback'    => 'quiz_question_feedback_page',
         'page arguments'   => array(1, 3),
         'access callback'  => 'quiz_question_feedback_access',

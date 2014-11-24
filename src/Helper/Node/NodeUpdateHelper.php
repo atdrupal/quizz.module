@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Helper\Node;
+namespace Drupal\quizz\Helper\Node;
 
 use PDO;
 

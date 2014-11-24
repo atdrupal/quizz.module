@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 /**
  * Specialized implementation of hook_page_manager_task_tasks(). See api-task.html for

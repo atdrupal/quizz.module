@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Controller;
+namespace Drupal\quizz\Controller;
 
 /**
  * Callback for:

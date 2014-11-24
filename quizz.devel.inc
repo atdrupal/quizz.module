@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Generator\Generator;
+use Drupal\quizz\Generator\Generator;
 
 function quiz_generate_form($form, $form_state) {
   foreach (quiz_get_types() as $name => $quiz_type) {

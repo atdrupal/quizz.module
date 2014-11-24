@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\quiz\Helper\Quiz;
+namespace Drupal\quizz\Helper\Quiz;
 
-use Drupal\quiz\Controller\QuizTakeController;
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Quiz;
+use Drupal\quizz\Controller\QuizTakeController;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Quiz;
 use stdClass;
 
 /**

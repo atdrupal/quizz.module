@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz\Schema;
+namespace Drupal\quizz\Schema;
 
 class Schema7060 {
 

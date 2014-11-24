@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\quiz\Helper;
+namespace Drupal\quizz\Helper;
 
-use Drupal\quiz\Helper\HookImplementation\HookEntityInfo;
-use Drupal\quiz\Helper\HookImplementation\HookFieldExtraFields;
-use Drupal\quiz\Helper\HookImplementation\HookMenu;
-use Drupal\quiz\Helper\HookImplementation\HookPermission;
-use Drupal\quiz\Helper\HookImplementation\HookQuizScored;
-use Drupal\quiz\Helper\HookImplementation\HookUserCancel;
+use Drupal\quizz\Helper\HookImplementation\HookEntityInfo;
+use Drupal\quizz\Helper\HookImplementation\HookFieldExtraFields;
+use Drupal\quizz\Helper\HookImplementation\HookMenu;
+use Drupal\quizz\Helper\HookImplementation\HookPermission;
+use Drupal\quizz\Helper\HookImplementation\HookQuizScored;
+use Drupal\quizz\Helper\HookImplementation\HookUserCancel;
 
 class HookImplementation {
 

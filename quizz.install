@@ -1,17 +1,17 @@
 <?php
 
-use Drupal\quiz\Schema\Schema7060;
+use Drupal\quizz\Schema\Schema7060;
 
 /**
  * @file
  * Quiz install schema for installing the quiz module
  */
-require_once dirname(__FILE__) . '/includes/update/quiz.update_before_7600.inc';
+require_once dirname(__FILE__) . '/includes/update/quizz.update_before_7600.inc';
 
 /**
  * Implements hook_install().
  */
-function quiz_install() {
+function quizz_install() {
   // Create default quiz type. In case the module is installed via an
   // installation profile, skip that.
   if (!drupal_installation_attempted()) {
@@ -27,7 +27,7 @@ function quiz_install() {
 /**
  * Implements hook_schema().
  */
-function quiz_schema() {
+function quizz_schema() {
   require_once dirname(__FILE__) . '/src/Schema/Schema7060.php';
   $schema = new Schema7060();
   return $schema->get();
@@ -37,7 +37,7 @@ function quiz_schema() {
  * Implements hook_update_N()
  */
 // should have been named quiz_update_7400
-function quiz_update_7100(&$sandbox) {
+function quizz_update_7100(&$sandbox) {
   db_add_field('quiz_node_properties', 'show_passed', array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'size' => 'tiny'));
   return t('Show passed field added to quiz config.');
 }
@@ -45,7 +45,7 @@ function quiz_update_7100(&$sandbox) {
 /**
  * Implements hook_uninstall().
  */
-function quiz_uninstall() {
+function quizz_uninstall() {
   db_delete('variable')
     ->condition('name', "quiz_%", 'like')
     ->execute();
@@ -54,7 +54,7 @@ function quiz_uninstall() {
 /**
  * Enable required modules for quiz-6.x
  */
-function quiz_update_7599() {
+function quizz_update_7599() {
   module_enable(array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload'));
   registry_rebuild();
   drupal_flush_all_caches();
@@ -64,7 +64,7 @@ function quiz_update_7599() {
 /**
  * Update schema for quiz when it becomes entity.
  */
-function quiz_update_7600() {
+function quizz_update_7600() {
   require_once dirname(__FILE__) . '/src/Schema/Schema7060.php';
   $schema = new Schema7060();
   $tables = $schema->get();
@@ -82,7 +82,7 @@ function quiz_update_7600() {
 /**
  * Update schema for quiz when it becomes entity.
  */
-function quiz_update_7601() {
+function quizz_update_7601() {
   db_rename_table('quiz_node_relationship', 'quiz_relationship');
   db_change_field('quiz_relationship', 'qnr_id', 'qr_id', array('type' => 'serial', 'size' => 'normal', 'unsigned' => TRUE, 'not null' => TRUE));
   db_change_field('quiz_relationship', 'parent_nid', 'quiz_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
@@ -105,7 +105,7 @@ function quiz_update_7601() {
 /**
  * Convert quiz nodes to quiz entity
  */
-function quiz_update_7602() {
+function quizz_update_7602() {
   // create temp columns quiz_revision.{node_nid, node_vid} to save old data
   db_add_field('quiz_entity', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_add_index('quiz_entity', 'quiz_node', array('node_nid'));
@@ -168,7 +168,7 @@ function _quiz_update_7602($row) {
 /**
  * Convet quiz-node fields data to quiz entity
  */
-function quiz_update_7603() {
+function quizz_update_7603() {
   // quiz node type is defined by quiz.module, but this modules no longer powers
   // it. Reown to core 'node' module.
   db_update("UDPATE {node_type} set module = 'node' WHERE type='quiz'");
@@ -223,7 +223,7 @@ function _quiz_update_7603($quiz_node, $field_names) {
 /**
  * Change path aliases from quiz-node to quiz-entity
  */
-function quiz_update_7604() {
+function quizz_update_7604() {
   $select = db_select('quiz_entity');
   $select->fields('quiz_entity', array('qid', 'node_nid'));
   $result = $select->execute()->fetchAll();
@@ -238,7 +238,7 @@ function quiz_update_7604() {
 /**
  * Clean up data of when quiz was node.
  */
-function quiz_update_7605() {
+function quizz_update_7605() {
   # db_drop_table('quiz_node_properties');
   # delete all quiz nodes?
   # delete quiz node type?

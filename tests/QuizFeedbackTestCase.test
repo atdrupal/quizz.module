@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizEntity;
 
 /**
  * Base test class for Quiz questions.

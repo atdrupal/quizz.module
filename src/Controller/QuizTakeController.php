@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\quiz\Controller;
+namespace Drupal\quizz\Controller;
 
-use Drupal\quiz\Controller\Legacy\QuizTakeLegacyController;
-use Drupal\quiz\Entity\Result;
+use Drupal\quizz\Controller\Legacy\QuizTakeLegacyController;
+use Drupal\quizz\Entity\Result;
 use RuntimeException;
 use stdClass;
 

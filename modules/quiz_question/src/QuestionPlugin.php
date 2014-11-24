@@ -2,8 +2,8 @@
 
 namespace Drupal\quiz_question;
 
-use Drupal\quiz\Controller\QuizQuestionFeedbackController;
-use Drupal\quiz\Entity\QuizEntity;
+use Drupal\quizz\Controller\QuizQuestionFeedbackController;
+use Drupal\quizz\Entity\QuizEntity;
 
 /**
  * QUESTION IMPLEMENTATION FUNCTIONS

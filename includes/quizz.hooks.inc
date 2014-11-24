@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\Result;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 
 /**
  * @file
@@ -11,7 +11,7 @@ use Drupal\quiz\Entity\Result;
 /**
  * Implements hook_help().
  */
-function quiz_help($path, $arg) {
+function quizz_help($path, $arg) {
   switch ($path) {
     case 'admin/help#quiz':
       return _filter_autop(t('The quiz module allows users to administer a quiz, as a sequence of questions, and track the answers given. It allows for the creation of questions (and their answers), and organizes these questions into a quiz. Its target audience includes educational institutions, online training programs, employers, and people who just want to add a fun activity for their visitors to their Drupal site.
@@ -27,7 +27,7 @@ For more information about quiz, and resources on how to use quiz, see the <a hr
 /**
  * Implements hook_views_api().
  */
-function quiz_views_api() {
+function quizz_views_api() {
   return array('api' => '3.0', 'path' => QUIZ_VIEWS_DIR);
 }
 
@@ -35,7 +35,7 @@ function quiz_views_api() {
  * Implements hook_ctools_plugin_directory() to let the system know
  * where our task and task_handler plugins are.
  */
-function quiz_ctools_plugin_directory($owner, $plugin_type) {
+function quizz_ctools_plugin_directory($owner, $plugin_type) {
   if ($owner === 'page_manager') {
     return 'plugins/page_manager/' . $plugin_type;
   }
@@ -47,7 +47,7 @@ function quiz_ctools_plugin_directory($owner, $plugin_type) {
 /**
  * Implements hook_ctools_plugin_api().
  */
-function quiz_ctools_plugin_api($module, $api) {
+function quizz_ctools_plugin_api($module, $api) {
   if ($module === 'page_manager' && $api === 'pages_default') {
     return array('version' => 1);
   }
@@ -56,28 +56,28 @@ function quiz_ctools_plugin_api($module, $api) {
 /**
  * Implements hook_entity_info().
  */
-function quiz_entity_info() {
+function quizz_entity_info() {
   return quiz()->getHookImplementation()->getHookEntityInfo()->execute();
 }
 
 /**
  * Implements hook_field_extra_fields().
  */
-function quiz_field_extra_fields() {
+function quizz_field_extra_fields() {
   return quiz()->getHookImplementation()->getHookFieldExtraFields()->execute();
 }
 
 /**
  * Implements hook_permission().
  */
-function quiz_permission() {
+function quizz_permission() {
   return quiz()->getHookImplementation()->getHookPermission()->execute();
 }
 
 /**
  * Implements hook_admin_paths().
  */
-function quiz_admin_paths() {
+function quizz_admin_paths() {
   $items = array();
 
   if (variable_get('node_admin_theme', TRUE)) {
@@ -94,7 +94,7 @@ function quiz_admin_paths() {
 /**
  * Implements hook_action_info().
  */
-function quiz_action_info() {
+function quizz_action_info() {
   $actions = array();
 
   $actions['quiz_add_question_to_quiz'] = array(
@@ -112,7 +112,7 @@ function quiz_action_info() {
  *
  * Remove old quiz results that haven't been finished.
  */
-function quiz_cron() {
+function quizz_cron() {
   if ($rm_time = variable_get('quiz_remove_partial_quiz_record', '0')) { // $time = 0 for never.
     db_delete('quiz_results')
       ->condition('time_end', 0)
@@ -127,7 +127,7 @@ function quiz_cron() {
 /**
  * Implements hook_menu().
  */
-function quiz_menu() {
+function quizz_menu() {
   return quiz()->getHookImplementation()->getHookMenu()->execute();
 }
 
@@ -136,7 +136,7 @@ function quiz_menu() {
  *
  * Add action link to 'quiz/add' on 'admin/content/quiz' page.
  */
-function quiz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function quizz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   switch ($root_path) {
     case 'admin/content/quiz':
       if (($item = menu_get_item('quiz/add')) && $item['access']) {
@@ -149,15 +149,15 @@ function quiz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 /**
  * Implements hook_theme().
  */
-function quiz_theme($existing, $type, $theme, $path) {
+function quizz_theme($existing, $type, $theme, $path) {
   return array(
       'quiz_view_stats'          => array(
           'variables' => array('quiz' => NULL),
-          'file'      => 'quiz.pages.inc'
+          'file'      => 'quizz.pages.inc'
       ),
       'quiz_categorized_form'    => array(
           'render element' => 'form',
-          'file'           => 'quiz.pages.inc'
+          'file'           => 'quizz.pages.inc'
       ),
       'quiz_result'              => array(
           'variables' => array(
@@ -166,7 +166,7 @@ function quiz_theme($existing, $type, $theme, $path) {
               'score'     => NULL,
               'summary'   => NULL,
               'result_id' => NULL),
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
       ),
       'quiz_progress'            => array(
           'variables' => array(
@@ -175,18 +175,18 @@ function quiz_theme($existing, $type, $theme, $path) {
               'num_questions'   => NULL,
               'allow_jumping'   => NULL,
               'time_limit'      => NULL),
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
       ),
       'quiz_no_feedback'         => array(
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
           'variables' => array(),
       ),
       'question_selection_table' => array(
-          'file'           => 'quiz.pages.inc',
+          'file'           => 'quizz.pages.inc',
           'render element' => 'form',
       ),
       'quiz_answer_result'       => array(
-          'file'      => 'quiz.pages.inc',
+          'file'      => 'quizz.pages.inc',
           'variables' => array(),
       ),
       'quiz_report_form'         => array(
@@ -196,7 +196,7 @@ function quiz_theme($existing, $type, $theme, $path) {
       ),
       'quiz_browser'             => array(
           'render element' => 'form',
-          'file'           => 'quiz.pages.inc',
+          'file'           => 'quizz.pages.inc',
       ),
       'quiz_question_score'      => array(
           'variables' => array('score' => NULL, 'max_score' => NULL),
@@ -212,14 +212,14 @@ function quiz_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_user_cancel().
  */
-function quiz_user_cancel($edit, $account, $method) {
+function quizz_user_cancel($edit, $account, $method) {
   quiz()->getHookImplementation()->getHookUserCancel($account, $method)->execute();
 }
 
 /**
  * Implements hook_mail().
  */
-function quiz_mail($key, &$message, $params) {
+function quizz_mail($key, &$message, $params) {
   global $user;
 
   switch ($key) {
@@ -237,7 +237,7 @@ function quiz_mail($key, &$message, $params) {
  *
  * Performs actions like sending quiz results over email at the end of quiz.
  */
-function quiz_quiz_scored($quiz, $score, $result_id) {
+function quizz_quiz_scored($quiz, $score, $result_id) {
   return quiz()->getHookImplementation()->getHookQuizScored($quiz, $score, $result_id)->execute();
 }
 
@@ -332,8 +332,7 @@ function quiz_access_my_results($quiz) {
 /**
  * Does the current user have access to take the quiz?
  *
- * @param $quiz
- *  The quiz entity
+ * @param QuizEntity $quiz
  */
 function quiz_take_access($quiz) {
   global $user;

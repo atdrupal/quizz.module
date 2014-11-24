@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\quiz\Entity\QuizEntity;
-use Drupal\quiz\Entity\QuizType;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\QuizType;
 
 /**
  * Test aspects of quiz creation including global and user defaults.
