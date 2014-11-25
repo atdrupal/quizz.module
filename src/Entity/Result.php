@@ -45,8 +45,8 @@ class Result extends Entity {
   /** @var array */
   public $layout = array();
 
-  /** @var int Current item in questions layout. */
-  public $current;
+  /** @var \Drupal\quizz\Entity\Result\TakingCache */
+  public $taking_cache;
 
   /**
    * Get quiz entity.
@@ -156,6 +156,27 @@ class Result extends Entity {
     return entity_get_controller('quiz_result')
         ->getMaintainer()
         ->maintenance($uid, $this);
+  }
+
+  public function takingCacheLoad() {
+    ctools_include('object-cache');
+    if ($cache = ctools_object_cache_get('quiz_result:taking', $this->result_id)) {
+      $this->taking_cache = $cache;
+    }
+    return $this;
+  }
+
+  public function takingCacheSet(array $attributes = array()) {
+    if (NULL === $this->taking_cache) {
+      $this->taking_cache = new \Drupal\quizz\Entity\Result\TakingCache();
+    }
+
+    foreach ($attributes as $k => $v) {
+      $this->taking_cache->{$k} = $v;
+    }
+
+    ctools_include('object-cache');
+    return ctools_object_cache_set('quiz_result:taking', $this->result_id, $this->taking_cache);
   }
 
 }
