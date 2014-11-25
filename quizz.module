@@ -3,6 +3,7 @@
 use Drupal\quizz\Entity\QuizType;
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Quiz;
+use Drupal\quizz\Entity\QuizEntity;
 
 /**
  * @file
@@ -119,6 +120,22 @@ function quiz_load($id = NULL, $vid = NULL, $reset = FALSE) {
   $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
   if ($results = entity_load('quiz_entity', FALSE, $conditions, $reset)) {
     return reset($results);
+  }
+}
+
+/**
+ * Load result entity using quiz ID. Only used
+ *
+ * @TODO: Update structure for *taking* menu items + controllers to use this.
+ *
+ * @param int $quiz_id
+ * @return \Drupal\quizz\Entity\Result
+ */
+function quiz_result_by_quiz_load($quiz_id) {
+  $conditions = array('quiz_qid' => $quiz_id, 'time_end' => NULL,);
+  if ($entities = entity_load('quiz_result', FALSE, $conditions)) {
+    $result = reset($entities);
+    return $result->takingCacheLoad();
   }
 }
 
