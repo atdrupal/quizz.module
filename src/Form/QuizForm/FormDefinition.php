@@ -14,9 +14,13 @@ class FormDefinition extends FormHelper {
     $this->quiz = $quiz;
 
     if (empty($this->quiz->qid) && 'admin' !== arg(0)) {
-      // If this is a new node we apply the user defaults for the quiz settings.
-      $msg = t('You are making your first @quiz. On this page you set the attributes, most of which you may tell the system to remember as defaults for the future. On the next screen you can add questions.', array('@quiz' => QUIZ_NAME));
-      drupal_set_message($msg);
+      global $user;
+
+      // If this is a new quiz we apply the user defaults for the quiz settings.
+      if (!entity_load('quiz_entity', FALSE, array('uid' => $user->uid))) {
+        $msg = t('You are making your first @quiz. On this page you set the attributes, most of which you may tell the system to remember as defaults for the future. On the next screen you can add questions.', array('@quiz' => QUIZ_NAME));
+        drupal_set_message($msg);
+      }
 
       foreach (quiz_controller()->getSettingIO()->getUserDefaultSettings() as $k => $v) {
         if (!isset($this->quiz->{$k}) || is_null($this->quiz->{$k})) {
