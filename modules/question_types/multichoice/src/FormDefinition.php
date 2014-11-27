@@ -88,15 +88,25 @@ class FormDefinition {
     drupal_add_tabledrag('multichoice-alternatives-table', 'order', 'sibling', 'multichoice-alternative-weight');
 
     $form['alternatives'] = array(
-        '#theme'       => array('multichoice_alternative_creation_table'),
-        '#type'        => 'fieldset',
-        '#title'       => t('Answer'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => FALSE,
-        '#weight'      => -4,
-        '#tree'        => TRUE,
-        '#prefix'      => '<div class="clear-block" id="multichoice-alternatives-wrapper">',
-        '#suffix'      => '</div>',
+        '#theme'                      => array('multichoice_alternative_creation_table'),
+        '#type'                       => 'fieldset',
+        '#title'                      => t('Answer'),
+        '#collapsible'                => TRUE,
+        '#collapsed'                  => FALSE,
+        '#weight'                     => -4,
+        '#tree'                       => TRUE,
+        '#prefix'                     => '<div class="clear-block" id="multichoice-alternatives-wrapper">',
+        '#suffix'                     => '</div>',
+        'multichoice_add_alternative' => array(
+            '#type'   => 'button',
+            '#value'  => t('Add choice'),
+            '#ajax'   => array(
+                'method'   => 'replace',
+                'wrapper'  => 'multichoice-alternatives-wrapper',
+                'callback' => 'multichoice_add_alternative_ajax_callback',
+            ),
+            '#weight' => 50,
+        ),
     );
 
     // Get the nodes settings, users settings or default settings
@@ -134,17 +144,6 @@ class FormDefinition {
         '#description'   => t('Give max score if everything is correct. Zero points otherwise.'),
         '#default_value' => $default_settings['choice_boolean'],
         '#parents'       => array('choice_boolean'),
-    );
-
-    $form['alternatives']['multichoice_add_alternative'] = array(
-        '#type'   => 'button',
-        '#value'  => t('Add choice'),
-        '#ajax'   => array(
-            'method'   => 'replace',
-            'wrapper'  => 'multichoice-alternatives-wrapper',
-            'callback' => 'multichoice_add_alternative_ajax_callback',
-        ),
-        '#weight' => 50,
     );
   }
 
