@@ -88,7 +88,8 @@ class QuizNavigationTestCase extends QuizTestCase {
     $quiz->getQuizType()->setConfig('quiz_pager_start', 5)->save();
 
     // One on each side.
-    variable_set('quiz_pager_siblings', 2);
+    $quiz->getQuizType()->setConfig('quiz_pager_siblings', 2)->save();
+
     $this->drupalGet("quiz/{$quiz->qid}/take/3");
     $this->assertNoFieldById('edit-question-number');
     $this->assertNoLink('1');

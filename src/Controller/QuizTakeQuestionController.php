@@ -59,6 +59,7 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
         'pager'         => count($questions) >= $this->quiz->getQuizType()->getConfig('quiz_pager_start', 100),
         'time_limit'    => $this->quiz->time_limit,
     ));
+
     $content['progress']['#weight'] = -50;
 
     if (function_exists('jquery_countdown_add') && variable_get('quiz_has_timer', 0) && $this->quiz->time_limit) {
