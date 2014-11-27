@@ -312,10 +312,16 @@ class FormDefinition extends FormHelper {
           '#default_value' => date($format, isset($this->quiz->quiz_open) ? $this->quiz->quiz_open : REQUEST_TIME),
           '#description'   => t('The date this @quiz will become available.', array('@quiz' => QUIZ_NAME)),
       );
+
+      $close = REQUEST_TIME + 86400 * $this->quiz->getQuizType()->getConfig('quiz_default_close', 30);
+      if (isset($this->quiz->quiz_close)) {
+        $close = $this->quiz->quiz_close;
+      }
+
       $form['quiz_availability']['quiz_close'] = array(
           '#type'          => 'date_popup',
           '#title'         => t('Close date'),
-          '#default_value' => date($format, isset($this->quiz->quiz_close) ? $this->quiz->quiz_close : REQUEST_TIME + variable_get('quiz_default_close', 30) * 86400),
+          '#default_value' => date($format, $close),
           '#description'   => t('The date this @quiz will become unavailable.', array('@quiz' => QUIZ_NAME)),
       );
     }
