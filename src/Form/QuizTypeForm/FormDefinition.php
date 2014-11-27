@@ -134,7 +134,7 @@ class FormDefinition {
         '#title'         => t('Remove incomplete quiz records (older than)'),
         '#options'       => $this->removePartialQuizRecordValue(),
         '#description'   => t('Number of days to keep incomplete quiz attempts.'),
-        '#default_value' => isset($config['quiz_remove_partial_quiz_record']) ? $config['quiz_remove_partial_quiz_record'] : $this->removePartialQuizRecordValue(),
+        '#default_value' => isset($config['quiz_remove_partial_quiz_record']) ? $config['quiz_remove_partial_quiz_record'] : 604800,
     );
 
     $form['vtabs']['configuration']['quiz_pager_start'] = array(
