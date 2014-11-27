@@ -124,22 +124,6 @@ function quiz_load($id = NULL, $vid = NULL, $reset = FALSE) {
 }
 
 /**
- * Load result entity using quiz ID. Only used
- *
- * @TODO: Update structure for *taking* menu items + controllers to use this.
- *
- * @param int $quiz_id
- * @return \Drupal\quizz\Entity\Result
- */
-function quiz_result_by_quiz_load($quiz_id) {
-  $conditions = array('quiz_qid' => $quiz_id, 'time_end' => NULL,);
-  if ($entities = entity_load('quiz_result', FALSE, $conditions)) {
-    $result = reset($entities);
-    return $result->takingCacheLoad();
-  }
-}
-
-/**
  * Shortcut to entity_load_single().
  *
  * @return \Drupal\quizz\Entity\Result

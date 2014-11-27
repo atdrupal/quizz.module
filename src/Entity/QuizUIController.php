@@ -155,14 +155,12 @@ class QuizUIController extends EntityDefaultUIController {
   }
 
   private function addQuizTakeItems(&$items, $base) {
-    // Define menu item structure for /quiz/%/take
     $items['quiz/%quiz/take'] = $base + array(
         'page callback'    => 'quiz_take_page',
         'page arguments'   => array(1),
         'access arguments' => array('access quiz'),
     );
 
-    // Define menu item structure for /quiz/%/take/%
     $items['quiz/%quiz/take/%question_number'] = $base + array(
         'access callback'  => 'quiz_access_question',
         'access arguments' => array(1, 3),
