@@ -116,7 +116,6 @@ function quiz_ddlines_theme() {
  * Implements hook_quiz_question_config().
  */
 function quiz_ddlines_quiz_question_config() {
-
   $form['quiz_ddlines_canvas_width'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The default width of the canvas'),

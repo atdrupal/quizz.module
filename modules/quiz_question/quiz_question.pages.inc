@@ -104,7 +104,7 @@ function quiz_question_config($form) {
   // Go through all question types and merge their config forms
   foreach (quiz_question_get_plugin_info() as $name => $info) {
     $function = $name . '_quiz_question_config';
-    if ($admin_form = $function()) {
+    if (function_exists($function) && ($admin_form = $function())) {
       $form[$name] = $admin_form;
       $form[$name]['#type'] = 'fieldset';
       $form[$name]['#title'] = $info['name'];

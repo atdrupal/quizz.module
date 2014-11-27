@@ -37,13 +37,6 @@ function truefalse_quiz_question_info() {
 }
 
 /**
- * Implements hook_quiz_question_config().
- */
-function truefalse_quiz_question_config() {
-  return FALSE;
-}
-
-/**
  * Implements hook_theme().
  */
 function truefalse_theme() {
