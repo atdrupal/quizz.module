@@ -25,11 +25,10 @@ function scale_manage_collection_form($form, &$form_state) {
     $collections['new'] = $new_col;
   }
 
-  $form = array();
+  $form += array('#tree' => TRUE);
+
   if (count($collections) == 0) {
-    $form['no_col'] = array(
-        '#markup' => t("You don't have any preset collections."),
-    );
+    $form['no_col']['#markup'] = t("You don't have any preset collections.");
     return $form;
   }
 
@@ -53,7 +52,8 @@ function scale_manage_collection_form($form, &$form_state) {
           '#required'      => ($i < 2) && ('new' !== $col_id),
       );
     }
-    if ($col_id != 'new') {
+
+    if ('new' !== $col_id) {
       if ($edit_globals_access) {
         $form["collection$col_id"]['for_all'] = array(
             '#type'          => 'checkbox',
@@ -61,6 +61,7 @@ function scale_manage_collection_form($form, &$form_state) {
             '#default_value' => $collections[$col_id]->for_all,
         );
       }
+
       $form["collection$col_id"]['to-do'] = array(
           '#type'          => 'radios',
           '#title'         => t('What will you do?'),
@@ -72,35 +73,23 @@ function scale_manage_collection_form($form, &$form_state) {
       );
     }
     else {
-      $form["collection$col_id"]["to-do"] = array(
-          '#type'  => 'value',
-          '#value' => 3,
-      );
-      $form["collection$col_id"]["for_all"] = array(
-          '#type'  => 'value',
-          '#value' => 1,
-      );
+      $form["collection$col_id"]["to-do"] = array('#type' => 'value', '#value' => 3);
+      $form["collection$col_id"]["for_all"] = array('#type' => 'value', '#value' => 1);
     }
   }
-  $form['process'] = array(
-      '#type'  => 'submit',
-      '#value' => t('Submit'),
-  );
-  $form['#submit'][] = 'scale_collection_form_submit';
+  $form['process'] = array('#type' => 'submit', '#value' => t('Submit'));
+
   if ($edit_globals_access) {
-    $form['#validate'][] = 'scale_collection_form_validate';
+    $form['#validate'][] = 'scale_manage_collection_form_validate';
   }
-  $form['#tree'] = TRUE;
+
   return $form;
 }
 
 /**
  * Handles the scale collection form.
- *
- * @param $form
- * @param $form_state
  */
-function scale_collection_form_submit($form, &$form_state) {
+function scale_manage_collection_form_submit($form, &$form_state) {
   global $user;
 
   $changed = 0;
@@ -175,13 +164,13 @@ function scale_collection_form_submit($form, &$form_state) {
 /**
  * Validates the scale collection form
  */
-function scale_collection_form_validate($form, &$form_state) {
+function scale_manage_collection_form_validate($form, &$form_state) {
   // If the user is trying to create a new collection
   if (drupal_strlen($form_state['values']['collectionnew']['alternative0']) > 0) {
     // If the new collection don't have two alternatives
-    if (drupal_strlen($form_state['values']['collectionnew']['alternative1']) == 0) {
-      // This can't be replaced by adding #required to the form elements. If we did so we would always have to
-      // create a new collection when we press submit
+    if (!drupal_strlen($form_state['values']['collectionnew']['alternative1'])) {
+      // This can't be replaced by adding #required to the form elements. If we
+      // did so we would always have to create a new collection when we press submit
       form_set_error('collectionnew][alternative1', t('New preset must have atleast two alternatives.'));
     }
   }

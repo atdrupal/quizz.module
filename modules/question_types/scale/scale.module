@@ -27,6 +27,7 @@ function scale_help($path, $args) {
  * Implements hook_menu().
  */
 function scale_menu() {
+  // @TODO Fix access checking
   $items['scale/collection/manage'] = array(
       'type'             => MENU_SUGGESTED_ITEM,
       'title'            => 'Manage your preset collections',
