@@ -136,22 +136,6 @@ function multichoice_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_field_extra_fields().
- */
-function multichoice_field_extra_fields() {
-  $extra['node']['multichoice'] = array(
-      'form' => array(
-          'alternatives' => array(
-              'label'       => t('Alternatives'),
-              'description' => t('Alternatives for multichoice'),
-              'weight'      => -4,
-          ),
-      ),
-  );
-  return $extra;
-}
-
-/**
  * Implements hook_views_api().
  */
 function multichoice_views_api() {
