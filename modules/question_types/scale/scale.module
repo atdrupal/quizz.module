@@ -24,23 +24,6 @@ function scale_help($path, $args) {
 }
 
 /**
- * Implements hook_menu().
- */
-function scale_menu() {
-  // @TODO Fix access checking
-  $items['scale/collection/manage'] = array(
-      'type'             => MENU_SUGGESTED_ITEM,
-      'title'            => 'Manage your preset collections',
-      'access callback'  => 'node_access',
-      'access arguments' => array('create', 'scale'),
-      'file'             => 'scale.pages.inc',
-      'page callback'    => 'drupal_get_form',
-      'page arguments'   => array('scale_manage_collection_form'),
-  );
-  return $items;
-}
-
-/**
  * Implements hook_theme().
  */
 function scale_theme($existing, $type, $theme, $path) {
