@@ -469,7 +469,7 @@ class FormDefinition extends FormHelper {
         '#access'      => user_access('administer quiz configuration'),
     );
 
-    if (quiz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || variable_get('quiz_auto_revisioning', 1))) {
+    if (quiz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
       $this->quiz->revision = 1;
       $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
     }
@@ -503,9 +503,9 @@ class FormDefinition extends FormHelper {
         '#description'   => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
 
-    if (variable_get('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
+    if ($this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
       $form['revision_information']['revision']['#type'] = 'value';
-      $form['revision_information']['revision']['#value'] = variable_get('quiz_auto_revisioning', 1);
+      $form['revision_information']['revision']['#value'] = 1;
       $form['revision_information']['log']['#type'] = 'value';
       $form['revision_information']['log']['#value'] = $form['revision_information']['log']['#default_value'];
       $form['revision_information']['#access'] = FALSE;
