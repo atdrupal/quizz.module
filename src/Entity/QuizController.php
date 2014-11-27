@@ -80,8 +80,6 @@ class QuizController extends EntityAPIController {
   public function buildContent($quiz, $view_mode = 'full', $langcode = NULL, $content = array()) {
     global $user;
 
-    drupal_alter('quiz_view', $quiz, $view_mode);
-
     $extra_fields = field_extra_fields_get_display($this->entityType, $quiz->type, $view_mode);
 
     // Render Stats

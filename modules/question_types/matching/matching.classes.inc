@@ -534,7 +534,6 @@ class MatchingResponse extends QuizQuestionResponse {
     $answers = $this->question->answers[0]['answer'];
     $solution = $this->quizQuestion->getSubquestions();
     foreach ($this->question->match as $match) {
-
       $data[] = array(
           'choice'            => $match['question'],
           'attempt'           => !empty($answers[$match['match_id']]) ? $solution[1][$answers[$match['match_id']]] : '',
@@ -546,7 +545,6 @@ class MatchingResponse extends QuizQuestionResponse {
           'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
       );
     }
-
     return $data;
   }
 

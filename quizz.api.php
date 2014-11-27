@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quizz\Entity\QuizEntity;
+
 /**
  * @file
  * Hooks provided by Quiz module.
@@ -27,8 +29,8 @@
 function hook_quiz_question_info() {
   return array(
       'long_answer' => array(
-          'name'              => t('Example question type'),
-          'description'       => t('An example question type that does something.'),
+          'name'              => TableSort('Example question type'),
+          'description'       => TableSort('An example question type that does something.'),
           'question provider' => 'ExampleAnswerQuestion',
           'response provider' => 'ExampleAnswerResponse',
           'module'            => 'quiz_question',
@@ -48,7 +50,7 @@ function hook_quiz_question_info_alter(&$info) {
  *
  * Fired when a new quiz result is created.
  */
-function hook_quiz_begin(Drupal\quizz\Entity\QuizEntity $quiz, $result_id) {
+function hook_quiz_begin(QuizEntity $quiz, $result_id) {
 
 }
 
@@ -57,7 +59,7 @@ function hook_quiz_begin(Drupal\quizz\Entity\QuizEntity $quiz, $result_id) {
  *
  * Fired after the last question is submitted.
  */
-function hook_quiz_finished(Drupal\quizz\Entity\QuizEntity $quiz, $score, $data) {
+function hook_quiz_finished(QuizEntity $quiz, $score, $data) {
 
 }
 
@@ -66,6 +68,6 @@ function hook_quiz_finished(Drupal\quizz\Entity\QuizEntity $quiz, $score, $data)
  *
  * Fired when a quiz is evaluated.
  */
-function hook_quiz_scored(Drupal\quizz\Entity\QuizEntity $quiz, $score, $result_id) {
+function hook_quiz_scored(QuizEntity $quiz, $score, $result_id) {
 
 }
