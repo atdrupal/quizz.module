@@ -41,11 +41,9 @@ class MultichoiceQuestion extends QuestionPlugin {
             $short['score_if_not_chosen'] = 0;
           }
           else {
-            if (variable_get('multichoice_def_scoring', 0) == 0) {
-              $short['score_if_chosen'] = -1;
-              $short['score_if_not_chosen'] = 0;
-            }
-            elseif (variable_get('multichoice_def_scoring', 0) == 1) {
+            $short['score_if_chosen'] = -1;
+            $short['score_if_not_chosen'] = 0;
+            if ($this->question->getQuestionType()->getConfig('multichoice_def_scoring', 0)) {
               $short['score_if_chosen'] = 0;
               $short['score_if_not_chosen'] = 1;
             }

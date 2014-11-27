@@ -233,7 +233,7 @@ class ShortAnswerQuestion extends QuestionPlugin {
    * @see QuizQuestion#getMaximumScore()
    */
   public function getMaximumScore() {
-    return variable_get('short_answer_default_max_score', 5);
+    return $this->question->getQuestionType()->getConfig('short_answer_default_max_score', 5);
   }
 
   /**

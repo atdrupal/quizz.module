@@ -192,6 +192,7 @@ function scale_manage_collection_form($form, &$form_state) {
     );
     return $form;
   }
+
   // Populate the form
   foreach ($collections as $col_id => $obj) {
     $form["collection$col_id"] = array(
