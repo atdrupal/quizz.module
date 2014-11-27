@@ -29,4 +29,11 @@ class QuizType extends Entity {
     return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
   }
 
+  public function getConfig($name, $default = NULL) {
+    if (isset($this->data['configuration'][$name])) {
+      return $this->data['configuration'][$name];
+    }
+    return $default;
+  }
+
 }
