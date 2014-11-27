@@ -16,14 +16,14 @@ class QuestionTypeForm {
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form, $question_type);
 
-//    $fn = $question_type->plugin . '_quiz_question_config';
-//    if (function_exists($fn) && ($plugin_form = $fn($question_type))) {
-//      $form['vtabs']['configuration'] = $plugin_form + array(
-//          '#type'  => 'fieldset',
-//          '#title' => t('Configuration'),
-//          '#tree'  => TRUE,
-//      );
-//    }
+    $fn = $question_type->plugin . '_quiz_question_config';
+    if (function_exists($fn) && ($plugin_form = $fn($question_type))) {
+      $form['vtabs']['configuration'] = $plugin_form + array(
+          '#type'  => 'fieldset',
+          '#title' => t('Configuration'),
+          '#tree'  => TRUE,
+      );
+    }
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question type'), '#weight' => 40);
@@ -118,8 +118,8 @@ class QuestionTypeForm {
       unset($question_type->multilingual);
     }
 
-//    $question_type->data['configuration'] = $question_type->configuration;
-//    unset($question_type->configuration);
+    $question_type->data['configuration'] = $question_type->configuration;
+    unset($question_type->configuration);
 
     $question_type->save();
     $form_state['redirect'] = 'admin/structure/quiz-questions';

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 
 /**
@@ -80,12 +82,12 @@ function short_answer_quiz_question_info() {
 /**
  * Implements hook_quiz_question_config().
  */
-function short_answer_quiz_question_config() {
+function short_answer_quiz_question_config(QuestionType $question_type) {
   $form['short_answer_default_max_score'] = array(
       '#type'          => 'textfield',
       '#title'         => t('Default max score'),
       '#description'   => t('Choose the default maximum score for a short answer question.'),
-      '#default_value' => variable_get('short_answer_default_max_score', 5),
+      '#default_value' => $question_type->getConfig('short_answer_default_max_score', 5),
   );
   $form['#validate'][] = 'short_answer_config_validate';
   return $form;
@@ -137,7 +139,7 @@ function short_answer_theme($existing, $type, $theme, $path) {
  * reflected in the total scoring table.
  *
  * @param Result $result
- * @param \Drupal\quizz\Entity\QuizEntity $quiz
+ * @param QuizEntity $quiz
  * @param $qid
  *  Node ID of question.
  * @param $vid
