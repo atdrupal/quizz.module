@@ -62,7 +62,7 @@ class QuizTakeController {
 
     // Enforce that we have the same quiz version.
     if (($this->result) && ($this->quiz->vid != $this->result->quiz_vid)) {
-      $this->quiz = quiz_load($this->quiz->qid, $this->quiz->vid);
+      $this->quiz = $this->result->getQuiz();
     }
 
     // Resume quiz progress
