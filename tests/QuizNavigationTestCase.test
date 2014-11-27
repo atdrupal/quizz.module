@@ -85,7 +85,8 @@ class QuizNavigationTestCase extends QuizTestCase {
     $this->assertNoLinkByHref("quiz/{$quiz->qid}/take/1");
 
     // Test the switch between select/pager.
-    variable_set('quiz_pager_start', 5);
+    $quiz->getQuizType()->setConfig('quiz_pager_start', 5)->save();
+
     // One on each side.
     variable_set('quiz_pager_siblings', 2);
     $this->drupalGet("quiz/{$quiz->qid}/take/3");
