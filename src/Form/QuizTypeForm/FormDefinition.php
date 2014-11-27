@@ -137,15 +137,6 @@ class FormDefinition {
         '#default_value' => isset($config['quiz_remove_partial_quiz_record']) ? $config['quiz_remove_partial_quiz_record'] : $this->removePartialQuizRecordValue(),
     );
 
-    $form['vtabs']['configuration']['quiz_autotitle_length'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Length of automatically set question titles'),
-        '#size'          => 3,
-        '#maxlength'     => 3,
-        '#description'   => t('Integer between 0 and 128. If the question creator doesn\'t set a question title the system will make a title automatically. Here you can decide how long the autotitle can be.'),
-        '#default_value' => isset($config['quiz_autotitle_length']) ? $config['quiz_autotitle_length'] : 50,
-    );
-
     $form['vtabs']['configuration']['quiz_pager_start'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Pager start'),
