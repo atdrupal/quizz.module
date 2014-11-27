@@ -36,4 +36,9 @@ class QuizType extends Entity {
     return $default;
   }
 
+  public function setConfig($name, $value) {
+    $this->data['configuration'][$name] = $value;
+    return $this;
+  }
+
 }
