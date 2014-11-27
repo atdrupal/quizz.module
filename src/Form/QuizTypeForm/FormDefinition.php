@@ -48,7 +48,7 @@ class FormDefinition {
     );
 
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
-    $this->baseInformation($form);
+    $this->basicInformation($form);
     $this->configuration($form);
 
     $form['actions'] = array('#type' => 'actions');
@@ -67,7 +67,7 @@ class FormDefinition {
     return $form;
   }
 
-  private function baseInformation(&$form) {
+  private function basicInformation(&$form) {
     $form['vtabs']['basic_information'] = array(
         '#type'       => 'fieldset',
         '#title'      => t('Basic informations'),
