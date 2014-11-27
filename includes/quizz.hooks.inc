@@ -86,6 +86,10 @@ function quizz_admin_paths() {
     $items['quiz/*/edit'] = TRUE;
     $items['quiz/*/edit/*'] = TRUE;
     $items['quiz/*/delete'] = TRUE;
+    $items['quiz-question/add'] = TRUE;
+    $items['quiz-question/add/*'] = TRUE;
+    $items['quiz-question/*/edit'] = TRUE;
+    $items['quiz-question/*/delete'] = TRUE;
   }
 
   return $items;
