@@ -342,7 +342,7 @@ class FormDefinition extends FormHelper {
     );
 
     // If pass/fail option is checked, present the form elements.
-    if (variable_get('quiz_use_passfail', 1)) {
+    if ($this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1)) {
       $form['summaryoptions']['pass_rate'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Passing rate for @quiz (%)', array('@quiz' => QUIZ_NAME)),
