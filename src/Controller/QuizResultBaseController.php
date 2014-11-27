@@ -122,7 +122,7 @@ abstract class QuizResultBaseController {
       if ($admin) {
         $summary['passfail'] = t('The user passed this @quiz.', array('@quiz' => QUIZ_NAME));
       }
-      elseif (variable_get('quiz_use_passfail', 1) == 0) {
+      elseif (!$this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1)) {
         // If there is only a single summary text, use this.
         if (trim($this->quiz_revision->summary_default) != '') {
           $summary['passfail'] = check_markup($this->quiz_revision->summary_default, $quiz_format);

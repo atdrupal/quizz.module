@@ -7,6 +7,7 @@ use Drupal\quizz\Controller\QuizTakeBaseController;
 
 class QuizTakeQuestionController extends QuizTakeBaseController {
 
+  /** @var \Drupal\quizz\Entity\QuizEntity */
   private $quiz;
   private $question;
   private $page_number;
@@ -55,9 +56,10 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
         'questions'     => $questions,
         'current'       => $this->page_number,
         'allow_jumping' => $this->quiz->allow_jumping,
-        'pager'         => count($questions) >= variable_get('quiz_pager_start', 100),
+        'pager'         => count($questions) >= $this->quiz->getQuizType()->getConfig('quiz_pager_start', 100),
         'time_limit'    => $this->quiz->time_limit,
     ));
+
     $content['progress']['#weight'] = -50;
 
     if (function_exists('jquery_countdown_add') && variable_get('quiz_has_timer', 0) && $this->quiz->time_limit) {

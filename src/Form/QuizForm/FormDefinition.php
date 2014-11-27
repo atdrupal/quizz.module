@@ -312,10 +312,16 @@ class FormDefinition extends FormHelper {
           '#default_value' => date($format, isset($this->quiz->quiz_open) ? $this->quiz->quiz_open : REQUEST_TIME),
           '#description'   => t('The date this @quiz will become available.', array('@quiz' => QUIZ_NAME)),
       );
+
+      $close = REQUEST_TIME + 86400 * $this->quiz->getQuizType()->getConfig('quiz_default_close', 30);
+      if (isset($this->quiz->quiz_close)) {
+        $close = $this->quiz->quiz_close;
+      }
+
       $form['quiz_availability']['quiz_close'] = array(
           '#type'          => 'date_popup',
           '#title'         => t('Close date'),
-          '#default_value' => date($format, isset($this->quiz->quiz_close) ? $this->quiz->quiz_close : REQUEST_TIME + variable_get('quiz_default_close', 30) * 86400),
+          '#default_value' => date($format, $close),
           '#description'   => t('The date this @quiz will become unavailable.', array('@quiz' => QUIZ_NAME)),
       );
     }
@@ -336,7 +342,7 @@ class FormDefinition extends FormHelper {
     );
 
     // If pass/fail option is checked, present the form elements.
-    if (variable_get('quiz_use_passfail', 1)) {
+    if ($this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1)) {
       $form['summaryoptions']['pass_rate'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Passing rate for @quiz (%)', array('@quiz' => QUIZ_NAME)),
@@ -386,7 +392,7 @@ class FormDefinition extends FormHelper {
 
   private function defineResultFeedbackFields(&$form) {
     $options = !empty($this->quiz->resultoptions) ? $this->quiz->resultoptions : array();
-    $num_options = max(count($options), variable_get('quiz_max_result_options', 5));
+    $num_options = max(count($options), $this->quiz->getQuizType()->getConfig('quiz_max_result_options', 5));
 
     if ($num_options > 0) {
       $form['resultoptions'] = array(
@@ -463,7 +469,7 @@ class FormDefinition extends FormHelper {
         '#access'      => user_access('administer quiz configuration'),
     );
 
-    if (quiz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || variable_get('quiz_auto_revisioning', 1))) {
+    if (quiz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
       $this->quiz->revision = 1;
       $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
     }
@@ -497,9 +503,9 @@ class FormDefinition extends FormHelper {
         '#description'   => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
 
-    if (variable_get('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
+    if ($this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
       $form['revision_information']['revision']['#type'] = 'value';
-      $form['revision_information']['revision']['#value'] = variable_get('quiz_auto_revisioning', 1);
+      $form['revision_information']['revision']['#value'] = 1;
       $form['revision_information']['log']['#type'] = 'value';
       $form['revision_information']['log']['#value'] = $form['revision_information']['log']['#default_value'];
       $form['revision_information']['#access'] = FALSE;

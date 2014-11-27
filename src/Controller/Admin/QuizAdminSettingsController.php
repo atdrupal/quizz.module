@@ -37,40 +37,6 @@ class QuizAdminSettingsController {
         '#description'   => t('If you turn this off, questions will not show up in search results.'),
     );
 
-    $form['quiz_global_settings']['quiz_default_close'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Default number of days before a @quiz is closed', array('@quiz' => QUIZ_NAME)),
-        '#default_value' => variable_get('quiz_default_close', 30),
-        '#size'          => 4,
-        '#maxlength'     => 4,
-        '#description'   => t('Supply a number of days to calculate the default close date for new quizzes.'),
-    );
-
-    $form['quiz_global_settings']['quiz_use_passfail'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Allow quiz creators to set a pass/fail option when creating a @quiz.', array('@quiz' => strtolower(QUIZ_NAME))),
-        '#default_value' => variable_get('quiz_use_passfail', 1),
-        '#description'   => t('Check this to display the pass/fail options in the @quiz form. If you want to prohibit other quiz creators from changing the default pass/fail percentage, uncheck this option.', array('@quiz' => QUIZ_NAME)),
-    );
-
-    $form['quiz_global_settings']['quiz_max_result_options'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Maximum result options'),
-        '#description'   => t('Set the maximum number of result options (categorizations for scoring a quiz). Set to 0 to disable result options.'),
-        '#default_value' => variable_get('quiz_max_result_options', 5),
-        '#size'          => 2,
-        '#maxlength'     => 2,
-        '#required'      => FALSE,
-    );
-
-    $form['quiz_global_settings']['quiz_remove_partial_quiz_record'] = array(
-        '#type'          => 'select',
-        '#title'         => t('Remove incomplete quiz records (older than)'),
-        '#options'       => $this->removePartialQuizRecordValue(),
-        '#description'   => t('Number of days to keep incomplete quiz attempts.'),
-        '#default_value' => variable_get('quiz_remove_partial_quiz_record', $this->removePartialQuizRecordValue()),
-    );
-
     $form['quiz_global_settings']['quiz_autotitle_length'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Length of automatically set question titles'),
@@ -78,24 +44,6 @@ class QuizAdminSettingsController {
         '#maxlength'     => 3,
         '#description'   => t('Integer between 0 and 128. If the question creator doesn\'t set a question title the system will make a title automatically. Here you can decide how long the autotitle can be.'),
         '#default_value' => variable_get('quiz_autotitle_length', 50),
-    );
-
-    $form['quiz_global_settings']['quiz_pager_start'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Pager start'),
-        '#size'          => 3,
-        '#maxlength'     => 3,
-        '#description'   => t('If a quiz has this many questions, a pager will be displayed instead of a select box.'),
-        '#default_value' => variable_get('quiz_pager_start', 100),
-    );
-
-    $form['quiz_global_settings']['quiz_pager_siblings'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Pager siblings'),
-        '#size'          => 3,
-        '#maxlength'     => 3,
-        '#description'   => t('Number of siblings to show.'),
-        '#default_value' => variable_get('quiz_pager_siblings', 5),
     );
 
     $target = array('attributes' => array('target' => '_blank'));

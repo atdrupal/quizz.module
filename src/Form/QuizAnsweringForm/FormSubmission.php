@@ -247,7 +247,7 @@ class FormSubmission extends QuizTakeBaseController {
       drupal_mail('quiz', 'notice', $author_mail, NULL, array($this->quiz, $this->score, $this->result_id, 'author'));
     }
 
-    if (variable_get('quiz_email_results', 0) && variable_get('quiz_use_passfail', 1) && $this->taker->uid != 0 && $this->score['is_evaluated']) {
+    if (variable_get('quiz_email_results', 0) && $this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1) && $this->taker->uid && $this->score['is_evaluated']) {
       drupal_mail('quiz', 'notice', $this->taker->mail, NULL, array($this->quiz, $this->score, $this->result_id, 'taker'));
       drupal_set_message(t('Your results have been sent to your email address.'));
     }

@@ -37,7 +37,10 @@ class QuizFeedbackTestCase extends QuizTestCase {
     $this->linkQuestionToQuiz($question_2, $quiz);
 
     // This is a dynamic test that only tests the feedback columns showing up.
-    variable_set('quiz_auto_revisioning', 0);
+    $quiz
+      ->getQuizType()
+      ->setConfig('quiz_auto_revisioning', 0)
+      ->save();
 
     $review_options = array(
         'attempt'         => t('Your answer'),

@@ -247,3 +247,29 @@ function quizz_update_7605() {
   db_drop_field('quiz_entity', 'node_nid');
   db_drop_field('quiz_entity_revision', 'node_vid');
 }
+
+/**
+ * Remove some quiz's global settings per they are now part of quiz type.
+ */
+function quizz_update_7606() {
+  $vars = array();
+  $vars['quiz_default_close'] = 30;
+  $vars['quiz_use_passfail'] = 1;
+  $vars['quiz_max_result_options'] = 5;
+  $vars['quiz_remove_partial_quiz_record'] = 604800; // 7 days
+  $vars['quiz_pager_start'] = 100;
+  $vars['quiz_pager_siblings'] = 5;
+
+  foreach (quiz_get_types() as $name => $quiz_type) {
+    // not yet remove 'quiz_auto_revisioning' global variable.
+    $quiz_type->setConfig('quiz_auto_revisioning', variable_get('quiz_auto_revisioning', 1));
+    foreach ($vars as $name => $default_value) {
+      $quiz_type->setConfig($name, variable_get($name, $default_value));
+    }
+    $quiz_type->save();
+  }
+
+  foreach (array_keys($vars) as $name) {
+    variable_del($name);
+  }
+}

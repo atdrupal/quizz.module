@@ -170,7 +170,7 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
     $quiz->number_of_random_questions = 0;
 
     // Update the refresh latest quizzes table so that we know what the users latest quizzes are
-    if (variable_get('quiz_auto_revisioning', 1)) {
+    if ($quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1)) {
       $is_new_revision = quiz_has_been_answered($quiz);
     }
     else {

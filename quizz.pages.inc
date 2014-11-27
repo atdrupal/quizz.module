@@ -376,7 +376,7 @@ function theme_quiz_progress($variables) {
     if ($variables['pager']) {
       $output .= theme('quiz_pager', array(
           'quiz'     => $variables['quiz'],
-          'siblings' => variable_get('quiz_pager_siblings', 5),
+          'siblings' => $variables['quiz']->getQuizType()->getConfig('quiz_pager_siblings', 5),
           'current'  => $variables['current'],
           'total'    => count($variables['questions']),
       ));
