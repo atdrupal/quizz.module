@@ -30,6 +30,9 @@ class QuestionType extends Entity {
   /** @var bool Set to 0 if admin would like disable dis question type. */
   public $disabled = 0;
 
+  /** @var mixed[] Extra info for question type. */
+  public $data;
+
   public function __construct(array $values = array()) {
     parent::__construct($values, 'quiz_question_type');
   }
@@ -42,6 +45,18 @@ class QuestionType extends Entity {
    */
   public function isLocked() {
     return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
+  }
+
+  public function getConfig($name, $default = NULL) {
+    if (isset($this->data['configuration'][$name])) {
+      return $this->data['configuration'][$name];
+    }
+    return $default;
+  }
+
+  public function setConfig($name, $value) {
+    $this->data['configuration'][$name] = $value;
+    return $this;
   }
 
 }
