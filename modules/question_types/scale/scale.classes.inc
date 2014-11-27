@@ -389,9 +389,8 @@ class ScaleQuestion extends QuestionPlugin {
    */
   public function getCreationForm(array &$form_state = NULL) {
     $form = array();
-    /*
-     * Getting presets from the database
-     */
+
+    // Getting presets from the database
     $collections = $this->getPresetCollections(TRUE);
     $options = $this->makeOptions($collections);
     $options['d'] = '-'; // Default

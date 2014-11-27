@@ -101,14 +101,8 @@ function scale_quiz_question_info() {
  * Implements hook_quiz_question_config().
  */
 function scale_quiz_question_config(QuestionType $question_type) {
-  $form['manage'] = array('#markup' => l(t('Manage presets'), 'scale/collection/manage'));
-  $form['scale_max_num_of_alts'] = array(
-      '#type'          => 'textfield',
-      '#title'         => t('Maximum number of alternatives allowed'),
-      '#default_value' => $question_type->getConfig('scale_max_num_of_alts', 10),
-  );
-  $form['#validate'][] = 'scale_config_validate';
-  return $form;
+  $obj = new \Drupal\scale\ConfigForm($question_type);
+  return $obj->get();
 }
 
 /**

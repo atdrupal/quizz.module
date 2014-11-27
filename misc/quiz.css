@@ -353,3 +353,7 @@ input#edit-submit-hidden {
 .quiz-score-icon.unselected {
   background-image: url('images/circle-o_808080_64.png');
 }
+
+fieldset fieldset.vertical-tabs-pane > legend {
+  display: none;
+}
