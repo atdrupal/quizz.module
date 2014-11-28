@@ -23,6 +23,15 @@ function scale_install() {
  * Implements hook_schema().
  */
 function scale_schema() {
+  $schema['quiz_scale_collections'] = array(
+      'description' => 'Answer collection ids and properties',
+      'fields'      => array(
+          'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'for_all' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
+      ),
+      'primary key' => array('id'),
+  );
+
   $schema['quiz_scale_properties'] = array(
       'description' => 'Properties specific to this question type. Holds information about what answer collection this node uses',
       'fields'      => array(
@@ -45,15 +54,6 @@ function scale_schema() {
       'primary key' => array(
           'result_id', 'question_qid', 'question_vid'
       ),
-  );
-
-  $schema['quiz_scale_answer_collection'] = array(
-      'description' => 'Answer collection ids and properties',
-      'fields'      => array(
-          'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'for_all' => array('description' => '1 for global presets, 0 otherwise', 'type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,),
-      ),
-      'primary key' => array('id'),
   );
 
   $schema['quiz_scale_user'] = array(
@@ -100,9 +100,7 @@ function scale_uninstall() {
  */
 function _scale_insert_collection($answers) {
   // Save the collection as a global preset
-  $collection_id = db_insert('quiz_scale_answer_collection')
-    ->fields(array('for_all' => 1))
-    ->execute();
+  $collection_id = db_insert('quiz_scale_collections')->fields(array('for_all' => 1))->execute();
 
   // Save the collections as a preset collection for user 1
   db_insert('quiz_scale_user')
@@ -147,4 +145,11 @@ function scale_update_7601() {
       ;
     }
   }
+}
+
+/**
+ * Rename {quiz_scale_answer_collection} to {quiz_scale_collections}
+ */
+function scale_update_7602() {
+  db_rename_table('quiz_scale_answer_collection', 'quiz_scale_collections');
 }

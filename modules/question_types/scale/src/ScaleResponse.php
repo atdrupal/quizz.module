@@ -27,7 +27,10 @@ class ScaleResponse extends QuizQuestionResponse {
     else {
       $this->answer_id = db_query('SELECT answer_id FROM {quiz_scale_user_answers} WHERE result_id = :rid AND question_qid = :qqid AND question_vid = :qvid', array(':rid' => $result_id, ':qqid' => $this->question->qid, ':qvid' => $this->question->vid))->fetchField();
     }
-    $answer = db_query('SELECT answer FROM {quiz_scale_answer} WHERE id = :id', array(':id' => $this->answer_id))->fetchField();
+    $answer = db_query(
+      'SELECT answer FROM {quiz_scale_answer} WHERE id = :id', array(
+        ':id' => $this->answer_id
+      ))->fetchField();
     $this->answer = check_plain($answer);
   }
 
