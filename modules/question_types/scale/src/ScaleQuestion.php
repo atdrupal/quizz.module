@@ -466,7 +466,9 @@ class ScaleQuestion extends QuestionPlugin {
         '#description'   => t('Current alternatives will be saved as a new preset'),
         '#default_value' => FALSE,
     );
-    $form['answer']['manage'] = array('#markup' => l(t('Manage presets'), 'scale/collection/manage'));
+
+    $form['answer']['manage']['#markup'] = l(t('Manage presets'), 'admin/structure/quiz-questions/manage/' . $this->question->getQuestionType()->type);
+
     return $form;
   }
 
