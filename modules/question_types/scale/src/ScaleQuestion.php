@@ -72,7 +72,7 @@ class ScaleQuestion extends QuestionPlugin {
     $answer_collection_id = $this->saveAnswerCollection($is_new_node);
     // Save the answer collection as a preset if the save preset option is checked
     if (!empty($this->question->save)) {
-      $this->setPreset($answer_collection_id);
+      $this->getCollectionIO()->setPreset($answer_collection_id);
     }
     if ($is_new_node) {
       $id = db_insert('quiz_scale_properties')
@@ -95,40 +95,24 @@ class ScaleQuestion extends QuestionPlugin {
   }
 
   /**
-   * Add a preset for the current user.
-   *
-   * @param $col_id - answer collection id of the collection this user wants to have as a preset
-   */
-  private function setPreset($col_id) {
-    db_merge('quiz_scale_user')
-      ->key(array(
-          'uid'                  => $GLOBALS['user']->uid,
-          'answer_collection_id' => $col_id
-      ))
-      ->fields(array(
-          'uid'                  => $GLOBALS['user']->uid,
-          'answer_collection_id' => $col_id
-      ))
-      ->execute();
-  }
-
-  /**
    * Stores the answer collection to the database, or identifies an existing collection.
    *
    * We try to reuse answer collections as much as possible to minimize the amount of rows in the database,
    * and thereby improving performance when surveys are beeing taken.
    *
-   * @param $is_new_node - the question is beeing inserted(not updated)
+   * @param bool $is_new - the question is beeing inserted(not updated)
    * @param $alt_input - the alternatives array to be saved.
    * @param $preset - 1 | 0 = preset | not preset
    * @return
    *  Answer collection id
    */
-  public function saveAnswerCollection($is_new_node, array $alt_input = NULL, $preset = NULL) {
+  public function saveAnswerCollection($is_new, array $alt_input = NULL, $preset = NULL) {
     global $user;
+
     if (!isset($alt_input)) {
       $alt_input = get_object_vars($this->question);
     }
+
     if (!isset($preset) && isset($this->question->save)) {
       $preset = $this->question->save;
     }
@@ -143,9 +127,10 @@ class ScaleQuestion extends QuestionPlugin {
     // If an identical answer collection already exists
     if ($answer_collection_id = $this->existingCollection($alternatives)) {
       if ($preset == 1) {
-        $this->setPreset($answer_collection_id);
+        $this->getCollectionIO()->setPreset($answer_collection_id);
       }
-      if (!$is_new_node || $this->util) {
+
+      if (!$is_new || $this->util) {
         $col_to_delete = $this->util ? $this->col_id : $this->question->{0}->answer_collection_id;
 
         // We try to delete the old answer collection
@@ -163,35 +148,22 @@ class ScaleQuestion extends QuestionPlugin {
 
     // Save as preset if checkbox for preset has been checked
     if ($preset == 1) {
-      $id = db_insert('quiz_scale_user')
+      db_insert('quiz_scale_user')
         ->fields(array(
             'uid'                  => $user->uid,
             'answer_collection_id' => $answer_collection_id,
         ))
         ->execute();
     }
+
     // Save the alternatives in the answer collection
     //db_lock_table('quiz_scale_answer');
     for ($i = 0; $i < count($alternatives); $i++) {
-      $this->saveAlternative($alternatives[$i], $answer_collection_id);
+      $this->getCollectionIO()->saveAlternative($alternatives[$i], $answer_collection_id);
     }
     //db_unlock_tables();
-    return $answer_collection_id;
-  }
 
-  /**
-   * Saves one alternative to the database
-   *
-   * @param $alternative - the alternative(String) to be saved.
-   * @param $answer_collection_id - the id of the answer collection this alternative shall belong to.
-   */
-  private function saveAlternative($alternative, $answer_collection_id) {
-    db_insert('quiz_scale_answer')
-      ->fields(array(
-          'answer_collection_id' => $answer_collection_id,
-          'answer'               => $alternative,
-      ))
-      ->execute();
+    return $answer_collection_id;
   }
 
   /**
@@ -217,7 +189,9 @@ class ScaleQuestion extends QuestionPlugin {
       $sql .= ' AND answer_collection_id = :acid';
       $args[':acid'] = $answer_collection_id;
     }
-    // Filter on alternative id(If we are investigating a specific collection, the alternatives needs to be in a correct order)
+
+    // Filter on alternative id(If we are investigating a specific collection,
+    // the alternatives needs to be in a correct order)
     if (isset($last_id)) {
       $sql .= ' AND id = :id';
       $args[':id'] = $last_id + 1;
@@ -228,13 +202,17 @@ class ScaleQuestion extends QuestionPlugin {
     }
 
     /*
-     * If all alternatives has matched make sure the collection we are comparing against in the database
-     * doesn't have more alternatives.
+     * If all alternatives has matched make sure the collection we are comparing
+     * against in the database doesn't have more alternatives.
      */
     if (count($my_alts) == 0) {
-      $res_o2 = db_query('SELECT * FROM {quiz_scale_answer}
-              WHERE answer_collection_id = :answer_collection_id
-              AND id = :id', array(':answer_collection_id' => $answer_collection_id, ':id' => ($last_id + 2)))->fetch();
+      $res_o2 = db_query(
+        'SELECT *
+          FROM {quiz_scale_answer}
+          WHERE answer_collection_id = :answer_collection_id AND id = :id', array(
+          ':answer_collection_id' => $answer_collection_id,
+          ':id'                   => ($last_id + 2)
+        ))->fetch();
       return ($res_o2) ? FALSE : $answer_collection_id;
     }
 
@@ -344,103 +322,8 @@ class ScaleQuestion extends QuestionPlugin {
    * @see QuizQuestion#getCreationForm()
    */
   public function getCreationForm(array &$form_state = NULL) {
-    $form = array();
-
-    // Getting presets from the database
-    $collections = $this->getCollectionIO()->getPresetCollections(TRUE);
-
-    $options = $this->makeOptions($collections);
-    $options['d'] = '-'; // Default
-    // We need to add the available preset collections as javascript so that
-    // the alternatives can be populated instantly when a
-    $jsArray = $this->makeJSArray($collections);
-
-    $form['answer'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Answer'),
-        '#description' => t('Provide alternatives for the user to answer.'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => FALSE,
-        '#weight'      => -4,
-    );
-    $form['answer']['#theme'][] = 'scale_creation_form';
-    $form['answer']['presets'] = array(
-        '#type'          => 'select',
-        '#title'         => t('Presets'),
-        '#options'       => $options,
-        '#default_value' => 'd',
-        '#description'   => t('Select a set of alternatives'),
-        '#attributes'    => array('onchange' => 'refreshAlternatives(this)'),
-    );
-    $max_num_alts = $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10);
-
-    // @TODO: use #attached
-    $form['jsArray'] = array(
-        '#markup' => "<script type='text/javascript'>$jsArray var scale_max_num_of_alts = $max_num_alts;</script>"
-    );
-    $form['answer']['alternatives'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Alternatives'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-    );
-    for ($i = 0; $i < $max_num_alts; $i++) {
-      $form['answer']['alternatives']["alternative$i"] = array(
-          '#type'          => 'textfield',
-          '#title'         => t('Alternative !i', array('!i' => ($i + 1))),
-          '#size'          => 60,
-          '#maxlength'     => 256,
-          '#default_value' => isset($this->question->{$i}->answer) ? $this->question->{$i}->answer : '',
-          '#required'      => $i < 2,
-      );
-    }
-    $form['answer']['alternatives']['save'] = array(// @todo: Rename save to save_as_preset or something
-        '#type'          => 'checkbox',
-        '#title'         => t('Save as a new preset'),
-        '#description'   => t('Current alternatives will be saved as a new preset'),
-        '#default_value' => FALSE,
-    );
-
-    $form['answer']['manage']['#markup'] = l(t('Manage presets'), 'admin/structure/quiz-questions/manage/' . $this->question->getQuestionType()->type);
-
-    return $form;
-  }
-
-  /**
-   * Makes options array for form elements.
-   *
-   * @param $collections
-   *  collections array, from getPresetCollections() for instance…
-   * @return
-   *  #options array.
-   */
-  private function makeOptions(array $collections = NULL) {
-    $options = array();
-    foreach ($collections as $col_id => $obj) {
-      $options[$col_id] = $obj->name;
-    }
-    return $options;
-  }
-
-  /**
-   * Makes a javascript constructing an answer collection array.
-   *
-   * @param $collections
-   *  collections array, from getPresetCollections() for instance…
-   * @return
-   *  javascript(string)
-   */
-  private function makeJSArray(array $collections = NULL) {
-    $jsArray = 'scaleCollections = new Array();';
-    foreach ($collections as $col_id => $obj) {
-      if (is_array($collections[$col_id]->alternatives)) {
-        $jsArray .= "scaleCollections[$col_id] = new Array();";
-        foreach ($collections[$col_id]->alternatives as $alt_id => $text) {
-          $jsArray .= "scaleCollections[$col_id][$alt_id] = '" . check_plain($text) . "';";
-        }
-      }
-    }
-    return $jsArray;
+    $obj = new \Drupal\scale\Form\ScaleQuestionForm($this->question, $this->getCollectionIO());
+    return $obj->get($form_state);
   }
 
   /**

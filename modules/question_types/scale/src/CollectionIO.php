@@ -13,7 +13,7 @@ class CollectionIO {
       'SELECT answer.id, answer.answer, answer.answer_collection_id
        FROM {quiz_scale_properties} p
          JOIN {quiz_scale_answer} answer ON (p.answer_collection_id = answer.answer_collection_id)
-       WHERE vid = :question_vid
+       WHERE p.vid = :question_vid
          ORDER BY answer.id', array(':question_vid' => $question_id));
     foreach ($query as $property) {
       $properties[] = $property;
@@ -37,7 +37,6 @@ class CollectionIO {
     global $user;
 
     $collections = array(); // array holding data for each collection
-    $scale_element_names = array();
     $sql = 'SELECT DISTINCT ac.id AS answer_collection_id, a.answer, ac.for_all
             FROM {quiz_scale_user} au
             JOIN {quiz_scale_answer_collection} ac ON(au.answer_collection_id = ac.id)
@@ -175,6 +174,35 @@ class CollectionIO {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Saves one alternative to the database
+   *
+   * @param $alternative - the alternative(String) to be saved.
+   * @param $answer_collection_id - the id of the answer collection this alternative shall belong to.
+   */
+  public function saveAlternative($alternative, $answer_collection_id) {
+    db_insert('quiz_scale_answer')
+      ->fields(array(
+          'answer_collection_id' => $answer_collection_id,
+          'answer'               => $alternative,
+      ))
+      ->execute();
+  }
+
+  /**
+   * Add a preset for the current user.
+   *
+   * @param $column_id - answer collection id of the collection this user wants to have as a preset
+   */
+  public function setPreset($column_id) {
+    $uid = $GLOBALS['user']->uid;
+
+    db_merge('quiz_scale_user')
+      ->key(array('uid' => $uid, 'answer_collection_id' => $column_id))
+      ->fields(array('uid' => $uid, 'answer_collection_id' => $column_id))
+      ->execute();
   }
 
 }
