@@ -1,7 +1,10 @@
 <?php
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionPlugin;
 use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quizz\Entity\Answer;
+use Drupal\scale\CollectionIO;
 
 /**
  * The main classes for the scale question type.
@@ -26,10 +29,28 @@ use Drupal\quiz_question\QuizQuestionResponse;
  */
 class ScaleQuestion extends QuestionPlugin {
 
-  // $util will be set to true if an instance of this class is used only as a utility
+  /**
+   * will be set to true if an instance of this class is used only as a utility.
+   *
+   * @var bool $util
+   */
   protected $util = FALSE;
-  // (answer)Collection id
+
+  /**
+   * (answer) Collection id
+   * @var int
+   */
   protected $col_id = NULL;
+
+  /** @var CollectionIO */
+  protected $collection_io;
+
+  public function getCollectionIO() {
+    if (NULL === $this->collection_io) {
+      $this->collection_io = new CollectionIO();
+    }
+    return $this->collection_io;
+  }
 
   /**
    * Tells the instance that it is beeing used as a utility.
@@ -391,11 +412,12 @@ class ScaleQuestion extends QuestionPlugin {
     $form = array();
 
     // Getting presets from the database
-    $collections = $this->getPresetCollections(TRUE);
+    $collections = $this->getCollectionIO()->getPresetCollections(TRUE);
+
     $options = $this->makeOptions($collections);
     $options['d'] = '-'; // Default
-    // We need to add the available preset collections as javascript so that the alternatives can be populated instantly
-    // when a
+    // We need to add the available preset collections as javascript so that
+    // the alternatives can be populated instantly when a
     $jsArray = $this->makeJSArray($collections);
 
     $form['answer'] = array(
@@ -444,62 +466,6 @@ class ScaleQuestion extends QuestionPlugin {
     );
     $form['answer']['manage'] = array('#markup' => l(t('Manage presets'), 'scale/collection/manage'));
     return $form;
-  }
-
-  /**
-   * Get all available presets for the current user.
-   *
-   * @param $with_defaults
-   * @return
-   *  array holding all the preset collections as an array of objects.
-   *  each object in the array has the following properties:
-   *   ->alternatives(array)
-   *   ->name(string)
-   *   ->for_all(int, 0|1)
-   */
-  public function getPresetCollections($with_defaults = FALSE) {
-    global $user;
-    $collections = array(); // array holding data for each collection
-    $scale_element_names = array();
-    $sql = 'SELECT DISTINCT ac.id AS answer_collection_id, a.answer, ac.for_all
-            FROM {quiz_scale_user} au
-            JOIN {quiz_scale_answer_collection} ac ON(au.answer_collection_id = ac.id)
-            JOIN {quiz_scale_answer} a ON(a.answer_collection_id = ac.id)
-            WHERE au.uid = :uid';
-    if ($with_defaults) {
-      $sql .= ' OR ac.for_all = 1';
-    }
-    $sql .= ' ORDER BY au.answer_collection_id, a.id';
-    $res = db_query($sql, array(':uid' => $user->uid));
-    $col_id = NULL;
-
-    // Populate the $collections array
-    while (true) {
-      if (!($res_o = $res->fetch()) || ($res_o->answer_collection_id != $col_id)) {
-        /*
-         * We have gone through all elements for one answer collection,
-         * and needs to store the answer collection name and id in the options array…
-         */
-        if (isset($col_id)) {
-          $num_scale_elements = count($collections[$col_id]->alternatives);
-          $collections[$col_id]->name = check_plain($collections[$col_id]->alternatives[0] . ' - ' . $collections[$col_id]->alternatives[$num_scale_elements - 1] . ' (' . $num_scale_elements . ')');
-        }
-        // Break the loop if there are no more answer collections to process
-        if (!$res_o) {
-          break;
-        }
-
-        // Init the next collection in the $collections array
-        $col_id = $res_o->answer_collection_id;
-        if (!isset($collections[$col_id])) {
-          $collections[$col_id] = new stdClass();
-          $collections[$col_id]->alternatives = array();
-          $collections[$col_id]->for_all = $res_o->for_all;
-        }
-      }
-      $collections[$col_id]->alternatives[] = check_plain($res_o->answer);
-    }
-    return $collections;
   }
 
   /**
@@ -565,7 +531,7 @@ class ScaleResponse extends QuizQuestionResponse {
   /**
    * Constructor
    */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
+  public function __construct($result_id, Question $question, $answer = NULL) {
     parent::__construct($result_id, $question, $answer);
 
     if (isset($answer)) {

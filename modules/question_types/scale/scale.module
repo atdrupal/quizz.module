@@ -109,7 +109,7 @@ function scale_get_answer($question_qid, $question_vid, $result_id) {
  * Implements hook_user_cancel().
  */
 function scale_user_cancel($edit, $account, $method) {
-  $results = db_query(
+  $query = db_query(
     'SELECT id
      FROM {quiz_scale_answer_collection} ac
        JOIN {quiz_scale_user} u ON(ac.id = u.answer_collection_id)
@@ -121,16 +121,10 @@ function scale_user_cancel($edit, $account, $method) {
       ':for_all' => 0
   ));
 
-  foreach ($results as $result) {
-    db_delete('quiz_scale_answer')
-      ->condition('answer_collection_id', $result->id)
-      ->execute();
-    db_delete('quiz_scale_answer_collection')
-      ->condition('id', $result->id)
-      ->execute();
+  foreach ($query as $row) {
+    db_delete('quiz_scale_answer')->condition('answer_collection_id', $row->id)->execute();
+    db_delete('quiz_scale_answer_collection')->condition('id', $row->id)->execute();
   }
 
-  db_delete('quiz_scale_user')
-    ->condition('uid', $account->uid)
-    ->execute();
+  db_delete('quiz_scale_user')->condition('uid', $account->uid)->execute();
 }

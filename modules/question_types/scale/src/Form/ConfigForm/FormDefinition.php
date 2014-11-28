@@ -3,7 +3,7 @@
 namespace Drupal\scale\Form\ConfigForm;
 
 use Drupal\quiz_question\Entity\QuestionType;
-use ScaleQuestion;
+use Drupal\scale\CollectionIO;
 use stdClass;
 
 class FormDefinition {
@@ -24,7 +24,7 @@ class FormDefinition {
         '#default_value' => $this->question_type->getConfig('scale_max_num_of_alts', 10),
     );
 
-    # $form['#validate'][] = 'scale_manage_collection_form_validate';
+    $form['#validate'][] = 'scale_manage_collection_form_validate';
     $form['collections'] = array(
         '#tree'     => TRUE,
         '#type'     => 'vertical_tabs',
@@ -42,16 +42,15 @@ class FormDefinition {
    * presets here.
    */
   private function getCollections() {
-    // We create an instance of ScaleQuestion. We want to use some of its methods.
-    $scale_question = new ScaleQuestion(new stdClass());
-    $collections = $scale_question->getPresetCollections();
+    $collectionIO = new CollectionIO();
+    $collections = $collectionIO->getPresetCollections();
 
     // If user is allowed to edit global answer collections he is also allowed
     // to add new global presets
-    $new_col = new stdClass();
-    $new_col->for_all = 1;
-    $new_col->name = t('New global collection(available to all users)');
-    $collections['new'] = $new_col;
+    $new_column = new stdClass();
+    $new_column->for_all = 1;
+    $new_column->name = t('New global collection(available to all users)');
+    $collections['new'] = $new_column;
 
     if (count($collections) == 0) {
       $form['no_col']['#markup'] = t("You don't have any preset collections.");
