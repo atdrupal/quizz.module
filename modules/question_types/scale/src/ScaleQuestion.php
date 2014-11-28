@@ -3,10 +3,8 @@
 namespace Drupal\scale;
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quizz\Entity\Answer;
 use Drupal\scale\CollectionIO;
 use Drupal\scale\Form\ScaleQuestionForm;
-use Drupal\scale\ScaleResponse;
 
 /**
  * @TODO: We mix the names answer_collection and alternatives. Use either
@@ -54,11 +52,11 @@ class ScaleQuestion extends QuestionPlugin {
    */
   public function saveEntityProperties($is_new = FALSE) {
     $is_new_node = $is_new || $this->question->revision == 1;
-    $answer_collection_id = $this->getAnsweringForm()->saveAnswerCollection($this->question, $is_new_node);
+    $collection_id = $this->getCollectionIO()->saveAnswerCollection($this->question, $is_new_node);
 
     // Save the answer collection as a preset if the save preset option is checked
     if (!empty($this->question->save)) {
-      $this->getCollectionIO()->setPreset($answer_collection_id);
+      $this->getCollectionIO()->setPreset($collection_id);
     }
 
     if ($is_new_node) {
@@ -66,15 +64,13 @@ class ScaleQuestion extends QuestionPlugin {
         ->fields(array(
             'qid'                  => $this->question->qid,
             'vid'                  => $this->question->vid,
-            'answer_collection_id' => $answer_collection_id,
+            'answer_collection_id' => $collection_id,
         ))
         ->execute();
     }
     else {
       db_update('quiz_scale_properties')
-        ->fields(array(
-            'answer_collection_id' => $answer_collection_id,
-        ))
+        ->fields(array('answer_collection_id' => $collection_id))
         ->condition('qid', $this->question->qid)
         ->condition('vid', $this->question->vid)
         ->execute();

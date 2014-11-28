@@ -2,6 +2,7 @@
 
 namespace Drupal\scale;
 
+use Drupal\quiz_question\Entity\Question;
 use stdClass;
 
 class CollectionIO {
@@ -113,7 +114,7 @@ class CollectionIO {
       ->execute();
   }
 
-  public function deleteQuestionProperties(\Drupal\quiz_question\Entity\Question $question, $single_revision) {
+  public function deleteQuestionProperties(Question $question, $single_revision) {
     if ($single_revision) {
       db_delete('quiz_scale_user_answers')
         ->condition('question_qid', $question->qid)
@@ -148,19 +149,28 @@ class CollectionIO {
    */
   public function deleteCollectionIfNotUsed($answer_collection_id, $accept = 0) {
     // Check if the collection is someones preset. If it is we can't delete it.
-    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
+    $count = db_query(
+      'SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(
+        ':acid' => $answer_collection_id
+      ))->fetchField();
     if ($count > 0) {
       return FALSE;
     }
 
     // Check if the collection is a global preset. If it is we can't delete it.
-    $for_all = db_query('SELECT for_all FROM {quiz_scale_answer_collection} WHERE id = :id', array(':id' => $answer_collection_id))->fetchField();
+    $for_all = db_query(
+      'SELECT for_all FROM {quiz_scale_answer_collection} WHERE id = :id', array(
+        ':id' => $answer_collection_id
+      ))->fetchField();
     if ($for_all == 1) {
       return FALSE;
     }
 
     // Check if the collection is used in an existing question. If it is we can't delete it.
-    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
+    $count = db_query(
+      'SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid', array(
+        ':acid' => $answer_collection_id
+      ))->fetchField();
 
     // We delete the answer collection if it isnt beeing used by enough questions
     if ($count <= $accept) {
@@ -275,8 +285,7 @@ class CollectionIO {
    * @param bool $is_new - the question is beeing inserted(not updated)
    * @param $alt_input - the alternatives array to be saved.
    * @param $preset - 1 | 0 = preset | not preset
-   * @return
-   *  Answer collection id
+   * @return int Answer collection id
    */
   public function saveAnswerCollection(Question $question, $is_new, array $alt_input = NULL, $preset = NULL) {
     global $user;
@@ -329,11 +338,11 @@ class CollectionIO {
     }
 
     // Save the alternatives in the answer collection
-    //db_lock_table('quiz_scale_answer');
+    // db_lock_table('quiz_scale_answer');
     for ($i = 0; $i < count($alternatives); $i++) {
       $this->saveAlternative($alternatives[$i], $answer_collection_id);
     }
-    //db_unlock_tables();
+    // db_unlock_tables();
 
     return $answer_collection_id;
   }
