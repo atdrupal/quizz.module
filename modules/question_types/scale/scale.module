@@ -74,6 +74,30 @@ function scale_quiz_question_info() {
 }
 
 /**
+ * Implements hook_entity_info().
+ * @return array
+ */
+function scale_entity_info() {
+  $info = array();
+
+  $info['scale_collection'] = array(
+      'label'            => t('Collection'),
+      'plural label'     => t('Collections'),
+      'description'      => '',
+      'entity class'     => 'Drupal\scale\Entity\Collection',
+      'controller class' => 'EntityAPIControllerExportable',
+      'base table'       => 'quiz_scale_collections',
+      'fieldable'        => FALSE,
+      'exportable'       => TRUE,
+      'entity keys'      => array('id' => 'id', 'name' => 'type', 'label' => 'label'),
+      'access callback'  => 'scale_collection_access_callback',
+      'module'           => 'scale',
+  );
+
+  return $info;
+}
+
+/**
  * Implements hook_quiz_question_config().
  */
 function scale_quiz_question_config(QuestionType $question_type) {
@@ -122,4 +146,15 @@ function scale_user_cancel($edit, $account, $method) {
   }
 
   db_delete('quiz_scale_user')->condition('uid', $account->uid)->execute();
+}
+
+/**
+ * Access callback for scale_collection entity.
+ * @param string $op
+ * @param \Drupal\scale\Entity\Collection $collection
+ * @param stdClass $account
+ * @return bool
+ */
+function scale_collection_access_callback($op, $collection = NULL, $account = NULL) {
+  return user_access('Edit global presets', $account);
 }
