@@ -30,6 +30,7 @@ function scale_schema() {
           'name'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'),
           'label'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'),
           'for_all' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
+          'status'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'),
       ),
       'primary key' => array('id'),
   );
@@ -162,4 +163,5 @@ function scale_update_7602() {
 function scale_update_7603() {
   db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'));
   db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
+  db_add_field('quiz_scale_collections', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'));
 }
