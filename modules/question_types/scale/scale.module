@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\Entity\QuestionType;
-use Drupal\scale\ConfigForm;
+use Drupal\scale\Form\ConfigForm\FormDefinition;
 
 /**
  * The main file for scale.
@@ -85,17 +85,9 @@ function scale_quiz_question_info() {
  * Implements hook_quiz_question_config().
  */
 function scale_quiz_question_config(QuestionType $question_type) {
-  $obj = new ConfigForm($question_type);
+  require_once dirname(__FILE__) . '/scale.pages.inc';
+  $obj = new FormDefinition($question_type);
   return $obj->get();
-}
-
-/**
- * Validate the scale config form values
- */
-function scale_config_validate($form, $form_state) {
-  if (!quiz_valid_integer($form_state['values']['scale_max_num_of_alts'], 2, 50)) {
-    form_set_error('scale_max_num_of_alts', t('The number of alternatives must be between 2 and 50'));
-  }
 }
 
 /**
@@ -140,52 +132,5 @@ function scale_user_cancel($edit, $account, $method) {
 
   db_delete('quiz_scale_user')
     ->condition('uid', $account->uid)
-    ->execute();
-}
-
-/**
- * Searches a string for the answer collection id
- *
- * @param $string
- * @return answer collection id
- */
-function _scale_get_col_id($string) {
-  $res = array();
-  $success = preg_match('/^collection([0-9]{1,}|new)$/', $string, $res);
-  return ($success > 0) ? $res[1] : FALSE;
-}
-
-/**
- * Make sure an answer collection isn't a preset for a given user.
- *
- * @param $col_id
- *  Answer_collection_id
- * @param $user_id
- */
-function _scale_unpreset_collection($col_id, $user_id) {
-  db_delete('quiz_scale_user')
-    ->condition('answer_collection_id', $col_id)
-    ->condition('uid', $user_id)
-    ->execute();
-  if (user_access('Edit global presets')) {
-    db_update('quiz_scale_answer_collection')
-      ->fields(array('for_all' => 0))
-      ->execute();
-  }
-}
-
-/**
- * Make an answer collection (un)available for all question creators.
- *
- * @param $new_col_id
- *  Answer collection id
- * @param $for_all
- *  0 if not for all,
- *  1 if for all
- */
-function _scale_set_for_all($new_col_id, $for_all) {
-  db_update('quiz_scale_answer_collection')
-    ->fields(array('for_all' => $for_all))
-    ->condition('id', $new_col_id)
     ->execute();
 }
