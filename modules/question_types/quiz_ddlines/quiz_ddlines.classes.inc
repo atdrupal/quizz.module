@@ -121,16 +121,16 @@ class DDLinesQuestion extends QuestionPlugin {
     }
     else {
       $settings['feedback']['enabled'] = 0;
-      $settings['hotspot']['radius'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_hotspot_radius', Defaults::HOTSPOT_RADIUS);
+      $settings['hotspot']['radius'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_hotspot_radius', QuizDdlinesDefaults::HOTSPOT_RADIUS);
       $settings['execution_mode'] = 0;
     }
 
     // Pick these from settings:
     $settings['feedback']['correct'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_feedback_correct', t('Correct'));
     $settings['feedback']['wrong'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_feedback_wrong', t('Wrong'));
-    $settings['canvas']['width'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_canvas_width', Defaults::CANVAS_WIDTH);
-    $settings['canvas']['height'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_canvas_height', Defaults::CANVAS_HEIGHT);
-    $settings['pointer']['radius'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_pointer_radius', Defaults::POINTER_RADIUS);
+    $settings['canvas']['width'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_canvas_width', QuizDdlinesDefaults::CANVAS_WIDTH);
+    $settings['canvas']['height'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_canvas_height', QuizDdlinesDefaults::CANVAS_HEIGHT);
+    $settings['pointer']['radius'] = $this->question->getQuestionType()->getConfig('quiz_ddlines_pointer_radius', QuizDdlinesDefaults::POINTER_RADIUS);
 
     return $settings;
   }

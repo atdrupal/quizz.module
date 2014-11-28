@@ -118,8 +118,8 @@ function quiz_ddlines_update_7601() {
       $question_type
         ->setConfig('quiz_ddlines_feedback_correct', variable_get('quiz_ddlines_feedback_correct', t('Correct')))
         ->setConfig('quiz_ddlines_feedback_wrong', variable_get('quiz_ddlines_feedback_wrong', t('Wrong')))
-        ->setConfig('quiz_ddlines_canvas_height', variable_get('quiz_ddlines_canvas_height', Defaults::CANVAS_HEIGHT))
-        ->setConfig('quiz_ddlines_hotspot_radius', variable_get('quiz_ddlines_hotspot_radius', Defaults::HOTSPOT_RADIUS))
+        ->setConfig('quiz_ddlines_canvas_height', variable_get('quiz_ddlines_canvas_height', QuizDdlinesDefaults::CANVAS_HEIGHT))
+        ->setConfig('quiz_ddlines_hotspot_radius', variable_get('quiz_ddlines_hotspot_radius', QuizDdlinesDefaults::HOTSPOT_RADIUS))
         ->save()
       ;
     }
