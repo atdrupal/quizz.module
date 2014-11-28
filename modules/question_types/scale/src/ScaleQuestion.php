@@ -147,13 +147,15 @@ class ScaleQuestion extends QuestionPlugin {
       }
       if (!$is_new_node || $this->util) {
         $col_to_delete = $this->util ? $this->col_id : $this->question->{0}->answer_collection_id;
+
+        // We try to delete the old answer collection
         if ($col_to_delete != $answer_collection_id) {
-          // We try to delete the old answer collection
-          $this->deleteCollectionIfNotUsed($col_to_delete, 1);
+          $this->getCollectionIO()->deleteCollectionIfNotUsed($col_to_delete, 1);
         }
       }
       return $answer_collection_id;
     }
+
     // Register a new answer collection
     $answer_collection_id = db_insert('quiz_scale_answer_collection')
       ->fields(array('for_all' => 1))
@@ -184,51 +186,12 @@ class ScaleQuestion extends QuestionPlugin {
    * @param $answer_collection_id - the id of the answer collection this alternative shall belong to.
    */
   private function saveAlternative($alternative, $answer_collection_id) {
-    $id = db_insert('quiz_scale_answer')
+    db_insert('quiz_scale_answer')
       ->fields(array(
           'answer_collection_id' => $answer_collection_id,
           'answer'               => $alternative,
       ))
       ->execute();
-  }
-
-  /**
-   * Deletes an answer collection if it isn't beeing used.
-   *
-   * @param $answer_collection_id
-   * @param $accept
-   *  If collection is used more than this many times we keep it.
-   * @return
-   *  true if deleted, false if not deleted.
-   */
-  public function deleteCollectionIfNotUsed($answer_collection_id, $accept = 0) {
-    // Check if the collection is someones preset. If it is we can't delete it.
-    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
-    if ($count > 0) {
-      return FALSE;
-    }
-
-    // Check if the collection is a global preset. If it is we can't delete it.
-    $for_all = db_query('SELECT for_all FROM {quiz_scale_answer_collection} WHERE id = :id', array(':id' => $answer_collection_id))->fetchField();
-    if ($for_all == 1) {
-      return FALSE;
-    }
-
-    // Check if the collection is used in an existing question. If it is we can't delete it.
-    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
-
-    // We delete the answer collection if it isnt beeing used by enough questions
-    if ($count <= $accept) {
-      db_delete('quiz_scale_answer_collection')
-        ->condition('id', $answer_collection_id)
-        ->execute();
-
-      db_delete('quiz_scale_answer')
-        ->condition('answer_collection_id', $answer_collection_id)
-        ->execute();
-      return TRUE;
-    }
-    return FALSE;
   }
 
   /**
@@ -299,29 +262,9 @@ class ScaleQuestion extends QuestionPlugin {
    *
    * @see QuizQuestion#delete()
    */
-  public function delete($only_this_version = FALSE) {
-    parent::delete($only_this_version);
-    if ($only_this_version) {
-      db_delete('quiz_scale_user_answers')
-        ->condition('question_qid', $this->question->qid)
-        ->condition('question_vid', $this->question->vid)
-        ->execute();
-
-      db_delete('quiz_scale_properties')
-        ->condition('qid', $this->question->qid)
-        ->condition('vid', $this->question->vid)
-        ->execute();
-    }
-    else {
-      db_delete('quiz_scale_user_answers')
-        ->condition('question_qid', $this->question->qid)
-        ->execute();
-
-      db_delete('quiz_scale_properties')
-        ->condition('qid', $this->question->qid)
-        ->execute();
-    }
-    $this->deleteCollectionIfNotUsed($this->question->{0}->answer_collection_id, 0);
+  public function delete($single_revision = FALSE) {
+    parent::delete($single_revision);
+    return $this->getCollectionIO()->deleteQuestionProperties($this->question, $single_revision);
   }
 
   /**

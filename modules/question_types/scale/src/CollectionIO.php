@@ -114,4 +114,67 @@ class CollectionIO {
       ->execute();
   }
 
+  public function deleteQuestionProperties(\Drupal\quiz_question\Entity\Question $question, $single_revision) {
+    if ($single_revision) {
+      db_delete('quiz_scale_user_answers')
+        ->condition('question_qid', $question->qid)
+        ->condition('question_vid', $question->vid)
+        ->execute();
+
+      db_delete('quiz_scale_properties')
+        ->condition('qid', $question->qid)
+        ->condition('vid', $question->vid)
+        ->execute();
+    }
+    else {
+      db_delete('quiz_scale_user_answers')
+        ->condition('question_qid', $question->qid)
+        ->execute();
+
+      db_delete('quiz_scale_properties')
+        ->condition('qid', $question->qid)
+        ->execute();
+    }
+    $this->deleteCollectionIfNotUsed($question->{0}->answer_collection_id, 0);
+  }
+
+  /**
+   * Deletes an answer collection if it isn't beeing used.
+   *
+   * @param $answer_collection_id
+   * @param $accept
+   *  If collection is used more than this many times we keep it.
+   * @return
+   *  true if deleted, false if not deleted.
+   */
+  public function deleteCollectionIfNotUsed($answer_collection_id, $accept = 0) {
+    // Check if the collection is someones preset. If it is we can't delete it.
+    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
+    if ($count > 0) {
+      return FALSE;
+    }
+
+    // Check if the collection is a global preset. If it is we can't delete it.
+    $for_all = db_query('SELECT for_all FROM {quiz_scale_answer_collection} WHERE id = :id', array(':id' => $answer_collection_id))->fetchField();
+    if ($for_all == 1) {
+      return FALSE;
+    }
+
+    // Check if the collection is used in an existing question. If it is we can't delete it.
+    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
+
+    // We delete the answer collection if it isnt beeing used by enough questions
+    if ($count <= $accept) {
+      db_delete('quiz_scale_answer_collection')
+        ->condition('id', $answer_collection_id)
+        ->execute();
+
+      db_delete('quiz_scale_answer')
+        ->condition('answer_collection_id', $answer_collection_id)
+        ->execute();
+      return TRUE;
+    }
+    return FALSE;
+  }
+
 }

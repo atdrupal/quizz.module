@@ -37,6 +37,8 @@ class FormSubmit {
   }
 
   private function doSubmit($column_id, $alternatives, &$changed, &$deleted) {
+    global $user;
+
     $plugin = new ScaleQuestion(new stdClass());
     $plugin->initUtil($column_id);
     switch ($alternatives['to-do']) { // @todo: Rename to-do to $op
@@ -49,7 +51,7 @@ class FormSubmit {
 
       // Delete
       case 2:
-        if (!$got_deleted = $plugin->deleteCollectionIfNotUsed($column_id)) {
+        if (!$got_deleted = $this->collectionIO->deleteCollectionIfNotUsed($column_id)) {
           $this->collectionIO->unpresetCollection($column_id, $user->uid);
         }
         $deleted++;
@@ -77,8 +79,9 @@ class FormSubmit {
     if ($alternatives['to-do'] == 0) {
       // The old version of the collection shall not be a preset anymore
       $this->collectionIO->unpresetCollection($column_id, $user->uid);
+
       // If the old version of the collection doesn't belong to any questions it is safe to delete it.
-      $plugin->deleteCollectionIfNotUsed($column_id);
+      $this->collectionIO->deleteCollectionIfNotUsed($column_id);
 
       if (isset($alternatives['for_all'])) {
         $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
@@ -96,7 +99,8 @@ class FormSubmit {
         ->condition('answer_collection_id', $column_id)
         ->condition('uid', $user->uid)
         ->execute();
-      $plugin->deleteCollectionIfNotUsed($column_id);
+
+      $this->collectionIO->deleteCollectionIfNotUsed($column_id);
     }
   }
 
