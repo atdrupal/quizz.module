@@ -100,3 +100,18 @@ function matching_update_7600() {
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
   db_change_field('quiz_matching_question', 'nid', 'qid', $spec_2);
 }
+
+/**
+ * Convert global configuration for questions to question type entity.
+ */
+function matching_update_7601() {
+  foreach (quiz_question_get_types() as $question_type) {
+    if ('matching' === $question_type->plugin) {
+      $question_type
+        ->setConfig('quiz_matching_form_size', variable_get('quiz_matching_form_size', TRUE))
+        ->setConfig('quiz_matching_shuffle_options', variable_get('quiz_matching_shuffle_options', TRUE))
+        ->save()
+      ;
+    }
+  }
+}
