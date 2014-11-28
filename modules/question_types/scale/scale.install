@@ -26,8 +26,8 @@ function scale_schema() {
   $schema['quiz_scale_properties'] = array(
       'description' => 'Properties specific to this question type. Holds information about what answer collection this node uses',
       'fields'      => array(
-          'qid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'vid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'qid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Question ID'),
+          'vid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Question VID'),
           'answer_collection_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
       ),
       'primary key' => array('qid', 'vid'),
