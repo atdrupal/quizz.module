@@ -240,7 +240,7 @@ class MatchingQuestion extends QuestionPlugin {
         $form[$match['match_id']]['#default_value'] = $responses[$match['match_id']];
       }
     }
-    if (variable_get('quiz_matching_shuffle_options', TRUE)) {
+    if ($this->question->getQuestionType()->getConfig('quiz_matching_shuffle_options', TRUE)) {
       $form = $this->customShuffle($form);
     }
     $form['scoring_info'] = array(
@@ -342,7 +342,7 @@ class MatchingQuestion extends QuestionPlugin {
         '#theme'       => 'matching_question_form',
         '#description' => t('Write your pairs in the question and answer columns. For the user the question will be fixed and the answers will be shown as alternatives in a dropdown box.'),
     );
-    for ($i = 1; $i <= variable_get('quiz_matching_form_size', 5); ++$i) {
+    for ($i = 1; $i <= $this->question->getQuestionType()->getConfig('quiz_matching_form_size', 5); ++$i) {
       $form['match'][$i] = array(
           '#type'  => 'fieldset',
           '#title' => t('Question ' . $i),

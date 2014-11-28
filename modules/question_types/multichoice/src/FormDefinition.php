@@ -73,7 +73,7 @@ class FormDefinition {
       $form_state['choice_count'] ++;
     }
     else {
-      $form_state['choice_count'] = max(variable_get('multichoice_def_num_of_alts', 2), isset($this->question->alternatives) ? count($this->question->alternatives) : 0);
+      $form_state['choice_count'] = max($this->question->getQuestionType()->getConfig('multichoice_def_num_of_alts', 2), isset($this->question->alternatives) ? count($this->question->alternatives) : 0);
     }
 
     $this->getChoiceWrapper($form);
@@ -171,8 +171,11 @@ class FormDefinition {
     $form['alternatives'][$i]['correct'] = array(
         '#type'          => 'checkbox',
         '#default_value' => $correct_default,
-        '#attributes'    => array('onchange' => 'Multichoice.refreshScores(this, ' . variable_get('multichoice_def_scoring', 0) . ')'),
+        '#attributes'    => array(
+            'onchange' => 'Multichoice.refreshScores(this, ' . $this->question->getQuestionType()->getConfig('multichoice_def_scoring', 0) . ')'
+        ),
     );
+
     // We add id to be able to update the correct alternatives if the node is updated, without destroying
     // existing answer reports
     $form['alternatives'][$i]['id'] = array(

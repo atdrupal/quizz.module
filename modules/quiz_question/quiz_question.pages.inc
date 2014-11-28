@@ -96,31 +96,6 @@ function quiz_question_form_submit_delete($form, &$form_state) {
 }
 
 /**
- * Get the configuration form for all enabled question types.
- */
-function quiz_question_config($form) {
-  $form['#validate'] = array();
-
-  // Go through all question types and merge their config forms
-  foreach (quiz_question_get_plugin_info() as $name => $info) {
-    $function = $name . '_quiz_question_config';
-    if (function_exists($function) && ($admin_form = $function())) {
-      $form[$name] = $admin_form;
-      $form[$name]['#type'] = 'fieldset';
-      $form[$name]['#title'] = $info['name'];
-      $form[$name]['#collapsible'] = TRUE;
-      $form[$name]['#collapsed'] = TRUE;
-      if (isset($admin_form['#validate']) && is_array($admin_form['#validate'])) {
-        $form['#validate'] = array_merge($form['#validate'], $admin_form['#validate']);
-        unset($form[$name]['#validate']);
-      }
-    }
-  }
-
-  return system_settings_form($form);
-}
-
-/**
  * Callback for /quiz-question/%/%/revision-actions
  */
 function quiz_question_revision_actions($form, $form_state, $question_qid, $question_vid) {

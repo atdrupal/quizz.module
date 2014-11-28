@@ -33,7 +33,7 @@ class MatchingTestCase extends QuizQuestionTestCase {
     );
 
     // generate rand match question, answer and feedback
-    for ($i = 1; $i < variable_get('quiz_matching_form_size', 5); $i++) {
+    for ($i = 1; $i < 5; $i++) { # 5 => $question_type->getConfig('quiz_matching_form_size', 5)
       $settings['match'][$i]['question'] = 'Can you say #' . $i . '?';
       $settings['match'][$i]['answer'] = 'Number ' . $i;
       $settings['match'][$i]['feedback'] = 'Correct result is: "Number ' . $i . '"';

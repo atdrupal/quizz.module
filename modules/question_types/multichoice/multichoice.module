@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quiz_question\Entity\QuestionType;
+
 /**
  * The main file for multichoice.
  *
@@ -53,12 +55,15 @@ function multichoice_quiz_question_info() {
 /**
  * Implements hook_quiz_question_config().
  */
-function multichoice_quiz_question_config() {
+function multichoice_quiz_question_config(QuestionType $question_type) {
+  $form = array('#validate' => array('multichoice_config_validate'));
+
   $form['multichoice_def_num_of_alts'] = array(
       '#type'          => 'textfield',
       '#title'         => t('Default number of alternatives'),
-      '#default_value' => variable_get('multichoice_def_num_of_alts', 2),
+      '#default_value' => $question_type->getConfig('multichoice_def_num_of_alts', 2),
   );
+
   $form['multichoice_def_scoring'] = array(
       '#type'          => 'radios',
       '#title'         => t('Default scoring method'),
@@ -67,9 +72,9 @@ function multichoice_quiz_question_config() {
           0 => t('Give minus one point for incorrect answers'),
           1 => t("Give one point for each incorrect option that haven't been chosen"),
       ),
-      '#default_value' => variable_get('multichoice_def_scoring', 0),
+      '#default_value' => $question_type->getConfig('multichoice_def_scoring', 0),
   );
-  $form['#validate'][] = 'multichoice_config_validate';
+
   return $form;
 }
 

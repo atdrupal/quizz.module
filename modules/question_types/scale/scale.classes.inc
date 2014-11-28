@@ -113,7 +113,7 @@ class ScaleQuestion extends QuestionPlugin {
     }
 
     $alternatives = array();
-    for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
+    for ($i = 0; $i < $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
       if (isset($alt_input['alternative' . $i]) && drupal_strlen($alt_input['alternative' . $i]) > 0) {
         $alternatives[] = $alt_input['alternative' . $i];
       }
@@ -334,7 +334,7 @@ class ScaleQuestion extends QuestionPlugin {
   public function getEntityView() {
     $content = parent::getEntityView();
     $alternatives = array();
-    for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
+    for ($i = 0; $i < $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
       if (isset($this->question->{$i}->answer) && drupal_strlen($this->question->{$i}->answer) > 0) {
         $alternatives[] = check_plain($this->question->{$i}->answer);
       }
@@ -355,7 +355,7 @@ class ScaleQuestion extends QuestionPlugin {
     $form = parent::getAnsweringForm($form_state, $result_id);
     //$form['#theme'] = 'scale_answering_form';
     $options = array();
-    for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
+    for ($i = 0; $i < $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
       if (isset($this->question->{$i}) && drupal_strlen($this->question->{$i}->answer) > 0) {
         $options[$this->question->{$i}->id] = check_plain($this->question->{$i}->answer);
       }
@@ -389,9 +389,8 @@ class ScaleQuestion extends QuestionPlugin {
    */
   public function getCreationForm(array &$form_state = NULL) {
     $form = array();
-    /*
-     * Getting presets from the database
-     */
+
+    // Getting presets from the database
     $collections = $this->getPresetCollections(TRUE);
     $options = $this->makeOptions($collections);
     $options['d'] = '-'; // Default
@@ -416,9 +415,11 @@ class ScaleQuestion extends QuestionPlugin {
         '#description'   => t('Select a set of alternatives'),
         '#attributes'    => array('onchange' => 'refreshAlternatives(this)'),
     );
-    $max_num_alts = variable_get('scale_max_num_of_alts', 10);
+    $max_num_alts = $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10);
     // TODO: use drupal_add_js($path, 'settings');
-    $form['jsArray'] = array('#markup' => "<script type='text/javascript'>$jsArray var scale_max_num_of_alts = $max_num_alts;</script>");
+    $form['jsArray'] = array(
+        '#markup' => "<script type='text/javascript'>$jsArray var scale_max_num_of_alts = $max_num_alts;</script>"
+    );
     $form['answer']['alternatives'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Alternatives'),

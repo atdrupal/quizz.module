@@ -123,3 +123,18 @@ function multichoice_update_7600() {
   $spec_3 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
   db_change_field('quiz_multichoice_answers', 'question_nid', 'question_qid', $spec_3);
 }
+
+/**
+ * Convert global configuration for questions to question type entity.
+ */
+function multichoice_update_7601() {
+  foreach (quiz_question_get_types() as $question_type) {
+    if ('multichoice' === $question_type->plugin) {
+      $question_type
+        ->setConfig('multichoice_def_num_of_alts', variable_get('multichoice_def_num_of_alts', 2))
+        ->setConfig('multichoice_def_scoring', variable_get('multichoice_def_scoring', 0))
+        ->save()
+      ;
+    }
+  }
+}

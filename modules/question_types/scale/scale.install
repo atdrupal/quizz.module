@@ -134,3 +134,17 @@ function scale_update_7600() {
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
   db_change_field('quiz_scale_user_answers', 'question_nid', 'question_qid', $spec_2);
 }
+
+/**
+ * Convert global configuration for questions to question type entity.
+ */
+function scale_update_7601() {
+  foreach (quiz_question_get_types() as $question_type) {
+    if ('scale' === $question_type->plugin) {
+      $question_type
+        ->setConfig('scale_max_num_of_alts', variable_get('scale_max_num_of_alts', 10))
+        ->save()
+      ;
+    }
+  }
+}

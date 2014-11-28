@@ -88,18 +88,6 @@ class QuestionUIController extends EntityDefaultUIController {
         'type'             => MENU_NORMAL_ITEM,
     );
 
-    // Menu items for admin view of each question type.
-    $items['admin/quiz/settings/questions-settings'] = array(
-        'title'            => 'Question configuration',
-        'description'      => 'Configure the question types.',
-        'file path'        => drupal_get_path('module', 'quiz_question'),
-        'file'             => 'quiz_question.pages.inc',
-        'page callback'    => 'drupal_get_form',
-        'page arguments'   => array('quiz_question_config'),
-        'access arguments' => array('administer quiz configuration'),
-        'type'             => MENU_NORMAL_ITEM,
-    );
-
     $items['quiz-question/%quiz_question_entity'] = array(
         'title callback'   => 'entity_class_label',
         'title arguments'  => array(1),

@@ -84,3 +84,17 @@ function long_answer_update_7600() {
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
   db_change_field('quiz_long_answer_user_answers', 'question_nid', 'question_qid', $spec_2);
 }
+
+/**
+ * Convert global configuration for questions to question type entity.
+ */
+function long_answer_7601() {
+  foreach (quiz_question_get_types() as $question_type) {
+    if ('long_answer' === $question_type->plugin) {
+      $question_type
+        ->setConfig('long_answer_default_max_score', variable_get('long_answer_default_max_score', 10))
+        ->save()
+      ;
+    }
+  }
+}
