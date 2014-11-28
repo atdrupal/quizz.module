@@ -40,7 +40,7 @@ class CollectionIO {
     $collections = array(); // array holding data for each collection
     $sql = 'SELECT DISTINCT ac.id AS answer_collection_id, a.answer, ac.for_all
             FROM {quiz_scale_user} au
-            JOIN {quiz_scale_answer_collection} ac ON(au.answer_collection_id = ac.id)
+            JOIN {quiz_scale_collections} ac ON(au.answer_collection_id = ac.id)
             JOIN {quiz_scale_answer} a ON(a.answer_collection_id = ac.id)
             WHERE au.uid = :uid';
     if ($with_defaults) {
@@ -92,7 +92,7 @@ class CollectionIO {
       ->execute();
 
     if (user_access('Edit global presets')) {
-      db_update('quiz_scale_answer_collection')
+      db_update('quiz_scale_collections')
         ->fields(array('for_all' => 0))
         ->execute();
     }
@@ -108,7 +108,7 @@ class CollectionIO {
    *  1 if for all
    */
   public function setForAll($new_column_id, $for_all) {
-    db_update('quiz_scale_answer_collection')
+    db_update('quiz_scale_collections')
       ->fields(array('for_all' => $for_all))
       ->condition('id', $new_column_id)
       ->execute();
@@ -159,7 +159,7 @@ class CollectionIO {
 
     // Check if the collection is a global preset. If it is we can't delete it.
     $for_all = db_query(
-      'SELECT for_all FROM {quiz_scale_answer_collection} WHERE id = :id', array(
+      'SELECT for_all FROM {quiz_scale_collections} WHERE id = :id', array(
         ':id' => $answer_collection_id
       ))->fetchField();
     if ($for_all == 1) {
@@ -174,7 +174,7 @@ class CollectionIO {
 
     // We delete the answer collection if it isnt beeing used by enough questions
     if ($count <= $accept) {
-      db_delete('quiz_scale_answer_collection')
+      db_delete('quiz_scale_collections')
         ->condition('id', $answer_collection_id)
         ->execute();
 
@@ -323,7 +323,7 @@ class CollectionIO {
     }
 
     // Register a new answer collection
-    $answer_collection_id = db_insert('quiz_scale_answer_collection')
+    $answer_collection_id = db_insert('quiz_scale_collections')
       ->fields(array('for_all' => 1))
       ->execute();
 
