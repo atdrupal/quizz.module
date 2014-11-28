@@ -66,7 +66,7 @@ class FormSubmit {
   private function doSubmitDelete(ScaleQuestion $plugin, $alternatives, $column_id) {
     global $user;
 
-    $new_col_id = $plugin->saveAnswerCollection(FALSE, $alternatives, 1);
+    $new_col_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
     if (isset($alternatives['for_all'])) {
       $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
     }
@@ -106,7 +106,7 @@ class FormSubmit {
 
   private function doSubmitNew(ScaleQuestion $plugin, $alternatives) {
     if (drupal_strlen($alternatives['alternative0']) > 0) {
-      $new_col_id = $plugin->saveAnswerCollection(FALSE, $alternatives, 1);
+      $new_col_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
       $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
       drupal_set_message(t('New preset has been added'));
     }

@@ -205,4 +205,137 @@ class CollectionIO {
       ->execute();
   }
 
+  /**
+   * Finds out if a collection already exists.
+   *
+   * @param $alternatives
+   *  This is the collection that will be compared with the database.
+   * @param $answer_collection_id
+   *  If we are matching a set of alternatives with a given collection that exists in the database.
+   * @param $last_id - The id of the last alternative we compared with.
+   * @return
+   *  TRUE if the collection exists
+   *  FALSE otherwise
+   */
+  private function existingCollection(array $alternatives, $answer_collection_id = NULL, $last_id = NULL) {
+    $my_alts = isset($answer_collection_id) ? $alternatives : array_reverse($alternatives);
+
+    // Find all answers identical to the next answer in $alternatives
+    $sql = 'SELECT id, answer_collection_id FROM {quiz_scale_answer} WHERE answer = :answer';
+    $args[':answer'] = array_pop($my_alts);
+    // Filter on collection id
+    if (isset($answer_collection_id)) {
+      $sql .= ' AND answer_collection_id = :acid';
+      $args[':acid'] = $answer_collection_id;
+    }
+
+    // Filter on alternative id(If we are investigating a specific collection,
+    // the alternatives needs to be in a correct order)
+    if (isset($last_id)) {
+      $sql .= ' AND id = :id';
+      $args[':id'] = $last_id + 1;
+    }
+    $res = db_query($sql, $args);
+    if (!$res_o = $res->fetch()) {
+      return FALSE;
+    }
+
+    /*
+     * If all alternatives has matched make sure the collection we are comparing
+     * against in the database doesn't have more alternatives.
+     */
+    if (count($my_alts) == 0) {
+      $res_o2 = db_query(
+        'SELECT *
+          FROM {quiz_scale_answer}
+          WHERE answer_collection_id = :answer_collection_id AND id = :id', array(
+          ':answer_collection_id' => $answer_collection_id,
+          ':id'                   => ($last_id + 2)
+        ))->fetch();
+      return ($res_o2) ? FALSE : $answer_collection_id;
+    }
+
+    // Do a recursive call to this function on all answer collection candidates
+    do {
+      $col_id = $this->existingCollection($my_alts, $res_o->answer_collection_id, $res_o->id);
+      if ($col_id) {
+        return $col_id;
+      }
+    } while ($res_o = $res->fetch());
+
+    return FALSE;
+  }
+
+  /**
+   * Stores the answer collection to the database, or identifies an existing collection.
+   *
+   * We try to reuse answer collections as much as possible to minimize the amount of rows in the database,
+   * and thereby improving performance when surveys are beeing taken.
+   *
+   * @param bool $is_new - the question is beeing inserted(not updated)
+   * @param $alt_input - the alternatives array to be saved.
+   * @param $preset - 1 | 0 = preset | not preset
+   * @return
+   *  Answer collection id
+   */
+  public function saveAnswerCollection(Question $question, $is_new, array $alt_input = NULL, $preset = NULL) {
+    global $user;
+
+    if (!isset($alt_input)) {
+      $alt_input = get_object_vars($question);
+    }
+
+    if (!isset($preset) && isset($question->save)) {
+      $preset = $question->save;
+    }
+
+    $alternatives = array();
+    for ($i = 0; $i < $question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
+      if (isset($alt_input['alternative' . $i]) && drupal_strlen($alt_input['alternative' . $i]) > 0) {
+        $alternatives[] = $alt_input['alternative' . $i];
+      }
+    }
+
+    // If an identical answer collection already exists
+    if ($answer_collection_id = $this->existingCollection($alternatives)) {
+      if ($preset == 1) {
+        $this->setPreset($answer_collection_id);
+      }
+
+      if (!$is_new || $this->util) {
+        $col_to_delete = $this->util ? $this->col_id : $question->{0}->answer_collection_id;
+
+        // We try to delete the old answer collection
+        if ($col_to_delete != $answer_collection_id) {
+          $this->deleteCollectionIfNotUsed($col_to_delete, 1);
+        }
+      }
+      return $answer_collection_id;
+    }
+
+    // Register a new answer collection
+    $answer_collection_id = db_insert('quiz_scale_answer_collection')
+      ->fields(array('for_all' => 1))
+      ->execute();
+
+    // Save as preset if checkbox for preset has been checked
+    if ($preset == 1) {
+      db_insert('quiz_scale_user')
+        ->fields(array(
+            'uid'                  => $user->uid,
+            'answer_collection_id' => $answer_collection_id,
+        ))
+        ->execute();
+    }
+
+    // Save the alternatives in the answer collection
+    //db_lock_table('quiz_scale_answer');
+    for ($i = 0; $i < count($alternatives); $i++) {
+      $this->saveAlternative($alternatives[$i], $answer_collection_id);
+    }
+    //db_unlock_tables();
+
+    return $answer_collection_id;
+  }
+
 }
