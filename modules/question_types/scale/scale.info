@@ -5,5 +5,4 @@ core = 7.x
 dependencies[] = quizz
 dependencies[] = quiz_question
 
-files[] = scale.classes.inc
 files[] = tests/ScaleTestCase.test

@@ -4,37 +4,6 @@ namespace Drupal\scale\Form\ConfigForm;
 
 class FormSubmit {
 
-  /**
-   * Searches a string for the answer collection id
-   *
-   * @param $string
-   * @return answer collection id
-   */
-  private function getColumnId($string) {
-    $res = array();
-    $success = preg_match('/^collection([0-9]{1,}|new)$/', $string, $res);
-    return ($success > 0) ? $res[1] : FALSE;
-  }
-
-  /**
-   * Make sure an answer collection isn't a preset for a given user.
-   *
-   * @param $col_id
-   *  Answer_collection_id
-   * @param $user_id
-   */
-  private function unpresetCollection($col_id, $user_id) {
-    db_delete('quiz_scale_user')
-      ->condition('answer_collection_id', $col_id)
-      ->condition('uid', $user_id)
-      ->execute();
-    if (user_access('Edit global presets')) {
-      db_update('quiz_scale_answer_collection')
-        ->fields(array('for_all' => 0))
-        ->execute();
-    }
-  }
-
   public function submit($form, &$form_state) {
     global $user;
 
@@ -82,14 +51,16 @@ class FormSubmit {
               $s_q->deleteCollectionIfNotUsed($col_id);
             }
             break;
-          case 2: //Delete
+
+          case 2: // Delete
             $got_deleted = $s_q->deleteCollectionIfNotUsed($col_id);
             if (!$got_deleted) {
               $this->unpresetCollection($col_id, $user->uid);
             }
             $deleted++;
             break;
-          case 3: //New
+
+          case 3: // New
             if (drupal_strlen($alternatives['alternative0']) > 0) {
               $new_col_id = $s_q->saveAnswerCollection(FALSE, $alternatives, 1);
               $this->setForAll($new_col_id, $alternatives['for_all']);
@@ -99,9 +70,11 @@ class FormSubmit {
         }
       }
     }
+
     if ($changed > 0) {
       drupal_set_message(t('!changed presets have been changed.', array('!changed' => $changed)));
     }
+
     if ($deleted > 0) {
       drupal_set_message(t('!deleted presets have been deleted.', array('!deleted' => $deleted)));
     }
@@ -110,9 +83,9 @@ class FormSubmit {
   /**
    * Make an answer collection (un)available for all question creators.
    *
-   * @param $new_column_id
+   * @param int $new_column_id
    *  Answer collection id
-   * @param $for_all
+   * @param int $for_all
    *  0 if not for all,
    *  1 if for all
    */
@@ -121,6 +94,37 @@ class FormSubmit {
       ->fields(array('for_all' => $for_all))
       ->condition('id', $new_column_id)
       ->execute();
+  }
+
+  /**
+   * Searches a string for the answer collection id
+   *
+   * @param $string
+   * @return answer collection id
+   */
+  private function getColumnId($string) {
+    $res = array();
+    $success = preg_match('/^collection([0-9]{1,}|new)$/', $string, $res);
+    return ($success > 0) ? $res[1] : FALSE;
+  }
+
+  /**
+   * Make sure an answer collection isn't a preset for a given user.
+   *
+   * @param $col_id
+   *  Answer_collection_id
+   * @param $user_id
+   */
+  private function unpresetCollection($col_id, $user_id) {
+    db_delete('quiz_scale_user')
+      ->condition('answer_collection_id', $col_id)
+      ->condition('uid', $user_id)
+      ->execute();
+    if (user_access('Edit global presets')) {
+      db_update('quiz_scale_answer_collection')
+        ->fields(array('for_all' => 0))
+        ->execute();
+    }
   }
 
 }
