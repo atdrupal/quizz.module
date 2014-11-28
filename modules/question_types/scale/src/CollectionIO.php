@@ -81,14 +81,13 @@ class CollectionIO {
   /**
    * Make sure an answer collection isn't a preset for a given user.
    *
-   * @param $column_id
-   *  Answer_collection_id
-   * @param $user_id
+   * @param int $collection_id
+   * @param int $uid
    */
-  public function unpresetCollection($column_id, $user_id) {
+  public function unpresetCollection($collection_id, $uid) {
     db_delete('quiz_scale_user')
-      ->condition('answer_collection_id', $column_id)
-      ->condition('uid', $user_id)
+      ->condition('answer_collection_id', $collection_id)
+      ->condition('uid', $uid)
       ->execute();
 
     if (user_access('Edit global presets')) {
@@ -101,16 +100,16 @@ class CollectionIO {
   /**
    * Make an answer collection (un)available for all question creators.
    *
-   * @param int $new_column_id
+   * @param int $new_collection_id
    *  Answer collection id
    * @param int $for_all
    *  0 if not for all,
    *  1 if for all
    */
-  public function setForAll($new_column_id, $for_all) {
+  public function setForAll($new_collection_id, $for_all) {
     db_update('quiz_scale_collections')
       ->fields(array('for_all' => $for_all))
-      ->condition('id', $new_column_id)
+      ->condition('id', $new_collection_id)
       ->execute();
   }
 
@@ -141,17 +140,17 @@ class CollectionIO {
   /**
    * Deletes an answer collection if it isn't beeing used.
    *
-   * @param $answer_collection_id
+   * @param $collection_id
    * @param $accept
    *  If collection is used more than this many times we keep it.
    * @return
    *  true if deleted, false if not deleted.
    */
-  public function deleteCollectionIfNotUsed($answer_collection_id, $accept = 0) {
+  public function deleteCollectionIfNotUsed($collection_id, $accept = 0) {
     // Check if the collection is someones preset. If it is we can't delete it.
     $count = db_query(
       'SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(
-        ':acid' => $answer_collection_id
+        ':acid' => $collection_id
       ))->fetchField();
     if ($count > 0) {
       return FALSE;
@@ -160,7 +159,7 @@ class CollectionIO {
     // Check if the collection is a global preset. If it is we can't delete it.
     $for_all = db_query(
       'SELECT for_all FROM {quiz_scale_collections} WHERE id = :id', array(
-        ':id' => $answer_collection_id
+        ':id' => $collection_id
       ))->fetchField();
     if ($for_all == 1) {
       return FALSE;
@@ -169,17 +168,17 @@ class CollectionIO {
     // Check if the collection is used in an existing question. If it is we can't delete it.
     $count = db_query(
       'SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid', array(
-        ':acid' => $answer_collection_id
+        ':acid' => $collection_id
       ))->fetchField();
 
     // We delete the answer collection if it isnt beeing used by enough questions
     if ($count <= $accept) {
       db_delete('quiz_scale_collections')
-        ->condition('id', $answer_collection_id)
+        ->condition('id', $collection_id)
         ->execute();
 
       db_delete('quiz_scale_answer')
-        ->condition('answer_collection_id', $answer_collection_id)
+        ->condition('answer_collection_id', $collection_id)
         ->execute();
       return TRUE;
     }
@@ -204,14 +203,14 @@ class CollectionIO {
   /**
    * Add a preset for the current user.
    *
-   * @param $column_id - answer collection id of the collection this user wants to have as a preset
+   * @param $collection_id - answer collection id of the collection this user wants to have as a preset
    */
-  public function setPreset($column_id) {
+  public function setPreset($collection_id) {
     $uid = $GLOBALS['user']->uid;
 
     db_merge('quiz_scale_user')
-      ->key(array('uid' => $uid, 'answer_collection_id' => $column_id))
-      ->fields(array('uid' => $uid, 'answer_collection_id' => $column_id))
+      ->key(array('uid' => $uid, 'answer_collection_id' => $collection_id))
+      ->fields(array('uid' => $uid, 'answer_collection_id' => $collection_id))
       ->execute();
   }
 

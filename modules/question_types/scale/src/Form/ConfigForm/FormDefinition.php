@@ -47,10 +47,10 @@ class FormDefinition {
 
     // If user is allowed to edit global answer collections he is also allowed
     // to add new global presets
-    $new_column = new stdClass();
-    $new_column->for_all = 1;
-    $new_column->name = t('New global collection(available to all users)');
-    $collections['new'] = $new_column;
+    $_collection = new stdClass();
+    $_collection->for_all = 1;
+    $_collection->name = t('New global collection(available to all users)');
+    $collections['new'] = $_collection;
 
     if (count($collections) == 0) {
       $form['no_col']['#markup'] = t("You don't have any preset collections.");

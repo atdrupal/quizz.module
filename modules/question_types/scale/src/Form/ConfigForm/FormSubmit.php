@@ -15,15 +15,25 @@ class FormSubmit {
     $this->collectionIO = new CollectionIO();
   }
 
-  public function submit($form, &$form_state) {
-    global $user;
+  /**
+   * Searches a string for the answer collection id
+   *
+   * @param $string
+   * @return int
+   */
+  private function findCollectionId($string) {
+    $matches = array();
+    $success = preg_match('/^collection([0-9]{1,}|new)$/', $string, $matches);
+    return ($success > 0) ? $matches[1] : FALSE;
+  }
 
+  public function submit($form, &$form_state) {
     $changed = 0;
     $deleted = 0;
 
     foreach ($form_state['values'] as $key => $alternatives) {
-      if ($col_id = $this->getColumnId($key)) {
-        $this->doSubmit($col_id, $alternatives, $changed, $deleted);
+      if ($col_id = $this->findCollectionId($key)) {
+        $this->doSubmitAlternatives($col_id, $alternatives, $changed, $deleted);
       }
     }
 
@@ -36,23 +46,23 @@ class FormSubmit {
     }
   }
 
-  private function doSubmit($column_id, $alternatives, &$changed, &$deleted) {
+  private function doSubmitAlternatives($collection_id, $alternatives, &$changed, &$deleted) {
     global $user;
 
     $plugin = new ScaleQuestion(new stdClass());
-    $plugin->initUtil($column_id);
+    $plugin->initUtil($collection_id);
     switch ($alternatives['to-do']) { // @todo: Rename to-do to $op
       case 0: // Save, but don't change
       case 1: // Save and change existing questions
-        if (FALSE !== $this->doSubmitDelete($plugin, $alternatives, $column_id)) {
+        if (FALSE !== $this->doSubmitDelete($plugin, $alternatives, $collection_id)) {
           $changed++;
         }
         break;
 
       // Delete
       case 2:
-        if (!$got_deleted = $this->collectionIO->deleteCollectionIfNotUsed($column_id)) {
-          $this->collectionIO->unpresetCollection($column_id, $user->uid);
+        if (!$got_deleted = $this->collectionIO->deleteCollectionIfNotUsed($collection_id)) {
+          $this->collectionIO->unpresetCollection($collection_id, $user->uid);
         }
         $deleted++;
         break;
@@ -63,44 +73,45 @@ class FormSubmit {
     }
   }
 
-  private function doSubmitDelete(ScaleQuestion $plugin, $alternatives, $column_id) {
+  private function doSubmitDelete(ScaleQuestion $plugin, $alternatives, $collection_id) {
     global $user;
 
-    $new_col_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
+    $new_collection_id = $this->collectionIO->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
     if (isset($alternatives['for_all'])) {
-      $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
+      $this->collectionIO->setForAll($new_collection_id, $alternatives['for_all']);
     }
 
-    if ($new_col_id == $column_id) {
+    if ($new_collection_id == $collection_id) {
       return FALSE;
     }
 
     // We save the changes, but don't change existing questions
     if ($alternatives['to-do'] == 0) {
       // The old version of the collection shall not be a preset anymore
-      $this->collectionIO->unpresetCollection($column_id, $user->uid);
+      $this->collectionIO->unpresetCollection($collection_id, $user->uid);
 
       // If the old version of the collection doesn't belong to any questions it is safe to delete it.
-      $this->collectionIO->deleteCollectionIfNotUsed($column_id);
+      $this->collectionIO->deleteCollectionIfNotUsed($collection_id);
 
       if (isset($alternatives['for_all'])) {
-        $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
+        $this->collectionIO->setForAll($new_collection_id, $alternatives['for_all']);
       }
     }
     elseif ($alternatives['to-do'] == 1) {
       // Update all the users questions where the collection is used
       $nids = db_query('SELECT nid FROM {node} WHERE uid = :uid', array(':uid' => 1))->fetchCol();
+
       db_update('quiz_scale_properties')
-        ->fields(array('answer_collection_id' => $new_col_id))
+        ->fields(array('answer_collection_id' => $new_collection_id))
         ->condition('answer_collection_id', $nids)
         ->execute();
 
       db_delete('quiz_scale_user')
-        ->condition('answer_collection_id', $column_id)
+        ->condition('answer_collection_id', $collection_id)
         ->condition('uid', $user->uid)
         ->execute();
 
-      $this->collectionIO->deleteCollectionIfNotUsed($column_id);
+      $this->collectionIO->deleteCollectionIfNotUsed($collection_id);
     }
   }
 
@@ -110,18 +121,6 @@ class FormSubmit {
       $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
       drupal_set_message(t('New preset has been added'));
     }
-  }
-
-  /**
-   * Searches a string for the answer collection id
-   *
-   * @param $string
-   * @return answer collection id
-   */
-  private function getColumnId($string) {
-    $res = array();
-    $success = preg_match('/^collection([0-9]{1,}|new)$/', $string, $res);
-    return ($success > 0) ? $res[1] : FALSE;
   }
 
 }

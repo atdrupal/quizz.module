@@ -18,4 +18,7 @@ class Collection extends Entity {
   /** @var bool */
   public $for_all;
 
+  /** @var int */
+  public $uid;
+
 }
