@@ -91,9 +91,9 @@ class ShortAnswerQuestion extends QuestionPlugin {
   }
 
   /**
-   * Implementation of getNodeProperties
+   * Implementation of load
    *
-   * @see QuizQuestion#getNodeProperties()
+   * @see QuizQuestion#load()
    */
   public function load() {
     if (isset($this->entityProperties)) {
