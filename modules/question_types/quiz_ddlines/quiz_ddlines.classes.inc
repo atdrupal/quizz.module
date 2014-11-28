@@ -391,7 +391,7 @@ class DDLinesResponse extends QuizQuestionResponse {
     $correct_count = 0;
 
     foreach ($results as $result) {
-      $correct_count += ($result == AnswerStatus::CORRECT) ? 1 : 0;
+      $correct_count += ($result == QuizDdlinesDefaults::CORRECT) ? 1 : 0;
     }
 
     return $correct_count;
@@ -551,10 +551,10 @@ class DDLinesResponse extends QuizQuestionResponse {
       $source_id = $element->label->id;
 
       if (isset($this->user_answers[$source_id])) {
-        $results[$element->label->id] = ($this->user_answers[$source_id] == $element->hotspot->id) ? AnswerStatus::CORRECT : AnswerStatus::WRONG;
+        $results[$element->label->id] = ($this->user_answers[$source_id] == $element->hotspot->id) ? QuizDdlinesDefaults::CORRECT : QuizDdlinesDefaults::WRONG;
       }
       else {
-        $results[$element->label->id] = AnswerStatus::NO_ANSWER;
+        $results[$element->label->id] = QuizDdlinesDefaults::NO_ANSWER;
       }
     }
 
