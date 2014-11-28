@@ -37,7 +37,7 @@ abstract class QuestionPlugin {
   /**
    * Extra node properties
    */
-  public $entityProperties = NULL;
+  public $properties = NULL;
 
   /**
    * QuizQuestion constructor stores the node object.
@@ -99,12 +99,12 @@ abstract class QuestionPlugin {
    * @return array
    */
   public function load() {
-    if (isset($this->entityProperties)) {
-      return $this->entityProperties;
+    if (isset($this->properties)) {
+      return $this->properties;
     }
 
     $props['is_quiz_question'] = TRUE;
-    $this->entityProperties = $props;
+    $this->properties = $props;
 
     return $props;
   }

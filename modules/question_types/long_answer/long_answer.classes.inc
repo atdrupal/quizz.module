@@ -85,8 +85,8 @@ class LongAnswerQuestion extends QuestionPlugin {
    * @see QuizQuestion#load()
    */
   public function load() {
-    if (isset($this->entityProperties)) {
-      return $this->entityProperties;
+    if (isset($this->properties)) {
+      return $this->properties;
     }
     $properties = parent::load();
 
@@ -101,7 +101,7 @@ class LongAnswerQuestion extends QuestionPlugin {
       $properties = array_merge($properties, $res_a);
     }
 
-    return $this->entityProperties = $properties;
+    return $this->properties = $properties;
   }
 
   /**

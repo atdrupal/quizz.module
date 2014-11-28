@@ -78,8 +78,8 @@ class TrueFalseQuestion extends QuestionPlugin {
    * @see QuizQuestion#load()
    */
   public function load() {
-    if (isset($this->entityProperties)) {
-      return $this->entityProperties;
+    if (isset($this->properties)) {
+      return $this->properties;
     }
     $props = parent::load();
 
@@ -92,7 +92,7 @@ class TrueFalseQuestion extends QuestionPlugin {
     if (is_array($res_a)) {
       $props = array_merge($props, $res_a);
     }
-    $this->entityProperties = $props;
+    $this->properties = $props;
     return $props;
   }
 

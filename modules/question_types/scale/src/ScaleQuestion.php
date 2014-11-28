@@ -330,23 +330,22 @@ class ScaleQuestion extends QuestionPlugin {
    * @see QuizQuestion#load()
    */
   public function load() {
-    if (!empty($this->entityProperties)) {
-      return $this->entityProperties;
+    if (!empty($this->properties)) {
+      return $this->properties;
     }
 
-    $this->entityProperties = parent::load();
+    $this->properties = parent::load();
 
-    $res = db_query('SELECT id, answer, a.answer_collection_id
-            FROM {quiz_scale_properties} p
-              JOIN {quiz_scale_answer} answer ON (p.answer_collection_id = answer.answer_collection_id)
-            WHERE vid = :question_vid
-            ORDER BY answer.id', array(
-        ':question_vid' => $this->question->vid
-    ));
-    foreach ($res as $properties) {
-      $this->entityProperties[] = $properties;
+    $query = db_query(
+      'SELECT id, answer, answer.answer_collection_id
+       FROM {quiz_scale_properties} p
+         JOIN {quiz_scale_answer} answer ON (p.answer_collection_id = answer.answer_collection_id)
+       WHERE vid = :question_vid
+         ORDER BY answer.id', array(':question_vid' => $this->question->vid));
+    foreach ($query as $property) {
+      $this->properties[] = $property;
     }
-    return $this->entityProperties;
+    return $this->properties;
   }
 
   /**

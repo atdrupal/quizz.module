@@ -2,6 +2,8 @@
 
 namespace Drupal\scale;
 
+use stdClass;
+
 class CollectionIO {
 
   /**
