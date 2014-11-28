@@ -84,3 +84,17 @@ function short_answer_update_7600() {
   db_change_field('quiz_short_answer_properties', 'nid', 'qid', $spec);
   db_change_field('quiz_short_answer_user_answers', 'question_nid', 'question_qid', $spec);
 }
+
+/**
+ * Convert global configuration for questions to question type entity.
+ */
+function short_answer_update_7601() {
+  foreach (quiz_question_get_types() as $question_type) {
+    if ('short_answer' === $question_type->plugin) {
+      $question_type
+        ->setConfig('short_answer_default_max_score', variable_get('short_answer_default_max_score', 5))
+        ->save()
+      ;
+    }
+  }
+}
