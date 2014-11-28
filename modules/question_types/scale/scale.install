@@ -29,6 +29,7 @@ function scale_schema() {
           'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
           'name'    => array('type' => 'varchar', 'length' => 32, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'),
           'label'   => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => '', 'description' => 'The human-readable name of this collection.'),
+          'uid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'),
           'for_all' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
           'data'    => array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'),
           'module'  => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'),
@@ -37,8 +38,19 @@ function scale_schema() {
       'primary key' => array('id'),
   );
 
+  // Store collection's items.
+  $schema['quiz_scale_answer'] = array(
+      'description' => 'Holds all the possible answers and what answer collections they belong to',
+      'fields'      => array(
+          'id'                   => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+          'answer_collection_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'answer'               => array('type' => 'text'),
+      ),
+      'primary key' => array('id'),
+  );
+
   $schema['quiz_scale_properties'] = array(
-      'description' => 'Properties specific to this question type. Holds information about what answer collection this node uses',
+      'description' => 'Properties specific to this question type. Holds information about what answer collection this question uses',
       'fields'      => array(
           'qid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Question ID'),
           'vid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Question VID'),
@@ -61,28 +73,14 @@ function scale_schema() {
       ),
   );
 
+  // @TODO: Remove me
   $schema['quiz_scale_user'] = array(
       'description' => 'User settings, store what answer collections the user have as presets',
       'fields'      => array(
           'uid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'answer_collection_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
       ),
-      'primary key' => array(
-          'uid', 'answer_collection_id'
-      ),
-  );
-
-  /*
-   * Holds each answer in the answer_collections.
-   */
-  $schema['quiz_scale_answer'] = array(
-      'description' => 'Holds all the possible answers and what answer collections they belong to',
-      'fields'      => array(
-          'id'                   => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-          'answer_collection_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'answer'               => array('type' => 'text'),
-      ),
-      'primary key' => array('id'),
+      'primary key' => array('uid', 'answer_collection_id'),
   );
 
   return $schema;
@@ -100,26 +98,24 @@ function scale_uninstall() {
 /**
  * Inserts answer collections into the database
  *
- * @param $answers
+ * @param $options
  *  Array of answers to include in the answer collection
  */
-function _scale_insert_collection($answers) {
+function _scale_insert_collection($options) {
   // Save the collection as a global preset
-  $collection_id = db_insert('quiz_scale_collections')->fields(array('for_all' => 1))->execute();
+  $collection = entity_create('scale_collection', array('for_all' => TRUE));
+  $collection->save();
 
   // Save the collections as a preset collection for user 1
   db_insert('quiz_scale_user')
-    ->fields(array('answer_collection_id' => $collection_id, 'uid' => 1))
+    ->fields(array('answer_collection_id' => $collection->id, 'uid' => 1))
     ->execute();
 
   $insert = db_insert('quiz_scale_answer')->fields(array('answer_collection_id', 'answer'));
   $values = array();
   // Save the answers belonging to the collection
-  for ($i = 0; $i < count($answers); $i++) {
-    $values = array(
-        'answer_collection_id' => $collection_id,
-        'answer'               => $answers[$i],
-    );
+  for ($i = 0; $i < count($options); $i++) {
+    $values = array('answer_collection_id' => $collection->id, 'answer' => $options[$i]);
     $insert->values($values);
   }
   $insert->execute();
@@ -165,7 +161,33 @@ function scale_update_7602() {
 function scale_update_7603() {
   db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'));
   db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
+  db_add_field('quiz_scale_collections', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'));
   db_add_field('quiz_scale_collections', 'data', array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'));
   db_add_field('quiz_scale_collections', 'module', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'));
   db_add_field('quiz_scale_collections', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'));
 }
+
+/**
+ * Update data per structure changed for scale collection.
+ */
+function scale_update_7604() {
+  $rows = db_select('quiz_scale_user')
+    ->fields('quiz_scale_user')
+    ->orderBy('answer_collection_id')
+    ->execute()
+    ->fetchAll();
+
+  foreach ($rows as $row) {
+    db_update('quiz_scale_collections')
+      ->fields(array('uid' => $row->uid))
+      ->condition('id', $row->answer_collection_id)
+      ->execute();
+  }
+}
+
+/**
+ * Drop {quiz_scale_user}
+ */
+//function scale_update_7605() {
+//  db_drop_table('quiz_scale_user');
+//}
