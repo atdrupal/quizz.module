@@ -60,4 +60,40 @@ class CollectionIO {
     return $collections;
   }
 
+  /**
+   * Make sure an answer collection isn't a preset for a given user.
+   *
+   * @param $column_id
+   *  Answer_collection_id
+   * @param $user_id
+   */
+  public function unpresetCollection($column_id, $user_id) {
+    db_delete('quiz_scale_user')
+      ->condition('answer_collection_id', $column_id)
+      ->condition('uid', $user_id)
+      ->execute();
+
+    if (user_access('Edit global presets')) {
+      db_update('quiz_scale_answer_collection')
+        ->fields(array('for_all' => 0))
+        ->execute();
+    }
+  }
+
+  /**
+   * Make an answer collection (un)available for all question creators.
+   *
+   * @param int $new_column_id
+   *  Answer collection id
+   * @param int $for_all
+   *  0 if not for all,
+   *  1 if for all
+   */
+  public function setForAll($new_column_id, $for_all) {
+    db_update('quiz_scale_answer_collection')
+      ->fields(array('for_all' => $for_all))
+      ->condition('id', $new_column_id)
+      ->execute();
+  }
+
 }

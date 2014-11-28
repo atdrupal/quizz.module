@@ -4,14 +4,6 @@ use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\scale\Form\ConfigForm\FormDefinition;
 
 /**
- * The main file for scale.
- *
- * Sponsored by: Norwegian Centre for Telemedicine
- * Code: falcon
- *
- * @file
- * Scale question type for the Quiz module.
- *
  * Allows the creation of scale questions (ex: likert scale)
  */
 
@@ -19,7 +11,7 @@ use Drupal\scale\Form\ConfigForm\FormDefinition;
  * Implements hook_help().
  */
 function scale_help($path, $args) {
-  if ($path == 'admin/help#scale') {
+  if ($path === 'admin/help#scale') {
     return t('This module provides a scale question type for Quiz. It may be used to construct surveys.');
   }
 }
@@ -101,12 +93,15 @@ function scale_get_answer($question_qid, $question_vid, $result_id) {
     WHERE question_qid = :question_id AND question_vid = :qvid AND result_id = :rid', array(
       ':question_id' => $question_qid,
       ':qvid'        => $question_vid,
-      ':rid'         => $result_id))->fetchAssoc();
+      ':rid'         => $result_id
+    ))->fetchAssoc();
   return $results ? $results : FALSE;
 }
 
 /**
  * Implements hook_user_cancel().
+ *
+ * @TODO: See #2383607
  */
 function scale_user_cancel($edit, $account, $method) {
   $query = db_query(
