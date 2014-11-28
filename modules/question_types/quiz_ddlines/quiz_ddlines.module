@@ -16,7 +16,7 @@ use Drupal\quiz_question\Entity\QuestionType;
 /**
  * Default values
  */
-class Defaults {
+class QuizDdlinesDefaults {
 
   const CANVAS_WIDTH = 700;
   const CANVAS_HEIGHT = 500;
@@ -121,22 +121,22 @@ function quiz_ddlines_quiz_question_config(QuestionType $question_type) {
   $form['quiz_ddlines_canvas_width'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The default width of the canvas'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_width', Defaults::CANVAS_WIDTH),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_width', QuizDdlinesDefaults::CANVAS_WIDTH),
   );
   $form['quiz_ddlines_canvas_height'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The default height of the canvas'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_height', Defaults::CANVAS_HEIGHT),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_height', QuizDdlinesDefaults::CANVAS_HEIGHT),
   );
   $form['quiz_ddlines_hotspot_radius'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The radius of the hotspot'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_hotspot_radius', Defaults::HOTSPOT_RADIUS),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_hotspot_radius', QuizDdlinesDefaults::HOTSPOT_RADIUS),
   );
   $form['quiz_ddlines_pointer_radius'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The radius of the pointer'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_pointer_radius', Defaults::POINTER_RADIUS),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_pointer_radius', QuizDdlinesDefaults::POINTER_RADIUS),
   );
   $form['quiz_ddlines_feedback_correct'] = array(
       '#type'          => 'textfield',
