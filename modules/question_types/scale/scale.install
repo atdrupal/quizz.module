@@ -26,7 +26,9 @@ function scale_schema() {
   $schema['quiz_scale_collections'] = array(
       'description' => 'Answer collection ids and properties',
       'fields'      => array(
-          'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+          'name'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'),
+          'label'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'),
           'for_all' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
       ),
       'primary key' => array('id'),
@@ -152,4 +154,12 @@ function scale_update_7601() {
  */
 function scale_update_7602() {
   db_rename_table('quiz_scale_answer_collection', 'quiz_scale_collections');
+}
+
+/**
+ * Add more columns for {quiz_scale_collections}
+ */
+function scale_update_7603() {
+  db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'));
+  db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
 }
