@@ -1,11 +1,21 @@
 <?php
 
+use Drupal\scale\Entity\Collection;
+use Drupal\scale\Entity\CollectionController;
+
 require_once dirname(__FILE__) . '/scale.hooks.inc';
+
+/**
+ * @return CollectionController
+ */
+function scale_collection_controller() {
+  return entity_get_controller('scale_collecction');
+}
 
 /**
  * Access callback for scale_collection entity.
  * @param string $op
- * @param \Drupal\scale\Entity\Collection $collection
+ * @param Collection $collection
  * @param stdClass $account
  * @return bool
  */
