@@ -13,6 +13,16 @@ function quizz_scale_help($path) {
 }
 
 /**
+ * Implements hook_ENTITYTYPE_insert()
+ * @param \Drupal\quiz_question\Entity\QuestionType $question_type
+ */
+function quizz_scale_quiz_question_type_insert($question_type) {
+  if ('quizz_scale' === $question_type->plugin) {
+    quizz_scale_collection_controller()->generateDefaultCollections($question_type);
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function quizz_scale_theme($existing, $type, $theme, $path) {

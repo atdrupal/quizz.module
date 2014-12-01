@@ -2,8 +2,10 @@
 
 namespace Drupal\quizz_scale\Entity;
 
-use EntityAPIControllerExportable;
+use DatabaseTransaction;
 use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\Entity\QuestionType;
+use EntityAPIControllerExportable;
 
 class CollectionController extends EntityAPIControllerExportable {
 
@@ -25,7 +27,7 @@ class CollectionController extends EntityAPIControllerExportable {
     return $collections;
   }
 
-  public function delete($ids, \DatabaseTransaction $transaction = NULL) {
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
     $return = parent::delete($ids, $transaction);
 
     // Delete alternatives
@@ -41,7 +43,7 @@ class CollectionController extends EntityAPIControllerExportable {
    *
    * @param int $uid
    * @param bool $with_defaults
-   * @return \Drupal\quizz_scale\Entity\Collection[]
+   * @return Collection[]
    */
   public function getPresetCollections($uid, $with_defaults = FALSE) {
     $select = db_select('quiz_scale_collections', 'collection');
@@ -243,6 +245,26 @@ class CollectionController extends EntityAPIControllerExportable {
     $collection->insertAlternatives($alternatives);
 
     return $collection->id;
+  }
+
+  public function generateDefaultCollections(QuestionType $question_type) {
+    $alternatives = array(
+        array('Always', 'Very often', 'Some times', 'Rarely', 'Very rarely', 'Never'),
+        array('Excellent', 'Very good', 'Good', 'Ok', 'Poor', 'Very poor'),
+        array('Totally agree', 'Agree', 'Not sure', 'Disagree', 'Totally disagree'),
+        array('Very important', 'Important', 'Moderately important', 'Less important', 'Least important'),
+    );
+
+    /* @var $collection Collection */
+    foreach ($alternatives as $_alternatives) {
+      $collection = entity_create('scale_collection', array(
+          'question_type' => $question_type->type,
+          'for_all'       => TRUE,
+          'uid'           => 1
+      ));
+      $collection->save();
+      $collection->insertAlternatives($_alternatives);
+    }
   }
 
 }

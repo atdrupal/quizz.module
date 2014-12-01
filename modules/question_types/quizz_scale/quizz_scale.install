@@ -12,20 +12,6 @@
  * Implements hook_install().
  */
 function quizz_scale_install() {
-  $_alternatives = array(
-      array('Always', 'Very often', 'Some times', 'Rarely', 'Very rarely', 'Never'),
-      array('Excellent', 'Very good', 'Good', 'Ok', 'Poor', 'Very poor'),
-      array('Totally agree', 'Agree', 'Not sure', 'Disagree', 'Totally disagree'),
-      array('Very important', 'Important', 'Moderately important', 'Less important', 'Least important'),
-  );
-
-  /* @var $collection \Drupal\quizz_scale\Entity\Collection */
-  foreach ($_alternatives as $alternatives) {
-    $collection = entity_create('scale_collection', array('for_all' => TRUE, 'uid' => 1));
-    $collection->save();
-    $collection->insertAlternatives($alternatives);
-  }
-
   variable_set('node_options_scale', array('status'));
 }
 
