@@ -22,22 +22,6 @@ class CollectionIO {
     return $properties;
   }
 
-  /**
-   * Make an answer collection (un)available for all question creators.
-   *
-   * @param int $new_collection_id
-   *  Answer collection id
-   * @param int $for_all
-   *  0 if not for all,
-   *  1 if for all
-   */
-  public function setForAll($new_collection_id, $for_all) {
-    db_update('quiz_scale_collections')
-      ->fields(array('for_all' => $for_all))
-      ->condition('id', $new_collection_id)
-      ->execute();
-  }
-
   public function deleteQuestionProperties(Question $question, $single_revision) {
     if ($single_revision) {
       db_delete('quiz_scale_user_answers')

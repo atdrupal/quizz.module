@@ -78,7 +78,7 @@ class FormSubmit {
 
     $new_collection_id = $this->collectionIO->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
     if (isset($alternatives['for_all'])) {
-      $this->collectionIO->setForAll($new_collection_id, $alternatives['for_all']);
+      quizz_scale_collection_controller()->setForAll($new_collection_id, $alternatives['for_all']);
     }
 
     if ($new_collection_id == $collection_id) {
@@ -94,7 +94,7 @@ class FormSubmit {
       $this->collectionIO->deleteCollectionIfNotUsed($collection_id);
 
       if (isset($alternatives['for_all'])) {
-        $this->collectionIO->setForAll($new_collection_id, $alternatives['for_all']);
+        quizz_scale_collection_controller()->setForAll($new_collection_id, $alternatives['for_all']);
       }
     }
     elseif ($alternatives['to-do'] == 1) {
@@ -117,8 +117,8 @@ class FormSubmit {
 
   private function doSubmitNew(ScaleQuestion $plugin, $alternatives) {
     if (drupal_strlen($alternatives['alternative0']) > 0) {
-      $new_col_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
-      $this->collectionIO->setForAll($new_col_id, $alternatives['for_all']);
+      $collection_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
+      quizz_scale_collection_controller()->setForAll($collection_id, $alternatives['for_all']);
       drupal_set_message(t('New preset has been added'));
     }
   }

@@ -64,4 +64,16 @@ class CollectionController extends EntityAPIControllerExportable {
     $collection->save();
   }
 
+  /**
+   * Make an answer collection (un)available for all question creators.
+   *
+   * @param int $collection_id
+   * @param bool $for_all
+   */
+  public function setForAll($collection_id, $for_all) {
+    $collection = quizz_scale_collection_load($collection_id);
+    $collection->for_all = $for_all;
+    $collection->save();
+  }
+
 }
