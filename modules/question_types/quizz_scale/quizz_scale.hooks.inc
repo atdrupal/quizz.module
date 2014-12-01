@@ -44,17 +44,6 @@ function quizz_scale_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_permission().
- */
-function quizz_scale_permission() {
-  return array(
-      'Edit global presets' => array(
-          'title' => t('Administer presets'),
-      ),
-  );
-}
-
-/**
  * Implements hook_quiz_question_info().
  */
 function quizz_scale_quiz_question_info() {

@@ -23,11 +23,12 @@ function quizz_scale_collection_entity_load($id) {
 
 /**
  * Access callback for scale_collection entity.
+ *
  * @param string $op
  * @param Collection $collection
  * @param stdClass $account
  * @return bool
  */
 function quizz_scale_collection_access_callback($op, $collection = NULL, $account = NULL) {
-  return user_access('Edit global presets', $account);
+  return TRUE;
 }
