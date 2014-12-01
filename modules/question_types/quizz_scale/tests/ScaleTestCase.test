@@ -5,7 +5,7 @@
  */
 class ScaleTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'scale';
+  protected $questionPlugin = 'quizz_scale';
 
   /**
    * The getInfo() method provides information about the test.
@@ -24,7 +24,7 @@ class ScaleTestCase extends QuizQuestionTestCase {
    * Implementing setUp() to enable scale module testing
    */
   function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'scale';
+    $modules[] = 'quizz_scale';
     parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
