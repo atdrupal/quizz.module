@@ -53,4 +53,15 @@ class CollectionController extends EntityAPIControllerExportable {
     return array();
   }
 
+  /**
+   * Make sure an answer collection isn't a preset for a given user.
+   *
+   * @param int $collection_id
+   */
+  public function unpresetCollection($collection_id) {
+    $collection = quizz_scale_collection_load($collection_id);
+    $collection->for_all = 0;
+    $collection->save();
+  }
+
 }

@@ -13,6 +13,16 @@ function quizz_scale_collection_controller() {
 }
 
 /**
+ * Load collection entity.
+ *
+ * @param int $id
+ * @return \Drupal\quizz_scale\Entity\Collection|null
+ */
+function quizz_scale_collection_load($id) {
+  return entity_load_single('scale_collection', $id);
+}
+
+/**
  * Access callback for scale_collection entity.
  * @param string $op
  * @param Collection $collection

@@ -27,19 +27,11 @@ class CollectionIO {
    * Make sure an answer collection isn't a preset for a given user.
    *
    * @param int $collection_id
-   * @param int $uid
    */
-  public function unpresetCollection($collection_id, $uid) {
-    db_delete('quiz_scale_user')
-      ->condition('answer_collection_id', $collection_id)
-      ->condition('uid', $uid)
-      ->execute();
-
-    if (user_access('Edit global presets')) {
-      db_update('quiz_scale_collections')
-        ->fields(array('for_all' => 0))
-        ->execute();
-    }
+  public function unpresetCollection($collection_id) {
+    $collection = quizz_scale_collection_load($collection_id);
+    $collection->for_all = 0;
+    $collection->save();
   }
 
   /**

@@ -62,7 +62,7 @@ class FormSubmit {
       // Delete
       case 2:
         if (!$got_deleted = $this->collectionIO->deleteCollectionIfNotUsed($collection_id)) {
-          $this->collectionIO->unpresetCollection($collection_id, $user->uid);
+          quizz_scale_collection_controller()->unpresetCollection($collection_id);
         }
         $deleted++;
         break;
@@ -88,7 +88,7 @@ class FormSubmit {
     // We save the changes, but don't change existing questions
     if ($alternatives['to-do'] == 0) {
       // The old version of the collection shall not be a preset anymore
-      $this->collectionIO->unpresetCollection($collection_id, $user->uid);
+      quizz_scale_collection_controller()->unpresetCollection($collection_id);
 
       // If the old version of the collection doesn't belong to any questions it is safe to delete it.
       $this->collectionIO->deleteCollectionIfNotUsed($collection_id);
