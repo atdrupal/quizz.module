@@ -108,14 +108,10 @@ class CollectionController extends EntityAPIControllerExportable {
   /**
    * Finds out if a collection already exists.
    *
-   * @param $alternatives
-   *  This is the collection that will be compared with the database.
+   * @param string[] $alternatives
    * @param int $collection_id
-   *  If we are matching a set of alternatives with a given collection that exists in the database.
    * @param int $last_id - The id of the last alternative we compared with.
    * @return bool
-   *  TRUE if the collection exists
-   *  FALSE otherwise
    */
   public function findCollectionId(array $alternatives, $collection_id = NULL, $last_id = NULL) {
     $my_alts = isset($collection_id) ? $alternatives : array_reverse($alternatives);
@@ -139,7 +135,6 @@ class CollectionController extends EntityAPIControllerExportable {
     if (!$res_o = $res->fetch()) {
       return FALSE;
     }
-
 
     // If all alternatives has matched make sure the collection we are comparing
     // against in the database doesn't have more alternatives.
