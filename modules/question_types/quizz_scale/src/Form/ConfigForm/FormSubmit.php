@@ -40,7 +40,7 @@ class FormSubmit {
     switch ($alternatives['to-do']) { // @todo: Rename to-do to $op
       case 'save_safe': // Save, but don't change
       case 'save': // Save and change existing questions
-        if (FALSE !== $this->doSubmitDelete($plugin, $alternatives, $collection_id)) {
+        if (FALSE !== $this->doSubmitSave($plugin, $alternatives, $collection_id)) {
           $changed++;
         }
         break;
@@ -59,8 +59,9 @@ class FormSubmit {
     }
   }
 
-  private function doSubmitDelete(ScaleQuestion $plugin, $alternatives, $collection_id) {
+  private function doSubmitSave(ScaleQuestion $plugin, $alternatives, $collection_id) {
     $new_collection_id = $this->controller->saveQuestionAlternatives($plugin->question, FALSE, $alternatives, 1);
+
     if (isset($alternatives['for_all'])) {
       $this->controller->setForAll($new_collection_id, $alternatives['for_all']);
     }
@@ -69,29 +70,42 @@ class FormSubmit {
       return FALSE;
     }
 
+    if (FALSE === $this->doSubmitPresave($plugin, $collection_id)) {
+      return FALSE;
+    }
+
     // We save the changes, but don't change existing questions
-    if ($alternatives['to-do'] == 0) {
-      // The old version of the collection shall not be a preset anymore
-      $this->controller->unpresetCollection($collection_id);
-
-      // If the old version of the collection doesn't belong to any questions it is safe to delete it.
-      $this->controller->deleteCollectionIfNotUsed($collection_id);
-
-      if (isset($alternatives['for_all'])) {
-        $this->controller->setForAll($new_collection_id, $alternatives['for_all']);
-      }
+    if ('save_safe' === $alternatives['to-do']) {
+      $this->doSubmitSaveSafe($collection_id, $new_collection_id, $alternatives);
     }
-    elseif ($alternatives['to-do'] == 1) {
-      // Update all the users questions where the collection is used
-      $nids = db_query('SELECT nid FROM {node} WHERE uid = :uid', array(':uid' => 1))->fetchCol();
 
-      db_update('quiz_scale_properties')
-        ->fields(array('answer_collection_id' => $new_collection_id))
-        ->condition('answer_collection_id', $nids)
-        ->execute();
-
-      $this->controller->deleteCollectionIfNotUsed($collection_id);
+    if ('save' === $alternatives['to-do']) {
+      $this->doSubmitSaveNormal($collection_id, $new_collection_id);
     }
+  }
+
+  private function doSubmitSaveSafe($collection_id, $new_collection_id, $alternatives) {
+    // The old version of the collection shall not be a preset anymore
+    $this->controller->unpresetCollection($collection_id);
+
+    // If the old version of the collection doesn't belong to any questions it is safe to delete it.
+    $this->controller->deleteCollectionIfNotUsed($collection_id);
+
+    if (isset($alternatives['for_all'])) {
+      $this->controller->setForAll($new_collection_id, $alternatives['for_all']);
+    }
+  }
+
+  private function doSubmitSaveNormal($collection_id, $new_collection_id) {
+    // Update all the users questions where the collection is used
+    $question_ids = db_query('SELECT qid FROM {quiz_question} WHERE uid = :uid', array(':uid' => 1))->fetchCol();
+
+    db_update('quiz_scale_properties')
+      ->fields(array('answer_collection_id' => $new_collection_id))
+      ->condition('answer_collection_id', $question_ids)
+      ->execute();
+
+    $this->controller->deleteCollectionIfNotUsed($collection_id);
   }
 
   private function doSubmitNew(ScaleQuestion $plugin, $alternatives) {
