@@ -57,7 +57,7 @@ class FormSubmit {
 
       // Delete
       case 2:
-        if (!$got_deleted = $this->collectionIO->deleteCollectionIfNotUsed($collection_id)) {
+        if (!$got_deleted = quizz_scale_collection_controller()->deleteCollectionIfNotUsed($collection_id)) {
           quizz_scale_collection_controller()->unpresetCollection($collection_id);
         }
         $deleted++;
@@ -87,7 +87,7 @@ class FormSubmit {
       quizz_scale_collection_controller()->unpresetCollection($collection_id);
 
       // If the old version of the collection doesn't belong to any questions it is safe to delete it.
-      $this->collectionIO->deleteCollectionIfNotUsed($collection_id);
+      quizz_scale_collection_controller()->deleteCollectionIfNotUsed($collection_id);
 
       if (isset($alternatives['for_all'])) {
         quizz_scale_collection_controller()->setForAll($new_collection_id, $alternatives['for_all']);
@@ -102,7 +102,7 @@ class FormSubmit {
         ->condition('answer_collection_id', $nids)
         ->execute();
 
-      $this->collectionIO->deleteCollectionIfNotUsed($collection_id);
+      quizz_scale_collection_controller()->deleteCollectionIfNotUsed($collection_id);
     }
   }
 

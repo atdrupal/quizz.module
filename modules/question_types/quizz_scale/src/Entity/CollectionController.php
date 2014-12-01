@@ -156,4 +156,39 @@ class CollectionController extends EntityAPIControllerExportable {
     return FALSE;
   }
 
+  /**
+   * Deletes an answer collection if it isn't beeing used.
+   *
+   * @param $collection_id
+   * @param $accept
+   *  If collection is used more than this many times we keep it.
+   * @return
+   *  true if deleted, false if not deleted.
+   */
+  public function deleteCollectionIfNotUsed($collection_id, $accept = 0) {
+    // Check if the collection is someones preset. If it is we can't delete it.
+    $sql_1 = 'SELECT 1 FROM {quiz_scale_collections} WHERE id = :cid AND uid <> 0';
+    if (db_query($sql_1, array(':id' => $collection_id))->fetchField()) {
+      return FALSE;
+    }
+
+    // Check if the collection is a global preset. If it is we can't delete it.
+    $sql_2 = 'SELECT 1 FROM {quiz_scale_collections} WHERE id = :id AND for_all = 1';
+    if (db_query($sql_2, array(':id' => $collection_id))->fetchField()) {
+      return FALSE;
+    }
+
+    // Check if the collection is used in an existing question. If it is we can't delete it.
+    $sql_3 = 'SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid';
+    $count = db_query($sql_3, array(':acid' => $collection_id))->fetchField();
+
+    // We delete the answer collection if it isnt beeing used by enough questions
+    if ($count <= $accept) {
+      entity_delete('scale_collection', $collection_id);
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
 }
