@@ -79,7 +79,7 @@ function scale_entity_info() {
   $info['scale_collection'] = array(
       'label'            => t('Collection'),
       'plural label'     => t('Collections'),
-      'description'      => '',
+      'description'      => t('Scale collections'),
       'entity class'     => 'Drupal\scale\Entity\Collection',
       'controller class' => 'Drupal\scale\Entity\CollectionController',
       'base table'       => 'quiz_scale_collections',
