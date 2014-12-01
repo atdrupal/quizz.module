@@ -22,16 +22,22 @@ function quizz_scale_schema() {
   $schema['quiz_scale_collections'] = array(
       'description' => 'Answer collection ids and properties',
       'fields'      => array(
-          'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-          'name'    => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'),
-          'label'   => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => '', 'description' => 'The human-readable name of this collection.'),
-          'uid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'),
-          'for_all' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
-          'data'    => array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'),
-          'module'  => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'),
-          'status'  => array('type' => 'int', 'not null' => FALSE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'),
+          'id'            => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_type' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this collection.'),
+          'name'          => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'),
+          'label'         => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => '', 'description' => 'The human-readable name of this collection.'),
+          'uid'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'),
+          'for_all'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
+          'data'          => array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'),
+          'module'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'),
+          'status'        => array('type' => 'int', 'not null' => FALSE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'),
       ),
       'primary key' => array('id'),
+      'indexes'     => array(
+          'question_type'     => array('question_type'),
+          'collection_name'   => array('name'),
+          'collection_status' => array('status'),
+      ),
   );
 
   // Store collection's items.
@@ -194,4 +200,24 @@ function quizz_scale_update_7605() {
     }
   }
   db_drop_table('quiz_scale_user');
+}
+
+/**
+ * Add {quiz_scale_collections}.question_type and missing indexes
+ */
+function quizz_scale_update_7606() {
+  db_add_field('quiz_scale_collections', 'question_type', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this collection.'));
+  db_add_index('quiz_scale_collections', 'question_type', array('question_type'));
+  db_add_index('quiz_scale_collections', 'collection_name', array('name'));
+  db_add_index('quiz_scale_collections', 'collection_status', array('status'));
+
+  if ($question_types = entity_load('quiz_question_type', FALSE, array('plugin' => 'quizz_scale'))) {
+    $question_type = reset($question_types);
+    db_update('quiz_scale_collections')
+      ->fields(array('question_type' => $question_type->type))
+      ->execute()
+    ;
+  }
+
+  db_change_field('quiz_scale_collections', 'question_type', 'question_type', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this collection.'));
 }
