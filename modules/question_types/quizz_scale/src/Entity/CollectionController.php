@@ -99,8 +99,10 @@ class CollectionController extends EntityAPIControllerExportable {
    */
   public function changeOwner($collection_id, $uid) {
     $collection = quizz_scale_collection_entity_load($collection_id);
-    $collection->uid = $uid;
-    $collection->save();
+    if ($uid != $collection->uid) {
+      $collection->uid = $uid;
+      $collection->save();
+    }
   }
 
   /**
