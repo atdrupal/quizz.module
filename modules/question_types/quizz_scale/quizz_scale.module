@@ -6,10 +6,10 @@ use Drupal\quizz_scale\Entity\CollectionController;
 require_once dirname(__FILE__) . '/quizz_scale.hooks.inc';
 
 /**
- * @return CollectionController
+ * @return \Drupal\quizz_scale\Entity\CollectionController
  */
 function quizz_scale_collection_controller() {
-  return entity_get_controller('scale_collecction');
+  return entity_get_controller('scale_collection');
 }
 
 /**
