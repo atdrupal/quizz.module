@@ -3,8 +3,6 @@
 namespace Drupal\quizz_scale\Form\ConfigForm;
 
 use Drupal\quiz_question\Entity\QuestionType;
-use Drupal\quizz_scale\CollectionIO;
-use stdClass;
 
 class FormDefinition {
 

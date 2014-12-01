@@ -3,7 +3,6 @@
 namespace Drupal\quizz_scale;
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quizz_scale\CollectionIO;
 use Drupal\quizz_scale\Form\ScaleQuestionForm;
 
 /**
@@ -25,24 +24,14 @@ class ScaleQuestion extends QuestionPlugin {
    */
   protected $col_id = NULL;
 
-  /** @var CollectionIO */
-  protected $collection_io;
-
-  public function getCollectionIO() {
-    if (NULL === $this->collection_io) {
-      $this->collection_io = new CollectionIO();
-    }
-    return $this->collection_io;
-  }
-
   /**
    * Tells the instance that it is beeing used as a utility.
    *
-   * @param $c_id - answer collection id
+   * @param $collection_id - answer collection id
    */
-  public function initUtil($c_id) {
+  public function initUtil($collection_id) {
     $this->util = TRUE;
-    $this->col_id = $c_id;
+    $this->col_id = $collection_id;
   }
 
   /**
@@ -183,7 +172,7 @@ class ScaleQuestion extends QuestionPlugin {
    * @see QuizQuestion#getCreationForm()
    */
   public function getCreationForm(array &$form_state = NULL) {
-    $obj = new ScaleQuestionForm($this->question, $this->getCollectionIO());
+    $obj = new ScaleQuestionForm($this->question);
     return $obj->get($form_state);
   }
 

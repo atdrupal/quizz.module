@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\quizz_scale\Entity\Collection;
-use Drupal\quizz_scale\Entity\CollectionController;
 
 require_once dirname(__FILE__) . '/quizz_scale.hooks.inc';
 
@@ -18,7 +17,7 @@ function quizz_scale_collection_controller() {
  * @param int $id
  * @return \Drupal\quizz_scale\Entity\Collection|null
  */
-function quizz_scale_collection_load($id) {
+function quizz_scale_collection_entity_load($id) {
   return entity_load_single('scale_collection', $id);
 }
 

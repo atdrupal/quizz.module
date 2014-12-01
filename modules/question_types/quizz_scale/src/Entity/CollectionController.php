@@ -59,7 +59,7 @@ class CollectionController extends EntityAPIControllerExportable {
     }
 
     if ($collection_ids = $select->execute()->fetchCol()) {
-      return entity_load('scale_collection', $collection_ids);
+      return $this->load($collection_ids);
     }
 
     return array();
@@ -71,7 +71,7 @@ class CollectionController extends EntityAPIControllerExportable {
    * @param int $collection_id
    */
   public function unpresetCollection($collection_id) {
-    $collection = quizz_scale_collection_load($collection_id);
+    $collection = quizz_scale_collection_entity_load($collection_id);
     $collection->for_all = 0;
     $collection->save();
   }
@@ -83,7 +83,7 @@ class CollectionController extends EntityAPIControllerExportable {
    * @param bool $for_all
    */
   public function setForAll($collection_id, $for_all) {
-    $collection = quizz_scale_collection_load($collection_id);
+    $collection = quizz_scale_collection_entity_load($collection_id);
     $collection->for_all = $for_all;
     $collection->save();
   }
@@ -94,7 +94,7 @@ class CollectionController extends EntityAPIControllerExportable {
    * @param $collection_id - answer collection id of the collection this user wants to have as a preset
    */
   public function changeOwner($collection_id, $uid) {
-    $collection = quizz_scale_collection_load($collection_id);
+    $collection = quizz_scale_collection_entity_load($collection_id);
     $collection->uid = $uid;
     $collection->save();
   }

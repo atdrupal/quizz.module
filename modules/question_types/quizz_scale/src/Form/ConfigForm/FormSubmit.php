@@ -2,18 +2,10 @@
 
 namespace Drupal\quizz_scale\Form\ConfigForm;
 
-use Drupal\quizz_scale\CollectionIO;
 use Drupal\quizz_scale\ScaleQuestion;
 use stdClass;
 
 class FormSubmit {
-
-  /** @var CollectionIO */
-  private $collectionIO;
-
-  public function __construct() {
-    $this->collectionIO = new CollectionIO();
-  }
 
   /**
    * Searches a string for the answer collection id

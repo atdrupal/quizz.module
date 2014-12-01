@@ -3,19 +3,14 @@
 namespace Drupal\quizz_scale\Form;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quizz_scale\CollectionIO;
 
 class ScaleQuestionForm {
 
   /** @var Question */
   private $question;
 
-  /** @var CollectionIO */
-  private $collectionIO;
-
-  public function __construct(Question $question, CollectionIO $collectionIO) {
+  public function __construct(Question $question) {
     $this->question = $question;
-    $this->collectionIO = $collectionIO;
   }
 
   public function get(array &$form_state = NULL) {
@@ -61,6 +56,7 @@ class ScaleQuestionForm {
         '#collapsible' => TRUE,
         '#collapsed'   => TRUE,
     );
+
     for ($i = 0; $i < $max_num_alts; $i++) {
       $form['answer']['alternatives']["alternative$i"] = array(
           '#type'          => 'textfield',
@@ -71,6 +67,7 @@ class ScaleQuestionForm {
           '#required'      => $i < 2,
       );
     }
+
     $form['answer']['alternatives']['save'] = array(// @todo: Rename save to save_as_preset or something
         '#type'          => 'checkbox',
         '#title'         => t('Save as a new preset'),
@@ -114,8 +111,8 @@ class ScaleQuestionForm {
    */
   private function makeOptions(array $collections = NULL) {
     $options = array();
-    foreach ($collections as $col_id => $obj) {
-      $options[$col_id] = $obj->name;
+    foreach ($collections as $id => $collection) {
+      $options[$id] = $collection->label;
     }
     return $options;
   }
