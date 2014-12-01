@@ -70,7 +70,10 @@ class ScaleQuestionForm {
         '#default_value' => FALSE,
     );
 
-    $form['answer']['manage']['#markup'] = l(t('Manage presets'), 'admin/structure/quiz-questions/manage/' . $this->question->getQuestionType()->type);
+    $form['answer']['manage'] = array(
+        '#markup' => l(t('Manage presets'), 'admin/structure/quiz-questions/manage/' . $this->question->getQuestionType()->type),
+        '#access' => entity_access('update', 'quiz_question_type', $this->question->getQuestionType(), $user),
+    );
 
     return $form;
   }
