@@ -12,10 +12,20 @@
  * Implements hook_install().
  */
 function quizz_scale_install() {
-  _scale_insert_collection(array('Always', 'Very often', 'Some times', 'Rarely', 'Very rarely', 'Never'));
-  _scale_insert_collection(array('Excellent', 'Very good', 'Good', 'Ok', 'Poor', 'Very poor'));
-  _scale_insert_collection(array('Totally agree', 'Agree', 'Not sure', 'Disagree', 'Totally disagree'));
-  _scale_insert_collection(array('Very important', 'Important', 'Moderately important', 'Less important', 'Least important'));
+  $_alternatives = array(
+      array('Always', 'Very often', 'Some times', 'Rarely', 'Very rarely', 'Never'),
+      array('Excellent', 'Very good', 'Good', 'Ok', 'Poor', 'Very poor'),
+      array('Totally agree', 'Agree', 'Not sure', 'Disagree', 'Totally disagree'),
+      array('Very important', 'Important', 'Moderately important', 'Less important', 'Least important'),
+  );
+
+  /* @var $collection \Drupal\quizz_scale\Entity\Collection */
+  foreach ($_alternatives as $alternatives) {
+    $collection = entity_create('scale_collection', array('for_all' => TRUE, 'uid' => 1));
+    $collection->save();
+    $collection->insertAlternatives($alternatives);
+  }
+
   variable_set('node_options_scale', array('status'));
 }
 
@@ -83,32 +93,6 @@ function quizz_scale_uninstall() {
   variable_del('scale_max_num_of_alts');
   cache_clear_all('variables', 'cache');
   drupal_set_message(t('The Scale module has been uninstalled. Scale nodes may still exist, but they will not function properly.'));
-}
-
-/**
- * Inserts answer collections into the database
- *
- * @param $options
- *  Array of answers to include in the answer collection
- */
-function _scale_insert_collection($options) {
-  // Save the collection as a global preset
-  $collection = entity_create('scale_collection', array('for_all' => TRUE));
-  $collection->save();
-
-  // Save the collections as a preset collection for user 1
-  db_insert('quiz_scale_user')
-    ->fields(array('answer_collection_id' => $collection->id, 'uid' => 1))
-    ->execute();
-
-  $insert = db_insert('quiz_scale_answer')->fields(array('answer_collection_id', 'answer'));
-  $values = array();
-  // Save the answers belonging to the collection
-  for ($i = 0; $i < count($options); $i++) {
-    $values = array('answer_collection_id' => $collection->id, 'answer' => $options[$i]);
-    $insert->values($values);
-  }
-  $insert->execute();
 }
 
 /**
@@ -215,6 +199,13 @@ function quizz_scale_update_7604() {
 /**
  * Drop {quiz_scale_user}
  */
-//function quizz_scale_update_7605() {
-//  db_drop_table('quiz_scale_user');
-//}
+function quizz_scale_update_7605() {
+  $rows = db_query('SELECT * FROM {quiz_scale_user} WHERE 1')->fetchAll();
+  foreach ($rows as $row) {
+    if ($collection = entity_load_single('scale_collection', $row->answer_collection_id)) {
+      $collection->uid = $row->uid;
+      $collection->save();
+    }
+  }
+  db_drop_table('quiz_scale_user');
+}
