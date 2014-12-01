@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\scale\Form\ConfigForm\FormSubmit;
+use Drupal\quizz_scale\Form\ConfigForm\FormSubmit;
 
 /**
  * Handles the scale collection form.
