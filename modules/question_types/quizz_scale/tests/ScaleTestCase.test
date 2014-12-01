@@ -33,7 +33,7 @@ class ScaleTestCase extends QuizQuestionTestCase {
    */
   private function createQuizQuestion() {
     return $this->drupalCreateQuestion(array(
-          'type'         => 'scale',
+          'type'         => 'quizz_scale',
           'title'        => 'Scale 1 title',
           'alternative0' => 'This is alternative 1',
           'alternative1' => 'This is alternative 2',

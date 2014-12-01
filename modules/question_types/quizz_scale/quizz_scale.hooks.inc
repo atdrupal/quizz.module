@@ -59,7 +59,7 @@ function quizz_scale_permission() {
  */
 function quizz_scale_quiz_question_info() {
   return array(
-      'scale' => array(
+      'quizz_scale' => array(
           'name'              => t('Scale question'),
           'description'       => t('Quiz questions that allow a user to choose from a scale.'),
           'question provider' => 'Drupal\quizz_scale\ScaleQuestion',
