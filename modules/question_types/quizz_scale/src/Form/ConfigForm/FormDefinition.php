@@ -42,15 +42,16 @@ class FormDefinition {
    * presets here.
    */
   private function getCollections() {
-    $collectionIO = new CollectionIO();
-    $collections = $collectionIO->getPresetCollections();
+    global $user;
+
+    $collections = quizz_scale_collection_controller()->getPresetCollections($user->uid);
 
     // If user is allowed to edit global answer collections he is also allowed
     // to add new global presets
-    $_collection = new stdClass();
-    $_collection->for_all = 1;
-    $_collection->name = t('New global collection(available to all users)');
-    $collections['new'] = $_collection;
+    $collections['new'] = entity_create('scale_collection', array(
+        'for_all' => 1,
+        'label'   => t('New global collection(available to all users)'),
+    ));
 
     if (count($collections) == 0) {
       $form['no_col']['#markup'] = t("You don't have any preset collections.");
@@ -68,20 +69,19 @@ class FormDefinition {
   private function getCollection(&$form, $collection, $id) {
     $form["collection{$id}"] = array(
         '#type'        => 'fieldset',
-        '#title'       => $collection->name,
+        '#title'       => $collection->label,
         '#collapsible' => TRUE,
         '#collapsed'   => TRUE,
         '#group'       => 'scale_manage_collection_form',
     );
 
-    $alternatives = isset($collection->alternatives) ? $collection->alternatives : array();
+    $alternatives = $collection->alternatives;
+    $indexes = array_keys($collection->alternatives);
     for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
       $form["collection$id"]["alternative{$i}"] = array(
           '#title'         => t('Alternative !i', array('!i' => ($i + 1))),
-          '#size'          => 60,
-          '#maxlength'     => 256,
           '#type'          => 'textfield',
-          '#default_value' => isset($alternatives[$i]) ? $alternatives[$i] : '',
+          '#default_value' => isset($indexes[$i]) ? $alternatives[$indexes[$i]] : '',
           '#required'      => ($i < 2) && ('new' !== $id),
       );
     }

@@ -19,10 +19,12 @@ class ScaleQuestionForm {
   }
 
   public function get(array &$form_state = NULL) {
+    global $user;
+
     $form = array();
 
     // Getting presets from the database
-    $collections = $this->collectionIO->getPresetCollections(TRUE);
+    $collections = quizz_scale_collection_controller()->getPresetCollections($user->uid, TRUE);
 
     $options = $this->makeOptions($collections);
     $options['d'] = '-'; // Default

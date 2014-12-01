@@ -17,11 +17,40 @@ class CollectionController extends EntityAPIControllerExportable {
         ->fetchAll();
 
       foreach ($alternatives as $alternative) {
-        $collections[$alternative->answer_collection_id]->alternatives[$alternative->id] = $alternative->answer;
+        $collections[$alternative->answer_collection_id]->alternatives[$alternative->id] = check_plain($alternative->answer);
       }
     }
 
     return $collections;
+  }
+
+  /**
+   * Get all available presets for a user.
+   *
+   * @param int $uid
+   * @param bool $with_defaults
+   * @return \Drupal\quizz_scale\Entity\Collection[]
+   */
+  public function getPresetCollections($uid, $with_defaults = FALSE) {
+    $select = db_select('quiz_scale_collections', 'collection');
+    $select->fields('collection', array('id'));
+
+    if (!$with_defaults) {
+      $select->condition('collection.uid', $uid);
+    }
+    else {
+      $select->condition(
+        db_or()
+          ->condition('collection.uid', $uid)
+          ->condition('collection.for_all', 1)
+      );
+    }
+
+    if ($collection_ids = $select->execute()->fetchCol()) {
+      return entity_load('scale_collection', $collection_ids);
+    }
+
+    return array();
   }
 
 }
