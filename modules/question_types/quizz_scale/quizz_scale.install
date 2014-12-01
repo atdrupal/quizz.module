@@ -125,6 +125,13 @@ function _scale_insert_collection($options) {
  * Change schema per structure of question is changed.
  */
 function quizz_scale_update_7600() {
+  db_query('UPDATE {system} SET name = :new_name filename = :filename WHERE type = :module AND name = :name', array(
+      ':new_name' => 'quizz_scale',
+      ':filename' => drupal_get_path('module', 'quizz_scale'),
+      ':module'   => 'module',
+      ':name'     => 'scale',
+  ));
+
   db_rename_table('quiz_scale_node_properties', 'quiz_scale_properties');
 
   $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
