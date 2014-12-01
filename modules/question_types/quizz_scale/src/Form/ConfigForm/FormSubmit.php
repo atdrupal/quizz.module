@@ -38,22 +38,22 @@ class FormSubmit {
     $plugin = new ScaleQuestion(new stdClass());
     $plugin->initUtil($collection_id);
     switch ($alternatives['to-do']) { // @todo: Rename to-do to $op
-      case 0: // Save, but don't change
-      case 1: // Save and change existing questions
+      case 'save_safe': // Save, but don't change
+      case 'save': // Save and change existing questions
         if (FALSE !== $this->doSubmitDelete($plugin, $alternatives, $collection_id)) {
           $changed++;
         }
         break;
 
       // Delete
-      case 2:
-        if (!$got_deleted = quizz_scale_collection_controller()->deleteCollectionIfNotUsed($collection_id)) {
-          quizz_scale_collection_controller()->unpresetCollection($collection_id);
+      case 'delete_safe':
+        if (!$got_deleted = $this->controller->deleteCollectionIfNotUsed($collection_id)) {
+          $this->controller->unpresetCollection($collection_id);
         }
         $deleted++;
         break;
 
-      case 3:
+      case 'save_new':
         $this->doSubmitNew($plugin, $alternatives);
         break;
     }

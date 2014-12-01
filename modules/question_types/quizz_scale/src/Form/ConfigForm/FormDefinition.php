@@ -75,8 +75,9 @@ class FormDefinition {
 
     $alternatives = $collection->alternatives;
     $indexes = array_keys($collection->alternatives);
-    for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
-      $form["collection$id"]["alternative{$i}"] = array(
+
+    for ($i = 0; $i < $this->question_type->getConfig('scale_max_num_of_alts', 10); $i++) {
+      $form["collection{$id}"]["alternative{$i}"] = array(
           '#title'         => t('Alternative !i', array('!i' => ($i + 1))),
           '#type'          => 'textfield',
           '#default_value' => isset($indexes[$i]) ? $alternatives[$indexes[$i]] : '',
@@ -94,15 +95,16 @@ class FormDefinition {
       $form["collection{$id}"]['to-do'] = array(
           '#type'          => 'radios',
           '#title'         => t('What will you do?'),
-          '#default_value' => '0',
+          '#default_value' => 'save_safe',
           '#options'       => array(
-              t('Save changes, do not change questions using this preset'),
-              t('Save changes, and change your own questions who uses this preset'),
-              t('Delete this preset(This will not affect existing questions)')),
+              'save_safe'   => t('Save changes, do not change questions using this preset'),
+              'save'        => t('Save changes, and change your own questions who uses this preset'),
+              'delete_safe' => t('Delete this preset(This will not affect existing questions)')
+          ),
       );
     }
     else {
-      $form["collection{$id}"]["to-do"] = array('#type' => 'value', '#value' => 3);
+      $form["collection{$id}"]["to-do"] = array('#type' => 'value', '#value' => 'save_new');
       $form["collection{$id}"]["for_all"] = array('#type' => 'value', '#value' => 1);
     }
   }
