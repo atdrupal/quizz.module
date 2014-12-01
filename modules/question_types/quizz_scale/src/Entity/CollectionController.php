@@ -41,13 +41,15 @@ class CollectionController extends EntityAPIControllerExportable {
   /**
    * Get all available presets for a user.
    *
+   * @param string $question_type
    * @param int $uid
    * @param bool $with_defaults
    * @return Collection[]
    */
-  public function getPresetCollections($uid, $with_defaults = FALSE) {
+  public function getPresetCollections($question_type, $uid, $with_defaults = FALSE) {
     $select = db_select('quiz_scale_collections', 'collection');
     $select->fields('collection', array('id'));
+    $select->condition('question_type', $question_type);
 
     if (!$with_defaults) {
       $select->condition('collection.uid', $uid);

@@ -42,7 +42,7 @@ class FormDefinition {
   private function getCollections() {
     global $user;
 
-    $collections = quizz_scale_collection_controller()->getPresetCollections($user->uid);
+    $collections = quizz_scale_collection_controller()->getPresetCollections($this->question_type->type, $user->uid);
 
     // If user is allowed to edit global answer collections he is also allowed
     // to add new global presets
