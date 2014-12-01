@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\scale;
+namespace Drupal\quizz_scale;
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\scale\CollectionIO;
-use Drupal\scale\Form\ScaleQuestionForm;
+use Drupal\quizz_scale\CollectionIO;
+use Drupal\quizz_scale\Form\ScaleQuestionForm;
 
 /**
  * @TODO: We mix the names answer_collection and alternatives. Use either

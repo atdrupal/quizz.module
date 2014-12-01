@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\scale\Form\ConfigForm;
+namespace Drupal\quizz_scale\Form\ConfigForm;
 
 use Drupal\quiz_question\Entity\QuestionType;
-use Drupal\scale\CollectionIO;
+use Drupal\quizz_scale\CollectionIO;
 use stdClass;
 
 class FormDefinition {

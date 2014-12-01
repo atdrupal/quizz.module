@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\scale\Form;
+namespace Drupal\quizz_scale\Form;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\scale\CollectionIO;
+use Drupal\quizz_scale\CollectionIO;
 
 class ScaleQuestionForm {
 

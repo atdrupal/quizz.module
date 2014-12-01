@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\scale\Entity;
+namespace Drupal\quizz_scale\Entity;
 
 use Entity;
 

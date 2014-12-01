@@ -1,14 +1,14 @@
 <?php
 
-use Drupal\scale\Entity\Collection;
-use Drupal\scale\Entity\CollectionController;
+use Drupal\quizz_scale\Entity\Collection;
+use Drupal\quizz_scale\Entity\CollectionController;
 
-require_once dirname(__FILE__) . '/scale.hooks.inc';
+require_once dirname(__FILE__) . '/quizz_scale.hooks.inc';
 
 /**
  * @return CollectionController
  */
-function scale_collection_controller() {
+function quizz_scale_collection_controller() {
   return entity_get_controller('scale_collecction');
 }
 
@@ -19,6 +19,6 @@ function scale_collection_controller() {
  * @param stdClass $account
  * @return bool
  */
-function scale_collection_access_callback($op, $collection = NULL, $account = NULL) {
+function quizz_scale_collection_access_callback($op, $collection = NULL, $account = NULL) {
   return user_access('Edit global presets', $account);
 }

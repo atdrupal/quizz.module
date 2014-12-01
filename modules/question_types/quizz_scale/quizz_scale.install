@@ -11,7 +11,7 @@
 /**
  * Implements hook_install().
  */
-function scale_install() {
+function quizz_scale_install() {
   _scale_insert_collection(array('Always', 'Very often', 'Some times', 'Rarely', 'Very rarely', 'Never'));
   _scale_insert_collection(array('Excellent', 'Very good', 'Good', 'Ok', 'Poor', 'Very poor'));
   _scale_insert_collection(array('Totally agree', 'Agree', 'Not sure', 'Disagree', 'Totally disagree'));
@@ -22,7 +22,7 @@ function scale_install() {
 /**
  * Implements hook_schema().
  */
-function scale_schema() {
+function quizz_scale_schema() {
   $schema['quiz_scale_collections'] = array(
       'description' => 'Answer collection ids and properties',
       'fields'      => array(
@@ -89,7 +89,7 @@ function scale_schema() {
 /**
  * Implements hook_uninstall().
  */
-function scale_uninstall() {
+function quizz_scale_uninstall() {
   variable_del('scale_max_num_of_alts');
   cache_clear_all('variables', 'cache');
   drupal_set_message(t('The Scale module has been uninstalled. Scale nodes may still exist, but they will not function properly.'));
@@ -124,7 +124,7 @@ function _scale_insert_collection($options) {
 /**
  * Change schema per structure of question is changed.
  */
-function scale_update_7600() {
+function quizz_scale_update_7600() {
   db_rename_table('quiz_scale_node_properties', 'quiz_scale_properties');
 
   $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
@@ -137,7 +137,7 @@ function scale_update_7600() {
 /**
  * Convert global configuration for questions to question type entity.
  */
-function scale_update_7601() {
+function quizz_scale_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
     if ('scale' === $question_type->plugin) {
       $question_type
@@ -151,14 +151,14 @@ function scale_update_7601() {
 /**
  * Rename {quiz_scale_answer_collection} to {quiz_scale_collections}
  */
-function scale_update_7602() {
+function quizz_scale_update_7602() {
   db_rename_table('quiz_scale_answer_collection', 'quiz_scale_collections');
 }
 
 /**
  * Add more columns for {quiz_scale_collections}
  */
-function scale_update_7603() {
+function quizz_scale_update_7603() {
   db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'));
   db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
   db_add_field('quiz_scale_collections', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'));
@@ -188,7 +188,7 @@ function scale_update_7603() {
 /**
  * Update data per structure changed for scale collection.
  */
-function scale_update_7604() {
+function quizz_scale_update_7604() {
   $rows = db_select('quiz_scale_user')
     ->fields('quiz_scale_user')
     ->orderBy('answer_collection_id')
@@ -206,6 +206,6 @@ function scale_update_7604() {
 /**
  * Drop {quiz_scale_user}
  */
-//function scale_update_7605() {
+//function quizz_scale_update_7605() {
 //  db_drop_table('quiz_scale_user');
 //}

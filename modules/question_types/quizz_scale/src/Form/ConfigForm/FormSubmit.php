@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\scale\Form\ConfigForm;
+namespace Drupal\quizz_scale\Form\ConfigForm;
 
-use Drupal\scale\CollectionIO;
-use Drupal\scale\ScaleQuestion;
+use Drupal\quizz_scale\CollectionIO;
+use Drupal\quizz_scale\ScaleQuestion;
 use stdClass;
 
 class FormSubmit {

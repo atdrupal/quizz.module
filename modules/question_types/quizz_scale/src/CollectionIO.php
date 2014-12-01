@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\scale;
+namespace Drupal\quizz_scale;
 
 use Drupal\quiz_question\Entity\Question;
 use stdClass;
