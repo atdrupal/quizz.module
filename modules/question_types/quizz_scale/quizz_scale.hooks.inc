@@ -115,20 +115,21 @@ function quizz_scale_get_answer($question_qid, $question_vid, $result_id) {
 function quizz_scale_user_cancel($edit, $account, $method) {
   $query = db_query(
     'SELECT id
-     FROM {quiz_scale_collections} ac
-       JOIN {quiz_scale_user} u ON(ac.id = u.answer_collection_id)
+     FROM {quiz_scale_collections} collection
+       JOIN {quiz_scale_user} u ON collection.id = u.answer_collection_id
      WHERE uid = :uid
-       AND ac.for_all = :for_all
-       AND ac.id NOT IN (SELECT answer_collection_id FROM {quiz_scale_properties})
-       AND ac.id NOT IN (SELECT answer_collection_id FROM {quiz_scale_user} WHERE NOT uid = :uid)', array(
+       AND collection.for_all = :for_all
+       AND collection.id NOT IN (SELECT answer_collection_id FROM {quiz_scale_properties})
+       AND collection.id NOT IN (SELECT answer_collection_id FROM {quiz_scale_user} WHERE NOT uid = :uid)', array(
       ':uid'     => $account->uid,
       ':for_all' => 0
   ));
 
   foreach ($query as $row) {
-    db_delete('quiz_scale_answer')->condition('answer_collection_id', $row->id)->execute();
-    db_delete('quiz_scale_collections')->condition('id', $row->id)->execute();
+    $ids[] = $row->id;
   }
 
-  db_delete('quiz_scale_user')->condition('uid', $account->uid)->execute();
+  if (!empty($ids)) {
+    entity_delete_multiple('scale_collection', $ids);
+  }
 }
