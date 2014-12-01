@@ -23,9 +23,6 @@ class ScaleQuestionForm {
 
     $options = $this->makeOptions($collections);
     $options['d'] = '-'; // Default
-    // We need to add the available preset collections as javascript so that
-    // the alternatives can be populated instantly when a
-    $jsArray = $this->makeJSArray($collections);
 
     $form['answer'] = array(
         '#type'        => 'fieldset',
@@ -42,14 +39,12 @@ class ScaleQuestionForm {
         '#options'       => $options,
         '#default_value' => 'd',
         '#description'   => t('Select a set of alternatives'),
-        '#attributes'    => array('onchange' => 'refreshAlternatives(this)'),
     );
     $max_num_alts = $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10);
 
     // @TODO: use #attached
-    $form['jsArray'] = array(
-        '#markup' => "<script type='text/javascript'>$jsArray var scale_max_num_of_alts = $max_num_alts;</script>"
-    );
+    $this->includeJSSettings($collections, $max_num_alts);
+
     $form['answer']['alternatives'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Alternatives'),
@@ -82,23 +77,24 @@ class ScaleQuestionForm {
 
   /**
    * Makes a javascript constructing an answer collection array.
-   *
    * @param $collections
-   *  collections array, from getPresetCollections() for instance…
-   * @return string
-   *  javascript code
    */
-  private function makeJSArray(array $collections = NULL) {
-    $jsArray = 'scaleCollections = new Array();';
-    foreach ($collections as $col_id => $obj) {
-      if (is_array($collections[$col_id]->alternatives)) {
-        $jsArray .= "scaleCollections[$col_id] = new Array();";
-        foreach ($collections[$col_id]->alternatives as $alt_id => $text) {
-          $jsArray .= "scaleCollections[$col_id][$alt_id] = '" . check_plain($text) . "';";
+  private function includeJSSettings(array $collections, $max_alternatives) {
+    $alternatives = array();
+    foreach ($collections as $id => $collection) {
+      if (is_array($collection->alternatives)) {
+        foreach ($collections[$id]->alternatives as $aid => $answer) {
+          $alternatives[$id][$aid] = check_plain($answer);
         }
       }
     }
-    return $jsArray;
+
+    drupal_add_js(array(
+        'quizz_scale_alternatives' => array(
+            'alternatives'     => $alternatives,
+            'max_alternatives' => $max_alternatives,
+        )
+      ), 'setting');
   }
 
   /**

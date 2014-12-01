@@ -1,28 +1,21 @@
-/**
- * @file
- * Javascript functions for the scale question type.
- */
+(function ($, Drupal) {
 
-/**
- * Refreshes alternatives when a preset is selected.
- *
- * @param selection
- *  The select item used to select answer collection
- */
-function refreshAlternatives(selection) {
-  clearAlternatives();
-  var colId = selection.options[selection.selectedIndex].value;
-  var numberOfOptions = scaleCollections[colId].length;
-  for(var i = 0; i<numberOfOptions;i++){
-	jQuery('#edit-alternative' + (i)).val(scaleCollections[colId][i]);
-  }
-}
+  Drupal.behaviors.quizzScaleQuestionForm = {
+    attach: function (context, settings) {
+      $('.form-select[name="presets"]', context).change(function () {
+        var alternatives = settings.quizz_scale_alternatives.alternatives[$(this).val()];
+        var max = settings.quizz_scale_alternatives.max_alternatives;
 
-/**
- * Clears all the alternatives on the scale node form
- */
-function clearAlternatives() {
-  for ( var i = 0; i < scale_max_num_of_alts; i++) {
-	jQuery('#edit-alternative' + (i)).val('');
-  }
-}
+        // Clears all the alternatives on the scale question form
+        for (var i = 0; i < max; i++)
+          $('#edit-alternative' + (i)).val('');
+
+        // Apply collection items
+        var i = 0;
+        for (var key in alternatives)
+          $('#edit-alternative' + (i++)).val(alternatives[key]);
+      });
+    }
+  };
+
+})(jQuery, Drupal);
