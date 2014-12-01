@@ -73,16 +73,6 @@ function quizz_scale_schema() {
       ),
   );
 
-  // @TODO: Remove me
-  $schema['quiz_scale_user'] = array(
-      'description' => 'User settings, store what answer collections the user have as presets',
-      'fields'      => array(
-          'uid'                  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'answer_collection_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-      ),
-      'primary key' => array('uid', 'answer_collection_id'),
-  );
-
   return $schema;
 }
 
