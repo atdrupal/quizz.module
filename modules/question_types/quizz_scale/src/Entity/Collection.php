@@ -29,9 +29,11 @@ class Collection extends Entity {
   public $alternatives = array();
 
   public function insertAlternatives($answers) {
+    // db_lock_table('quiz_scale_answer');
     foreach ($answers as $answer) {
       $this->insertAlternative($answer);
     }
+    // db_unlock_tables();
   }
 
   /**

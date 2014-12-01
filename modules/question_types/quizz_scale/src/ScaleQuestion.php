@@ -51,30 +51,24 @@ class ScaleQuestion extends QuestionPlugin {
    * @see QuizQuestion#saveEntityProperties()
    */
   public function saveEntityProperties($is_new = FALSE) {
-    $is_new_node = $is_new || $this->question->revision == 1;
-    $collection_id = $this->getCollectionIO()->saveAnswerCollection($this->question, $is_new_node);
+    global $user;
+
+    if ($this->question->revision == 1) {
+      $is_new = TRUE;
+    }
+
+    $collection_id = $this->getCollectionIO()->saveAnswerCollection($this->question, $is_new);
 
     // Save the answer collection as a preset if the save preset option is checked
     if (!empty($this->question->save)) {
-      $this->getCollectionIO()->setPreset($collection_id);
+      quizz_scale_collection_controller()->changeOwner($collection_id, $user->uid);
     }
 
-    if ($is_new_node) {
-      db_insert('quiz_scale_properties')
-        ->fields(array(
-            'qid'                  => $this->question->qid,
-            'vid'                  => $this->question->vid,
-            'answer_collection_id' => $collection_id,
-        ))
-        ->execute();
-    }
-    else {
-      db_update('quiz_scale_properties')
-        ->fields(array('answer_collection_id' => $collection_id))
-        ->condition('qid', $this->question->qid)
-        ->condition('vid', $this->question->vid)
-        ->execute();
-    }
+    db_merge('quiz_scale_properties')
+      ->key(array('qid' => $this->question->vid, 'vid' => $this->question->vid))
+      ->fields(array('answer_collection_id' => $collection_id))
+      ->execute()
+    ;
   }
 
   /**
