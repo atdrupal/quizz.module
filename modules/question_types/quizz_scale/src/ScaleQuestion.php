@@ -57,7 +57,7 @@ class ScaleQuestion extends QuestionPlugin {
       $is_new = TRUE;
     }
 
-    $collection_id = $this->getCollectionIO()->saveAnswerCollection($this->question, $is_new);
+    $collection_id = quizz_scale_collection_controller()->saveQuestionAlternatives($this->question, $is_new);
 
     // Save the answer collection as a preset if the save preset option is checked
     if (!empty($this->question->save)) {
@@ -87,7 +87,21 @@ class ScaleQuestion extends QuestionPlugin {
    */
   public function delete($single_revision = FALSE) {
     parent::delete($single_revision);
-    return $this->getCollectionIO()->deleteQuestionProperties($this->question, $single_revision);
+
+    $qid = $this->question->qid;
+    $vid = $this->question->vid;
+    $cid = $this->question->{0}->answer_collection_id;
+
+    if ($single_revision) {
+      db_delete('quiz_scale_user_answers')->condition('question_qid', $qid)->condition('question_vid', $vid)->execute();
+      db_delete('quiz_scale_properties')->condition('qid', $qid)->condition('vid', $vid)->execute();
+    }
+    else {
+      db_delete('quiz_scale_user_answers')->condition('question_qid', $qid)->execute();
+      db_delete('quiz_scale_properties')->condition('qid', $qid)->execute();
+    }
+
+    quizz_scale_collection_controller()->deleteCollectionIfNotUsed($cid, 0);
   }
 
   /**

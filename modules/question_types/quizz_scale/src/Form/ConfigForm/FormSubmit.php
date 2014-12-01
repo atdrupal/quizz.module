@@ -72,7 +72,7 @@ class FormSubmit {
   private function doSubmitDelete(ScaleQuestion $plugin, $alternatives, $collection_id) {
     global $user;
 
-    $new_collection_id = $this->collectionIO->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
+    $new_collection_id = quizz_scale_collection_controller()->saveQuestionAlternatives($plugin->question, FALSE, $alternatives, 1);
     if (isset($alternatives['for_all'])) {
       quizz_scale_collection_controller()->setForAll($new_collection_id, $alternatives['for_all']);
     }
