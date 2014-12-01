@@ -104,7 +104,14 @@ class ScaleQuestion extends QuestionPlugin {
   public function load() {
     if (empty($this->properties)) {
       $this->properties = parent::load();
-      foreach ($this->getCollectionIO()->loadQuestionAlternatives($this->question->vid) as $property) {
+
+      $select = db_select('quiz_scale_properties', 'p');
+      $select->join('quiz_scale_answer', 'answer', 'p.answer_collection_id = answer.answer_collection_id');
+      $properties = $select
+          ->fields('answer', array('id', 'answer', 'answer_collection_id'))
+          ->condition('p.vid', $this->question->vid)
+          ->orderBy('answer.id')->execute()->fetchAll();
+      foreach ($properties as $property) {
         $this->properties[] = $property;
       }
     }

@@ -6,22 +6,6 @@ use Drupal\quiz_question\Entity\Question;
 
 class CollectionIO {
 
-  public function loadQuestionAlternatives($question_id) {
-    $properties = array();
-
-    $query = db_query(
-      'SELECT answer.id, answer.answer, answer.answer_collection_id
-       FROM {quiz_scale_properties} p
-         JOIN {quiz_scale_answer} answer ON (p.answer_collection_id = answer.answer_collection_id)
-       WHERE p.vid = :question_vid
-         ORDER BY answer.id', array(':question_vid' => $question_id));
-    foreach ($query as $property) {
-      $properties[] = $property;
-    }
-
-    return $properties;
-  }
-
   public function deleteQuestionProperties(Question $question, $single_revision) {
     if ($single_revision) {
       db_delete('quiz_scale_user_answers')
