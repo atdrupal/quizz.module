@@ -10,14 +10,14 @@ class CollectionController extends EntityAPIControllerExportable {
     $collections = parent::load($ids, $conditions);
 
     if (!empty($collections)) {
-      $options = db_select('quiz_scale_answer')
+      $alternatives = db_select('quiz_scale_answer')
         ->fields('quiz_scale_answer')
         ->condition('answer_collection_id', array_keys($collections))
         ->execute()
         ->fetchAll();
 
-      foreach ($options as $option) {
-        $collections[$option->answer_collection_id]->options[$option->id] = $option->answer;
+      foreach ($alternatives as $alternative) {
+        $collections[$alternative->answer_collection_id]->alternatives[$alternative->id] = $alternative->answer;
       }
     }
 

@@ -191,8 +191,8 @@ function quizz_scale_update_7603() {
   foreach ($collections as $collection) {
     $collection->module = 'scale';
     $collection->name = 'collection_' . $collection->id;
-    if (1 < count($collection->options)) {
-      $options = $collection->options;
+    if (1 < count($collection->alternatives)) {
+      $options = $collection->alternatives;
       $first = array_shift($options);
       $last = array_pop($options);
       $collection->label = "{$first} - {$last}";

@@ -26,6 +26,6 @@ class Collection extends Entity {
    *
    * @var array
    */
-  public $options = array();
+  public $alternatives = array();
 
 }
