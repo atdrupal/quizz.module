@@ -138,13 +138,13 @@ class MatchingQuestion extends QuestionPlugin {
   }
 
   /**
-   * Implementation of getNodeProperties
+   * Implementation of load
    *
-   * @see QuizQuestion#getNodeProperties()
+   * @see QuizQuestion#load()
    */
   public function load() {
-    if (isset($this->entityProperties)) {
-      return $this->entityProperties;
+    if (isset($this->properties)) {
+      return $this->properties;
     }
     $props = parent::load();
 
@@ -170,7 +170,7 @@ class MatchingQuestion extends QuestionPlugin {
           'feedback' => $result->feedback,
       );
     }
-    $this->entityProperties = $props;
+    $this->properties = $props;
     return $props;
   }
 

@@ -225,13 +225,13 @@ class DDLinesQuestion extends QuestionPlugin {
   }
 
   /**
-   * Implementation of getNodeProperties
+   * Implementation of load
    *
-   * @see QuizQuestion#getNodeProperties()
+   * @see QuizQuestion#load()
    */
   public function load() {
-    if (isset($this->entityProperties) && !empty($this->entityProperties)) {
-      return $this->entityProperties;
+    if (isset($this->properties) && !empty($this->properties)) {
+      return $this->properties;
     }
     $props = parent::load();
 
@@ -243,7 +243,7 @@ class DDLinesQuestion extends QuestionPlugin {
     if (is_array($res_a)) {
       $props = array_merge($props, $res_a);
     }
-    $this->entityProperties = $props;
+    $this->properties = $props;
     return $props;
   }
 

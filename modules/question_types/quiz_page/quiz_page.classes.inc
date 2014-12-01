@@ -28,7 +28,7 @@ class QuizPagesQuestion extends QuestionPlugin {
    * @see QuizQuestion#saveEntityProperties($is_new)
    */
   public function saveEntityProperties($is_new = FALSE) {
-
+    
   }
 
   /**

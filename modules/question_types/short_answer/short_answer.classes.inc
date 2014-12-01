@@ -91,19 +91,19 @@ class ShortAnswerQuestion extends QuestionPlugin {
   }
 
   /**
-   * Implementation of getNodeProperties
+   * Implementation of load
    *
-   * @see QuizQuestion#getNodeProperties()
+   * @see QuizQuestion#load()
    */
   public function load() {
-    if (isset($this->entityProperties)) {
-      return $this->entityProperties;
+    if (isset($this->properties)) {
+      return $this->properties;
     }
     $props = parent::load();
     $res_a = db_query('SELECT correct_answer, correct_answer_evaluation FROM {quiz_short_answer_properties}
       WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchAssoc();
-    $this->entityProperties = (is_array($res_a)) ? array_merge($props, $res_a) : $props;
-    return $this->entityProperties;
+    $this->properties = (is_array($res_a)) ? array_merge($props, $res_a) : $props;
+    return $this->properties;
   }
 
   /**
