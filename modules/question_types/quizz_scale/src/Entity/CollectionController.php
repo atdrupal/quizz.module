@@ -24,6 +24,17 @@ class CollectionController extends EntityAPIControllerExportable {
     return $collections;
   }
 
+  public function delete($ids, \DatabaseTransaction $transaction = NULL) {
+    $return = parent::delete($ids, $transaction);
+
+    // Delete alternatives
+    db_delete('quiz_scale_answer')
+      ->condition('answer_collection_id', $ids)
+      ->execute();
+
+    return $return;
+  }
+
   /**
    * Get all available presets for a user.
    *

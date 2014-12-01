@@ -28,9 +28,7 @@ class FormSubmit {
   }
 
   public function submit($form, &$form_state) {
-    $changed = 0;
-    $deleted = 0;
-
+    $changed = $deleted = 0;
     foreach ($form_state['values'] as $key => $alternatives) {
       if ($col_id = $this->findCollectionId($key)) {
         $this->doSubmitAlternatives($col_id, $alternatives, $changed, $deleted);
@@ -47,8 +45,6 @@ class FormSubmit {
   }
 
   private function doSubmitAlternatives($collection_id, $alternatives, &$changed, &$deleted) {
-    global $user;
-
     $plugin = new ScaleQuestion(new stdClass());
     $plugin->initUtil($collection_id);
     switch ($alternatives['to-do']) { // @todo: Rename to-do to $op
@@ -104,11 +100,6 @@ class FormSubmit {
       db_update('quiz_scale_properties')
         ->fields(array('answer_collection_id' => $new_collection_id))
         ->condition('answer_collection_id', $nids)
-        ->execute();
-
-      db_delete('quiz_scale_user')
-        ->condition('answer_collection_id', $collection_id)
-        ->condition('uid', $user->uid)
         ->execute();
 
       $this->collectionIO->deleteCollectionIfNotUsed($collection_id);

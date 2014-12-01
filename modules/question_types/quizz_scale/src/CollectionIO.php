@@ -41,40 +41,27 @@ class CollectionIO {
    */
   public function deleteCollectionIfNotUsed($collection_id, $accept = 0) {
     // Check if the collection is someones preset. If it is we can't delete it.
-    $count = db_query(
-      'SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(
-        ':acid' => $collection_id
-      ))->fetchField();
-    if ($count > 0) {
+    $sql_1 = 'SELECT 1 FROM {quiz_scale_collections} WHERE id = :cid AND uid <> 0';
+    if (db_query($sql_1, array(':id' => $collection_id))->fetchField()) {
       return FALSE;
     }
 
     // Check if the collection is a global preset. If it is we can't delete it.
-    $for_all = db_query(
-      'SELECT for_all FROM {quiz_scale_collections} WHERE id = :id', array(
-        ':id' => $collection_id
-      ))->fetchField();
-    if ($for_all == 1) {
+    $sql_2 = 'SELECT 1 FROM {quiz_scale_collections} WHERE id = :id AND for_all = 1';
+    if (db_query($sql_2, array(':id' => $collection_id))->fetchField()) {
       return FALSE;
     }
 
     // Check if the collection is used in an existing question. If it is we can't delete it.
-    $count = db_query(
-      'SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid', array(
-        ':acid' => $collection_id
-      ))->fetchField();
+    $sql_3 = 'SELECT COUNT(*) FROM {quiz_scale_properties} WHERE answer_collection_id = :acid';
+    $count = db_query($sql_3, array(':acid' => $collection_id))->fetchField();
 
     // We delete the answer collection if it isnt beeing used by enough questions
     if ($count <= $accept) {
-      db_delete('quiz_scale_collections')
-        ->condition('id', $collection_id)
-        ->execute();
-
-      db_delete('quiz_scale_answer')
-        ->condition('answer_collection_id', $collection_id)
-        ->execute();
+      entity_delete('scale_collection', $collection_id);
       return TRUE;
     }
+
     return FALSE;
   }
 
