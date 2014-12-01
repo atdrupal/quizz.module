@@ -1,0 +1,22 @@
+Quiz Scale
+====
+
+Allows quiz creators to make a special question type for surveys.
+
+### 1. Introduction
+
+This module is an attempt to make it easy to create simple surveys using the
+quiz module.
+
+The Scale module lets the quiz creator store preset answer collections, enabling
+rapid creation of survey questions.
+
+### 2. Installation
+
+To install, unpack the module to your modules folder, and simply enable the
+module at Admin > Build > Modules.
+
+### 3. Configuration
+
+Go to /admin/structure/quiz-questions, find question type that uses 'quizz_scale'
+as plugin, click edit. Here you can change and delete presets (answer collections).
