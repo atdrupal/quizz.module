@@ -41,6 +41,10 @@ class Collection extends Entity {
    * @param string $answer
    */
   public function insertAlternative($answer) {
+    if (!$this->id) {
+      $this->save();
+    }
+
     return db_insert('quiz_scale_answer')
         ->fields(array(
             'answer_collection_id' => $this->id,
