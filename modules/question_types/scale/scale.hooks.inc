@@ -85,7 +85,7 @@ function scale_entity_info() {
       'base table'       => 'quiz_scale_collections',
       'fieldable'        => FALSE,
       'exportable'       => TRUE,
-      'entity keys'      => array('id' => 'id', 'name' => 'type', 'label' => 'label'),
+      'entity keys'      => array('id' => 'id', 'name' => 'name', 'label' => 'label'),
       'access callback'  => 'scale_collection_access_callback',
       'module'           => 'scale',
   );

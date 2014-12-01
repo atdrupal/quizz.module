@@ -27,7 +27,7 @@ function scale_schema() {
       'description' => 'Answer collection ids and properties',
       'fields'      => array(
           'id'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-          'name'    => array('type' => 'varchar', 'length' => 32, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'),
+          'name'    => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'),
           'label'   => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => '', 'description' => 'The human-readable name of this collection.'),
           'uid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'),
           'for_all' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => '1 for global presets, 0 otherwise'),
@@ -159,12 +159,30 @@ function scale_update_7602() {
  * Add more columns for {quiz_scale_collections}
  */
 function scale_update_7603() {
-  db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'));
+  db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'));
   db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
   db_add_field('quiz_scale_collections', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'));
   db_add_field('quiz_scale_collections', 'data', array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'));
   db_add_field('quiz_scale_collections', 'module', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'));
   db_add_field('quiz_scale_collections', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'));
+  drupal_flush_all_caches();
+
+  // Create default name for current collections
+  $collections = entity_load('scale_collection', FALSE, array());
+  foreach ($collections as $collection) {
+    $collection->module = 'scale';
+    $collection->name = 'collection_' . $collection->id;
+    if (1 < count($collection->options)) {
+      $options = $collection->options;
+      $first = array_shift($options);
+      $last = array_pop($options);
+      $collection->label = "{$first} - {$last}";
+    }
+    $collection->save();
+  }
+
+  // collection name is not required column
+  db_change_field('quiz_scale_collections', 'name', 'name', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'description' => 'The machine-readable name of this collection.'));
 }
 
 /**

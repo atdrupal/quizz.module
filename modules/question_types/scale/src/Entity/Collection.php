@@ -21,4 +21,11 @@ class Collection extends Entity {
   /** @var int */
   public $uid;
 
+  /**
+   * ID -> Label
+   *
+   * @var array
+   */
+  public $options = array();
+
 }
