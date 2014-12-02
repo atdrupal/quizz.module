@@ -116,7 +116,24 @@ class HookEntityInfo {
         'entity keys'               => array('id' => 'result_id', 'bundle' => 'quiz_type'),
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
+        'fieldable'                 => TRUE,
     );
+
+    // User may come from 4.x, where the table is not available yet
+    if (db_table_exists('quiz_type')) {
+      // Add bundle info but bypass entity_load() as we cannot use it here.
+      foreach (db_select('quiz_type', 'qt')->fields('qt')->execute()->fetchAllAssoc('type') as $name => $question_type) {
+        $info['bundles'][$name] = array(
+            'label' => $question_type->label,
+            'admin' => array(
+                'path'             => 'admin/structure/quiz-results/manage/%quiz_type',
+                'real path'        => 'admin/structure/quiz-results/manage/' . $name,
+                'bundle argument'  => 4,
+                'access arguments' => array('administer quiz'),
+            ),
+        );
+      }
+    }
 
     return $info;
   }
