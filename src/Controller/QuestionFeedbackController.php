@@ -6,7 +6,7 @@ use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 use Drupal\quiz_question\Entity\Question;
 
-class QuizQuestionFeedbackController {
+class QuestionFeedbackController {
 
   /** @var QuizEntity */
   private $quiz;

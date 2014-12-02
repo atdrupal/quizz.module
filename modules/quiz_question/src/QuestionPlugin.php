@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_question;
 
-use Drupal\quizz\Controller\QuizQuestionFeedbackController;
+use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Entity\QuizEntity;
 
 /**
@@ -212,7 +212,7 @@ abstract class QuestionPlugin {
       form_set_error('', t('The answer was incorrect. Please try again.'));
 
       $result = $form_state['build_info']['args'][3];
-      $controller = new QuizQuestionFeedbackController($quiz, $result);
+      $controller = new QuestionFeedbackController($quiz, $result);
       $feedback = $controller->buildRenderArray($current_question);
       $element['feedback'] = array(
           '#weight' => 100,

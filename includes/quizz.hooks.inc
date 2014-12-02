@@ -173,15 +173,6 @@ function quizz_theme($existing, $type, $theme, $path) {
           'render element' => 'form',
           'file'           => 'quizz.pages.inc'
       ),
-      'quiz_result'              => array(
-          'variables' => array(
-              'quiz'      => NULL,
-              'questions' => NULL,
-              'score'     => NULL,
-              'summary'   => NULL,
-              'result_id' => NULL),
-          'file'      => 'quizz.pages.inc',
-      ),
       'quiz_progress'            => array(
           'variables' => array(
               'quiz'            => null,

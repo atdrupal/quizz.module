@@ -5,7 +5,7 @@ namespace Drupal\quizz\Controller;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 
-abstract class QuizResultBaseController {
+abstract class ResultBaseController {
 
   /** @var QuizEntity */
   protected $quiz;
@@ -24,12 +24,16 @@ abstract class QuizResultBaseController {
    */
   protected $score;
 
+  /** @var \stdClass */
+  protected $author;
+
   public function __construct(QuizEntity $quiz, QuizEntity $quiz_revision, $result) {
     $this->quiz = $quiz;
     $this->quiz_revision = $quiz_revision;
     $this->result = $result;
     $this->quiz_id = $this->result->quiz_qid;
     $this->score = quiz_result_controller()->getScoreIO()->calculate($this->result);
+    $this->author = user_load($this->result->uid);
   }
 
   /**
