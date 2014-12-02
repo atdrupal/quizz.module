@@ -28,7 +28,7 @@ class QuizPagesQuestion extends QuestionPlugin {
    * @see QuizQuestion#saveEntityProperties($is_new)
    */
   public function saveEntityProperties($is_new = FALSE) {
-    
+
   }
 
   /**
@@ -67,6 +67,10 @@ class QuizPagesQuestion extends QuestionPlugin {
         '#type' => 'hidden',
     );
     return $element;
+  }
+
+  public function hasFeedback() {
+    return FALSE;
   }
 
 }

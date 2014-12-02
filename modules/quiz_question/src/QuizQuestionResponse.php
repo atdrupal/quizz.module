@@ -2,8 +2,9 @@
 
 namespace Drupal\quiz_question;
 
-use Drupal\quiz_question\QuestionPlugin;
 use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quizz\Entity\Result;
 use stdClass;
 
 /**
@@ -12,14 +13,16 @@ use stdClass;
  */
 abstract class QuizQuestionResponse {
 
-  /** @var \Drupal\quizz\Entity\Result */
+  /** @var Result */
   protected $result;
   protected $result_id = 0;
   protected $is_correct = FALSE;
   protected $evaluated = TRUE;
 
-  /** @var \Drupal\quiz_question\Entity\Question */
+  /** @var Question */
   public $question = NULL;
+
+  /** @var QuestionPlugin */
   public $quizQuestion = NULL;
   protected $answer = NULL;
   protected $score;
@@ -68,7 +71,7 @@ abstract class QuizQuestionResponse {
   /**
    * Used to refresh this instances question in case drupal has changed it.
    *
-   * @param \Drupal\quiz_question\Entity\Question $newQuestion
+   * @param Question $newQuestion
    */
   public function refreshQuestionNode($newQuestion) {
     $this->question = $newQuestion;

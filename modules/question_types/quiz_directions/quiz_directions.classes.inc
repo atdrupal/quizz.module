@@ -84,6 +84,10 @@ class QuizDirectionsQuestion extends QuestionPlugin {
     return FALSE;
   }
 
+  public function hasFeedback() {
+    return FALSE;
+  }
+
 }
 
 /**
