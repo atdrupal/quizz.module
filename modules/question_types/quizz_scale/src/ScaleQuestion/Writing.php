@@ -82,52 +82,56 @@ class Writing {
    * Finds out if a collection already exists.
    *
    * @param string $question_type
-   * @param string[] $alternatives
+   * @param string[] $in_alternatives
    * @param int $collection_id
    * @param int $last_id - The id of the last alternative we compared with.
    * @return bool
    */
-  private function findCollectionId($question_type, array $alternatives, $collection_id = NULL, $last_id = NULL) {
-    $_alternatives = isset($collection_id) ? $alternatives : array_reverse($alternatives);
+  private function findCollectionId($question_type, array $in_alternatives, $collection_id = NULL, $last_id = NULL) {
+    $alternatives = isset($collection_id) ? $in_alternatives : array_reverse($in_alternatives);
 
     // Find all answers identical to the next answer in $alternatives
     $select = db_select('quiz_scale_answer', 'answer');
-    $select->fields('answer', array('id', 'answer_collection_id'));
-    $select->condition('answer.answer', array_pop($_alternatives));
+    $select->innerJoin('quiz_scale_collections', 'collection', 'answer.answer_collection_id = collection.id');
+    $select
+      ->fields('answer', array('id', 'answer_collection_id'))
+      ->condition('answer.answer', array_pop($alternatives))
+      ->condition('collection.question_type', $question_type)
+    ;
 
-    // Filter on collection id
+    // Filter on collection ID
     if (isset($collection_id)) {
       $select->condition('answer.answer_collection_id', $collection_id);
     }
 
-    // Filter on alternative id(If we are investigating a specific collection,
+    // Filter on alternative id (If we are investigating a specific collection,
     // the alternatives needs to be in a correct order)
-    if (isset($last_id)) {
+    if (NULL !== $last_id) {
       $select->condition('id', $last_id + 1);
     }
 
-    if (!$res_o = $select->execute()->fetch()) {
+    if (!$_alternatives = $select->execute()->fetch()) {
       return FALSE;
     }
 
     // If all alternatives has matched make sure the collection we are comparing
     // against in the database doesn't have more alternatives.
-    if (count($_alternatives) == 0) {
-      $res_o2 = db_query(
-        'SELECT * FROM {quiz_scale_answer}
-          WHERE answer_collection_id = :answer_collection_id AND id = :id', array(
-          ':answer_collection_id' => $collection_id,
-          ':id'                   => ($last_id + 2)
-        ))->fetch();
-      return ($res_o2) ? FALSE : $collection_id;
+    if (!$alternatives && NULL !== $collection_id && NULL !== $last_id) {
+      $sql = 'SELECT 1 FROM {quiz_scale_answer} WHERE answer_collection_id = :cid AND id = :id';
+      if (db_query($sql, array(':cid' => $collection_id, ':id' => $last_id + 2))->fetchColumn()) {
+        return $collection_id;
+      }
+      return FALSE;
     }
 
     // Do a recursive call to this function on all answer collection candidates
-//    do {
-//      if ($collection_id = $this->findCollectionId($question_type, $_alternatives, $res_o->answer_collection_id, $res_o->id)) {
-//        return $collection_id;
-//      }
-//    } while ($res_o = $res->fetch());
+    foreach ($_alternatives as $alternative) {
+      $aid = $alternative->id;
+      $cid = $alternative->answer_collection_id;
+      if ($collection_id = $this->findCollectionId($question_type, $alternatives, $cid, $aid)) {
+        return $collection_id;
+      }
+    }
 
     return FALSE;
   }
