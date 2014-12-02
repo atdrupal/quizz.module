@@ -273,3 +273,25 @@ function quizz_update_7606() {
     variable_del($name);
   }
 }
+
+/**
+ * Add {quiz_results}.quiz_type & new index
+ */
+function quizz_update_7607() {
+  $spec = array(
+      'type'        => 'varchar',
+      'length'      => 32,
+      'not null'    => TRUE,
+      'default'     => '',
+      'description' => 'The {quiz_type}.type of this result.'
+  );
+
+  db_add_field('quiz_results', 'quiz_type', array('not null' => FALSE) + $spec);
+  db_update('quiz_results')
+    ->fields(array('type' => 'quiz'))
+    ->execute()
+  ;
+
+  db_change_field('quiz_results', 'quiz_type', 'quiz_type', $spec);
+  db_add_index('quiz_results', 'bundle', array('quiz_type'));
+}

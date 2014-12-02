@@ -12,11 +12,11 @@ class HookEntityInfo {
     }
 
     return array(
-        'quiz_type'                  => $this->getQuizEntityTypeInfo(),
-        'quiz_entity'                => $this->getQuizEntityInfo(),
-        'quiz_relationship' => $this->getQuizQuestionRelationshipInfo(),
-        'quiz_result'                => $this->getQuizResultInfo(),
-        'quiz_result_answer'         => $this->getQuizResultAnswerInfo(),
+        'quiz_type'          => $this->getQuizEntityTypeInfo(),
+        'quiz_entity'        => $this->getQuizEntityInfo(),
+        'quiz_relationship'  => $this->getQuizQuestionRelationshipInfo(),
+        'quiz_result'        => $this->getQuizResultInfo(),
+        'quiz_result_answer' => $this->getQuizResultAnswerInfo(),
     );
   }
 
@@ -108,15 +108,17 @@ class HookEntityInfo {
   }
 
   private function getQuizResultInfo() {
-    return array(
+    $info = array(
         'label'                     => t('Quiz result'),
         'entity class'              => 'Drupal\quizz\Entity\Result',
         'controller class'          => 'Drupal\quizz\Entity\ResultController',
         'base table'                => 'quiz_results',
-        'entity keys'               => array('id' => 'result_id'),
+        'entity keys'               => array('id' => 'result_id', 'bundle' => 'quiz_type'),
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
     );
+
+    return $info;
   }
 
   private function getQuizResultAnswerInfo() {
