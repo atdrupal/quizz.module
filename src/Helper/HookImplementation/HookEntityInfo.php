@@ -129,6 +129,9 @@ class HookEntityInfo {
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
         'fieldable'                 => TRUE,
+        'view modes'                => array(
+            'result' => array('label' => t('Result'), 'custom settings' => TRUE),
+        ),
     );
 
     // User may come from 4.x, where the table is not available yet

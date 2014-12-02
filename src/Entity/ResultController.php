@@ -4,6 +4,7 @@ namespace Drupal\quizz\Entity;
 
 use DatabaseTransaction;
 use Drupal\quizz\Entity\Result\Maintainer;
+use Drupal\quizz\Entity\Result\Render;
 use Drupal\quizz\Entity\Result\ScoreIO;
 use Drupal\quizz\Entity\Result\Writer;
 use EntityAPIController;
@@ -94,6 +95,17 @@ class ResultController extends EntityAPIController {
       );
     }
     ksort($result->layout, SORT_NUMERIC);
+  }
+
+  /**
+   * @param Result $result
+   */
+  public function buildContent($result, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $quiz = quiz_load($result->quiz_qid);
+    $quiz_revision = quiz_load(NULL, $result->quiz_vid);
+    $obj = new Render($quiz, $quiz_revision, $result);
+    $obj->render($content);
+    return parent::buildContent($result, $view_mode, $langcode, $content);
   }
 
   /**

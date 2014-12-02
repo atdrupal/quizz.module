@@ -18,6 +18,25 @@ class HookFieldExtraFields {
             'display' => $this->getQuizDisplayFields(),
             'form'    => $this->getQuizFormExtraFields(),
         );
+
+        $extra['quiz_result'][$name] = array(
+            'display' => array(
+                'score'         => array(
+                    'label'       => t('Score'),
+                    'description' => '',
+                    'weight'      => -10,
+                ),
+                'feedback'      => array(
+                    'label'  => t('Feedback'),
+                    'weight' => -5,
+                ),
+                'feedback_form' => array(
+                    'label'       => t('Feedback form'),
+                    'description' => '',
+                    'weight'      => 0,
+                ),
+            ),
+        );
       }
     }
 

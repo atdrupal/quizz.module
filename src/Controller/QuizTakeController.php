@@ -30,6 +30,18 @@ class QuizTakeController {
 
     try {
       if ($this->initQuizResult() && ($this->result)) {
+        // @kludge above, how are we going to check this form for fields?
+        // checking for field instances is easy, but what about these one-offs?
+        // maybe we can require add-on field items to put something in the
+        // $form so that we can check it. I don't want to have the "start"
+        // button show if we don't have anything to ask the user.
+        if ($instances = field_info_instances('quiz_result', $this->quiz->type)) {
+          if (empty($_SESSION['quiz'][$this->quiz->qid]['current'])) {
+            require_once drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
+            return entity_ui_get_form('quiz_result', $this->result, 'edit');
+          }
+        }
+
         drupal_goto($this->getQuestionTakePath());
       }
     }

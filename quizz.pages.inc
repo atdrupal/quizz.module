@@ -9,10 +9,10 @@
  */
 use Drupal\quizz\Controller\Admin\QuizAdminSettingsController;
 use Drupal\quizz\Controller\Admin\QuizRevisionsAdminController;
-use Drupal\quizz\Controller\QuizQuestionFeedbackController;
+use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Controller\QuizTakeController;
 use Drupal\quizz\Controller\QuizTakeQuestionController;
-use Drupal\quizz\Controller\QuizUserResultController;
+use Drupal\quizz\Controller\ResultRender;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Form\QuizAdminEntityForm;
@@ -332,7 +332,7 @@ function quiz_report_form_element_validate(&$element, &$form_state) {
 function quiz_question_feedback_page(QuizEntity $quiz, $page_number) {
   $result_id = empty($_SESSION['quiz'][$quiz->qid]['result_id']) ? $_SESSION['quiz']['temp']['result_id'] : $_SESSION['quiz'][$quiz->qid]['result_id'];
   $result = quiz_result_load($result_id);
-  $controller = new QuizQuestionFeedbackController($quiz, $result);
+  $controller = new QuestionFeedbackController($quiz, $result);
   return $controller->render($page_number);
 }
 
@@ -460,77 +460,7 @@ function theme_quiz_view_stats($variables) {
  * @param Result $result
  */
 function quiz_result_page(Result $result) {
-  $quiz = quiz_load($result->quiz_qid);
-  $quiz_revision = quiz_load($result->quiz_qid, $result->quiz_vid);
-  $obj = new QuizUserResultController($quiz, $quiz_revision, $result);
-  return $obj->render();
-}
-
-/**
- * Theme the result page.
- *
- * @param QuizEntity $quiz
- *  The quiz entity object.
- * @param array $questions
- *  The questions array as defined by _quiz_get_answers.
- * @param int $score
- *  Array of score information as returned by quiz_calculate_score().
- * @param string $summary
- *  Filtered text of the summary.
- * @return string
- *
- * @ingroup themeable
- */
-function theme_quiz_result($variables) {
-  global $user;
-
-  $questions = $variables['questions'];
-  $score = $variables['score'];
-  $summary = $variables['summary'];
-  $result = quiz_result_load($variables['result_id']);
-  $account = $variables['account'];
-
-  if (!$score['is_evaluated']) {
-    $msg = t('Parts of this @quiz have not been evaluated yet. The score below is not final.', array(
-        '@quiz' => QUIZ_NAME
-    ));
-    drupal_set_message($msg, 'warning');
-  }
-
-  // Display overall result.
-  $params = array(
-      '%num_correct'    => $score['numeric_score'],
-      '%question_count' => $score['possible_score'],
-      '!username'       => ($user->uid == $account->uid) ? t('You') : theme('username', array('account' => $account)),
-      '@score'          => $score['percentage_score'],
-      '!yourtotal'      => ($user->uid == $account->uid) ? t('Your') : t('Total'),
-  );
-
-  $output = '';
-
-  // Show score.
-  if ($result->canReview('score')) {
-    $output .= '<div id="quiz_score_possible">' . t('!username got %num_correct of %question_count possible points.', $params) . '</div>' . "\n";
-    $output .= '<div id="quiz_score_percent">' . t('!yourtotal score: @score%', $params) . '</div>' . "\n";
-  }
-
-  // Show quiz feedback
-  if ($result->canReview('quiz_feedback')) {
-    if (isset($summary['passfail'])) {
-      $output .= '<div id="quiz_summary">' . $summary['passfail'] . '</div>' . "\n";
-    }
-
-    if (isset($summary['result'])) {
-      $output .= '<div id="quiz_summary">' . $summary['result'] . '</div>' . "\n";
-    }
-  }
-
-  $form = drupal_get_form('quiz_report_form', $result, $questions);
-
-  return array(
-      '#markup' => $output,
-      '#suffix' => drupal_render($form),
-  );
+  return entity_view('quiz_result', array($result), 'default', $GLOBALS['language']->language, TRUE);
 }
 
 /**
@@ -707,4 +637,30 @@ function theme_quiz_categorized_form($variables) {
     $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'existing-terms')));
   }
   return $output . drupal_render_children($form);
+}
+
+/**
+ * Quiz result edit form.
+ */
+function quiz_result_edit_quiz_form($form, &$form_state, Result $result) {
+  field_attach_form('quiz_result', $result, $form, $form_state);
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+      '#type'  => 'submit',
+      '#value' => t('Start @quiz', array('@quiz' => QUIZ_NAME)),
+  );
+
+  return $form;
+}
+
+/**
+ * Quiz result submit handler.
+ */
+function quiz_result_edit_quiz_form_submit($form, &$form_state) {
+  /* @var $result Result */
+  $result = $form_state['quiz_result'];
+  field_attach_submit('quiz_result', $result, $form, $form_state);
+  entity_save('quiz_result', $result);
+  $_SESSION['quiz'][$result->quiz_qid]['current'] = 1;
 }
