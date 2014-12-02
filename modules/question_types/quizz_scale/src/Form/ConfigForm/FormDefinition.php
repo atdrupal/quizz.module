@@ -3,6 +3,7 @@
 namespace Drupal\quizz_scale\Form\ConfigForm;
 
 use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_scale\Entity\Collection;
 
 class FormDefinition {
 
@@ -51,20 +52,19 @@ class FormDefinition {
         'label'   => t('New global collection(available to all users)'),
     ));
 
-    if (count($collections) == 0) {
-      $form['no_col']['#markup'] = t("You don't have any preset collections.");
-      return $form;
+    if (!count($collections)) {
+      return array('#markup' => t("You don't have any preset collections."));
     }
 
     // Populate the form
+    $form = array();
     foreach (array_keys($collections) as $id) {
       $this->getCollection($form, $collections[$id], $id);
     }
-
     return $form;
   }
 
-  private function getCollection(&$form, $collection, $id) {
+  private function getCollection(&$form, Collection $collection, $id) {
     $form["collection{$id}"] = array(
         '#type'        => 'fieldset',
         '#title'       => $collection->label,

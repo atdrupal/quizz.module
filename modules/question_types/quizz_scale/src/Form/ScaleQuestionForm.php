@@ -63,7 +63,7 @@ class ScaleQuestionForm {
       );
     }
 
-    $form['answer']['alternatives']['save'] = array(// @todo: Rename save to save_as_preset or something
+    $form['answer']['alternatives']['save_new_collection'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Save as a new preset'),
         '#description'   => t('Current alternatives will be saved as a new preset'),
