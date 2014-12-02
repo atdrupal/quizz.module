@@ -10,7 +10,7 @@ class Result extends Entity {
   public $result_id;
 
   /** @var string */
-  public $type;
+  public $type = 'quiz';
 
   /** @var \Drupal\quizz\Entity\QuizEntity */
   private $quiz;

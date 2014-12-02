@@ -114,11 +114,7 @@ class HookEntityInfo {
         'plural label' => t('Result types'),
         'description'  => t('Types of result.'),
         'bundle of'    => 'quiz_result',
-        'admin ui'     => array(
-            'path'             => 'admin/structure/quiz-results',
-            'file'             => 'quizz.pages.inc',
-            'controller class' => 'Drupal\quizz\Entity\QuizTypeUIController',
-        ),
+        'admin ui'     => array(),
       ) + $this->getQuizTypeInfo();
   }
 
@@ -142,8 +138,8 @@ class HookEntityInfo {
         $info['bundles'][$name] = array(
             'label' => $question_type->label,
             'admin' => array(
-                'path'             => 'admin/structure/quiz-results/manage/%quiz_type',
-                'real path'        => 'admin/structure/quiz-results/manage/' . $name,
+                'path'             => 'admin/structure/quiz/manage/%quiz_type/result',
+                'real path'        => 'admin/structure/quiz/manage/' . $name . '/result',
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz'),
             ),

@@ -29,7 +29,7 @@ class ResultGenerator {
     return $this->doGenerate($quiz, $questions, $account);
   }
 
-  private function doGenerate($quiz, $questions, $account) {
+  private function doGenerate(QuizEntity $quiz, $questions, $account) {
     // correct item numbers
     $count = $display_count = 0;
     $question_list = array();
@@ -44,6 +44,7 @@ class ResultGenerator {
 
     // Write the layout for this result.
     $result = entity_create('quiz_result', array(
+        'type'       => $quiz->type,
         'quiz_qid'   => $quiz->identifier(),
         'quiz_vid'   => $quiz->vid,
         'uid'        => $account->uid,
