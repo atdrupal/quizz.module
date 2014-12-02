@@ -98,8 +98,10 @@ class CollectionController extends EntityAPIControllerExportable {
    */
   public function setForAll($collection_id, $for_all) {
     $collection = quizz_scale_collection_entity_load($collection_id);
-    $collection->for_all = $for_all;
-    $collection->save();
+    if ($for_all != $collection->for_all) {
+      $collection->for_all = $for_all;
+      $collection->save();
+    }
   }
 
   /**
