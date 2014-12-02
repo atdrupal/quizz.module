@@ -12,15 +12,16 @@ class HookEntityInfo {
     }
 
     return array(
-        'quiz_type'                  => $this->getQuizEntityTypeInfo(),
-        'quiz_entity'                => $this->getQuizEntityInfo(),
-        'quiz_relationship' => $this->getQuizQuestionRelationshipInfo(),
-        'quiz_result'                => $this->getQuizResultInfo(),
-        'quiz_result_answer'         => $this->getQuizResultAnswerInfo(),
+        'quiz_type'          => $this->getQuizTypeInfo(),
+        'quiz_entity'        => $this->getQuizInfo(),
+        'quiz_relationship'  => $this->getQuizQuestionRelationshipInfo(),
+        'quiz_result_type'   => $this->getQuizResultTypeInfo(),
+        'quiz_result'        => $this->getQuizResultInfo(),
+        'quiz_result_answer' => $this->getQuizResultAnswerInfo(),
     );
   }
 
-  private function getQuizEntityTypeInfo() {
+  private function getQuizTypeInfo() {
     return array(
         'label'            => t('!quiz type', array('!quiz' => QUIZ_NAME)),
         'plural label'     => t('!quiz types', array('!quiz' => QUIZ_NAME)),
@@ -42,7 +43,7 @@ class HookEntityInfo {
     );
   }
 
-  private function getQuizEntityInfo() {
+  private function getQuizInfo() {
     $entity_info = array(
         'label'                     => QUIZ_NAME,
         'description'               => t('!quiz entity', array('!quiz' => QUIZ_NAME)),
@@ -107,16 +108,46 @@ class HookEntityInfo {
     );
   }
 
-  private function getQuizResultInfo() {
+  private function getQuizResultTypeInfo() {
     return array(
+        'label'        => t('Result type'),
+        'plural label' => t('Result types'),
+        'description'  => t('Types of result.'),
+        'bundle of'    => 'quiz_result',
+        'admin ui'     => array(),
+      ) + $this->getQuizTypeInfo();
+  }
+
+  private function getQuizResultInfo() {
+    $info = array(
         'label'                     => t('Quiz result'),
         'entity class'              => 'Drupal\quizz\Entity\Result',
         'controller class'          => 'Drupal\quizz\Entity\ResultController',
         'base table'                => 'quiz_results',
-        'entity keys'               => array('id' => 'result_id'),
+        'entity keys'               => array('id' => 'result_id', 'bundle' => 'type', 'label' => 'result_id'),
+        'bundle keys'               => array('bundle' => 'type'),
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
+        'fieldable'                 => TRUE,
     );
+
+    // User may come from 4.x, where the table is not available yet
+    if (db_table_exists('quiz_type')) {
+      // Add bundle info but bypass entity_load() as we cannot use it here.
+      foreach (db_select('quiz_type', 'qt')->fields('qt')->execute()->fetchAllAssoc('type') as $name => $question_type) {
+        $info['bundles'][$name] = array(
+            'label' => $question_type->label,
+            'admin' => array(
+                'path'             => 'admin/structure/quiz/manage/%quiz_type/result',
+                'real path'        => 'admin/structure/quiz/manage/' . $name . '/result',
+                'bundle argument'  => 4,
+                'access arguments' => array('administer quiz'),
+            ),
+        );
+      }
+    }
+
+    return $info;
   }
 
   private function getQuizResultAnswerInfo() {

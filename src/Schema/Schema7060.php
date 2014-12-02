@@ -110,7 +110,8 @@ class Schema7060 {
     $schema['quiz_results'] = array(
         'description' => 'Table storing the total results for a quiz',
         'fields'      => array(
-            'result_id'    => array('type' => 'serial', 'size' => 'normal', 'unsigned' => TRUE, 'not null' => TRUE,),
+            'result_id'    => array('type' => 'serial', 'size' => 'normal', 'unsigned' => TRUE, 'not null' => TRUE),
+            'type'         => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_type}.type of this result.'),
             'quiz_qid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'ID of quiz entity'),
             'quiz_vid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Version ID of quiz entity'),
             'uid'          => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Author ID'),
@@ -124,6 +125,7 @@ class Schema7060 {
         ),
         'primary key' => array('result_id'),
         'indexes'     => array(
+            'bundle'       => array('type'),
             'user_results' => array('uid', 'quiz_vid', 'quiz_qid'),
             'vid'          => array('quiz_vid'),
         ),

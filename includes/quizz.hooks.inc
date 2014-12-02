@@ -136,6 +136,16 @@ function quizz_menu() {
 }
 
 /**
+ * Implements hook_menu_alter()
+ */
+function quizz_menu_alter(&$items) {
+  $items['admin/structure/quiz/manage/%quiz_type/result/fields']['title'] = 'Result fields';
+  $items['admin/structure/quiz/manage/%quiz_type/result/fields']['weight'] = 3;
+  $items['admin/structure/quiz/manage/%quiz_type/result/display']['title'] = 'Result display';
+  $items['admin/structure/quiz/manage/%quiz_type/result/display']['weight'] = 4;
+}
+
+/**
  * Implements hook_menu_local_tasks_alter().
  *
  * Add action link to 'quiz/add' on 'admin/content/quiz' page.

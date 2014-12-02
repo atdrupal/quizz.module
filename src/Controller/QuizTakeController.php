@@ -12,9 +12,6 @@ class QuizTakeController {
   /** @var Result */
   private $result;
 
-  /** @var int */
-  protected $result_id;
-
   /** @var QuizEntity */
   protected $quiz;
 
@@ -27,13 +24,12 @@ class QuizTakeController {
   }
 
   public function render() {
-    try {
-      if (isset($this->quiz->rendered_content)) {
-        return $this->quiz->rendered_content;
-      }
+    if (isset($this->quiz->rendered_content)) {
+      return $this->quiz->rendered_content;
+    }
 
-      $this->initQuizResult();
-      if ($this->result_id) {
+    try {
+      if ($this->initQuizResult() && ($this->result)) {
         drupal_goto($this->getQuestionTakePath());
       }
     }
@@ -56,8 +52,7 @@ class QuizTakeController {
   public function initQuizResult() {
     // Inject result from user's session
     if (!empty($_SESSION['quiz'][$this->quiz->qid]['result_id'])) {
-      $this->result_id = $_SESSION['quiz'][$this->quiz->qid]['result_id'];
-      $this->result = quiz_result_load($this->result_id);
+      $this->result = quiz_result_load($result_id = $_SESSION['quiz'][$this->quiz->qid]['result_id']);
     }
 
     // Enforce that we have the same quiz version.
@@ -77,7 +72,6 @@ class QuizTakeController {
       }
 
       $this->result = quiz_controller()->getResultGenerator()->generate($this->quiz, $this->account);
-      $this->result_id = $this->result->result_id;
       $_SESSION['quiz'][$this->quiz->qid]['result_id'] = $this->result->result_id;
       $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
 
@@ -87,6 +81,8 @@ class QuizTakeController {
     if (TRUE !== $this->quiz->isAvailable($this->account)) {
       throw new RuntimeException(t('This @quiz is not available.', array('@quiz' => QUIZ_NAME)));
     }
+
+    return TRUE;
   }
 
   /**
@@ -101,7 +97,6 @@ class QuizTakeController {
     $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
     $this->result = quiz_result_load($result_id);
     $this->quiz = quiz_load($this->result->quiz_qid, $this->result->quiz_vid);
-    $this->result_id = $result_id;
 
     // Resume a quiz from the database.
     drupal_set_message(t('Resuming a previous @quiz in-progress.', array('@quiz' => QUIZ_NAME)), 'status');
