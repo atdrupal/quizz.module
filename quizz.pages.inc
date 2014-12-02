@@ -708,3 +708,29 @@ function theme_quiz_categorized_form($variables) {
   }
   return $output . drupal_render_children($form);
 }
+
+/**
+ * Quiz result edit form.
+ */
+function quiz_result_edit_quiz_form($form, &$form_state, Result $result) {
+  field_attach_form('quiz_result', $result, $form, $form_state);
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+      '#type'  => 'submit',
+      '#value' => t('Start @quiz', array('@quiz' => QUIZ_NAME)),
+  );
+
+  return $form;
+}
+
+/**
+ * Quiz result submit handler.
+ */
+function quiz_result_edit_quiz_form_submit($form, &$form_state) {
+  /* @var $result Result */
+  $result = $form_state['quiz_result'];
+  field_attach_submit('quiz_result', $result, $form, $form_state);
+  entity_save('quiz_result', $result);
+  $_SESSION['quiz'][$result->quiz_qid]['current'] = 1;
+}
