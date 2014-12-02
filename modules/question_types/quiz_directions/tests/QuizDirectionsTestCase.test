@@ -41,7 +41,7 @@ class QuizDirectionsTestCase extends QuizQuestionTestCase {
   public function testBasicDirectionsQuestion() {
     $question = $this->createQuizQuestion();
     $this->assertTrue($question instanceof Question);
-    $this->assertEqual($this->questionPlugin, $question->getModule());
+    $this->assertEqual($this->questionPlugin, $question->getQuestionType()->plugin);
   }
 
 }
