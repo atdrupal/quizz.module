@@ -7,3 +7,4 @@ dependencies[] = quizz
 dependencies[] = quiz_question
 
 files[] = quiz_directions.classes.inc
+files[] = tests/QuizDirectionsTestCase.test

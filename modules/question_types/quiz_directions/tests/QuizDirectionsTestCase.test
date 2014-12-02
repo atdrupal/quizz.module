@@ -1,0 +1,47 @@
+<?php
+
+use Drupal\quiz_question\Entity\Question;
+
+/**
+ * @file
+ * Unit tests for the short_answer Module.
+ */
+
+/**
+ * Test class for short answer.
+ */
+class QuizDirectionsTestCase extends QuizQuestionTestCase {
+
+  protected $questionPlugin = 'quiz_directions';
+
+  public static function getInfo() {
+    return array(
+        'name'        => t('Quiz directions'),
+        'description' => t('Unit test for Quiz directions question type.'),
+        'group'       => t('Quiz'),
+    );
+  }
+
+  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
+    $modules[] = 'quiz_directions';
+    parent::setUp($modules, $admin_permissions, $user_permissions);
+  }
+
+  /**
+   * Test adding and taking a quiz directions question.
+   */
+  private function createQuizQuestion($settings = array()) {
+    return $this->drupalCreateQuestion(array(
+          'type'  => $this->questionPlugin,
+          'title' => 'QD 1 title',
+          'body'  => 'QD 1 body text.'
+        ) + $settings);
+  }
+
+  public function testBasicDirectionsQuestion() {
+    $question = $this->createQuizQuestion();
+    $this->assertTrue($question instanceof Question);
+    $this->assertEqual($this->questionPlugin, $question->getModule());
+  }
+
+}
