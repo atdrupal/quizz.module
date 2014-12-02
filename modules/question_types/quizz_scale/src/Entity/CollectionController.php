@@ -128,7 +128,7 @@ class CollectionController extends EntityAPIControllerExportable {
    */
   public function deleteCollectionIfNotUsed($collection_id, $accept = 0) {
     // Check if the collection is someones preset. If it is we can't delete it.
-    $sql_1 = 'SELECT 1 FROM {quiz_scale_collections} WHERE id = :cid AND uid <> 0';
+    $sql_1 = 'SELECT 1 FROM {quiz_scale_collections} WHERE id = :id AND uid <> 0';
     if (db_query($sql_1, array(':id' => $collection_id))->fetchField()) {
       return FALSE;
     }

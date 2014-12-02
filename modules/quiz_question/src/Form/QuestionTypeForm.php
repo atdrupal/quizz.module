@@ -18,6 +18,20 @@ class QuestionTypeForm {
 
     $fn = $question_type->plugin . '_quiz_question_config';
     if (function_exists($fn) && ($plugin_form = $fn($question_type))) {
+      if (!empty($plugin_form['#validate'])) {
+        foreach ($plugin_form['#validate'] as $validator) {
+          $form['#validate'][] = $validator;
+        }
+        unset($plugin_form['#validate']);
+      }
+
+      if (!empty($plugin_form['#submit'])) {
+        foreach ($plugin_form['#submit'] as $validator) {
+          $form['#submit'][] = $validator;
+        }
+        unset($plugin_form['#submit']);
+      }
+
       $form['vtabs']['configuration'] = $plugin_form + array(
           '#type'  => 'fieldset',
           '#title' => t('Configuration'),
