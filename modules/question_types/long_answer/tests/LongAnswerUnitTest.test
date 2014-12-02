@@ -32,7 +32,7 @@ class LongAnswerTestCase extends QuizQuestionTestCase {
     return $this->drupalCreateQuestion(array(
           'type'  => $this->questionPlugin,
           'title' => 'LA 1 title',
-          'body'  => array(LANGUAGE_NONE => array(array('value' => 'LA 1 body text.'))),
+          'body'  => 'LA 1 body text.',
         ) + $settings);
   }
 

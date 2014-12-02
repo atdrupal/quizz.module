@@ -17,11 +17,12 @@ class FormSubmit {
 
   public function submit($form, &$form_state) {
     $changed = $deleted = 0;
+    $plugin = new ScaleQuestion(new stdClass());
     foreach ($form_state['values'] as $key => $alternatives) {
       $matches = array();
       preg_match('/^collection([0-9]{1,}|new)$/', $key, $matches);
       if ($matches && ($collection_id = $matches[1])) {
-        $this->doSubmitAlternatives($collection_id, $alternatives, $changed, $deleted);
+        $this->doSubmitAlternatives($plugin, $collection_id, $alternatives, $changed, $deleted);
       }
     }
 
@@ -34,10 +35,8 @@ class FormSubmit {
     }
   }
 
-  private function doSubmitAlternatives($collection_id, $alternatives, &$changed, &$deleted) {
-    $plugin = new ScaleQuestion(new stdClass());
-    $plugin->initUtil($collection_id);
-    switch ($alternatives['to-do']) { // @todo: Rename to-do to $op
+  private function doSubmitAlternatives(ScaleQuestion $plugin, $collection_id, $alternatives, &$changed, &$deleted) {
+    switch ($alternatives['to-do']) {
       case 'save_safe': // Save, but don't change
       case 'save': // Save and change existing questions
         if (FALSE !== $this->doSubmitSave($plugin, $alternatives, $collection_id)) {
@@ -60,11 +59,9 @@ class FormSubmit {
   }
 
   private function doSubmitSave(ScaleQuestion $plugin, $alternatives, $collection_id) {
-    $new_collection_id = $this->controller->saveQuestionAlternatives($plugin->question, FALSE, $alternatives, 1);
-
-    if (isset($alternatives['for_all'])) {
-      $this->controller->setForAll($new_collection_id, $alternatives['for_all']);
-    }
+    $new_collection_id = $this->controller
+      ->getWriting()
+      ->write($plugin->question, FALSE, $alternatives, 1, isset($alternatives['for_all']) ? $alternatives['for_all'] : NULL);
 
     if ($new_collection_id == $collection_id) {
       return FALSE;

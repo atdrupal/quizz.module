@@ -223,9 +223,9 @@ class QuizAdminSettingsController {
 
   /**
    * Helper function returning number of days as values and corresponding
-   * number of milliseconds as array keys.
+   * number of seconds as array keys.
    *
-   * @return
+   * @return array
    *   array of options for when we want to delete partial quiz record values.
    */
   private function removePartialQuizRecordValue() {

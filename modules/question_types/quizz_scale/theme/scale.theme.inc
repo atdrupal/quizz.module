@@ -1,8 +1,6 @@
 <?php
 
 /**
- * The theme file for scale.
- *
  * @file
  * Theming functions for the scale question type.
  */
@@ -26,7 +24,7 @@ function theme_scale_answer_node_view($variables) {
 /**
  * Theme the scale response form
  *
- * @param $form
+ * @param array $form
  *  The response form
  */
 function theme_scale_response_form($variables) {

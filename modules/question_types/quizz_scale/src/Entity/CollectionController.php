@@ -2,10 +2,22 @@
 
 namespace Drupal\quizz_scale\Entity;
 
+use DatabaseTransaction;
+use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_scale\ScaleQuestion\Writing;
 use EntityAPIControllerExportable;
-use Drupal\quiz_question\Entity\Question;
 
 class CollectionController extends EntityAPIControllerExportable {
+
+  /** @var Writing */
+  private $writing;
+
+  public function getWriting() {
+    if (NULL === $this->writing) {
+      $this->writing = new Writing($this);
+    }
+    return $this->writing;
+  }
 
   public function load($ids = array(), $conditions = array()) {
     $collections = parent::load($ids, $conditions);
@@ -25,7 +37,7 @@ class CollectionController extends EntityAPIControllerExportable {
     return $collections;
   }
 
-  public function delete($ids, \DatabaseTransaction $transaction = NULL) {
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
     $return = parent::delete($ids, $transaction);
 
     // Delete alternatives
@@ -39,13 +51,15 @@ class CollectionController extends EntityAPIControllerExportable {
   /**
    * Get all available presets for a user.
    *
+   * @param string $question_type
    * @param int $uid
    * @param bool $with_defaults
-   * @return \Drupal\quizz_scale\Entity\Collection[]
+   * @return Collection[]
    */
-  public function getPresetCollections($uid, $with_defaults = FALSE) {
+  public function getPresetCollections($question_type, $uid, $with_defaults = FALSE) {
     $select = db_select('quiz_scale_collections', 'collection');
     $select->fields('collection', array('id'));
+    $select->condition('question_type', $question_type);
 
     if (!$with_defaults) {
       $select->condition('collection.uid', $uid);
@@ -84,8 +98,10 @@ class CollectionController extends EntityAPIControllerExportable {
    */
   public function setForAll($collection_id, $for_all) {
     $collection = quizz_scale_collection_entity_load($collection_id);
-    $collection->for_all = $for_all;
-    $collection->save();
+    if ($for_all != $collection->for_all) {
+      $collection->for_all = $for_all;
+      $collection->save();
+    }
   }
 
   /**
@@ -95,66 +111,10 @@ class CollectionController extends EntityAPIControllerExportable {
    */
   public function changeOwner($collection_id, $uid) {
     $collection = quizz_scale_collection_entity_load($collection_id);
-    $collection->uid = $uid;
-    $collection->save();
-  }
-
-  /**
-   * Finds out if a collection already exists.
-   *
-   * @param $alternatives
-   *  This is the collection that will be compared with the database.
-   * @param int $collection_id
-   *  If we are matching a set of alternatives with a given collection that exists in the database.
-   * @param int $last_id - The id of the last alternative we compared with.
-   * @return bool
-   *  TRUE if the collection exists
-   *  FALSE otherwise
-   */
-  public function findCollectionId(array $alternatives, $collection_id = NULL, $last_id = NULL) {
-    $my_alts = isset($collection_id) ? $alternatives : array_reverse($alternatives);
-
-    // Find all answers identical to the next answer in $alternatives
-    $sql = 'SELECT id, answer_collection_id FROM {quiz_scale_answer} WHERE answer = :answer';
-    $args[':answer'] = array_pop($my_alts);
-    // Filter on collection id
-    if (isset($collection_id)) {
-      $sql .= ' AND answer_collection_id = :acid';
-      $args[':acid'] = $collection_id;
+    if ($uid != $collection->uid) {
+      $collection->uid = $uid;
+      $collection->save();
     }
-
-    // Filter on alternative id(If we are investigating a specific collection,
-    // the alternatives needs to be in a correct order)
-    if (isset($last_id)) {
-      $sql .= ' AND id = :id';
-      $args[':id'] = $last_id + 1;
-    }
-    $res = db_query($sql, $args);
-    if (!$res_o = $res->fetch()) {
-      return FALSE;
-    }
-
-
-    // If all alternatives has matched make sure the collection we are comparing
-    // against in the database doesn't have more alternatives.
-    if (count($my_alts) == 0) {
-      $res_o2 = db_query(
-        'SELECT * FROM {quiz_scale_answer}
-          WHERE answer_collection_id = :answer_collection_id AND id = :id', array(
-          ':answer_collection_id' => $collection_id,
-          ':id'                   => ($last_id + 2)
-        ))->fetch();
-      return ($res_o2) ? FALSE : $collection_id;
-    }
-
-    // Do a recursive call to this function on all answer collection candidates
-    do {
-      if ($collection_id = $this->findCollectionId($my_alts, $res_o->answer_collection_id, $res_o->id)) {
-        return $collection_id;
-      }
-    } while ($res_o = $res->fetch());
-
-    return FALSE;
   }
 
   /**
@@ -192,57 +152,24 @@ class CollectionController extends EntityAPIControllerExportable {
     return FALSE;
   }
 
-  /**
-   * Stores the answer collection to the database, or identifies an existing collection.
-   *
-   * We try to reuse answer collections as much as possible to minimize the amount of rows in the database,
-   * and thereby improving performance when surveys are beeing taken.
-   *
-   * @param bool $is_new - the question is beeing inserted(not updated)
-   * @param $alt_input - the alternatives array to be saved.
-   * @param $preset - 1 | 0 = preset | not preset
-   * @return int Answer collection id
-   */
-  public function saveQuestionAlternatives(Question $question, $is_new, array $alt_input = NULL, $preset = NULL) {
-    global $user;
+  public function generateDefaultCollections(QuestionType $question_type) {
+    $alternatives = array(
+        array('Always', 'Very often', 'Some times', 'Rarely', 'Very rarely', 'Never'),
+        array('Excellent', 'Very good', 'Good', 'Ok', 'Poor', 'Very poor'),
+        array('Totally agree', 'Agree', 'Not sure', 'Disagree', 'Totally disagree'),
+        array('Very important', 'Important', 'Moderately important', 'Less important', 'Least important'),
+    );
 
-    if (!isset($alt_input)) {
-      $alt_input = get_object_vars($question);
+    /* @var $collection Collection */
+    foreach ($alternatives as $_alternatives) {
+      $collection = entity_create('scale_collection', array(
+          'question_type' => $question_type->type,
+          'for_all'       => TRUE,
+          'uid'           => 1
+      ));
+      $collection->save();
+      $collection->insertAlternatives($_alternatives);
     }
-
-    if (!isset($preset) && isset($question->save)) {
-      $preset = $question->save;
-    }
-
-    $alternatives = array();
-    for ($i = 0; $i < $question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
-      if (isset($alt_input['alternative' . $i]) && drupal_strlen($alt_input['alternative' . $i]) > 0) {
-        $alternatives[] = $alt_input['alternative' . $i];
-      }
-    }
-
-    // If an identical answer collection already exists
-    if ($collection_id = quizz_scale_collection_controller()->findCollectionId($alternatives)) {
-      if ($preset == 1) {
-        quizz_scale_collection_controller()->changeOwner($collection_id, $user->uid);
-      }
-
-      if (!$is_new || $this->util) {
-        $col_to_delete = $this->util ? $this->col_id : $question->{0}->answer_collection_id;
-
-        // We try to delete the old answer collection
-        if ($col_to_delete != $collection_id) {
-          quizz_scale_collection_controller()->deleteCollectionIfNotUsed($col_to_delete, 1);
-        }
-      }
-      return $collection_id;
-    }
-
-    // Register a new answer collection
-    $collection = entity_create('scale_collection', array('for_all' => 1, 'uid' => 1 == $preset ? $user->uid : NULL));
-    $collection->insertAlternatives($alternatives);
-
-    return $collection->id;
   }
 
 }

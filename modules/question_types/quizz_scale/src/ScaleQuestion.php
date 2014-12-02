@@ -12,52 +12,25 @@ use Drupal\quizz_scale\Form\ScaleQuestionForm;
 class ScaleQuestion extends QuestionPlugin {
 
   /**
-   * will be set to true if an instance of this class is used only as a utility.
-   *
-   * @var bool $util
-   */
-  protected $util = FALSE;
-
-  /**
-   * (answer) Collection id
-   * @var int
-   */
-  protected $col_id = NULL;
-
-  /**
-   * Tells the instance that it is beeing used as a utility.
-   *
-   * @param $collection_id - answer collection id
-   */
-  public function initUtil($collection_id) {
-    $this->util = TRUE;
-    $this->col_id = $collection_id;
-  }
-
-  /**
    * Implementation of saveEntityProperties
    *
    * @see QuizQuestion#saveEntityProperties()
    */
   public function saveEntityProperties($is_new = FALSE) {
-    global $user;
-
     if ($this->question->revision == 1) {
       $is_new = TRUE;
     }
 
-    $collection_id = quizz_scale_collection_controller()->saveQuestionAlternatives($this->question, $is_new);
-
-    // Save the answer collection as a preset if the save preset option is checked
-    if (!empty($this->question->save)) {
-      quizz_scale_collection_controller()->changeOwner($collection_id, $user->uid);
+    $alternatives = array();
+    foreach ($this->question as $property => $value) {
+      if (0 === strpos($property, 'alternative')) {
+        $alternatives[$property] = trim($value);
+      }
     }
 
-    db_merge('quiz_scale_properties')
-      ->key(array('qid' => $this->question->vid, 'vid' => $this->question->vid))
-      ->fields(array('answer_collection_id' => $collection_id))
-      ->execute()
-    ;
+    quizz_scale_collection_controller()
+      ->getWriting()
+      ->write($this->question, $is_new, $alternatives, !empty($this->question->save_new_collection) ? $this->question->save_new_collection : 0);
   }
 
   /**
