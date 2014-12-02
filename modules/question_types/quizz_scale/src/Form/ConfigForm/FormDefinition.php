@@ -15,7 +15,15 @@ class FormDefinition {
   }
 
   public function get() {
-    $form = array('#validate' => array('scale_config_validate'));
+    $form = array(
+        '#validate' => array(
+            'quizz_scale_config_validate',
+            'quizz_scale_manage_collection_form_validate'
+        ),
+        '#submit'   => array(
+            'quizz_scale_manage_collection_form_submit'
+        )
+    );
 
     $form['scale_max_num_of_alts'] = array(
         '#type'          => 'textfield',
@@ -23,7 +31,6 @@ class FormDefinition {
         '#default_value' => $this->question_type->getConfig('scale_max_num_of_alts', 10),
     );
 
-    $form['#validate'][] = 'scale_manage_collection_form_validate';
     $form['collections'] = array(
         '#tree'     => TRUE,
         '#type'     => 'vertical_tabs',
@@ -49,7 +56,7 @@ class FormDefinition {
     // to add new global presets
     $collections['new'] = entity_create('scale_collection', array(
         'for_all' => 1,
-        'label'   => t('New global collection(available to all users)'),
+        'label'   => t('New global collection (available to all users)'),
     ));
 
     if (!count($collections)) {
@@ -75,6 +82,13 @@ class FormDefinition {
 
     $alternatives = $collection->alternatives;
     $indexes = array_keys($collection->alternatives);
+
+    $form["collection{$id}"]['label'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Label'),
+        '#required'      => 'new' !== $id,
+        '#default_value' => 'new' === $id ? '' : $collection->label,
+    );
 
     for ($i = 0; $i < $this->question_type->getConfig('scale_max_num_of_alts', 10); $i++) {
       $form["collection{$id}"]["alternative{$i}"] = array(

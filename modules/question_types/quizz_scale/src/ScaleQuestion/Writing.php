@@ -23,12 +23,13 @@ class Writing {
    * and thereby improving performance when surveys are beeing taken.
    *
    * @param bool $is_new - the question is beeing inserted(not updated)
-   * @param $in_alternatives - the alternatives array to be saved.
+   * @param string[] $in_alternatives - the alternatives array to be saved.
    * @param int $preset
-   * @param int $for_all
+   * @param int|null $for_all
+   * @param string|null $label
    * @return int Answer collection id
    */
-  public function write(Question $question, $is_new, array $in_alternatives, $preset, $for_all = NULL) {
+  public function write(Question $question, $is_new, array $in_alternatives, $preset, $for_all = NULL, $label = NULL, $collection_id = NULL) {
     $alternatives = array();
     for ($i = 0; $i < $question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
       if (isset($in_alternatives['alternative' . $i]) && drupal_strlen($in_alternatives['alternative' . $i]) > 0) {
@@ -36,7 +37,13 @@ class Writing {
       }
     }
 
-    $collection_id = $this->doWrite($question, $alternatives, $preset, $is_new);
+    // If an identical answer collection already exists
+    if ((NULL !== $collection_id) || $collection_id = $this->findCollectionId($question->type, $alternatives)) {
+      $this->doWriteExistingCollection($collection_id, $question, $is_new, $preset, $for_all, $label);
+    }
+    else {
+      $collection_id = $this->doWriteNewCollection($alternatives, $preset, $for_all, $label);
+    }
 
     if (!empty($question->vid)) {
       db_merge('quiz_scale_properties')
@@ -45,36 +52,50 @@ class Writing {
         ->execute()
       ;
     }
+  }
 
-    if (NULL !== $for_all) {
-      $this->controller->setForAll($collection_id, $for_all);
+  private function doWriteExistingCollection($collection_id, $question, $is_new, $preset, $for_all, $label) {
+    global $user;
+
+    // We try to delete the old answer collection
+    if (!$is_new & !empty($question->{0})) {
+      $collection_id_to_delete = $question->{0}->answer_collection_id;
+      if ($collection_id_to_delete != $collection_id) {
+        $this->controller->deleteCollectionIfNotUsed($collection_id_to_delete, 1);
+      }
+    }
+
+    if ($preset || (NULL !== $for_all) || (NULL !== $label)) {
+      $collection = entity_load_single('scale_collection', $collection_id);
+
+      if ($preset) {
+        $collection->uid = $user->uid;
+      }
+
+      if (NULL !== $for_all) {
+        $collection->for_all = $for_all;
+      }
+
+      if (NULL !== $label) {
+        $collection->label = $label;
+      }
+
+      $collection->save();
     }
   }
 
-  private function doWrite(Question $question, $alternatives, $preset, $is_new) {
+  private function doWriteNewCollection($alternatives, $preset, $for_all, $label) {
     global $user;
 
-    // If an identical answer collection already exists
-    if ($collection_id = $this->findCollectionId($question->type, $alternatives)) {
-      if ($preset == 1) {
-        $this->controller->changeOwner($collection_id, $user->uid);
-      }
-
-      // We try to delete the old answer collection
-      if (!$is_new & !empty($question->{0})) {
-        $collection_id_to_delete = $question->{0}->answer_collection_id;
-        if ($collection_id_to_delete != $collection_id) {
-          $this->controller->deleteCollectionIfNotUsed($collection_id_to_delete, 1);
-        }
-      }
-
-      return $collection_id;
-    }
-
     // Register a new answer collection
-    $collection = entity_create('scale_collection', array('for_all' => 1, 'uid' => $preset ? $user->uid : NULL));
+    $collection = entity_create('scale_collection', array(
+        'for_all' => NULl !== $for_all ? $for_all : 1,
+        'label'   => NULL !== $label ? check_plain($label) : '',
+        'uid'     => $preset ? $user->uid : NULL,
+        'name'    => 'collection_' . REQUEST_TIME . rand(0, 1000),
+    ));
+    $collection->save();
     $collection->insertAlternatives($alternatives);
-
     return $collection->id;
   }
 
@@ -107,10 +128,10 @@ class Writing {
     // Filter on alternative id (If we are investigating a specific collection,
     // the alternatives needs to be in a correct order)
     if (NULL !== $last_id) {
-      $select->condition('id', $last_id + 1);
+      $select->condition('answer.id', $last_id + 1);
     }
 
-    if (!$_alternatives = $select->execute()->fetch()) {
+    if (!$_alternatives = $select->execute()->fetchAll()) {
       return FALSE;
     }
 

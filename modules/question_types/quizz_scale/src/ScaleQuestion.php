@@ -28,9 +28,13 @@ class ScaleQuestion extends QuestionPlugin {
       }
     }
 
+    $preset = !empty($this->question->save_new_collection) ? $this->question->save_new_collection : 0;
+    $label = empty($this->question->save_new_collection) ? NULL : $this->question->new_collection_label;
+
     quizz_scale_collection_controller()
       ->getWriting()
-      ->write($this->question, $is_new, $alternatives, !empty($this->question->save_new_collection) ? $this->question->save_new_collection : 0);
+      ->write($this->question, $is_new, $alternatives, $preset, NULL, $label)
+    ;
   }
 
   /**

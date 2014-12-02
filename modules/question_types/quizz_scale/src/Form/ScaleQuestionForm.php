@@ -70,6 +70,16 @@ class ScaleQuestionForm {
         '#default_value' => FALSE,
     );
 
+    $form['answer']['alternatives']['new_collection_label'] = array(
+        '#type'   => 'textfield',
+        '#title'  => t('Label'),
+        '#states' => array(
+            'visible' => array(
+                ':input[name="save_new_collection"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
     $form['answer']['manage'] = array(
         '#markup' => l(t('Manage presets'), 'admin/structure/quiz-questions/manage/' . $this->question->getQuestionType()->type),
         '#access' => entity_access('update', 'quiz_question_type', $this->question->getQuestionType(), $user),

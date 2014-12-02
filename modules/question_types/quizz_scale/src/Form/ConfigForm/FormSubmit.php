@@ -4,7 +4,6 @@ namespace Drupal\quizz_scale\Form\ConfigForm;
 
 use Drupal\quizz_scale\Entity\CollectionController;
 use Drupal\quizz_scale\ScaleQuestion;
-use stdClass;
 
 class FormSubmit {
 
@@ -15,14 +14,19 @@ class FormSubmit {
     $this->controller = quizz_scale_collection_controller();
   }
 
+  private function getQuestionPlugin($question_type) {
+    $question = entity_create('quiz_question', array('type' => $question_type));
+    return new ScaleQuestion($question);
+  }
+
   public function submit($form, &$form_state) {
+    $plugin = $this->getQuestionPlugin($form_state['quiz_question_type']->type);
     $changed = $deleted = 0;
-    $plugin = new ScaleQuestion(new stdClass());
-    foreach ($form_state['values'] as $key => $alternatives) {
+    foreach ($form_state['values']['configuration']['collections'] as $key => $input) {
       $matches = array();
       preg_match('/^collection([0-9]{1,}|new)$/', $key, $matches);
       if ($matches && ($collection_id = $matches[1])) {
-        $this->doSubmitAlternatives($plugin, $collection_id, $alternatives, $changed, $deleted);
+        $this->doSubmitAlternatives($plugin, $collection_id, $input, $changed, $deleted);
       }
     }
 
@@ -35,11 +39,11 @@ class FormSubmit {
     }
   }
 
-  private function doSubmitAlternatives(ScaleQuestion $plugin, $collection_id, $alternatives, &$changed, &$deleted) {
-    switch ($alternatives['to-do']) {
+  private function doSubmitAlternatives(ScaleQuestion $plugin, $collection_id, $input, &$changed, &$deleted) {
+    switch ($input['to-do']) {
       case 'save_safe': // Save, but don't change
       case 'save': // Save and change existing questions
-        if (FALSE !== $this->doSubmitSave($plugin, $alternatives, $collection_id)) {
+        if (FALSE !== $this->doSubmitSave($plugin, $input, $collection_id)) {
           $changed++;
         }
         break;
@@ -53,44 +57,39 @@ class FormSubmit {
         break;
 
       case 'save_new':
-        $this->doSubmitNew($plugin, $alternatives);
+        $this->doSubmitNew($plugin, $input);
         break;
     }
   }
 
-  private function doSubmitSave(ScaleQuestion $plugin, $alternatives, $collection_id) {
+  private function doSubmitSave(ScaleQuestion $plugin, $input, $collection_id) {
+    $for_all = isset($input['for_all']) ? $input['for_all'] : NULL;
+    $label = check_plain($input['label']);
+
     $new_collection_id = $this->controller
       ->getWriting()
-      ->write($plugin->question, FALSE, $alternatives, 1, isset($alternatives['for_all']) ? $alternatives['for_all'] : NULL);
+      ->write($plugin->question, FALSE, $input, 1, $for_all, $label, $collection_id);
 
     if ($new_collection_id == $collection_id) {
       return FALSE;
     }
 
-    if (FALSE === $this->doSubmitPresave($plugin, $collection_id)) {
-      return FALSE;
-    }
-
     // We save the changes, but don't change existing questions
-    if ('save_safe' === $alternatives['to-do']) {
-      $this->doSubmitSaveSafe($collection_id, $new_collection_id, $alternatives);
+    if ('save_safe' === $input['to-do']) {
+      $this->doSubmitSaveSafe($collection_id);
     }
 
-    if ('save' === $alternatives['to-do']) {
+    if ('save' === $input['to-do']) {
       $this->doSubmitSaveNormal($collection_id, $new_collection_id);
     }
   }
 
-  private function doSubmitSaveSafe($collection_id, $new_collection_id, $alternatives) {
+  private function doSubmitSaveSafe($collection_id) {
     // The old version of the collection shall not be a preset anymore
     $this->controller->unpresetCollection($collection_id);
 
     // If the old version of the collection doesn't belong to any questions it is safe to delete it.
     $this->controller->deleteCollectionIfNotUsed($collection_id);
-
-    if (isset($alternatives['for_all'])) {
-      $this->controller->setForAll($new_collection_id, $alternatives['for_all']);
-    }
   }
 
   private function doSubmitSaveNormal($collection_id, $new_collection_id) {
@@ -105,10 +104,10 @@ class FormSubmit {
     $this->controller->deleteCollectionIfNotUsed($collection_id);
   }
 
-  private function doSubmitNew(ScaleQuestion $plugin, $alternatives) {
-    if (drupal_strlen($alternatives['alternative0']) > 0) {
-      $collection_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $alternatives, 1);
-      $this->controller->setForAll($collection_id, $alternatives['for_all']);
+  private function doSubmitNew(ScaleQuestion $plugin, $input) {
+    if (drupal_strlen($input['alternative0']) > 0) {
+      $collection_id = $plugin->saveAnswerCollection($plugin->question, FALSE, $input, 1);
+      $this->controller->setForAll($collection_id, $input['for_all']);
       drupal_set_message(t('New preset has been added'));
     }
   }
