@@ -24,18 +24,35 @@ class Writing {
    *
    * @param bool $is_new - the question is beeing inserted(not updated)
    * @param $in_alternatives - the alternatives array to be saved.
-   * @param $preset - 1 | 0 = preset | not preset
+   * @param int $preset
+   * @param int $for_all
    * @return int Answer collection id
    */
-  public function write(Question $question, $is_new, array $in_alternatives, $preset = NULL) {
-    global $user;
-
+  public function write(Question $question, $is_new, array $in_alternatives, $preset, $for_all = NULL) {
     $alternatives = array();
     for ($i = 0; $i < $question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
       if (isset($in_alternatives['alternative' . $i]) && drupal_strlen($in_alternatives['alternative' . $i]) > 0) {
         $alternatives[] = $in_alternatives['alternative' . $i];
       }
     }
+
+    $collection_id = $this->doWrite($question, $alternatives, $preset, $is_new);
+
+    if (!empty($question->vid)) {
+      db_merge('quiz_scale_properties')
+        ->key(array('qid' => $question->qid, 'vid' => $question->vid))
+        ->fields(array('answer_collection_id' => $collection_id))
+        ->execute()
+      ;
+    }
+
+    if (NULL !== $for_all) {
+      $this->controller->setForAll($collection_id, $for_all);
+    }
+  }
+
+  private function doWrite(Question $question, $alternatives, $preset, $is_new) {
+    global $user;
 
     // If an identical answer collection already exists
     if ($collection_id = $this->findCollectionId($question->type, $alternatives)) {

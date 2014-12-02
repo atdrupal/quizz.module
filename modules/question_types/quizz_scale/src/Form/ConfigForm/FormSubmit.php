@@ -61,11 +61,7 @@ class FormSubmit {
   private function doSubmitSave(ScaleQuestion $plugin, $alternatives, $collection_id) {
     $new_collection_id = $this->controller
       ->getWriting()
-      ->write($plugin->question, FALSE, $alternatives, 1);
-
-    if (isset($alternatives['for_all'])) {
-      $this->controller->setForAll($new_collection_id, $alternatives['for_all']);
-    }
+      ->write($plugin->question, FALSE, $alternatives, 1, isset($alternatives['for_all']) ? $alternatives['for_all'] : NULL);
 
     if ($new_collection_id == $collection_id) {
       return FALSE;

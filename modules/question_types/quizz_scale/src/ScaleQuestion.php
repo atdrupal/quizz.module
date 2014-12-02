@@ -17,8 +17,6 @@ class ScaleQuestion extends QuestionPlugin {
    * @see QuizQuestion#saveEntityProperties()
    */
   public function saveEntityProperties($is_new = FALSE) {
-    global $user;
-
     if ($this->question->revision == 1) {
       $is_new = TRUE;
     }
@@ -29,20 +27,10 @@ class ScaleQuestion extends QuestionPlugin {
         $alternatives[$property] = trim($value);
       }
     }
-    $collection_id = quizz_scale_collection_controller()
+
+    quizz_scale_collection_controller()
       ->getWriting()
       ->write($this->question, $is_new, $alternatives, !empty($this->question->save_new_collection) ? $this->question->save_new_collection : 0);
-
-    // Save the answer collection as a preset if the save preset option is checked
-    if (!empty($this->question->save_new_collection)) {
-      quizz_scale_collection_controller()->changeOwner($collection_id, $user->uid);
-    }
-
-    db_merge('quiz_scale_properties')
-      ->key(array('qid' => $this->question->vid, 'vid' => $this->question->vid))
-      ->fields(array('answer_collection_id' => $collection_id))
-      ->execute()
-    ;
   }
 
   /**
