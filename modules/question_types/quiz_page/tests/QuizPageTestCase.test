@@ -19,9 +19,20 @@ class QuizPageTestCase extends QuizQuestionTestCase {
   }
 
   /**
+   * Test adding and taking a quiz page question.
+   */
+  public function testCreateQuizQuestion($settings = array()) {
+    return $this->drupalCreateQuestion(array(
+          'type'  => $this->questionPlugin,
+          'title' => 'PG 1 title',
+          'body'  => 'PG 1 body text.',
+        ) + $settings);
+  }
+
+  /**
    * Test that question parentage saves.
    */
-  function testQuizPageParentage() {
+  public function testQuizPageParentage() {
     // Create Quiz with review of score.
     $quiz = $this->drupalCreateQuiz();
 
