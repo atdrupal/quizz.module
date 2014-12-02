@@ -18,7 +18,7 @@ class QuizDirectionsTestCase extends QuizQuestionTestCase {
     return array(
         'name'        => t('Quiz directions'),
         'description' => t('Unit test for Quiz directions question type.'),
-        'group'       => t('Quiz'),
+        'group'       => t('Quiz question'),
     );
   }
 
