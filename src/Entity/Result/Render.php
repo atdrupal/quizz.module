@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\quizz\Controller;
+namespace Drupal\quizz\Entity\Result;
+
+use Drupal\quizz\Controller\ResultBaseController;
 
 /**
  * Callback for:
@@ -8,17 +10,14 @@ namespace Drupal\quizz\Controller;
  *  - quiz-result/%
  *  - user/%/quiz-results/%quiz_result/view
  *
- * Show result page for a given result
+ * Show result page for a given result. Check issue #2362097
  */
-class ResultController extends ResultBaseController {
+class Render extends ResultBaseController {
 
-  /**
-   * Render user's result.
-   *
-   * Check issue #2362097
-   */
-  public function render() {
-    $this->setBreadcrumb();
+  public function render(array &$output) {
+    $bc = drupal_get_breadcrumb();
+    $bc[] = l($this->quiz->title, 'quiz/' . $this->quiz_id);
+    drupal_set_breadcrumb($bc);
 
     if (!$this->score['is_evaluated']) {
       $msg = t('Parts of this @quiz have not been evaluated yet. The score below is not final.', array(
@@ -27,17 +26,11 @@ class ResultController extends ResultBaseController {
       drupal_set_message($msg, 'warning');
     }
 
-    return $this->doRender();
-  }
-
-  private function doRender() {
-    $output = array();
     $this->doRenderScore($output);
     $this->doRenderFeedback($output, $summary = $this->getSummaryText());
     $output['feedback_form'] = array(
         drupal_get_form('quiz_report_form', $this->result, $this->getAnswers())
     );
-    return $output;
   }
 
   private function doRenderScore(&$output) {
@@ -89,12 +82,6 @@ class ResultController extends ResultBaseController {
           '#suffix' => '</div>',
       );
     }
-  }
-
-  private function setBreadcrumb() {
-    $bc = drupal_get_breadcrumb();
-    $bc[] = l($this->quiz->title, 'quiz/' . $this->quiz_id);
-    drupal_set_breadcrumb($bc);
   }
 
 }

@@ -12,7 +12,7 @@ use Drupal\quizz\Controller\Admin\QuizRevisionsAdminController;
 use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Controller\QuizTakeController;
 use Drupal\quizz\Controller\QuizTakeQuestionController;
-use Drupal\quizz\Controller\ResultController;
+use Drupal\quizz\Controller\ResultRender;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Form\QuizAdminEntityForm;
@@ -460,10 +460,7 @@ function theme_quiz_view_stats($variables) {
  * @param Result $result
  */
 function quiz_result_page(Result $result) {
-  $quiz = quiz_load($result->quiz_qid);
-  $quiz_revision = quiz_load(NULL, $result->quiz_vid);
-  $obj = new ResultController($quiz, $quiz_revision, $result);
-  return $obj->render();
+  return entity_view('quiz_result', array($result));
 }
 
 /**
