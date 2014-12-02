@@ -126,6 +126,7 @@ class FormSubmission extends QuizTakeBaseController {
     $form_state['redirect'] = $this->quiz_uri . '/take/' . $this->getCurrentPageNumber($this->quiz);
     if (!empty($this->quiz->review_options['question']) && array_filter($this->quiz->review_options['question'])) {
       $form_state['redirect'] = $this->quiz_uri . '/take/' . ($this->getCurrentPageNumber($this->quiz) - 1) . '/feedback';
+      $form_state['feedback'] = TRUE;
     }
 
     if ($time_reached || $this->result->isLastPage($this->page_number)) {
@@ -148,7 +149,7 @@ class FormSubmission extends QuizTakeBaseController {
     $score = $this->endScoring();
 
     // Only redirect to question results if there is not question feedback.
-    if (empty($this->quiz->review_options['question']) || !array_filter($this->quiz->review_options['question'])) {
+    if (empty($this->quiz->review_options['question']) || !array_filter($this->quiz->review_options['question']) || empty($form_state['feedback'])) {
       $form_state['redirect'] = "quiz-result/{$this->result->result_id}";
     }
 
