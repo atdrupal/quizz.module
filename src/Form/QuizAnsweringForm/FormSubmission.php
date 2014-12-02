@@ -91,6 +91,8 @@ class FormSubmission extends QuizTakeBaseController {
    * correct feedback.
    */
   public function formSubmit($form, &$form_state) {
+    $feedback_count = 0;
+
     if ($time_reached = $this->quiz->time_limit && (REQUEST_TIME > ($this->result->time_start + $this->quiz->time_limit))) {
       // Too late.
       // @todo move to quiz_question_answering_form_validate(), and then put all
@@ -119,12 +121,13 @@ class FormSubmission extends QuizTakeBaseController {
 
         // Increment the counter.
         $this->redirect($this->quiz, $this->result->getNextPageNumber($this->page_number));
+        $feedback_count += $instance->quizQuestion->hasFeedback();
       }
     }
 
     // In case we have question feedback, redirect to feedback form.
     $form_state['redirect'] = $this->quiz_uri . '/take/' . $this->getCurrentPageNumber($this->quiz);
-    if (!empty($this->quiz->review_options['question']) && array_filter($this->quiz->review_options['question'])) {
+    if (!empty($this->quiz->review_options['question']) && array_filter($this->quiz->review_options['question']) && $feedback_count) {
       $form_state['redirect'] = $this->quiz_uri . '/take/' . ($this->getCurrentPageNumber($this->quiz) - 1) . '/feedback';
       $form_state['feedback'] = TRUE;
     }

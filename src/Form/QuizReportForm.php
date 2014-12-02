@@ -24,8 +24,11 @@ class QuizReportForm {
       if (isset($form_to_add['submit'])) {
         $show_submit = TRUE;
       }
-      $form_to_add['#element_validate'][] = 'quiz_report_form_element_validate';
-      $form[] = $form_to_add;
+
+      if (!isset($form_to_add['#no_report'])) {
+        $form_to_add['#element_validate'][] = 'quiz_report_form_element_validate';
+        $form[] = $form_to_add;
+      }
     }
 
     // The submit button is only shown if one or more of the questions has input elements
