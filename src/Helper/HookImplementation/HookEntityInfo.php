@@ -12,15 +12,16 @@ class HookEntityInfo {
     }
 
     return array(
-        'quiz_type'          => $this->getQuizEntityTypeInfo(),
-        'quiz_entity'        => $this->getQuizEntityInfo(),
+        'quiz_type'          => $this->getQuizTypeInfo(),
+        'quiz_entity'        => $this->getQuizInfo(),
         'quiz_relationship'  => $this->getQuizQuestionRelationshipInfo(),
+        'quiz_result_type'   => $this->getQuizResultTypeInfo(),
         'quiz_result'        => $this->getQuizResultInfo(),
         'quiz_result_answer' => $this->getQuizResultAnswerInfo(),
     );
   }
 
-  private function getQuizEntityTypeInfo() {
+  private function getQuizTypeInfo() {
     return array(
         'label'            => t('!quiz type', array('!quiz' => QUIZ_NAME)),
         'plural label'     => t('!quiz types', array('!quiz' => QUIZ_NAME)),
@@ -42,7 +43,7 @@ class HookEntityInfo {
     );
   }
 
-  private function getQuizEntityInfo() {
+  private function getQuizInfo() {
     $entity_info = array(
         'label'                     => QUIZ_NAME,
         'description'               => t('!quiz entity', array('!quiz' => QUIZ_NAME)),
@@ -107,13 +108,28 @@ class HookEntityInfo {
     );
   }
 
+  private function getQuizResultTypeInfo() {
+    return array(
+        'label'        => t('Result type'),
+        'plural label' => t('Result types'),
+        'description'  => t('Types of result.'),
+        'bundle of'    => 'quiz_result',
+        'admin ui'     => array(
+            'path'             => 'admin/structure/quiz-results',
+            'file'             => 'quizz.pages.inc',
+            'controller class' => 'Drupal\quizz\Entity\QuizTypeUIController',
+        ),
+      ) + $this->getQuizTypeInfo();
+  }
+
   private function getQuizResultInfo() {
     $info = array(
         'label'                     => t('Quiz result'),
         'entity class'              => 'Drupal\quizz\Entity\Result',
         'controller class'          => 'Drupal\quizz\Entity\ResultController',
         'base table'                => 'quiz_results',
-        'entity keys'               => array('id' => 'result_id', 'bundle' => 'quiz_type'),
+        'entity keys'               => array('id' => 'result_id', 'bundle' => 'type', 'label' => 'result_id'),
+        'bundle keys'               => array('bundle' => 'type'),
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
         'fieldable'                 => TRUE,

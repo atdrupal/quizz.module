@@ -9,6 +9,9 @@ class Result extends Entity {
   /** @var int */
   public $result_id;
 
+  /** @var string */
+  public $type;
+
   /** @var \Drupal\quizz\Entity\QuizEntity */
   private $quiz;
 

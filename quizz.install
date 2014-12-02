@@ -286,12 +286,12 @@ function quizz_update_7607() {
       'description' => 'The {quiz_type}.type of this result.'
   );
 
-  db_add_field('quiz_results', 'quiz_type', array('not null' => FALSE) + $spec);
+  db_add_field('quiz_results', 'type', array('not null' => FALSE) + $spec);
   db_update('quiz_results')
     ->fields(array('type' => 'quiz'))
     ->execute()
   ;
 
-  db_change_field('quiz_results', 'quiz_type', 'quiz_type', $spec);
-  db_add_index('quiz_results', 'bundle', array('quiz_type'));
+  db_change_field('quiz_results', 'type', 'type', $spec);
+  db_add_index('quiz_results', 'bundle', array('type'));
 }
