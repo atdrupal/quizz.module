@@ -460,7 +460,7 @@ function theme_quiz_view_stats($variables) {
  * @param Result $result
  */
 function quiz_result_page(Result $result) {
-  return entity_view('quiz_result', array($result));
+  return entity_view('quiz_result', array($result), 'default', $GLOBALS['language']->language, TRUE);
 }
 
 /**
