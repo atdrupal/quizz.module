@@ -218,16 +218,20 @@ class QuizResultTestCase extends QuizTestCase {
         'required'    => 1,
     ));
 
-    $quizA = $this->drupalCreateQuiz();
-    $questionA = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'feedback' => 'Q1Feedback'));
-    $this->linkQuestionToQuiz($questionA, $quizA);
+    $quiz = $this->drupalCreateQuiz();
+    $question = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'feedback' => 'Q1Feedback'));
+    $this->linkQuestionToQuiz($question, $quiz);
 
     // Taking quiz
     $this->drupalLogin($this->user);
 
     // Check if field shows up and user is not yet enrolled.
-    $this->drupalGet("quiz/$quizA->qid/take");
+    $this->drupalGet("quiz/$quiz->qid/take");
     $this->assertFieldById('edit-quiz-result-field-a-und-0-value');
+
+    // Check the result not yet created
+    $empty_results = entity_load('quiz_result', FALSE, array('quiz_qid' => $quiz->qid, 'uid' => $this->user->uid));
+    $this->assertTrue(empty($empty_results), 'Quiz result is not created.');
 
     // Submit the form, Check that we hooked into Form API correctly.
     $this->drupalPost(NULL, array(), t('Start Quiz'));
@@ -237,7 +241,7 @@ class QuizResultTestCase extends QuizTestCase {
     $this->drupalPost(NULL, array('quiz_result_field_a[und][0][value]' => 'test 123'), t('Start Quiz'));
 
     // Check the result exists now.
-    $result = entity_load('quiz_result', FALSE, array('quiz_qid' => $quizA->qid, 'uid' => $this->user->uid));
+    $result = entity_load('quiz_result', FALSE, array('quiz_qid' => $quiz->qid, 'uid' => $this->user->uid));
     $this->assertTrue(!empty($result), 'Quiz result exists.');
   }
 
