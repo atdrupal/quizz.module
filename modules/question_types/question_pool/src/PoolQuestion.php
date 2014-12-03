@@ -78,16 +78,6 @@ class PoolQuestion extends QuestionPlugin {
   }
 
   /**
-   * Implementation of getCreationForm
-   *
-   * @see QuizQuestion#getCreationForm()
-   */
-  public function getCreationForm(array &$form_state = NULL) {
-    $form = array();
-    return $form;
-  }
-
-  /**
    * Implementation of getMaximumScore.
    *
    * @see QuizQuestion#getMaximumScore()
@@ -96,12 +86,11 @@ class PoolQuestion extends QuestionPlugin {
     $score = 0;
     $question_entity = quiz_question_entity_load($this->question->qid, $this->question->vid);
     $wrapper = entity_metadata_wrapper('quiz_question', $question_entity);
-
+    /* @var $question \Drupal\quiz_question\Entity\Question */
     foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
       // When referencing entity is deleted
       if ($question = $wrapper_question->value()) {
-        $plugin = _quiz_question_get_instance($question);
-        $score += $plugin->getMaximumScore();
+        $score += $question->getPlugin()->getMaximumScore();
       }
     }
     return $score;

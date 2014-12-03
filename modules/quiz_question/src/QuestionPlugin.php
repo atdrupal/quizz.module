@@ -223,13 +223,12 @@ abstract class QuestionPlugin {
 
   /**
    * Get the form used to create a new question.
-   *
-   * @param
-   *  FAPI form state
-   * @return
-   *  Must return a FAPI array.
+   * @param array FAPI form state
+   * @return array Must return a FAPI array.
    */
-  abstract public function getCreationForm(array &$form_state = NULL);
+  public function getCreationForm(array &$form_state = NULL) {
+    return array();
+  }
 
   /**
    * Get the maximum possible score for this question.
