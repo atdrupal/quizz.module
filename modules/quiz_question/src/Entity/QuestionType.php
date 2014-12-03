@@ -54,6 +54,16 @@ class QuestionType extends Entity {
     return $default;
   }
 
+  /**
+   * Get module for a question type.
+   * @return string
+   */
+  public function getPluginModule() {
+    if ($plugin_info = quiz_question_get_plugin_info($this->plugin)) {
+      return $plugin_info['module'];
+    }
+  }
+
   public function setConfig($name, $value) {
     $this->data['configuration'][$name] = $value;
     return $this;

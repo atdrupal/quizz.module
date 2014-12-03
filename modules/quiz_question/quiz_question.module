@@ -93,20 +93,6 @@ function quiz_question_get_plugin_info($name = NULL, $reset = FALSE) {
 }
 
 /**
- * Get module for a question type.
- *
- * @param string $question_type_name
- * @return string
- *   Name of module matching the question type, as given by quiz_question_info()
- *   hook.
- */
-function quiz_question_module_for_type($question_type_name) {
-  $question_type = quiz_question_type_load($question_type_name);
-  $plugin_info = quiz_question_get_plugin_info($question_type->plugin);
-  return $plugin_info['module'];
-}
-
-/**
  * Figure out if a user has access to score a certain result
  *
  * @param int $question_vid

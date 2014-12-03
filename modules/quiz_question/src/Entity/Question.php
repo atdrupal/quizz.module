@@ -138,8 +138,7 @@ class Question extends Entity {
    * @return string
    */
   public function getModule() {
-    $info = $this->getPluginInfo();
-    return $info['module'];
+    return $this->getQuestionType()->getPluginModule();
   }
 
   /**

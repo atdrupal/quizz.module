@@ -54,38 +54,38 @@ abstract class ResultBaseController {
       . " WHERE ra.result_id = :rid "
       . " ORDER BY ra.number, ra.answer_timestamp";
     $ids = db_query($sql, array(':vid' => $this->quiz_revision->vid, ':rid' => $this->result->result_id));
-    while ($db_row = $ids->fetch()) {
-      if ($report = $this->getAnswer($db_row)) {
-        $answers[] = $report;
+    while ($row = $ids->fetch()) {
+      if ($answer = $this->getAnswer($row)) {
+        $answers[] = $answer;
       }
     }
     return !empty($answers) ? $answers : array();
   }
 
-  private function getAnswer($db_row) {
+  private function getAnswer($row) {
     // Questions picked from term id's won't be found in the quiz_relationship table
-    if ($db_row->max_score === NULL) {
-      if ($this->quiz_revision->randomization == 2 && isset($this->quiz_revision->tid) && $this->quiz_revision->tid > 0) {
-        $db_row->max_score = $this->quiz_revision->max_score_for_random;
+    if ($row->max_score === NULL) {
+      if ($this->quiz_revision->randomization == QUIZ_QUESTION_NEVER && isset($this->quiz_revision->tid) && $this->quiz_revision->tid > 0) {
+        $row->max_score = $this->quiz_revision->max_score_for_random;
       }
-      elseif ($this->quiz_revision->randomization == 3) {
-        $db_row->max_score = $db_row->term_max_score;
+      elseif (QUIZ_QUESTION_CATEGORIZED_RANDOM == $this->quiz_revision->randomization) {
+        $row->max_score = $row->term_max_score;
       }
     }
 
-    if (!$module = quiz_question_module_for_type($db_row->type)) {
+    if (!$module = quiz_question_type_load($row->type)->getPluginModule()) {
       return;
     }
 
     // Invoke hook_get_report().
-    if (!$report = module_invoke($module, 'get_report', $db_row->question_qid, $db_row->question_vid, $this->result->result_id)) {
+    if (!$report = module_invoke($module, 'get_report', $row->question_qid, $row->question_vid, $this->result->result_id)) {
       return;
     }
 
     // Add max score info to the question.
     if (!isset($report->score_weight)) {
-      $report->qnr_max_score = $db_row->max_score;
-      $report->score_weight = !$report->max_score ? 0 : ($db_row->max_score / $report->max_score);
+      $report->qnr_max_score = $row->max_score;
+      $report->score_weight = !$report->max_score ? 0 : ($row->max_score / $report->max_score);
     }
 
     return $report;
