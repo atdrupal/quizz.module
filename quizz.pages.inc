@@ -641,8 +641,29 @@ function theme_quiz_categorized_form($variables) {
 /**
  * Quiz result edit form.
  */
-function quiz_result_edit_quiz_form($form, &$form_state, Result $result) {
+function quiz_result_form($form, &$form_state, Result $result) {
+  global $user;
+
+  $form_state['quiz_result'] = $result;
+
   field_attach_form('quiz_result', $result, $form, $form_state);
+
+  if (($quiz = $result->getQuiz()) && $quiz->build_on_last) {
+    if (entity_load('quiz_result', FALSE, array('quiz_vid' => $quiz->vid, 'uid' => $user->uid))) {
+      $form['build_on_last'] = array(
+          '#title'         => t('Keep answers from last attempt?'),
+          '#type'          => 'radios',
+          '#options'       => array(
+              ''        => t('No answers'),
+              'correct' => t('Only correct answers'),
+              'all'     => t('All answers'),
+          ),
+          '#default_value' => $quiz->build_on_last,
+          '#description'   => t('You can choose to keep previous answers or start a new attempt.'),
+          '#access'        => $quiz->build_on_last,
+      );
+    }
+  }
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -656,11 +677,16 @@ function quiz_result_edit_quiz_form($form, &$form_state, Result $result) {
 /**
  * Quiz result submit handler.
  */
-function quiz_result_edit_quiz_form_submit($form, &$form_state) {
+function quiz_result_form_submit($form, &$form_state) {
   global $user;
 
   $base_result = $form_state['quiz_result'];
+  $quiz = $base_result->getQuiz();
   field_attach_submit('quiz_result', $base_result, $form, $form_state);
+
+  if (!empty($form_state['values']['build_on_last'])) {
+    $quiz->build_on_last = $form_state['values']['build_on_last'];
+  }
 
   quiz_controller()
     ->getResultGenerator()

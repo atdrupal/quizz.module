@@ -197,9 +197,72 @@ class QuizResultTestCase extends QuizTestCase {
   }
 
   /**
+   * Test the build on last attempt functionality.
+   */
+  public function testBuildOnLastAttempt() {
+    // Prepopulate correct answers.
+    $quiz = $this->drupalCreateQuiz(array('build_on_last' => 'correct'));
+    $question_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_3 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_4 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $this->linkQuestionToQuiz($question_1, $quiz);
+    $this->linkQuestionToQuiz($question_2, $quiz);
+    $this->linkQuestionToQuiz($question_3, $quiz);
+    $this->linkQuestionToQuiz($question_4, $quiz);
+
+    $this->drupalLogin($this->user);
+
+    // Take the quiz.
+    $this->drupalGet("quiz/$quiz->qid/take");
+
+    // No build on last form here.
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+
+    // Take it again, ensure the correct answers are prefilled.
+    $this->drupalGet("quiz/$quiz->qid/take");
+    $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->assertNoFieldChecked("edit-question-{$question_2->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_3->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->assertNoFieldChecked("edit-question-{$question_4->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+
+    // Switch the build option
+    $quiz->build_on_last = 'all';
+    $quiz->save();
+
+    // Take the quiz with this revision.
+    $this->drupalGet("quiz/$quiz->qid/take");
+    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+
+    // Take it again, ensure all the answers are prefilled.
+    $this->drupalGet("quiz/$quiz->qid/take");
+    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_2->qid}-0");
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_3->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_4->qid}-0");
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+  }
+
+  /**
    * Test fieldable Quiz results.
    */
-  function testFieldableResults() {
+  public function testFieldableResults() {
     // Add a field to quiz result and make it required for starting.
     field_create_field(array('field_name' => 'quiz_result_field_a', 'type' => 'text'));
     field_create_instance(array(

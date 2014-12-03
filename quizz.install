@@ -295,3 +295,10 @@ function quizz_update_7607() {
   db_change_field('quiz_results', 'type', 'type', $spec);
   db_add_index('quiz_results', 'bundle', array('type'));
 }
+
+/**
+ * Add build_on_last to optionally rebuild each attempt on the last.
+ */
+function quiz_update_7608() {
+  db_add_field('quiz_entity_revision', 'build_on_last', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+}

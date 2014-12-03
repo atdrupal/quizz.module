@@ -15,41 +15,41 @@ class DefaultPropertiesIO extends FormHelper {
   /**
    * Returns the users default settings.
    *
-   * @return
-   *   An array of settings. The array is empty in case no settings are available.
+   * @param bool $remove_ids
+   * @param string $type
+   * @return array
    */
-  public function getUserDefaultSettings($remove_ids = TRUE) {
+  public function get($remove_ids = TRUE, $type = NULL) {
+    if ($quiz = $this->getUserDefaults($remove_ids, $type)) {
+      return $quiz;
+    }
+    return $this->getSystemDefaults($remove_ids, $type);
+  }
+
+  public function getUserDefaults($remove_ids = TRUE, $type = NULL) {
     global $user;
 
     // We found user defaults.
-    $conditions = array('status' => -1, 'uid' => $user->uid, 'qid' => 0, 'vid' => 0);
-    if ($quizzes = entity_load('quiz_entity', FALSE, $conditions)) {
+    $conds = array('status' => -1, 'uid' => $user->uid, 'qid' => 0, 'vid' => 0, 'type' => $type);
+    if ($quizzes = entity_load('quiz_entity', FALSE, $conds)) {
       $quiz = reset($quizzes);
-
       if ($remove_ids) {
         $quiz->qid = $quiz->uid = $quiz->vid = $quiz->quiz_open = $quiz->quiz_close = NULL;
       }
-
       return $quiz;
     }
-
-    return $this->getSystemDefaultSettings($remove_ids);
   }
 
-  public function getSystemDefaultSettings($remove_ids = TRUE) {
+  public function getSystemDefaults($remove_ids = TRUE, $type = 'quiz') {
     // Found global defaults.
-    $conditions = array('status' => -1, 'uid' => 0);
-    if ($quizzes = entity_load('quiz_entity', FALSE, $conditions)) {
-      $quiz = reset($quizzes);
-
-      if ($remove_ids) {
+    $conds = array('status' => -1, 'uid' => 0, 'type' => $type);
+    if ($quizzes = entity_load('quiz_entity', FALSE, $conds)) {
+      if (($quiz = reset($quizzes)) && $remove_ids) {
         $quiz->qid = $quiz->uid = $quiz->vid = $quiz->quiz_open = $quiz->quiz_close = NULL;
       }
-
       return $quiz;
     }
-
-    return entity_create('quiz_entity', $this->getQuizDefaultSettings());
+    return entity_create('quiz_entity', $this->getQuizDefaultPropertyValues($type));
   }
 
   /**
@@ -58,8 +58,13 @@ class DefaultPropertiesIO extends FormHelper {
    * @return mixed[]
    *   Array of default values.
    */
-  public function getQuizDefaultSettings() {
-    return array(
+  public function getQuizDefaultPropertyValues($type = NULL) {
+    $defaults = array();
+    if ($type && $question_type = quiz_type_load($type)) {
+      $defaults = $question_type->getConfigurations();
+    }
+
+    return $defaults + array(
         'status'                     => -1,
         'aid'                        => NULL,
         'allow_jumping'              => 0,
@@ -67,6 +72,7 @@ class DefaultPropertiesIO extends FormHelper {
         'allow_skipping'             => 1,
         'always_available'           => TRUE,
         'backwards_navigation'       => 1,
+        'build_on_last'              => '',
         'has_userpoints'             => 0,
         'keep_results'               => 2,
         'mark_doubtful'              => 0,
@@ -112,39 +118,37 @@ class DefaultPropertiesIO extends FormHelper {
 
     if (!empty($quiz->remember_settings)) {
       // Save user defaults.
-      $user_quiz = clone $quiz;
-      $user_quiz->uid = $user->uid;
+      $u_quiz = clone $quiz;
+      $u_quiz->uid = $user->uid;
 
       // Find ID of old entry.
       $conditions = array('status' => -1, 'uid' => $user->uid, 'qid' => 0, 'vid' => 0);
       if ($quizzes = entity_load('quiz_entity', FALSE, $conditions)) {
         $_user_quiz = reset($quizzes);
-        $user_quiz->qid = $_user_quiz->qid;
-        $user_quiz->vid = $_user_quiz->vid;
+        $u_quiz->qid = $_user_quiz->qid;
+        $u_quiz->vid = $_user_quiz->vid;
       }
       else {
-        $user_quiz->qid = $user_quiz->vid = NULL;
+        $u_quiz->qid = $u_quiz->vid = NULL;
       }
-
-      $this->saveQuizSettings($user_quiz);
+      $this->saveQuizSettings($u_quiz);
     }
 
     if (!empty($quiz->remember_global)) {
-      $system_quiz = clone $quiz;
-      $system_quiz->uid = 0;
+      $s_quiz = clone $quiz;
+      $s_quiz->uid = 0;
 
       // Find ID of old entry
       $conditions = array('status' => -1, 'uid' => 0);
       if ($quizzes = entity_load('quiz_entity', FALSE, $conditions, TRUE)) {
         $_system_quiz = reset($quizzes);
-        $system_quiz->qid = $_system_quiz->qid;
-        $system_quiz->vid = $_system_quiz->vid;
+        $s_quiz->qid = $_system_quiz->qid;
+        $s_quiz->vid = $_system_quiz->vid;
       }
       else {
-        $system_quiz->qid = $system_quiz->vid = NULL;
+        $s_quiz->qid = $s_quiz->vid = NULL;
       }
-
-      return $this->saveQuizSettings($system_quiz);
+      return $this->saveQuizSettings($s_quiz);
     }
   }
 
