@@ -4,6 +4,7 @@ namespace Drupal\quizz\Entity\QuizEntity;
 
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
+use EntityFieldQuery;
 use RuntimeException;
 
 /**
@@ -27,10 +28,30 @@ class ResultGenerator {
           '!assign' => l(t('assign questions'), 'quiz/' . $quiz->identifier() . '/questions')
       )));
     }
-    return $this->doGenerate($quiz, $questions, $account, $base_result);
+
+    // Build on the last attempt the user took. If this quiz has build on last
+    // attempt set, we need to search for a previous attempt with the same
+    // version of the current quiz.
+    if ($quiz->build_on_last) {
+      $query = new EntityFieldQuery();
+      $query_results = $query->entityCondition('entity_type', 'quiz_result')
+        ->propertyCondition('uid', $account->uid)
+        ->propertyCondition('qid', $quiz->qid)
+        ->propertyCondition('vid', $quiz->vid)
+        ->propertyOrderBy('time_start', 'DESC')
+        ->range(0, 1)
+        ->execute();
+
+      // Found an existing result we need to rebuild from. We also need to retain the version.
+      if (!empty($query_results['quiz_result'])) {
+        $prev_result = quiz_result_load(key($query_results['quiz_result']));
+      }
+    }
+
+    return $this->doGenerate($quiz, $questions, $account, $base_result, $prev_result);
   }
 
-  private function doGenerate(QuizEntity $quiz, $questions, $account, Result $base_result = NULL) {
+  private function doGenerate(QuizEntity $quiz, $questions, $account, Result $base_result = NULL, Result $prev_result = NULL) {
     // correct item numbers
     $count = $display_count = 0;
     $question_list = array();
@@ -61,10 +82,32 @@ class ResultGenerator {
       ))->save();
     }
 
+    if (NULL !== $prev_result) {
+      $this->cloneResult($prev_result, $result);
+    }
+
     $_SESSION['quiz'][$quiz->qid] = array('result_id' => $result->result_id, 'current' => 1);
     module_invoke_all('quiz_begin', $quiz, $result->result_id);
 
     return quiz_result_load($result->result_id);
+  }
+
+  /**
+   * Clone a result, and its correct answers. Do not finish.
+   */
+  private function cloneResult(QuizEntity $quiz, $prev_result, $result) {
+    foreach ($prev_result->layout as $question_info) {
+      $question = quiz_question_entity_load($question_info['qid'], $question_info['vid']);
+      $answer = quiz_answer_controller()->getInstance($prev_result->result_id, $question);
+
+      // Override the existing response.
+      if (('all' === $quiz->build_on_last) || $answer->isCorrect()) {
+        $answer->setResultId($result->result_id);
+        $answer->saveResult();
+      }
+    }
+
+    return $result;
   }
 
 }

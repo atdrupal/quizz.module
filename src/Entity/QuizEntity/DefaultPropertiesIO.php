@@ -67,6 +67,7 @@ class DefaultPropertiesIO extends FormHelper {
         'allow_skipping'             => 1,
         'always_available'           => TRUE,
         'backwards_navigation'       => 1,
+        'build_on_last'              => '',
         'has_userpoints'             => 0,
         'keep_results'               => 2,
         'mark_doubtful'              => 0,

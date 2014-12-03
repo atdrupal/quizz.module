@@ -61,7 +61,8 @@ class FormSubmission extends QuizTakeBaseController {
       $question = quiz_question_entity_load($question_id);
 
       // Delete the user's answer.
-      quiz_answer_controller()->getInstance($this->result->result_id, $question)
+      quiz_answer_controller()
+        ->getInstance($this->result->result_id, $question)
         ->delete();
 
       // Mark our question attempt as skipped, reset the correct and points flag.

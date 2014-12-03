@@ -55,7 +55,7 @@ class QuizEntity extends Entity {
   /** @var bool Magic flag to create new revision on save */
   public $is_new_revision;
 
-  /** @var string */
+  /** @var string ('', correct, all)*/
   public $build_on_last;
 
   /** @var string Revision log */
