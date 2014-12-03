@@ -3,6 +3,7 @@
 namespace Drupal\question_pool;
 
 use Drupal\question_pool\Form\AnswerForm;
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionPlugin;
 
 /**
@@ -12,7 +13,7 @@ class PoolQuestion extends QuestionPlugin {
 
   /**
    * Implementation of delete
-   * @see \Drupal\quiz_question\QuestionPlugin::delete()
+   * @see QuestionPlugin::delete()
    */
   public function delete($single_revision = FALSE) {
     parent::delete($single_revision);
@@ -33,7 +34,7 @@ class PoolQuestion extends QuestionPlugin {
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     $markup = '';
 
-    /* @var $question \Drupal\quiz_question\Entity\Question */
+    /* @var $question Question */
     foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
       $question = $wrapper_question->value();
       $plugin = $question->getPlugin();
@@ -69,7 +70,7 @@ class PoolQuestion extends QuestionPlugin {
     $score = 0;
     $question_entity = quiz_question_entity_load($this->question->qid, $this->question->vid);
     $wrapper = entity_metadata_wrapper('quiz_question', $question_entity);
-    /* @var $question \Drupal\quiz_question\Entity\Question */
+    /* @var $question Question */
     foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
       // When referencing entity is deleted
       if ($question = $wrapper_question->value()) {

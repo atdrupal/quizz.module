@@ -241,7 +241,7 @@ abstract class QuestionPlugin {
    * Save question type specific node properties
    */
   public function saveEntityProperties($is_new = FALSE) {
-    
+
   }
 
   /**

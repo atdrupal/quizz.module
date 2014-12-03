@@ -1,86 +1,16 @@
 <?php
 
+use Drupal\question_pool\Installer;
+
 function question_pool_install() {
-  $field_name = 'field_question_reference';
-  if (!field_info_field($field_name)) {
-    $field_base = array(
-      'active' => 1,
-      'cardinality' => -1,
-      'deleted' => 0,
-      'entity_types' => array(),
-      'field_name' => $field_name,
-      'foreign keys' => array(
-        'node' => array(
-          'columns' => array(
-            'target_id' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
-      'indexes' => array(
-        'target_id' => array(
-          0 => 'target_id',
-        ),
-      ),
-      'locked' => 0,
-      'module' => 'entityreference',
-      'settings' => array(
-        'handler' => 'base',
-        'handler_settings' => array(
-          'sort' => array(
-            'type' => 'none',
-          ),
-          'target_bundles' => array(
-            'matching' => 'matching',
-            'multichoice' => 'multichoice',
-            'truefalse' => 'truefalse',
-          ),
-        ),
-        'target_type' => 'node',
-      ),
-      'translatable' => 0,
-      'type' => 'entityreference',
-    );
-    field_create_field($field_base);
-  }
-  
-  $instance = field_info_instance('node', $field_name, 'pool');
-  if (empty($instance)) {
-    $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'pool',
-      'label' => 'Question reference',
-      'description' => 'Question that this pool contains',
-      'required' => TRUE,
-      'settings' => array(        
-        'no_ui' => TRUE,
-      ),
-      'widget' => array (
-        'settings' => array (
-          'preview_image_style' => 'quiz_ddlines', 
-          'no_ui' => TRUE,
-        ),
-      ),
-    );   
-    field_create_instance($instance);
-  }
-  
-  // add body field.
-  node_types_rebuild();
-  $node_type = node_type_get_type('pool');
-  node_add_body_field($node_type, 'Question');
-  // Override default weight to make body field appear first
-  $instance = field_read_instance('node', 'body', 'pool');
-  $instance['widget']['weight'] = -10;
-  $instance['widget']['settings']['rows'] = 6;
-  field_update_instance($instance);
+  require_once dirname(__FILE__) . '/src/Installer.php';
+  $installer = new Installer();
+  $installer->install();
 }
 
 function question_pool_uninstall() {
-  field_delete_field('field_question_reference');    
+  field_delete_field('field_question_reference');
 }
-
 
 /**
  * Implements hook_schema().
@@ -88,99 +18,33 @@ function question_pool_uninstall() {
 function question_pool_schema() {
   // Place to store user answers for pool questions
   $schema['quiz_pool_user_answers'] = array(
-    'fields' => array(
-      'question_nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+      'fields'      => array(
+          'question_nid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'answer'       => array('type' => 'int', 'size' => 'tiny', 'default' => 0,),
+          'score'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,),
       ),
-      'question_vid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+      'primary key' => array(
+          'result_id', 'question_nid', 'question_vid',
       ),
-      'result_id' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'answer' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'default' => 0,
-      ),
-      'score' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array(
-      'result_id', 'question_nid', 'question_vid',
-    ),
   );
   $schema['quiz_pool_user_answers_questions'] = array(
-    'fields' => array(
-      'pool_nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+      'fields'      => array(
+          'pool_nid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'pool_vid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'question_nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'question_vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'result_id'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
+          'answer'          => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of answer.',),
+          'is_evaluated'    => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0, 'not null' => TRUE,),
+          'is_correct'      => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0, 'not null' => TRUE,),
+          'score'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,),
+          'answer_feedback' => array('type' => 'text'),
       ),
-      'pool_vid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+      'primary key' => array(
+          'result_id', 'pool_nid', 'pool_vid', 'question_nid', 'question_vid',
       ),
-      'question_nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'question_vid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'result_id' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'answer' => array(
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-        'description' => 'A serialized array of answer.',
-      ),
-      'is_evaluated' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'size' => 'tiny',
-        'default' => 0,
-        'not null' => TRUE,
-      ),
-      'is_correct' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'size' => 'tiny',
-        'default' => 0,
-        'not null' => TRUE,
-      ),
-      'score' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'answer_feedback' => array(
-        'type' => 'text'
-      ),
-    ),
-    'primary key' => array(
-      'result_id', 'pool_nid', 'pool_vid', 'question_nid', 'question_vid',
-    ),
   );
 
   return $schema;
