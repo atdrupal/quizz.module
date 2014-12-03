@@ -70,9 +70,9 @@ class PoolQuestion extends QuestionPlugin {
    * This is called whenever a question is rendered, either
    * to an administrator or to a quiz taker.
    */
-  public function getAnsweringForm(array $form_state = NULL, $rid) {
-    $quiz = menu_get_object();
-    $form = parent::getAnsweringForm($form_state, $rid);
+  public function getAnsweringForm(array $form_state = NULL, $result_id) {
+    $quiz = quiz_result_load($result_id)->getQuiz();
+    $form = parent::getAnsweringForm($form_state, $result_id);
     $obj = new AnswerForm($quiz, $this->question, $_SESSION['quiz_' . $quiz->qid]);
     return $obj->get($form);
   }
