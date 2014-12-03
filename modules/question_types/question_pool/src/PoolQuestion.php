@@ -10,18 +10,14 @@ use Drupal\quiz_question\QuestionPlugin;
  */
 class PoolQuestion extends QuestionPlugin {
 
-  private $question;
-
   /**
    * Implementation of delete
-   *
-   * @see QuizQuestion#delete()
+   * @see \Drupal\quiz_question\QuestionPlugin::delete()
    */
   public function delete($single_revision = FALSE) {
     parent::delete($single_revision);
     $delete_ans = db_delete('quiz_pool_user_answers');
     $delete_ans->condition('question_nid', $this->question->qid);
-
     if ($single_revision) {
       $delete_ans->condition('question_vid', $this->question->vid);
     }
@@ -30,22 +26,25 @@ class PoolQuestion extends QuestionPlugin {
 
   /**
    * Implementation of getNodeView
-   *
    * @see QuizQuestion#getNodeView()
    */
   public function getNodeView() {
-    $content = parent::getNodeView();
-    $wrapper = entity_metadata_wrapper('node', $this->question);
+    $build = parent::getNodeView();
+    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     $markup = '';
-    foreach ($wrapper->field_question_reference->getIterator() as $delta => $wrapper_question) {
+
+    /* @var $question \Drupal\quiz_question\Entity\Question */
+    foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
       $question = $wrapper_question->value();
-      $question = _quiz_question_get_instance($question);
-      $_content = $question->getNodeView();
-      $markup .= "<h3>{$question->question->title}</h3>";
-      $markup .= $_content['answers']['#markup'];
+      $plugin = $question->getPlugin();
+      if ($content = $plugin->getNodeView()) {
+        $markup .= "<h3>{$question->title}</h3>";
+        $markup .= $content['answers']['#markup'];
+      }
     }
-    $content['answers']['#mariup'] = $markup;
-    return $content;
+
+    $build['answers']['#markup'] = $markup;
+    return $build;
   }
 
   /**
