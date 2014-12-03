@@ -2,10 +2,7 @@ name = Question Pool
 package = Quiz Question
 description = Question pool for quiz.
 core = 7.x
-php = 5
-dependencies[] = quiz
+
+dependencies[] = quizz
 dependencies[] = quiz_question
 dependencies[] = entityreference
-
-files[] = pool.classes.inc
-;files[] = multichoice.test
