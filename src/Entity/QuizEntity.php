@@ -55,6 +55,9 @@ class QuizEntity extends Entity {
   /** @var bool Magic flag to create new revision on save */
   public $is_new_revision;
 
+  /** @var string ('', correct, all)*/
+  public $build_on_last;
+
   /** @var string Revision log */
   public $log;
 
@@ -102,7 +105,7 @@ class QuizEntity extends Entity {
     }
 
     // Default properties
-    foreach ($this->getController()->getSettingIO()->getQuizDefaultSettings() as $k => $v) {
+    foreach ($this->getController()->getSettingIO()->getQuizDefaultPropertyValues() as $k => $v) {
       if (!isset($this->{$k})) {
         $this->{$k} = $v;
       }

@@ -145,8 +145,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->drupalGet('admin/quiz/settings/quiz-form');
     $this->assertNoFieldChecked('edit-allow-resume');
 
-    // Check that the default carried over. Check that other options remained
-    // set.
+    // Check that the default carried over. Check that other options remained set.
     $this->drupalGet('quiz/add');
     $this->assertNoFieldChecked('edit-allow-resume');
     $this->assertFieldChecked('edit-allow-skipping');

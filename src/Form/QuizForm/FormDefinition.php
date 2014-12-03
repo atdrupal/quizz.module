@@ -22,7 +22,8 @@ class FormDefinition extends FormHelper {
         drupal_set_message($msg);
       }
 
-      foreach (quiz_controller()->getSettingIO()->getUserDefaultSettings() as $k => $v) {
+      $defaults = quiz_controller()->getSettingIO()->get(TRUE, $this->quiz->type);
+      foreach ($defaults as $k => $v) {
         if (!isset($this->quiz->{$k}) || is_null($this->quiz->{$k})) {
           $this->quiz->{$k} = $v;
         }
@@ -157,6 +158,17 @@ class FormDefinition extends FormHelper {
         '#title'         => t('Repeat until correct'),
         '#default_value' => $this->quiz->repeat_until_correct,
         '#description'   => t('Require the user to retry the question until answered correctly.'),
+    );
+    $form['taking']['build_on_last'] = array(
+        '#type'          => 'radios',
+        '#options'       => array(
+            ''        => t('Fresh attempt every time'),
+            'correct' => t('Prepopulate with correct answers from last result'),
+            'all'     => t('Prepopulate with all answers from last result'),
+        ),
+        '#title'         => t('Each attempt builds on the last'),
+        '#default_value' => $this->quiz->build_on_last,
+        '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZ_NAME)),
     );
     $form['taking']['mark_doubtful'] = array(
         '#type'          => 'checkbox',
