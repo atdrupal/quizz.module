@@ -9,7 +9,8 @@ class QuestionTypeInstaller {
   private $field_name = 'field_question_reference';
 
   public function setup(QuestionType $question_type) {
-    $this->createEntityReferenceField();
+    $this->doCreateField();
+    $this->doCreateFieldInstance($question_type);
 
     // Override default weight to make body field appear first
     if ($instance = field_read_instance('quiz_question', 'quiz_question_body', $question_type->type)) {
@@ -17,11 +18,6 @@ class QuestionTypeInstaller {
       $instance['widget']['settings']['rows'] = 6;
       field_update_instance($instance);
     }
-  }
-
-  private function createEntityReferenceField() {
-    $this->doCreateField();
-    $this->doCreateFieldInstance();
   }
 
   private function doCreateField() {
@@ -56,18 +52,26 @@ class QuestionTypeInstaller {
     }
   }
 
-  private function doCreateFieldInstance() {
-    if (!field_info_instance('node', $this->field_name, 'pool')) {
+  private function doCreateFieldInstance(QuestionType $question_type) {
+    if (!field_info_instance('quiz_question', $this->field_name, $question_type->type)) {
       field_create_instance(array(
           'field_name'  => $this->field_name,
-          'entity_type' => 'node',
-          'bundle'      => 'pool',
+          'entity_type' => 'quiz_question',
+          'bundle'      => $question_type->type,
           'label'       => 'Question reference',
           'description' => 'Question that this pool contains',
           'required'    => TRUE,
-          'settings'    => array('no_ui' => TRUE,),
-          'widget'      => array('settings' => array('preview_image_style' => 'quiz_ddlines', 'no_ui' => TRUE,),
+          'widget'      => array(
+              'type'     => 'entityreference_autocomplete',
+              'module'   => 'entityreference',
+              'active'   => 1,
+              'settings' => array(
+                  'match_operator' => 'CONTAINS',
+                  'size'           => 60,
+                  'path'           => '',
+              )
           ),
+          'settings'    => array(),
       ));
     }
   }
