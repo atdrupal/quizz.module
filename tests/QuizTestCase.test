@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz\Entity\QuizEntity;
 
 /**
  * Base test class for Quiz questions.
@@ -100,7 +100,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
    * @param QuizEntity|null $quiz
    * @return QuizEntity
    */
-  public function linkQuestionToQuiz($question, $quiz = NULL) {
+  public function linkQuestionToQuiz(Question $question, QuizEntity $quiz = NULL) {
     if (is_null($quiz)) {
       $quiz = $this->drupalCreateQuiz();
     }
