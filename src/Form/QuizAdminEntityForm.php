@@ -2,7 +2,6 @@
 
 namespace Drupal\quizz\Form;
 
-use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Form\QuizForm\FormValidation;
 
 class QuizAdminEntityForm {
@@ -11,7 +10,7 @@ class QuizAdminEntityForm {
     // basic form
     $dummy_quiz = quiz_controller()->getSettingIO()->getSystemDefaultSettings(FALSE);
     $entity_form = new QuizForm($dummy_quiz);
-    $form = $entity_form->get($form, $form_state, 'add');
+    $form += $entity_form->get($form, $form_state, 'add');
 
     $form['direction'] = array(
         '#markup' => t('Here you can change the default @quiz settings for new users.', array('@quiz' => QUIZ_NAME)),
@@ -51,7 +50,6 @@ class QuizAdminEntityForm {
   }
 
   public function submitForm($form, &$form_state) {
-    /* @var $quiz QuizEntity */
     $quiz = entity_create('quiz_entity', array(
         'qid'               => $form['#quiz']->qid,
         'vid'               => $form['#quiz']->vid,

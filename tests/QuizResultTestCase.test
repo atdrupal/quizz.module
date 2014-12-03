@@ -199,7 +199,7 @@ class QuizResultTestCase extends QuizTestCase {
   /**
    * Test fieldable Quiz results.
    */
-  function testFieldableResults() {
+  public function testFieldableResults() {
     // Add a field to quiz result and make it required for starting.
     field_create_field(array('field_name' => 'quiz_result_field_a', 'type' => 'text'));
     field_create_instance(array(
