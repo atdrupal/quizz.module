@@ -27,12 +27,12 @@ function _question_pool_evaluate_question($pool, $question, $result_id, $answer)
       ->condition('result_id', $result->rid)
       ->execute();
 
-    //fix error with score
+    // fix error with score
     if ($result->score < 0) {
       $result->score = 0;
     }
 
-    // Insert.
+    // Insert
     db_insert('quiz_pool_user_answers_questions')
       ->fields(array(
           'pool_qid'     => $pool->qid,
@@ -79,18 +79,18 @@ function question_pool_ajax_callback($form, $form_state) {
  * submit callback
  */
 function question_pool_answer_submit(&$form, &$form_state) {
-  $rid = $form['#rid'];
+  $result_id = $form['#rid'];
   $pool = $form['#pool'];
-  $qid = $form['#qid'];
+  $quiz_id = $form['#qid'];
   $wrapper = entity_metadata_wrapper('node', $pool);
   $total = $wrapper->field_question_reference->count();
-  $session = &$_SESSION['quiz_' . $qid];
+  $session = &$_SESSION['quiz_' . $quiz_id];
   $passed = &$session['pool_' . $pool->qid]['passed'];
   $answer = !empty($form_state['input']['tries']) ? $form_state['input']['tries'] : "";
   $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta']]->value();
 
   if ($question) {
-    $result = _question_pool_evaluate_question($pool, $question, $rid, $answer);
+    $result = _question_pool_evaluate_question($pool, $question, $result_id, $answer);
 
     if ($result->is_valid !== TRUE) {
       form_set_error('tries', $result->is_valid);
@@ -108,7 +108,7 @@ function question_pool_answer_submit(&$form, &$form_state) {
 
   if ($passed) {
     $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta'] - 1]->value();
-    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
+    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $result_id, $question);
     $elements = element_children($question_form);
     foreach ($elements as $element) {
       if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id')))
@@ -126,7 +126,7 @@ function question_pool_answer_submit(&$form, &$form_state) {
   }
   else {
     $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta'] - 1]->value();
-    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
+    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $result_id, $question);
     $elements = element_children($question_form);
     foreach ($elements as $element) {
       if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id'))) {
@@ -135,7 +135,7 @@ function question_pool_answer_submit(&$form, &$form_state) {
     }
     if ($session['pool_' . $pool->qid]['delta'] < $total) {
       $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta']]->value();
-      $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
+      $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $result_id, $question);
       $elements = element_children($question_form);
       foreach ($elements as $element) {
         if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id')))

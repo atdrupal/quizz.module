@@ -26,8 +26,6 @@ class QuestionTypeInstaller {
 
   private function doCreateField() {
     if (!field_info_field($this->field_name)) {
-      $question_bundles = array();
-
       field_create_field(array(
           'active'       => 1,
           'cardinality'  => -1,
@@ -49,7 +47,7 @@ class QuestionTypeInstaller {
               'target_type'      => 'quiz_question',
               'handler'          => 'base',
               'handler_settings' => array(
-                  'target_bundles' => $question_bundles,
+                  'target_bundles' => array_keys(quiz_question_get_types()),
                   'sort'           => array('type' => 'property', 'property' => 'title', 'direction' => 'ASC'),
                   'behaviors'      => array(),
               ),
