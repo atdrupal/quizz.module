@@ -1,7 +1,11 @@
 <?php
 
+/**
+ * Implement hooks_uninstall().
+ */
 function question_pool_uninstall() {
-  field_delete_field('field_question_reference');
+  // @TODO: Really?
+  // field_delete_field('field_question_reference');
 }
 
 /**
@@ -11,27 +15,28 @@ function question_pool_schema() {
   // Place to store user answers for pool questions
   $schema['quiz_pool_user_answers'] = array(
       'fields'      => array(
-          'question_nid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'answer'       => array('type' => 'int', 'size' => 'tiny', 'default' => 0,),
-          'score'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,),
+          'question_qid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'answer'       => array('type' => 'int', 'size' => 'tiny', 'default' => 0),
+          'score'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       ),
       'primary key' => array(
-          'result_id', 'question_nid', 'question_vid',
+          'result_id', 'question_qid', 'question_vid',
       ),
   );
+
   $schema['quiz_pool_user_answers_questions'] = array(
       'fields'      => array(
-          'pool_nid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'pool_vid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'question_nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'question_vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'result_id'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
-          'answer'          => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of answer.',),
-          'is_evaluated'    => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0, 'not null' => TRUE,),
-          'is_correct'      => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0, 'not null' => TRUE,),
-          'score'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,),
+          'pool_nid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'pool_vid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'result_id'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'answer'          => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of answer.'),
+          'is_evaluated'    => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0, 'not null' => TRUE),
+          'is_correct'      => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0, 'not null' => TRUE),
+          'score'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
           'answer_feedback' => array('type' => 'text'),
       ),
       'primary key' => array(
@@ -40,4 +45,11 @@ function question_pool_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Rename {quiz_pool_user_answers}.question_nid to {quiz_pool_user_answers}.question_qid
+ */
+function question_pool_update_7600() {
+  db_change_field('quiz_pool_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
 }

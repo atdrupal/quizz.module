@@ -18,7 +18,7 @@ class PoolQuestion extends QuestionPlugin {
   public function delete($single_revision = FALSE) {
     parent::delete($single_revision);
     $delete_ans = db_delete('quiz_pool_user_answers');
-    $delete_ans->condition('question_nid', $this->question->qid);
+    $delete_ans->condition('question_qid', $this->question->qid);
     if ($single_revision) {
       $delete_ans->condition('question_vid', $this->question->vid);
     }

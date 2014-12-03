@@ -67,7 +67,7 @@ class PoolResponse extends QuizQuestionResponse {
   public function save() {
     db_insert('quiz_pool_user_answers')
       ->fields(array(
-          'question_nid' => $this->question->qid,
+          'question_qid' => $this->question->qid,
           'question_vid' => $this->question->vid,
           'result_id'    => $this->rid,
           'score'        => (int) $this->getScore(),
@@ -83,7 +83,7 @@ class PoolResponse extends QuizQuestionResponse {
    */
   public function delete() {
     db_delete('quiz_pool_user_answers')
-      ->condition('question_nid', $this->question->qid)
+      ->condition('question_qid', $this->question->qid)
       ->condition('question_vid', $this->question->vid)
       ->condition('result_id', $this->rid)
       ->execute();
@@ -142,7 +142,7 @@ class PoolResponse extends QuizQuestionResponse {
    */
   public function getReportFormResponse($showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE) {
     $result = db_select('quiz_pool_user_answers_questions', 'p')
-      ->fields('p', array('question_nid', 'question_nid'))
+      ->fields('p', array('question_qid', 'question_qid'))
       ->condition('pool_nid', $this->question->qid)
       ->condition('pool_vid', $this->question->vid)
       ->condition('result_id', $this->rid)

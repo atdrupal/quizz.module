@@ -76,7 +76,7 @@ class AnswerForm {
       $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $this->result_id, $question);
       $elements = element_children($question_form);
       foreach ($elements as $element) {
-        if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id'))) {
+        if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id'))) {
           $form[$element] = $question_form[$element];
         }
       }

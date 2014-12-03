@@ -20,9 +20,9 @@ function _question_pool_evaluate_question($pool, $question, $result_id, $answer)
     // the case where the user has not gone back (since there will be no entries
     // to delete). So we always run the delete.
     db_delete('quiz_pool_user_answers_questions')
-      ->condition('pool_nid', $pool->nid)
+      ->condition('pool_nid', $pool->qid)
       ->condition('pool_vid', $pool->vid)
-      ->condition('question_nid', $result->nid)
+      ->condition('question_qid', $result->qid)
       ->condition('question_vid', $result->vid)
       ->condition('result_id', $result->rid)
       ->execute();
@@ -35,9 +35,9 @@ function _question_pool_evaluate_question($pool, $question, $result_id, $answer)
     // Insert.
     db_insert('quiz_pool_user_answers_questions')
       ->fields(array(
-          'pool_nid'     => $pool->nid,
+          'pool_nid'     => $pool->qid,
           'pool_vid'     => $pool->vid,
-          'question_nid' => $result->nid,
+          'question_qid' => $result->qid,
           'question_vid' => $result->vid,
           'result_id'    => $result->rid,
           'answer'       => serialize($answer),
@@ -54,7 +54,7 @@ function quiz_pool_question_get_result($pool_id, $rid, $question_id) {
   $result = db_select('quiz_pool_user_answers_questions', 'p')
     ->fields('p')
     ->condition('pool_nid', $pool_id)
-    ->condition('question_nid', $question_id)
+    ->condition('question_qid', $question_id)
     ->condition('result_id', $rid)
     ->execute()
     ->fetchObject();
@@ -85,9 +85,9 @@ function question_pool_answer_submit(&$form, &$form_state) {
   $wrapper = entity_metadata_wrapper('node', $pool);
   $total = $wrapper->field_question_reference->count();
   $session = &$_SESSION['quiz_' . $qid];
-  $passed = &$session['pool_' . $pool->nid]['passed'];
+  $passed = &$session['pool_' . $pool->qid]['passed'];
   $answer = !empty($form_state['input']['tries']) ? $form_state['input']['tries'] : "";
-  $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta']]->value();
+  $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta']]->value();
 
   if ($question) {
     $result = _question_pool_evaluate_question($pool, $question, $rid, $answer);
@@ -100,18 +100,18 @@ function question_pool_answer_submit(&$form, &$form_state) {
         $passed = true;
       }
 
-      if ($session['pool_' . $pool->nid]['delta'] < $total) {
-        $session['pool_' . $pool->nid]['delta'] ++;
+      if ($session['pool_' . $pool->qid]['delta'] < $total) {
+        $session['pool_' . $pool->qid]['delta'] ++;
       }
     }
   }
 
   if ($passed) {
-    $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta'] - 1]->value();
-    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+    $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta'] - 1]->value();
+    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
     $elements = element_children($question_form);
     foreach ($elements as $element) {
-      if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+      if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id')))
         unset($form[$element]);
     }
     $form['tries'] = array(
@@ -125,20 +125,20 @@ function question_pool_answer_submit(&$form, &$form_state) {
     unset($form['navigation']['submit']['#attributes']['class']['js-hide']);
   }
   else {
-    $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta'] - 1]->value();
-    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+    $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta'] - 1]->value();
+    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
     $elements = element_children($question_form);
     foreach ($elements as $element) {
-      if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id'))) {
+      if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id'))) {
         unset($form[$element]);
       }
     }
-    if ($session['pool_' . $pool->nid]['delta'] < $total) {
-      $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta']]->value();
-      $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+    if ($session['pool_' . $pool->qid]['delta'] < $total) {
+      $question = $wrapper->field_question_reference[$session['pool_' . $pool->qid]['delta']]->value();
+      $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
       $elements = element_children($question_form);
       foreach ($elements as $element) {
-        if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+        if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id')))
           $form[$element] = $question_form[$element];
       }
     }
@@ -164,9 +164,9 @@ function question_pool_answer_form_rebuild($form) {
   $total = $wrapper->field_question_reference->count();
 
   $session = $_SESSION['quiz_' . $qid];
-  $passed = $session['pool_' . $pool->nid]['passed'];
+  $passed = $session['pool_' . $pool->qid]['passed'];
 
-  if (!$passed && $session['pool_' . $pool->nid]['delta'] < $total) {
+  if (!$passed && $session['pool_' . $pool->qid]['delta'] < $total) {
     $form['navigation']['submit']['#attributes']['class']['js-hide'] = 'js-hide';
   }
   return $form;
@@ -179,13 +179,13 @@ function question_pool_retry_submit(&$form, &$form_state) {
 
   $wrapper = entity_metadata_wrapper('node', $pool);
   $question = $wrapper->field_question_reference[0]->value();
-  $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+  $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
   $elements = element_children($question_form);
   foreach ($elements as $element) {
-    if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+    if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id')))
       $form[$element] = $question_form[$element];
   }
-  unset($_SESSION['quiz_' . $qid]['pool_' . $pool->nid]);
+  unset($_SESSION['quiz_' . $qid]['pool_' . $pool->qid]);
 }
 
 /**
