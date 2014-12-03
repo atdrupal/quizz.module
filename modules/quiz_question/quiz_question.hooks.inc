@@ -273,13 +273,15 @@ function quiz_question_modules_enabled($modules) {
       continue;
     }
 
-    entity_create('quiz_question_type', array(
-        'type'        => 'default_' . $module,
-        'label'       => $info[$module]['name'],
-        'status'      => 0,
-        'plugin'      => $module,
-        'description' => isset($info[$module]['description']) ? $info[$module]['description'] : '',
-    ))->save();
+    foreach ($info as $plugin_name => $plugin_info) {
+      entity_create('quiz_question_type', array(
+          'type'        => 'default_' . $plugin_name,
+          'label'       => $plugin_info['name'],
+          'status'      => 0,
+          'plugin'      => $plugin_name,
+          'description' => isset($plugin_info['description']) ? $plugin_info['description'] : '',
+      ))->save();
+    }
   }
 }
 
