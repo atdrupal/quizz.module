@@ -5,6 +5,7 @@ namespace Drupal\quiz_question\Entity;
 use Drupal\quiz_question\QuestionPlugin;
 use Entity;
 use RuntimeException;
+use Drupal\quizz\Entity\Result;
 use stdClass;
 
 class Question extends Entity {
@@ -139,6 +140,40 @@ class Question extends Entity {
   public function getModule() {
     $info = $this->getPluginInfo();
     return $info['module'];
+  }
+
+  /**
+   * @TODO The method name maybe wrong, I (Andy) not really know what doest this
+   * function do. Moved to here from quiz_question_report_form() function.
+   */
+  public function findLegacyMaxScore(Result $result) {
+    // If need to specify the score weight if it isn't already specified.
+    if (isset($this->score_weight)) {
+      return;
+    }
+
+    if ($relationship = $this->getController()->findRelationship($result->getQuiz(), $this)) {
+      $max_score = $relationship->max_score;
+    }
+
+    if (!isset($max_score)) {
+      $max_score = db_query('SELECT qt.max_score
+        FROM {quiz_results} result
+         JOIN {quiz_results_answers} answer ON (result.result_id = answer.result_id)
+         JOIN {quiz_terms} qt ON (qt.vid = result.quiz_vid AND qt.tid = answer.tid)
+         WHERE result.result_id = :rid
+          AND answer.question_qid = :question_id
+          AND answer.question_vid = :question_vid', array(
+          ':rid'          => $result->result_id,
+          ':question_id'  => $this->qid,
+          ':question_vid' => $this->vid
+        ))->fetchField();
+    }
+
+    $this->score_weight = 0;
+    if (!empty($max_score) && $this->max_score) {
+      $this->score_weight = $max_score / $this->max_score;
+    }
   }
 
 }

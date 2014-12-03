@@ -152,29 +152,7 @@ function quiz_question_access_to_score($question_vid, $result_id) {
  * @return array
  */
 function quiz_question_report_form(Result $result, Question $question) {
-  // If need to specify the score weight if it isn't already specified.
-  if (!isset($question->score_weight)) {
-    if ($relationship = quiz_question_controller()->findRelationship($result->getQuiz(), $question)) {
-      $max_score = $relationship->max_score;
-    }
-
-    if (NULL === $max_score) {
-      $max_score = db_query('SELECT qt.max_score
-        FROM {quiz_results} result
-         JOIN {quiz_results_answers} answer ON (result.result_id = answer.result_id)
-         JOIN {quiz_terms} qt ON (qt.vid = result.quiz_vid AND qt.tid = answer.tid)
-         WHERE result.result_id = :rid AND answer.question_qid = :question_id AND answer.question_vid = :question_vid', array(
-          ':rid'          => $result->result_id,
-          ':question_id'  => $question->qid,
-          ':question_vid' => $question->vid
-        ))->fetchField();
-    }
-
-    $question->score_weight = 0;
-    if (!empty($max_score) && $question->max_score) {
-      $question->score_weight = $max_score / $question->max_score;
-    }
-  }
+  $question->findLegacyMaxScore($result);
 
   return quiz_answer_controller()
       ->getInstance($result->result_id, $question, $question->answers[0])
