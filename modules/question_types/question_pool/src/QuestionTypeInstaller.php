@@ -2,11 +2,11 @@
 
 namespace Drupal\question_pool;
 
-class Installer {
+class QuestionTypeInstaller {
 
   private $field_name = 'field_question_reference';
 
-  public function install() {
+  public function setup() {
     $this->createEntityReferenceField();
 
     // Override default weight to make body field appear first

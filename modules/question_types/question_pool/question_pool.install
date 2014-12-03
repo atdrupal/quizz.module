@@ -1,13 +1,5 @@
 <?php
 
-use Drupal\question_pool\Installer;
-
-function question_pool_install() {
-  require_once dirname(__FILE__) . '/src/Installer.php';
-  $installer = new Installer();
-  $installer->install();
-}
-
 function question_pool_uninstall() {
   field_delete_field('field_question_reference');
 }

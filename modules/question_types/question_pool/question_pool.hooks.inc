@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\question_pool\QuestionTypeInstaller;
+use Drupal\quiz_question\Entity\QuestionType;
+
 /**
  * Implements hook_quiz_question_info().
  */
@@ -104,5 +107,16 @@ function question_pool_node_update($node) {
       ->condition('nid', $pool->node->nid)
       ->condition('vid', $pool->node->vid)
       ->execute();
+  }
+}
+
+/**
+ * Implements hook_ENTITYTYPE_insert()
+ * @param QuestionType $question_type
+ */
+function question_pool_quiz_question_type_insert($question_type) {
+  if ('question_pool' === $question_type->plugin) {
+    $installer = new QuestionTypeInstaller();
+    $installer->setup();
   }
 }
