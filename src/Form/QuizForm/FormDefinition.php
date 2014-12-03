@@ -22,7 +22,8 @@ class FormDefinition extends FormHelper {
         drupal_set_message($msg);
       }
 
-      foreach (quiz_controller()->getSettingIO()->getUserDefaultSettings() as $k => $v) {
+      $defaults = quiz_controller()->getSettingIO()->get(TRUE, $this->quiz->type);
+      foreach ($defaults as $k => $v) {
         if (!isset($this->quiz->{$k}) || is_null($this->quiz->{$k})) {
           $this->quiz->{$k} = $v;
         }
