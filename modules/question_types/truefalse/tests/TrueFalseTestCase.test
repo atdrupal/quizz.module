@@ -10,8 +10,8 @@ class TrueFalseTestCase extends QuizQuestionTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('True/False'),
-        'description' => t('Unit test for true or false question type.'),
-        'group'       => t('Quiz question'),
+        'description' => t('Test cases for true or false question type.'),
+        'group'       => 'Quiz question',
     );
   }
 
@@ -30,7 +30,7 @@ class TrueFalseTestCase extends QuizQuestionTestCase {
           'type'           => 'truefalse',
           'title'          => 'TF 1 title',
           'correct_answer' => 1,
-          'body'           => array(LANGUAGE_NONE => array(array('value' => 'TF 1 body text'))),
+          'body'           => 'TF 1 body text',
     ));
   }
 

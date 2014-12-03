@@ -11,7 +11,7 @@ class QuizEntityTestCase extends QuizTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Quiz entity'),
-        'description' => t('Unit test for Quiz entity.'),
+        'description' => t('Test cases for Quiz entity.'),
         'group'       => t('Quiz'),
     );
   }

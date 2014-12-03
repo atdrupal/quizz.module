@@ -17,8 +17,8 @@ class QuizDirectionsTestCase extends QuizQuestionTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Quiz directions'),
-        'description' => t('Unit test for Quiz directions question type.'),
-        'group'       => t('Quiz question'),
+        'description' => t('Test cases for Quiz directions question type.'),
+        'group'       => 'Quiz question',
     );
   }
 

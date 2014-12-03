@@ -5,7 +5,7 @@ class QuizTimerTestCase extends QuizTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Quiz timer'),
-        'description' => t('Unit test for Quiz and question timer behaviors.'),
+        'description' => t('Test cases for Quiz and question timer behaviors.'),
         'group'       => t('Quiz'),
     );
   }
