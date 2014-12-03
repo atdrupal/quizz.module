@@ -180,7 +180,9 @@ abstract class QuestionPlugin {
    * @param $form
    *  The processed form.
    */
-  abstract public function validate(array &$form);
+  public function validate(array &$form) {
+
+  }
 
   /**
    * Get the form through which the user will answer the question.
@@ -238,7 +240,9 @@ abstract class QuestionPlugin {
   /**
    * Save question type specific node properties
    */
-  abstract public function saveEntityProperties($is_new = FALSE);
+  public function saveEntityProperties($is_new = FALSE) {
+    
+  }
 
   /**
    * Save this Question to the specified Quiz.

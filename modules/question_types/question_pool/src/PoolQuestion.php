@@ -13,22 +13,6 @@ class PoolQuestion extends QuestionPlugin {
   private $question;
 
   /**
-   *
-   */
-  public function saveEntityProperties($is_new = FALSE) {
-
-  }
-
-  /**
-   * Implementation of validate
-   *
-   * QuizQuestion#validate()
-   */
-  public function validate(array &$form) {
-
-  }
-
-  /**
    * Implementation of delete
    *
    * @see QuizQuestion#delete()
