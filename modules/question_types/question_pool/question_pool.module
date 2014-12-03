@@ -1,0 +1,324 @@
+<?php
+
+/**
+ * Implements hook_quiz_question_info().
+ */
+function question_pool_quiz_question_info() {
+  return array(
+    'pool' => array(
+      'name' => t('Question pool'),
+      'description' => t('This provides question pool for use by the Quiz module.'),
+      'question provider' => 'QuestionPool',
+      'response provider' => 'ResponsePool',
+      'module' => 'quiz_question', // All wrapper functions are in that module.
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function question_pool_menu() {
+  $items['question-pool/%node/%/%ctools_js/form'] = array(
+    'title' => t('Question pool'),
+    'page callback' => 'question_pool_wizard',
+    'page arguments' => array(1, 2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implement hook_forms.
+ */
+function question_pool_forms($form_id, $args) {
+  $forms = array();
+
+  $form_ids = explode("__", $form_id);
+  if (!empty($form_ids) && count($form_ids) == 2) {
+    $question_form_id = reset($form_ids);
+  }
+  else {
+    return $forms;
+  }
+
+  $question_types = _quiz_question_get_implementations();
+  foreach (array_keys($question_types) as $type) {
+    if ($question_form_id == $type . '_question_pool_form') {
+      $forms[$form_id]['callback'] = 'question_pool_form';
+    }
+  }
+  return $forms;
+}
+
+function question_pool_form($form, &$form_state, $result_id, $question) {
+//  $result_id = $form_state['#rid'];
+//  $question = $form_state['form_info']['forms'][$step]['question'];
+
+  $question = _quiz_question_get_instance($question);
+  $form += $question->getAnsweringForm($form_state, $result_id);
+
+//  $form['#submit'][] = 'question_pool_form_submit';
+  $form['#validate'][] = 'question_pool_form_validate';
+  return $form;
+}
+
+function _question_pool_evaluate_question($pool, $question, $result_id, $answer) {
+  $response = _quiz_question_response_get_instance($result_id, $question, $answer);
+  // Convert the response to a bare object.
+  $result = $response->toBareObject();
+
+  // If a result_id is set, we are taking a quiz.
+  if ($result_id && isset($answer)) {
+    // We don't know whether or not the user has gone back a question. However,
+    // we do know that deleting a question for this result set should be safe in
+    // the case where the user has not gone back (since there will be no entries
+    // to delete). So we always run the delete.
+    // Delete
+    db_delete('quiz_pool_user_answers_questions')
+        ->condition('pool_nid', $pool->nid)
+        ->condition('pool_vid', $pool->vid)
+        ->condition('question_nid', $result->nid)
+        ->condition('question_vid', $result->vid)
+        ->condition('result_id', $result->rid)
+        ->execute();
+
+    //fix error with score
+    if ($result->score < 0) {
+      $result->score = 0;
+    }
+
+    // Insert.
+    db_insert('quiz_pool_user_answers_questions')
+        ->fields(array(
+          'pool_nid' => $pool->nid,
+          'pool_vid' => $pool->vid,
+          'question_nid' => $result->nid,
+          'question_vid' => $result->vid,
+          'result_id' => $result->rid,
+          'answer' => serialize($answer),
+          'is_evaluated' => (int) $response->isEvaluated(),
+          'is_correct' => $result->is_correct,
+          'score' => (int) $result->score,
+        ))
+        ->execute();
+  }
+  return $result;
+}
+
+function quiz_pool_question_get_result($pool_id, $rid, $question_id) {
+  $result = db_select('quiz_pool_user_answers_questions', 'p')
+      ->fields('p')
+      ->condition('pool_nid', $pool_id)
+      ->condition('question_nid', $question_id)
+      ->condition('result_id', $rid)
+      ->execute()
+      ->fetchObject();
+
+  if ($result) {
+    $result->answer = unserialize($result->answer);
+  }
+  return $result;
+}
+
+/**
+ * Handles the 'next' click on the add/edit pane form wizard.
+ *
+ * All we need to do is store the updated pane in the cache.
+ */
+function question_pool_wizard_next(&$form_state) {
+  if (isset($form_state['#result']->is_correct) && $form_state['#result']->is_correct) {
+    $form_state['#is_passed'] = 1;
+    $form_state['complete'] = TRUE;
+  }
+}
+
+/**
+ * Handles the 'finish' click on teh add/edit pane form wizard.
+ *
+ * All we need to do is set a flag so the return can handle adding
+ * the pane.
+ */
+function question_pool_wizard_finish(&$form_state) {
+  if (isset($form_state['#result']->is_correct) && $form_state['#result']->is_correct) {
+    $form_state['#is_passed'] = 1;
+  }
+  $form_state['complete'] = TRUE;
+}
+
+/**
+ * Implement hook_node_insert().
+ */
+function question_pool_node_insert($node) {
+  // Update pool score when insert node.
+  if ($node->type == 'pool') {
+    $pool = _quiz_question_get_instance($node);
+    db_update('quiz_question_properties')
+        ->fields(array(
+          'max_score' => $pool->getMaximumScore(),
+        ))
+        ->condition('nid', $pool->node->nid)
+        ->condition('vid', $pool->node->vid)
+        ->execute();
+  }
+}
+
+/**
+ * Implement hook_node_update().
+ */
+function question_pool_node_update($node) {
+  // Update pool score when update node.
+  if ($node->type == 'pool') {
+    $pool = _quiz_question_get_instance($node);
+    db_update('quiz_question_properties')
+        ->fields(array(
+          'max_score' => $pool->getMaximumScore(),
+        ))
+        ->condition('nid', $pool->node->nid)
+        ->condition('vid', $pool->node->vid)
+        ->execute();
+  }
+}
+
+/**
+ * @see QuestionPool::getAnsweringForm()
+ * ajax callack
+ */
+function question_pool_ajax_callback($form, $form_state) {
+  return $form;
+}
+
+/**
+ * @see QuestionPool::getAnsweringForm()
+ * submit callback
+ */
+function question_pool_answer_submit(&$form, &$form_state) {
+  $btn = $form_state['triggering_element'];
+  $rid = $form['#rid'];
+  $pool = $form['#pool'];
+  $qid = $form['#qid'];
+
+  $wrapper = entity_metadata_wrapper('node', $pool);
+  $total = $wrapper->field_question_reference->count();
+
+  $session = &$_SESSION['quiz_' . $qid];
+
+  $passed = &$session['pool_' . $pool->nid]['passed'];
+  //validate
+
+  $answer = !empty($form_state['input']['tries'])?$form_state['input']['tries']:"";
+  $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta']]->value();
+
+  if ($question) {
+    $result = _question_pool_evaluate_question($pool, $question, $rid, $answer);
+
+    if ($result->is_valid !== TRUE) {
+      form_set_error('tries', $result->is_valid);
+    }
+    else {
+      if ($result->is_correct)
+        $passed = true;
+
+      if ($session['pool_' . $pool->nid]['delta'] < $total)
+        $session['pool_' . $pool->nid]['delta']++;
+    }
+  }
+
+  if ($passed) {
+    $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta'] - 1]->value();
+    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+    $elements = element_children($question_form);
+    foreach ($elements as $element) {
+      if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+        unset($form[$element]);
+    }
+    $form['tries'] = array(
+      '#type' => 'hidden',
+      '#value' => 1,
+      '#attributes' => array('class' => array('tries-pool-value')),
+      '#name' => 'tries'
+    );
+    $form['msg'] = array('#markup' => '<p class="pool-message">Pool is passed.</p>');
+    unset($form['navigation']['pool_btn']);
+    unset($form['navigation']['submit']['#attributes']['class']['js-hide']);
+  }
+  else {
+    $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta'] - 1]->value();
+    $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+    $elements = element_children($question_form);
+    foreach ($elements as $element) {
+      if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+        unset($form[$element]);
+    }
+    if ($session['pool_' . $pool->nid]['delta'] < $total) {
+      $question = $wrapper->field_question_reference[$session['pool_' . $pool->nid]['delta']]->value();
+      $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+      $elements = element_children($question_form);
+      foreach ($elements as $element) {
+        if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+          $form[$element] = $question_form[$element];
+      }
+    }
+    else {
+      $form['tries'] = array(
+        '#type' => 'hidden',
+        '#value' => 0,
+        '#attributes' => array('class' => array('tries-pool-value')),
+        '#name' => 'tries'
+      );
+      $form['msg'] = array('#markup' => '<p class="pool-message">Pool is done.</p>');
+      unset($form['navigation']['pool_btn']);
+      unset($form['navigation']['submit']['#attributes']['class']['js-hide']);
+    }
+  }
+  $form['navigation']['#weight'] = 100;
+}
+
+function question_pool_answer_form_rebuild($form) {
+  $qid = $form['#qid'];
+  $pool = $form['#pool'];
+  $wrapper = entity_metadata_wrapper('node', $pool);
+  $total = $wrapper->field_question_reference->count();
+
+  $session = $_SESSION['quiz_' . $qid];
+  $passed = $session['pool_' . $pool->nid]['passed'];
+
+  if (!$passed && $session['pool_' . $pool->nid]['delta'] < $total) {
+    $form['navigation']['submit']['#attributes']['class']['js-hide'] = 'js-hide';
+  }
+  return $form;
+}
+
+function question_pool_retry_submit(&$form, &$form_state){
+  $pool = $form['#pool'];
+  $rid = $form['#rid'];
+  $qid = $form['#qid'];
+
+  $wrapper = entity_metadata_wrapper('node', $pool);
+  $question = $wrapper->field_question_reference[0]->value();
+  $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->nid, $rid, $question);
+  $elements = element_children($question_form);
+  foreach ($elements as $element) {
+    if (!in_array($element, array('question_nid', 'form_build_id', 'form_token', 'form_id')))
+      $form[$element] = $question_form[$element];
+  }
+  unset($_SESSION['quiz_' . $qid]['pool_' . $pool->nid]);
+}
+
+function question_pool_node_load($nodes, $types) {
+  foreach ($nodes as $node) {
+    if ($node->type == 'pool' && !empty($node->field_question_reference['und'])) {
+      $questions = field_get_items('node', $node, 'field_question_reference');
+      $delta = 0;
+      unset($nodes[$node->nid]->field_question_reference['und']);
+      foreach ($questions as $q) {
+        $check = node_load($q['target_id']);
+        if ($check) {
+          $nodes[$node->nid]->field_question_reference['und'][$delta]['target_id'] = $q['target_id'];
+          $delta++;
+        }
+      }
+    }
+  }
+}
