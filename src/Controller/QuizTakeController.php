@@ -82,12 +82,7 @@ class QuizTakeController {
       if (!$this->checkAvailability()) {
         throw new RuntimeException(t('This @quiz is closed.', array('@quiz' => QUIZ_NAME)));
       }
-
       $this->result = quiz_controller()->getResultGenerator()->generate($this->quiz, $this->account);
-      $_SESSION['quiz'][$this->quiz->qid]['result_id'] = $this->result->result_id;
-      $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
-
-      module_invoke_all('quiz_begin', $this->quiz, $this->result->result_id);
     }
 
     if (TRUE !== $this->quiz->isAvailable($this->account)) {

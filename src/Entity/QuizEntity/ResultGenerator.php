@@ -61,6 +61,9 @@ class ResultGenerator {
       ))->save();
     }
 
+    $_SESSION['quiz'][$quiz->qid] = array('result_id' => $result->result_id, 'current' => 1);
+    module_invoke_all('quiz_begin', $this->quiz, $this->result->result_id);
+
     return quiz_result_load($result->result_id);
   }
 
