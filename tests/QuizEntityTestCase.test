@@ -25,11 +25,11 @@ class QuizEntityTestCase extends QuizTestCase {
    * Reduce runtime from 1m to ~30s.
    */
   public function testQuizEntityWrapper() {
-    $this->checkInitQuizEntityType();
-    $this->checkQuizEntity();
-    $this->checkQuizMethods();
+    #$this->checkInitQuizEntityType();
+    #$this->checkQuizEntity();
+    #$this->checkQuizMethods();
     $this->checkQuizDefaults();
-    $this->checkQuizCreation();
+    #$this->checkQuizCreation();
   }
 
   private function checkInitQuizEntityType() {
@@ -145,8 +145,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->drupalGet('admin/quiz/settings/quiz-form');
     $this->assertNoFieldChecked('edit-allow-resume');
 
-    // Check that the default carried over. Check that other options remained
-    // set.
+    // Check that the default carried over. Check that other options remained set.
     $this->drupalGet('quiz/add');
     $this->assertNoFieldChecked('edit-allow-resume');
     $this->assertFieldChecked('edit-allow-skipping');
@@ -189,7 +188,7 @@ class QuizEntityTestCase extends QuizTestCase {
   /**
    * Test quiz revisioning.
    */
-  function testQuizRevisioning() {
+  function ___testQuizRevisioning() {
     $quiz = $this->linkQuestionToQuiz($question = $this->drupalCreateQuestion(array(
         'type'           => 'truefalse',
         'title'          => 'Revision TRUE',
