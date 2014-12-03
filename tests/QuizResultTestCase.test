@@ -12,6 +12,7 @@ class QuizResultTestCase extends QuizTestCase {
 
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
     $modules[] = $this->questionPlugin = 'truefalse';
+    $modules[] = 'text';
     parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
@@ -193,6 +194,51 @@ class QuizResultTestCase extends QuizTestCase {
     $this->assertEqual(count($results_4th), 1, 'Found only one quiz result');
     $result_4th = reset($results_4th);
     $this->assertEqual($result_4th->score, 75, 'Quiz score was 75%');
+  }
+
+  /**
+   * Test fieldable Quiz results.
+   */
+  function testFieldableResults() {
+    // Add a field to quiz result and make it required for starting.
+    field_create_field(array('field_name' => 'quiz_result_field_a', 'type' => 'text'));
+    field_create_instance(array(
+        'field_name'  => 'quiz_result_field_a',
+        'entity_type' => 'quiz_result',
+        'bundle'      => 'quiz',
+        'label'       => 'Result field A',
+        'widget'      => array(
+            'active'   => 1,
+            'module'   => 'text',
+            'settings' => array('size' => 60),
+            'type'     => 'text_textfield',
+            'weight'   => 1,
+        ),
+        'settings'    => array('quiz_result_user_field' => 1),
+        'required'    => 1,
+    ));
+
+    $quizA = $this->drupalCreateQuiz();
+    $questionA = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'feedback' => 'Q1Feedback'));
+    $this->linkQuestionToQuiz($questionA, $quizA);
+
+    // Taking quiz
+    $this->drupalLogin($this->user);
+
+    // Check if field shows up and user is not yet enrolled.
+    $this->drupalGet("quiz/$quizA->qid/take");
+    $this->assertFieldById('edit-quiz-result-field-a-und-0-value');
+
+    // Submit the form, Check that we hooked into Form API correctly.
+    $this->drupalPost(NULL, array(), t('Start Quiz'));
+    $this->assertText('field is required');
+
+    // SUbmit the form with data.
+    $this->drupalPost(NULL, array('quiz_result_field_a[und][0][value]' => 'test 123'), t('Start Quiz'));
+
+    // Check the result exists now.
+    $result = entity_load('quiz_result', FALSE, array('quiz_qid' => $quizA->qid, 'uid' => $this->user->uid));
+    $this->assertTrue(!empty($result), 'Quiz result exists.');
   }
 
 }

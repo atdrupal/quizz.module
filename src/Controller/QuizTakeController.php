@@ -28,20 +28,23 @@ class QuizTakeController {
       return $this->quiz->rendered_content;
     }
 
+    // @kludge above, how are we going to check this form for fields?
+    // checking for field instances is easy, but what about these one-offs?
+    // maybe we can require add-on field items to put something in the
+    // $form so that we can check it. I don't want to have the "start"
+    // button show if we don't have anything to ask the user.
+    if (empty($_SESSION['quiz'][$this->quiz->qid]) && field_info_instances('quiz_result', $this->quiz->type)) {
+      require_once drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
+      $result = entity_create('quiz_result', array(
+          'type'     => $this->quiz->type,
+          'quiz_qid' => $this->quiz->qid,
+          'quiz_vid' => $this->quiz->vid
+      ));
+      return entity_ui_get_form('quiz_result', $result, 'edit');
+    }
+
     try {
       if ($this->initQuizResult() && ($this->result)) {
-        // @kludge above, how are we going to check this form for fields?
-        // checking for field instances is easy, but what about these one-offs?
-        // maybe we can require add-on field items to put something in the
-        // $form so that we can check it. I don't want to have the "start"
-        // button show if we don't have anything to ask the user.
-        if ($instances = field_info_instances('quiz_result', $this->quiz->type)) {
-          if (empty($_SESSION['quiz'][$this->quiz->qid]['current'])) {
-            require_once drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
-            return entity_ui_get_form('quiz_result', $this->result, 'edit');
-          }
-        }
-
         drupal_goto($this->getQuestionTakePath());
       }
     }
@@ -82,12 +85,7 @@ class QuizTakeController {
       if (!$this->checkAvailability()) {
         throw new RuntimeException(t('This @quiz is closed.', array('@quiz' => QUIZ_NAME)));
       }
-
       $this->result = quiz_controller()->getResultGenerator()->generate($this->quiz, $this->account);
-      $_SESSION['quiz'][$this->quiz->qid]['result_id'] = $this->result->result_id;
-      $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
-
-      module_invoke_all('quiz_begin', $this->quiz, $this->result->result_id);
     }
 
     if (TRUE !== $this->quiz->isAvailable($this->account)) {

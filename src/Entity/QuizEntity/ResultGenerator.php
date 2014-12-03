@@ -15,10 +15,11 @@ class ResultGenerator {
 
   /**
    * @param QuizEntity $quiz
+   * @param Result $result
    * @return Result
    * @throws RuntimeException
    */
-  public function generate(QuizEntity $quiz, $account) {
+  public function generate(QuizEntity $quiz, $account, Result $base_result = NULL) {
     if (!$questions = $quiz->getQuestionIO()->getQuestionList()) {
       throw new RuntimeException(t(
         'No questions were found. Please !assign before trying to take this @quiz.', array(
@@ -26,10 +27,10 @@ class ResultGenerator {
           '!assign' => l(t('assign questions'), 'quiz/' . $quiz->identifier() . '/questions')
       )));
     }
-    return $this->doGenerate($quiz, $questions, $account);
+    return $this->doGenerate($quiz, $questions, $account, $base_result);
   }
 
-  private function doGenerate(QuizEntity $quiz, $questions, $account) {
+  private function doGenerate(QuizEntity $quiz, $questions, $account, Result $base_result = NULL) {
     // correct item numbers
     $count = $display_count = 0;
     $question_list = array();
@@ -43,14 +44,12 @@ class ResultGenerator {
     }
 
     // Write the layout for this result.
-    $result = entity_create('quiz_result', array(
-        'type'       => $quiz->type,
-        'quiz_qid'   => $quiz->identifier(),
-        'quiz_vid'   => $quiz->vid,
-        'uid'        => $account->uid,
-        'time_start' => REQUEST_TIME,
-        'layout'     => $question_list,
-    ));
+    $result = NULL !== $base_result ? $base_result : entity_create('quiz_result', array('type' => $quiz->type));
+    $result->quiz_qid = $quiz->identifier();
+    $result->quiz_vid = $quiz->vid;
+    $result->uid = $account->uid;
+    $result->time_start = REQUEST_TIME;
+    $result->layout = $question_list;
     $result->save();
 
     foreach ($question_list as $i => $question) {
@@ -61,6 +60,9 @@ class ResultGenerator {
           'number'       => $i,
       ))->save();
     }
+
+    $_SESSION['quiz'][$quiz->qid] = array('result_id' => $result->result_id, 'current' => 1);
+    module_invoke_all('quiz_begin', $quiz, $result->result_id);
 
     return quiz_result_load($result->result_id);
   }
