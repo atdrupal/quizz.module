@@ -96,6 +96,7 @@ class Schema7060 {
             'show_passed'                => array('type' => 'int', 'size' => 'tiny', 'unsigned' => FALSE, 'not null' => TRUE, 'default' => 1),
             'mark_doubtful'              => array('type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0),
             'review_options'             => array('type' => 'text', 'serialize' => TRUE),
+            'build_on_last'              => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE, 'default' => ''),
         ),
         'primary key' => array('vid'),
         'indexes'     => array('fpid' => array('qid', 'vid')),
