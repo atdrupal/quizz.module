@@ -30,7 +30,7 @@ function question_pool_schema() {
       'fields'      => array(
           'pool_nid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'pool_vid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'question_nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_qid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'question_vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'result_id'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'answer'          => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of answer.'),
@@ -52,4 +52,11 @@ function question_pool_schema() {
  */
 function question_pool_update_7600() {
   db_change_field('quiz_pool_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+}
+
+/**
+ * Rename {quiz_pool_user_answers_questions}.question_nid to {quiz_pool_user_answers_questions}.question_qid
+ */
+function question_pool_update_7601() {
+  db_change_field('quiz_pool_user_answers_questions', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
 }
