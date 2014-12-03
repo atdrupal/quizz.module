@@ -6,6 +6,7 @@ core = 7.x
 dependencies[] = ctools
 dependencies[] = entity
 dependencies[] = filter
+dependencies[] = quiz_question
 dependencies[] = views
 dependencies[] = views_bulk_operations
 dependencies[] = xautoload
