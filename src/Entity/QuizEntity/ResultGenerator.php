@@ -48,7 +48,7 @@ class ResultGenerator {
       }
     }
 
-    return $this->doGenerate($quiz, $questions, $account, $base_result, $prev_result);
+    return $this->doGenerate($quiz, $questions, $account, $base_result, isset($prev_result) ? $prev_result : NULL);
   }
 
   private function doGenerate(QuizEntity $quiz, $questions, $account, Result $base_result = NULL, Result $prev_result = NULL) {
