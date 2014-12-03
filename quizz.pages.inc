@@ -12,7 +12,6 @@ use Drupal\quizz\Controller\Admin\QuizRevisionsAdminController;
 use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Controller\QuizTakeController;
 use Drupal\quizz\Controller\QuizTakeQuestionController;
-use Drupal\quizz\Controller\ResultRender;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Form\QuizAdminEntityForm;
@@ -658,9 +657,13 @@ function quiz_result_edit_quiz_form($form, &$form_state, Result $result) {
  * Quiz result submit handler.
  */
 function quiz_result_edit_quiz_form_submit($form, &$form_state) {
-  /* @var $result Result */
-  $result = $form_state['quiz_result'];
-  field_attach_submit('quiz_result', $result, $form, $form_state);
-  entity_save('quiz_result', $result);
-  $_SESSION['quiz'][$result->quiz_qid]['current'] = 1;
+  global $user;
+
+  $base_result = $form_state['quiz_result'];
+  field_attach_submit('quiz_result', $base_result, $form, $form_state);
+
+  quiz_controller()
+    ->getResultGenerator()
+    ->generate($this->quiz, $this->account, $base_result)
+  ;
 }
