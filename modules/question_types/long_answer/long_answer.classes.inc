@@ -147,12 +147,13 @@ class LongAnswerQuestion extends QuestionPlugin {
         '#description' => t('Enter your answer here. If you need more space, click on the grey bar at the bottom of this area and drag it down.'),
         '#rows'        => 15,
         '#cols'        => 60,
-      //'#theme' =>'long_answer_answering_form',
     );
+
     if (isset($result_id)) {
       $response = new LongAnswerResponse($result_id, $this->question);
       $element['#default_value'] = $response->getResponse();
     }
+
     return $element;
   }
 
