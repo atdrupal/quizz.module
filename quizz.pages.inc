@@ -664,6 +664,6 @@ function quiz_result_edit_quiz_form_submit($form, &$form_state) {
 
   quiz_controller()
     ->getResultGenerator()
-    ->generate($this->quiz, $this->account, $base_result)
+    ->generate($base_result->getQuiz(), $user, $base_result)
   ;
 }
