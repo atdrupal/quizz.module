@@ -129,6 +129,18 @@ class FormDefinition {
         '#required'      => FALSE,
     );
 
+    $form['vtabs']['configuration']['build_on_last'] = array(
+        '#type'          => 'radios',
+        '#options'       => array(
+            ''        => t('Fresh attempt every time'),
+            'correct' => t('Prepopulate with correct answers from last result'),
+            'all'     => t('Prepopulate with all answers from last result'),
+        ),
+        '#title'         => t('Each attempt builds on the last'),
+        '#default_value' => isset($config['build_on_last']) ? $config['build_on_last'] : '',
+        '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZ_NAME)),
+    );
+
     $form['vtabs']['configuration']['quiz_remove_partial_quiz_record'] = array(
         '#type'          => 'select',
         '#title'         => t('Remove incomplete quiz records (older than)'),

@@ -23,6 +23,16 @@ class QuizTakeController {
     $this->account = $account;
   }
 
+  private function renderResultForm() {
+    require_once drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
+    $result = entity_create('quiz_result', array(
+        'type'     => $this->quiz->type,
+        'quiz_qid' => $this->quiz->qid,
+        'quiz_vid' => $this->quiz->vid
+    ));
+    return drupal_get_form('quiz_result_form', $result, 'edit');
+  }
+
   public function render() {
     if (isset($this->quiz->rendered_content)) {
       return $this->quiz->rendered_content;
@@ -33,14 +43,14 @@ class QuizTakeController {
     // maybe we can require add-on field items to put something in the
     // $form so that we can check it. I don't want to have the "start"
     // button show if we don't have anything to ask the user.
-    if (empty($_SESSION['quiz'][$this->quiz->qid]) && field_info_instances('quiz_result', $this->quiz->type)) {
-      require_once drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
-      $result = entity_create('quiz_result', array(
-          'type'     => $this->quiz->type,
-          'quiz_qid' => $this->quiz->qid,
-          'quiz_vid' => $this->quiz->vid
-      ));
-      return entity_ui_get_form('quiz_result', $result, 'edit');
+    if (empty($_SESSION['quiz'][$this->quiz->qid])) {
+      if (field_info_instances('quiz_result', $this->quiz->type)) {
+        return $this->renderResultForm();
+      }
+
+      if ($this->quiz->build_on_last && entity_load('quiz_result', FALSE, array('quiz_vid' => $this->quiz->vid, 'uid' => $this->account->uid))) {
+        return $this->renderResultForm();
+      }
     }
 
     try {
