@@ -224,7 +224,7 @@ class QuizResultTestCase extends QuizTestCase {
 
     // Take it again, ensure the correct answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    // $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
     $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
     $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
     $this->assertNoFieldChecked("edit-question-{$question_2->qid}-1");
