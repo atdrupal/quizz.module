@@ -20,7 +20,7 @@ function _question_pool_evaluate_question($pool, $question, $result_id, $answer)
     // the case where the user has not gone back (since there will be no entries
     // to delete). So we always run the delete.
     db_delete('quiz_pool_user_answers_questions')
-      ->condition('pool_nid', $pool->qid)
+      ->condition('pool_qid', $pool->qid)
       ->condition('pool_vid', $pool->vid)
       ->condition('question_qid', $result->qid)
       ->condition('question_vid', $result->vid)
@@ -35,7 +35,7 @@ function _question_pool_evaluate_question($pool, $question, $result_id, $answer)
     // Insert.
     db_insert('quiz_pool_user_answers_questions')
       ->fields(array(
-          'pool_nid'     => $pool->qid,
+          'pool_qid'     => $pool->qid,
           'pool_vid'     => $pool->vid,
           'question_qid' => $result->qid,
           'question_vid' => $result->vid,
@@ -53,7 +53,7 @@ function _question_pool_evaluate_question($pool, $question, $result_id, $answer)
 function quiz_pool_question_get_result($pool_id, $rid, $question_id) {
   $result = db_select('quiz_pool_user_answers_questions', 'p')
     ->fields('p')
-    ->condition('pool_nid', $pool_id)
+    ->condition('pool_qid', $pool_id)
     ->condition('question_qid', $question_id)
     ->condition('result_id', $rid)
     ->execute()

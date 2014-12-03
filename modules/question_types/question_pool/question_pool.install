@@ -28,7 +28,7 @@ function question_pool_schema() {
 
   $schema['quiz_pool_user_answers_questions'] = array(
       'fields'      => array(
-          'pool_nid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'pool_qid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'pool_vid'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'question_qid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'question_vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
@@ -40,7 +40,7 @@ function question_pool_schema() {
           'answer_feedback' => array('type' => 'text'),
       ),
       'primary key' => array(
-          'result_id', 'pool_nid', 'pool_vid', 'question_nid', 'question_vid',
+          'result_id', 'pool_qid', 'pool_vid', 'question_qid', 'question_vid',
       ),
   );
 
@@ -59,4 +59,11 @@ function question_pool_update_7600() {
  */
 function question_pool_update_7601() {
   db_change_field('quiz_pool_user_answers_questions', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+}
+
+/**
+ * Rename {quiz_pool_user_answers_questions}.pool_nid to {quiz_pool_user_answers_questions}.pool_qid
+ */
+function question_pool_update_7602() {
+  db_change_field('quiz_pool_user_answers_questions', 'pool_nid', 'pool_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
 }

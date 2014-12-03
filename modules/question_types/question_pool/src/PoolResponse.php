@@ -97,7 +97,7 @@ class PoolResponse extends QuizQuestionResponse {
     // Question delete $this->question is custom object.
     if (!isset($this->question->created)) {
       db_delete('quiz_pool_user_answers_questions')
-        ->condition('pool_nid', $this->question->qid)
+        ->condition('pool_qid', $this->question->qid)
         ->condition('pool_vid', $this->question->vid)
         ->condition('result_id', $this->rid)
         ->execute();
@@ -143,7 +143,7 @@ class PoolResponse extends QuizQuestionResponse {
   public function getReportFormResponse($showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE) {
     $result = db_select('quiz_pool_user_answers_questions', 'p')
       ->fields('p', array('question_qid', 'question_qid'))
-      ->condition('pool_nid', $this->question->qid)
+      ->condition('pool_qid', $this->question->qid)
       ->condition('pool_vid', $this->question->vid)
       ->condition('result_id', $this->rid)
       ->condition('is_correct', 1)
