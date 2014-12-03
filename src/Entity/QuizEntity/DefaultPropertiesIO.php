@@ -20,8 +20,8 @@ class DefaultPropertiesIO extends FormHelper {
    * @return array
    */
   public function get($remove_ids = TRUE, $type = NULL) {
-    if ($defaults = $this->getUserDefaults($remove_ids, $type)) {
-      return $defaults;
+    if ($quiz = $this->getUserDefaults($remove_ids, $type)) {
+      return $quiz;
     }
     return $this->getSystemDefaults($remove_ids, $type);
   }
@@ -33,11 +33,9 @@ class DefaultPropertiesIO extends FormHelper {
     $conds = array('status' => -1, 'uid' => $user->uid, 'qid' => 0, 'vid' => 0, 'type' => $type);
     if ($quizzes = entity_load('quiz_entity', FALSE, $conds)) {
       $quiz = reset($quizzes);
-
       if ($remove_ids) {
         $quiz->qid = $quiz->uid = $quiz->vid = $quiz->quiz_open = $quiz->quiz_close = NULL;
       }
-
       return $quiz;
     }
   }
@@ -51,7 +49,7 @@ class DefaultPropertiesIO extends FormHelper {
       }
       return $quiz;
     }
-    return entity_create('quiz_entity', $this->getQuizDefaultPropertyValues());
+    return entity_create('quiz_entity', $this->getQuizDefaultPropertyValues($type));
   }
 
   /**
@@ -60,8 +58,13 @@ class DefaultPropertiesIO extends FormHelper {
    * @return mixed[]
    *   Array of default values.
    */
-  public function getQuizDefaultPropertyValues() {
-    return array(
+  public function getQuizDefaultPropertyValues($type = NULL) {
+    $defaults = array();
+    if ($type && $question_type = quiz_type_load($type)) {
+      $defaults = $question_type->getConfigurations();
+    }
+
+    return $defaults + array(
         'status'                     => -1,
         'aid'                        => NULL,
         'allow_jumping'              => 0,
