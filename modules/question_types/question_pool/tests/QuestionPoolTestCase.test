@@ -12,11 +12,17 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
     );
   }
 
+  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
+    $modules[] = 'question_pool';
+    $modules[] = 'entityreference';
+    parent::setUp($modules, $admin_permissions, $user_permissions);
+  }
+
   public function testCreateQuestion() {
     return $this->drupalCreateQuestion(array(
           'type'  => 'question_pool',
-          'title' => 'Pool 1 title',
-          'body'  => 'Scale 1 body text',
+          'title' => 'Pool question title',
+          'body'  => 'Pool body text',
     ));
   }
 
