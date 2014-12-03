@@ -217,22 +217,22 @@ class QuizResultTestCase extends QuizTestCase {
     $this->drupalGet("quiz/$quiz->qid/take");
 
     // No build on last form here.
-    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
 
     // Take it again, ensure the correct answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
     $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
-    $this->assertFieldChecked("edit-question-{$question_1->qid}-answer-1");
-    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
-    $this->assertNoFieldChecked("edit-question-{$question_2->qid}-answer-1");
-    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_3->qid}-answer-1");
-    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
-    $this->assertNoFieldChecked("edit-question-{$question_4->qid}-answer-1");
-    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
+    $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->assertNoFieldChecked("edit-question-{$question_2->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_3->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->assertNoFieldChecked("edit-question-{$question_4->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
 
     // Switch the build option
     $quiz->build_on_last = 'all';
@@ -240,22 +240,22 @@ class QuizResultTestCase extends QuizTestCase {
 
     // Take the quiz with this revision.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
 
     // Take it again, ensure all the answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
-    $this->assertFieldChecked("edit-question-{$question_1->qid}-answer-1");
-    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_2->qid}-answer-0");
-    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_3->qid}-answer-1");
-    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_4->qid}-answer-0");
-    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
+    // $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_2->qid}-0");
+    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_3->qid}-1");
+    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_4->qid}-0");
+    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
   }
 
   /**

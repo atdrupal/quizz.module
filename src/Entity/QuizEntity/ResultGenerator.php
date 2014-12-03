@@ -36,8 +36,8 @@ class ResultGenerator {
       $query = new EntityFieldQuery();
       $query_results = $query->entityCondition('entity_type', 'quiz_result')
         ->propertyCondition('uid', $account->uid)
-        ->propertyCondition('qid', $quiz->qid)
-        ->propertyCondition('vid', $quiz->vid)
+        ->propertyCondition('quiz_qid', $quiz->qid)
+        ->propertyCondition('quiz_vid', $quiz->vid)
         ->propertyOrderBy('time_start', 'DESC')
         ->range(0, 1)
         ->execute();
@@ -83,7 +83,7 @@ class ResultGenerator {
     }
 
     if (NULL !== $prev_result) {
-      $this->cloneResult($prev_result, $result);
+      $this->cloneResult($quiz, $prev_result, $result);
     }
 
     $_SESSION['quiz'][$quiz->qid] = array('result_id' => $result->result_id, 'current' => 1);
