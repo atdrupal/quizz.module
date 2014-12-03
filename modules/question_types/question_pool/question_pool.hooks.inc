@@ -117,6 +117,6 @@ function question_pool_node_update($node) {
 function question_pool_quiz_question_type_insert($question_type) {
   if ('question_pool' === $question_type->plugin) {
     $installer = new QuestionTypeInstaller();
-    $installer->setup();
+    $installer->setup($question_type);
   }
 }

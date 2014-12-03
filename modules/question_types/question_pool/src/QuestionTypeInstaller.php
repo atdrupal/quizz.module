@@ -2,18 +2,21 @@
 
 namespace Drupal\question_pool;
 
+use Drupal\quiz_question\Entity\QuestionType;
+
 class QuestionTypeInstaller {
 
   private $field_name = 'field_question_reference';
 
-  public function setup() {
+  public function setup(QuestionType $question_type) {
     $this->createEntityReferenceField();
 
     // Override default weight to make body field appear first
-    $instance = field_read_instance('node', 'body', 'pool');
-    $instance['widget']['weight'] = -10;
-    $instance['widget']['settings']['rows'] = 6;
-    field_update_instance($instance);
+    if ($instance = field_read_instance('quiz_question', 'quiz_question_body', $question_type->type)) {
+      $instance['widget']['weight'] = -10;
+      $instance['widget']['settings']['rows'] = 6;
+      field_update_instance($instance);
+    }
   }
 
   private function createEntityReferenceField() {
