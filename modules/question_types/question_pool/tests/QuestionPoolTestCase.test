@@ -2,7 +2,7 @@
 
 class QuestionPoolTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'question_pool';
+  protected $questionPlugin = 'pool';
 
   public static function getInfo() {
     return array(
@@ -23,7 +23,20 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
           'type'  => 'question_pool',
           'title' => 'Pool question title',
           'body'  => 'Pool body text',
+    // Check new entity-reference field is created
+    $this->assertNotNull(field_info_field('field_question_reference'));
+    $this->assertNotNull(field_info_instance('quiz_question', 'field_question_reference', 'default_pool'));
+
+    // Create new pool question
+    $question = $this->drupalCreateQuestion(array(
+        'type'  => 'question_pool',
+        'title' => 'Pool question title',
+        'body'  => 'Pool body text',
     ));
+
+    // Make sure custom field values are stored
+
+    return $question;
   }
 
 }
