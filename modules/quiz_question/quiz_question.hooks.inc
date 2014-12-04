@@ -168,7 +168,7 @@ function quiz_question_field_extra_fields() {
   foreach (quiz_question_get_types() as $name => $question_type) {
     $extra['quiz_question'][$name] = array(
         'display' => array(
-            'title'           => array(
+            'title'            => array(
                 'label'       => t('Title'),
                 'description' => t("Question's title."),
                 'weight'      => -10,
@@ -269,8 +269,8 @@ function quiz_question_modules_enabled($modules) {
 
     foreach ($info as $handler_name => $handler_info) {
       // Do not create if already have one
-      $sql = 'SELECT 1 FROM {quiz_question_type} WHERE plugin = :plugin';
-      if (db_query($sql, array(':plugin' => $handler_name))->fetchColumn()) {
+      $sql = 'SELECT 1 FROM {quiz_question_type} WHERE handler = :handler';
+      if (db_query($sql, array(':handler' => $handler_name))->fetchColumn()) {
         continue;
       }
 
@@ -278,7 +278,7 @@ function quiz_question_modules_enabled($modules) {
           'type'        => 'default_' . $handler_name,
           'label'       => $handler_info['name'],
           'status'      => 0,
-          'plugin'      => $handler_name,
+          'handler'     => $handler_name,
           'description' => isset($handler_info['description']) ? $handler_info['description'] : '',
       ))->save();
     }
@@ -302,7 +302,7 @@ function quiz_question_modules_disabled($modules) {
   if (!empty($handler_names)) {
     db_update('quiz_question_type')
       ->fields(array('disabled' => 1))
-      ->condition('plugin', $handler_names)
+      ->condition('handler', $handler_names)
       ->execute()
     ;
   }

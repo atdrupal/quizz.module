@@ -51,7 +51,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
 
     // @TODO: Test max-score — Removed old code
     //    db_update('quiz_question_properties')
-    //      ->fields(array('max_score' => $this->question->getPlugin()->getMaximumScore()))
+    //      ->fields(array('max_score' => $this->question->getHandler()->getMaximumScore()))
     //      ->condition('qid', $this->question->qid)
     //      ->condition('vid', $this->question->vid)
     //      ->execute();

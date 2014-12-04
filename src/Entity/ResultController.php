@@ -131,7 +131,7 @@ class ResultController extends EntityAPIController {
   }
 
   /**
-   * Call plugin owner to delete the answer.
+   * Call handler owner to delete the answer.
    *
    * @param int[] $result_ids
    */

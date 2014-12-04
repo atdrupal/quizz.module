@@ -59,8 +59,8 @@ class QuestionType extends Entity {
    * @return string
    */
   public function getHandlerModule() {
-    if ($plugin_info = quiz_question_get_handler_info($this->handler)) {
-      return $plugin_info['module'];
+    if ($handler_info = quiz_question_get_handler_info($this->handler)) {
+      return $handler_info['module'];
     }
   }
 

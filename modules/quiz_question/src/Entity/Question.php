@@ -20,7 +20,7 @@ class Question extends Entity {
   public $type;
 
   /** @var QuestionHandler */
-  private $plugin;
+  private $handler;
 
   /** @var string */
   public $language = LANGUAGE_NONE;
@@ -78,14 +78,14 @@ class Question extends Entity {
    * @return QuestionHandler
    */
   public function getHandler() {
-    if (NULL === $this->plugin) {
-      $this->plugin = $this->doGetHandler();
+    if (NULL === $this->handler) {
+      $this->handler = $this->doGetHandler();
     }
-    return $this->plugin;
+    return $this->handler;
   }
 
   /**
-   * Get plugin info.
+   * Get handler info.
    * @return array
    * @throws RuntimeException
    */
@@ -93,15 +93,15 @@ class Question extends Entity {
     if ($question_type = $this->getQuestionType()) {
       return quiz_question_get_handler_info($question_type->handler);
     }
-    throw new RuntimeException('Question plugin not found for question #' . $this->qid . ' (type: ' . $this->type . ')');
+    throw new RuntimeException('Question handler not found for question #' . $this->qid . ' (type: ' . $this->type . ')');
   }
 
   /**
    * @return QuestionHandler
    */
   private function doGetHandler() {
-    $plugin_info = $this->getHandlerInfo();
-    return new $plugin_info['question provider']($this);
+    $handler_info = $this->getHandlerInfo();
+    return new $handler_info['question provider']($this);
   }
 
   /**
@@ -134,7 +134,7 @@ class Question extends Entity {
   }
 
   /**
-   * Get module of question plugin.
+   * Get module of question handler.
    * @return string
    */
   public function getModule() {

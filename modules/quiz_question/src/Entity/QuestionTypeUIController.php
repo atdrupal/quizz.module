@@ -16,7 +16,7 @@ class QuestionTypeUIController extends EntityDefaultUIController {
   }
 
   protected function overviewTableHeaders($conditions, $rows, $additional_header = array()) {
-    $additional_header[] = t('Plugin');
+    $additional_header[] = t('Handler');
     return parent::overviewTableHeaders($conditions, $rows, $additional_header);
   }
 
