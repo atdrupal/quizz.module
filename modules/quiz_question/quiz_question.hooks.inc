@@ -267,19 +267,21 @@ function quiz_question_modules_enabled($modules) {
       continue;
     }
 
-    // Do not create if already have one
-    $sql = 'SELECT 1 FROM {quiz_question_type} WHERE plugin = :module';
-    if (db_query($sql, array(':module' => $module))->fetchColumn()) {
-      continue;
-    }
+    foreach ($info as $plugin_name => $plugin_info) {
+      // Do not create if already have one
+      $sql = 'SELECT 1 FROM {quiz_question_type} WHERE plugin = :plugin';
+      if (db_query($sql, array(':plugin' => $plugin_name))->fetchColumn()) {
+        continue;
+      }
 
-    entity_create('quiz_question_type', array(
-        'type'        => 'default_' . $module,
-        'label'       => $info[$module]['name'],
-        'status'      => 0,
-        'plugin'      => $module,
-        'description' => isset($info[$module]['description']) ? $info[$module]['description'] : '',
-    ))->save();
+      entity_create('quiz_question_type', array(
+          'type'        => 'default_' . $plugin_name,
+          'label'       => $plugin_info['name'],
+          'status'      => 0,
+          'plugin'      => $plugin_name,
+          'description' => isset($plugin_info['description']) ? $plugin_info['description'] : '',
+      ))->save();
+    }
   }
 }
 
