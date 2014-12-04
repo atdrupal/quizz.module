@@ -12,23 +12,17 @@ use stdClass;
  */
 abstract class ResponseHandler extends ResponseHandlerBase {
 
-  /**
-   * Create a new user response.
-   *
-   * @param $result_id
-   * @param Question $question
-   * @param mixed $input (dependent on question type).
-   */
   public function __construct($result_id, Question $question, $input = NULL) {
-    $this->result_id = $result_id;
-    $this->result = quiz_result_load($result_id);
-    $this->question = $question;
-    $this->question_handler = $question->getHandler();
-    $this->answer = $input;
+    parent::__construct($result_id, $question, $input);
 
-    /* @var $answer Answer */
-    $conds = array('result_id' => $result_id, 'question_qid' => $question->qid, 'question_vid' => $question->vid);
+    $conds = array(
+        'result_id'    => $this->result_id,
+        'question_qid' => $this->question->qid,
+        'question_vid' => $this->question->vid
+    );
+
     if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
+      /* @var $answer Answer */
       $answer = reset($find);
       $this->is_doubtful = $answer->is_doubtful;
       $this->is_skipped = $answer->is_skipped;

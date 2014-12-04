@@ -10,8 +10,14 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
 
   /** @var Result */
   protected $result;
+
+  /** @var int */
   protected $result_id = 0;
+
+  /** @var bool */
   protected $is_correct = FALSE;
+
+  /** @var bool */
   protected $evaluated = TRUE;
 
   /** @var Question */
@@ -19,10 +25,31 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
 
   /** @var QuestionHandler */
   public $question_handler = NULL;
+
+  /** @var mixed */
   protected $answer = NULL;
+
+  /** @var int */
   protected $score;
+
+  /** @var bool */
   public $is_skipped;
+
+  /** @var bool */
   public $is_doubtful;
+
+  /**
+   * @param int $result_id
+   * @param Question $question
+   * @param mixed $input (dependent on question type).
+   */
+  public function __construct($result_id, Question $question, $input = NULL) {
+    $this->result_id = $result_id;
+    $this->result = quiz_result_load($result_id);
+    $this->question = $question;
+    $this->question_handler = $question->getHandler();
+    $this->answer = $input;
+  }
 
   /**
    * {@inheritdoc}
@@ -70,14 +97,8 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
     $this->question = $newQuestion;
   }
 
-  /**
-   * Get the submit function for the reportForm
-   *
-   * @return
-   *  Submit function as a string, or FALSE if no submit function
-   */
   public function getReportFormSubmit() {
-    return FALSE;
+    return '';
   }
 
   /**
