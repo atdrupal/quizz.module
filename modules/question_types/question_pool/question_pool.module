@@ -51,19 +51,3 @@ function question_pool_quiz_question_type_insert($question_type) {
     $installer->setup($question_type);
   }
 }
-
-function quiz_pool_question_get_result($pool_id, $result_id, $question_id) {
-  $result = db_select('quiz_pool_user_answers_questions', 'p')
-    ->fields('p')
-    ->condition('pool_qid', $pool_id)
-    ->condition('question_qid', $question_id)
-    ->condition('result_id', $result_id)
-    ->execute()
-    ->fetchObject();
-
-  if ($result) {
-    $result->answer = unserialize($result->answer);
-  }
-
-  return $result;
-}
