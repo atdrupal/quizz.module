@@ -217,7 +217,7 @@ function quiz_question_field_extra_fields() {
  *  Node containing all of the items from the question plus the user's answer.
  */
 function quiz_question_get_report($qid, $vid, $result_id) {
-  if (!$response_instance = quiz_answer_controller()->getInstance($result_id, NULL, NULL, $qid, $vid)) {
+  if (!$response_instance = quiz_answer_controller()->getHandler($result_id, NULL, NULL, $qid, $vid)) {
     drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array('%qid' => $qid, '%vid' => $vid)), 'error');
     return FALSE;
   }
@@ -246,7 +246,7 @@ function quiz_question_quiz_question_score($quiz, Question $question, $result_id
   $score->question_vid = $question->vid;
 
   if (isset($result_id)) {
-    $handler = quiz_answer_controller()->getInstance($result_id, $plugin->question);
+    $handler = quiz_answer_controller()->getHandler($result_id, $plugin->question);
     $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
     $score->possible = $handler->getMaxScore();
     $score->is_evaluated = $handler->isEvaluated();
@@ -267,19 +267,21 @@ function quiz_question_modules_enabled($modules) {
       continue;
     }
 
-    // Do not create if already have one
-    $sql = 'SELECT 1 FROM {quiz_question_type} WHERE plugin = :module';
-    if (db_query($sql, array(':module' => $module))->fetchColumn()) {
-      continue;
-    }
+    foreach ($info as $plugin_name => $plugin_info) {
+      // Do not create if already have one
+      $sql = 'SELECT 1 FROM {quiz_question_type} WHERE plugin = :plugin';
+      if (db_query($sql, array(':plugin' => $plugin_name))->fetchColumn()) {
+        continue;
+      }
 
-    entity_create('quiz_question_type', array(
-        'type'        => 'default_' . $module,
-        'label'       => $info[$module]['name'],
-        'status'      => 0,
-        'plugin'      => $module,
-        'description' => isset($info[$module]['description']) ? $info[$module]['description'] : '',
-    ))->save();
+      entity_create('quiz_question_type', array(
+          'type'        => 'default_' . $plugin_name,
+          'label'       => $plugin_info['name'],
+          'status'      => 0,
+          'plugin'      => $plugin_name,
+          'description' => isset($plugin_info['description']) ? $plugin_info['description'] : '',
+      ))->save();
+    }
   }
 }
 

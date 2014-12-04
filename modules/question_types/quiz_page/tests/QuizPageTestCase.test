@@ -7,8 +7,8 @@ class QuizPageTestCase extends QuizQuestionTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Quiz page'),
-        'description' => t('Unit test for quiz pages'),
-        'group'       => t('Quiz question'),
+        'description' => t('Test cases for quiz pages'),
+        'group'       => 'Quiz question',
     );
   }
 

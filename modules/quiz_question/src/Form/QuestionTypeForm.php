@@ -132,8 +132,10 @@ class QuestionTypeForm {
       unset($question_type->multilingual);
     }
 
-    $question_type->data['configuration'] = $question_type->configuration;
-    unset($question_type->configuration);
+    if (!empty($question_type->data['configuration'])) {
+      $question_type->data['configuration'] = $question_type->configuration;
+      unset($question_type->configuration);
+    }
 
     $question_type->save();
     $form_state['redirect'] = 'admin/structure/quiz-questions';

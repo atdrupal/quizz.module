@@ -8,7 +8,7 @@ class QuizNavigationTestCase extends QuizTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Quiz navigation'),
-        'description' => t('Unit test for Quiz navigation.'),
+        'description' => t('Test cases for Quiz navigation.'),
         'group'       => t('Quiz'),
     );
   }

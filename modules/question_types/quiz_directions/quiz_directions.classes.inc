@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * quiz_directions.classes
@@ -93,7 +93,7 @@ class QuizDirectionsQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class QuizDirectionsResponse extends QuizQuestionResponse {
+class QuizDirectionsResponse extends ResponseHandler {
 
   /**
    * Implementation of save

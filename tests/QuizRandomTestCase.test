@@ -11,7 +11,7 @@ class QuizRandomTestCase extends QuizTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Quiz random'),
-        'description' => t('Unit test for random quiz question behavior'),
+        'description' => t('Test cases for random quiz question behavior'),
         'group'       => t('Quiz'),
     );
   }

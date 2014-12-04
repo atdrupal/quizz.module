@@ -103,10 +103,10 @@ abstract class QuestionPlugin {
       return $this->properties;
     }
 
-    $props['is_quiz_question'] = TRUE;
-    $this->properties = $props;
+    $properties['is_quiz_question'] = TRUE;
+    $this->properties = $properties;
 
-    return $props;
+    return $properties;
   }
 
   /**
@@ -157,15 +157,12 @@ abstract class QuestionPlugin {
    * Called by quiz_question_delete (hook_delete).
    * Child classes must call super
    *
-   * @param $only_this_version
-   *  If the $only_this_version flag is TRUE, then only the particular
-   *  qid/vid combo should be deleted. Otherwise, all questions with the
-   *  current qid can be deleted.
+   * @param bool $single_revision
    */
-  public function delete($only_this_version = FALSE) {
+  public function delete($single_revision = FALSE) {
     // Delete answeres & properties
     $remove_answer = db_delete('quiz_results_answers')->condition('question_qid', $this->question->qid);
-    if ($only_this_version) {
+    if ($single_revision) {
       $remove_answer->condition('question_vid', $this->question->vid);
     }
     $remove_answer->execute();
@@ -177,20 +174,18 @@ abstract class QuestionPlugin {
    * When a new question is created and initially submited, this is
    * called to validate that the settings are acceptible.
    *
-   * @param $form
-   *  The processed form.
+   * @param array $form
    */
-  abstract public function validate(array &$form);
+  public function validate(array &$form) {
+
+  }
 
   /**
    * Get the form through which the user will answer the question.
    *
-   * @param $form_state
-   *  The FAPI form_state array
-   * @param $result_id
-   *  The result id.
-   * @return
-   *  Must return a FAPI array.
+   * @param array $form_state
+   * @param int $result_id
+   * @return array
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     return array('#element_validate' => array('quiz_question_element_validate'));
@@ -207,7 +202,7 @@ abstract class QuestionPlugin {
     $current_question = quiz_question_entity_load($question_qid);
 
     // There was an answer submitted.
-    $response = quiz_answer_controller()->getInstance($_SESSION['quiz'][$quiz->qid]['result_id'], $current_question, $answer);
+    $response = quiz_answer_controller()->getHandler($_SESSION['quiz'][$quiz->qid]['result_id'], $current_question, $answer);
     if ($quiz->repeat_until_correct && !$response->isCorrect()) {
       form_set_error('', t('The answer was incorrect. Please try again.'));
 
@@ -223,13 +218,12 @@ abstract class QuestionPlugin {
 
   /**
    * Get the form used to create a new question.
-   *
-   * @param
-   *  FAPI form state
-   * @return
-   *  Must return a FAPI array.
+   * @param array $form state
+   * @return array Must return a FAPI array.
    */
-  abstract public function getCreationForm(array &$form_state = NULL);
+  public function getCreationForm(array &$form_state = NULL) {
+    return array();
+  }
 
   /**
    * Get the maximum possible score for this question.
@@ -239,7 +233,9 @@ abstract class QuestionPlugin {
   /**
    * Save question type specific node properties
    */
-  abstract public function saveEntityProperties($is_new = FALSE);
+  public function saveEntityProperties($is_new = FALSE) {
+
+  }
 
   /**
    * Save this Question to the specified Quiz.

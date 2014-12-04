@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * The main classes for the drag and drop with lines question type.
@@ -302,7 +302,7 @@ class DDLinesQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class DDLinesResponse extends QuizQuestionResponse {
+class DDLinesResponse extends ResponseHandler {
 
   // Contains a assoc array with label-ID as key
   // and hotspot-ID as value:

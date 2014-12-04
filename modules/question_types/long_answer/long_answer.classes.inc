@@ -2,7 +2,7 @@
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * Long answer classes.
@@ -147,12 +147,13 @@ class LongAnswerQuestion extends QuestionPlugin {
         '#description' => t('Enter your answer here. If you need more space, click on the grey bar at the bottom of this area and drag it down.'),
         '#rows'        => 15,
         '#cols'        => 60,
-      //'#theme' =>'long_answer_answering_form',
     );
+
     if (isset($result_id)) {
       $response = new LongAnswerResponse($result_id, $this->question);
       $element['#default_value'] = $response->getResponse();
     }
+
     return $element;
   }
 
@@ -197,7 +198,7 @@ class LongAnswerQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class LongAnswerResponse extends QuizQuestionResponse {
+class LongAnswerResponse extends ResponseHandler {
 
   /**
    * Get all scores that have not yet been evaluated.

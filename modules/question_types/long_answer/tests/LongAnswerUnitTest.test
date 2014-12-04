@@ -10,8 +10,8 @@ class LongAnswerTestCase extends QuizQuestionTestCase {
   public static function getInfo() {
     return array(
         'name'        => t('Long answer'),
-        'description' => t('Unit test for Long answers question type.'),
-        'group'       => t('Quiz question'),
+        'description' => t('Test cases for Long answers question type.'),
+        'group'       => 'Quiz question',
     );
   }
 
