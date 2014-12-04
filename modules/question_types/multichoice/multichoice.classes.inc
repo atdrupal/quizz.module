@@ -3,7 +3,7 @@
 use Drupal\multichoice\FormDefinition;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * The main classes for the multichoice question type.
@@ -555,7 +555,7 @@ class MultichoiceQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class MultichoiceResponse extends QuizQuestionResponse {
+class MultichoiceResponse extends ResponseHandler {
 
   /**
    * ID of the answers.

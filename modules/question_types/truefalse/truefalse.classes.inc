@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * Defines the classes necessary for a True/False quiz.
@@ -203,7 +203,7 @@ class TrueFalseQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class TrueFalseResponse extends QuizQuestionResponse {
+class TrueFalseResponse extends ResponseHandler {
 
   /**
    * Constructor

@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * matching.classes
@@ -439,7 +439,7 @@ class MatchingQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class MatchingResponse extends QuizQuestionResponse {
+class MatchingResponse extends ResponseHandler {
 
   /**
    * Constructor

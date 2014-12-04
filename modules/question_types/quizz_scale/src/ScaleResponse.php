@@ -3,12 +3,12 @@
 namespace Drupal\quizz_scale;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * Extension of QuizQuestionResponse
  */
-class ScaleResponse extends QuizQuestionResponse {
+class ScaleResponse extends ResponseHandler {
 
   /**
    * ID of the answer.

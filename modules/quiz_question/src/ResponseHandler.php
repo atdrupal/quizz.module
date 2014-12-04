@@ -11,7 +11,7 @@ use stdClass;
  * Each question type must store its own response data and be able to calculate a score for
  * that data.
  */
-abstract class QuizQuestionResponse {
+abstract class ResponseHandler {
 
   /** @var Result */
   protected $result;

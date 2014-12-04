@@ -3,12 +3,12 @@
 namespace Drupal\question_pool;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * Extension of QuizQuestionResponse
  */
-class PoolResponse extends QuizQuestionResponse {
+class PoolResponse extends ResponseHandler {
 
   /**
    * ID of the answers.
