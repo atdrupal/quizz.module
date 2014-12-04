@@ -156,7 +156,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     foreach ($relationships as $relationship) {
       $relationship = is_array($relationship) ? (object) $relationship : $relationship;
       $question = quiz_question_entity_load($relationship->qid);
-      $instance = $question->getHandler();
+      $handler = $question->getHandler();
 
       $fieldset = 'question_list';
       $id = $question->qid . '-' . $question->vid;
@@ -186,7 +186,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
 
       // Quiz directions don't have scoring…
       $form[$fieldset]['max_scores'][$id] = array(
-          '#type'          => $instance->isGraded() ? 'textfield' : 'hidden',
+          '#type'          => $handler->isGraded() ? 'textfield' : 'hidden',
           '#size'          => 2,
           '#maxlength'     => 2,
           '#disabled'      => isset($question->auto_update_max_score) ? $question->auto_update_max_score : FALSE,
@@ -197,7 +197,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       );
 
       $form[$fieldset]['auto_update_max_scores'][$id] = array(
-          '#type'          => $instance->isGraded() ? 'checkbox' : 'hidden',
+          '#type'          => $handler->isGraded() ? 'checkbox' : 'hidden',
           '#default_value' => isset($question->auto_update_max_score) ? $question->auto_update_max_score : 0,
       );
 
