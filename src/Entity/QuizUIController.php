@@ -117,7 +117,8 @@ class QuizUIController extends EntityDefaultUIController {
           'page arguments'   => array('quiz_entity', 1),
           'type'             => MENU_LOCAL_TASK,
           'file'             => 'devel.pages.inc',
-          'file path'        => drupal_get_path('module', 'devel')
+          'file path'        => drupal_get_path('module', 'devel'),
+          'weight'           => 20,
       );
     }
   }
