@@ -1,0 +1,53 @@
+<?php
+
+use Drupal\question_pool\QuestionTypeInstaller;
+use Drupal\quiz_question\Entity\QuestionType;
+
+/**
+ * Implements hook_quiz_question_info().
+ */
+function question_pool_quiz_question_info() {
+  return array(
+      'pool' => array(
+          'name'              => t('Question pool'),
+          'description'       => t('This provides question pool for use by the Quiz module.'),
+          'question provider' => 'Drupal\question_pool\PoolQuestion',
+          'response provider' => 'Drupal\question_pool\PoolResponseHandler',
+          'module'            => 'quiz_question',
+      ),
+  );
+}
+
+/**
+ * Implement hook_forms.
+ */
+function question_pool_forms($form_id, $args) {
+  $forms = array();
+
+  $form_ids = explode("__", $form_id);
+  if (!empty($form_ids) && count($form_ids) == 2) {
+    $question_form_id = reset($form_ids);
+  }
+  else {
+    return $forms;
+  }
+
+  $question_types = quiz_question_get_types();
+  foreach (array_keys($question_types) as $type) {
+    if ($question_form_id == $type . '_question_pool_form') {
+      $forms[$form_id]['callback'] = 'question_pool_form';
+    }
+  }
+  return $forms;
+}
+
+/**
+ * Implements hook_ENTITYTYPE_insert()
+ * @param QuestionType $question_type
+ */
+function question_pool_quiz_question_type_insert($question_type) {
+  if ('pool' === $question_type->plugin) {
+    $installer = new QuestionTypeInstaller();
+    $installer->setup($question_type);
+  }
+}
