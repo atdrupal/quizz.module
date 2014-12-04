@@ -103,10 +103,10 @@ abstract class QuestionPlugin {
       return $this->properties;
     }
 
-    $props['is_quiz_question'] = TRUE;
-    $this->properties = $props;
+    $properties['is_quiz_question'] = TRUE;
+    $this->properties = $properties;
 
-    return $props;
+    return $properties;
   }
 
   /**
