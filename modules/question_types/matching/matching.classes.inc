@@ -538,7 +538,7 @@ class MatchingResponse extends ResponseHandler {
   public function getReportFormResponse() {
     $data = array();
     $answers = $this->question->answers[0]['answer'];
-    $solution = $this->quizQuestion->getSubquestions();
+    $solution = $this->question_plugin->getSubquestions();
     foreach ($this->question->match as $match) {
       $data[] = array(
           'choice'            => $match['question'],
