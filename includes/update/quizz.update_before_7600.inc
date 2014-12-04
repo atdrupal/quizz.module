@@ -1,15 +1,27 @@
 <?php
 
-// should have been named quiz_update_7401
-function quizz_update_7101(&$sandbox) {
+/**
+ * Add {quiz_node_properties}.show_passed
+ */
+function quizz_update_7100() {
+  // Should have been named quiz_update_7400
+  db_add_field('quiz_node_properties', 'show_passed', array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'size' => 'tiny'));
+  return t('Show passed field added to quiz config.');
+}
+
+/**
+ * Add {quiz_user_settings}.{}show_passed
+ */
+function quizz_update_7101() {
+  // should have been named quiz_update_7401
   db_add_field('quiz_user_settings', 'show_passed', array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'size' => 'tiny'));
   return t('Done !');
 }
 
 /**
- * Implements hook_update_N
+ * Add {quiz_node_properties|quiz_user_settings}.{summary_pass_format|summary_default_format}
  */
-function quizz_update_7402(&$sandbox) {
+function quizz_update_7402() {
   if (!db_field_exists('quiz_node_properties', 'summary_pass_format')) {
     db_add_field('quiz_node_properties', 'summary_pass_format', array('type' => 'varchar', 'length' => 255));
     db_add_field('quiz_node_properties', 'summary_default_format', array('type' => 'varchar', 'length' => 255));

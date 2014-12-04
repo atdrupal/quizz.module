@@ -34,15 +34,6 @@ function quizz_schema() {
 }
 
 /**
- * Implements hook_update_N()
- */
-// should have been named quiz_update_7400
-function quizz_update_7100(&$sandbox) {
-  db_add_field('quiz_node_properties', 'show_passed', array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'size' => 'tiny'));
-  return t('Show passed field added to quiz config.');
-}
-
-/**
  * Implements hook_uninstall().
  */
 function quizz_uninstall() {
