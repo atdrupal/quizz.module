@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_question\Entity;
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Entity;
 use RuntimeException;
 use Drupal\quizz\Entity\Result;
@@ -19,7 +19,7 @@ class Question extends Entity {
   /** @var string */
   public $type;
 
-  /** @var QuestionPlugin */
+  /** @var QuestionHandler */
   private $plugin;
 
   /** @var string */
@@ -75,11 +75,11 @@ class Question extends Entity {
   }
 
   /**
-   * @return QuestionPlugin
+   * @return QuestionHandler
    */
-  public function getPlugin() {
+  public function getHandler() {
     if (NULL === $this->plugin) {
-      $this->plugin = $this->doGetPlugin();
+      $this->plugin = $this->doGetHandler();
     }
     return $this->plugin;
   }
@@ -89,18 +89,18 @@ class Question extends Entity {
    * @return array
    * @throws RuntimeException
    */
-  public function getPluginInfo() {
+  public function getHandlerInfo() {
     if ($question_type = $this->getQuestionType()) {
-      return quiz_question_get_plugin_info($question_type->plugin);
+      return quiz_question_get_handler_info($question_type->handler);
     }
     throw new RuntimeException('Question plugin not found for question #' . $this->qid . ' (type: ' . $this->type . ')');
   }
 
   /**
-   * @return QuestionPlugin
+   * @return QuestionHandler
    */
-  private function doGetPlugin() {
-    $plugin_info = $this->getPluginInfo();
+  private function doGetHandler() {
+    $plugin_info = $this->getHandlerInfo();
     return new $plugin_info['question provider']($this);
   }
 
@@ -138,7 +138,7 @@ class Question extends Entity {
    * @return string
    */
   public function getModule() {
-    return $this->getQuestionType()->getPluginModule();
+    return $this->getQuestionType()->getHandlerModule();
   }
 
   /**

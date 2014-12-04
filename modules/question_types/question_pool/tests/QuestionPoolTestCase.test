@@ -2,8 +2,8 @@
 
 class QuestionPoolTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'pool';
-  protected $questionPlugins = array('truefalse');
+  protected $questionHandler = 'pool';
+  protected $questionHandlers = array('truefalse');
 
   public static function getInfo() {
     return array(
@@ -33,7 +33,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
 
   private function createPool() {
     $pool = $this->drupalCreateQuestion(array(
-        'type'  => $this->questionPlugin,
+        'type'  => $this->questionHandler,
         'title' => 'Pool question title',
         'body'  => 'Pool body text',
     ));

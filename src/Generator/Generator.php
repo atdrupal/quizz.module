@@ -69,7 +69,7 @@ class Generator {
       $this
         ->question_generator
         ->generate($question_type)
-        ->getPlugin()
+        ->getHandler()
         ->saveRelationships($quiz->qid, $quiz->vid)
       ;
     }

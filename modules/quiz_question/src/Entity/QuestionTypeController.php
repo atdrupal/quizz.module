@@ -18,7 +18,7 @@ class QuestionTypeController extends EntityAPIControllerExportable {
       $this->addBodyField($question_type->type);
     }
 
-    if ($question_type->plugin === 'quiz_ddlines') {
+    if ($question_type->handler === 'quiz_ddlines') {
       if (!field_info_instance('quiz_question', 'field_image', $question_type->type)) {
         $this->addImageField($question_type->type);
       }

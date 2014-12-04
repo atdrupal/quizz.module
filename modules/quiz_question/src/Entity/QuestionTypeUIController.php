@@ -21,7 +21,7 @@ class QuestionTypeUIController extends EntityDefaultUIController {
   }
 
   protected function overviewTableRow($conditions, $id, $entity, $additional_cols = array()) {
-    $additional_cols[] = $entity->plugin;
+    $additional_cols[] = $entity->handler;
     $row = parent::overviewTableRow($conditions, $id, $entity, $additional_cols);
     return $row;
   }

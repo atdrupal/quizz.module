@@ -4,12 +4,12 @@ namespace Drupal\question_pool;
 
 use Drupal\question_pool\Form\AnswerForm;
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 
 /**
  * Extension of QuizQuestion.
  */
-class PoolQuestion extends QuestionPlugin {
+class PoolQuestion extends QuestionHandler {
 
   public function delete($single_revision = FALSE) {
     parent::delete($single_revision);
@@ -44,7 +44,7 @@ class PoolQuestion extends QuestionPlugin {
 
   /**
    * Implementation of getEntityView
-   * @see QuestionPlugin#getEntityView()
+   * @see QuestionHandler#getEntityView()
    */
   public function getEntityView() {
     $build = parent::getEntityView();
@@ -54,7 +54,7 @@ class PoolQuestion extends QuestionPlugin {
     $markup = '';
     foreach ($wrapper->field_question_reference->getIterator() as $sub_wrapper) {
       $sub_question = $sub_wrapper->value();
-      if ($content = $sub_question->getPlugin()->getEntityView() && !empty($content['answer'])) {
+      if ($content = $sub_question->getHandler()->getEntityView() && !empty($content['answer'])) {
         $markup .= "<h3>{$sub_question->title}</h3>";
         $markup .= $content['answer']['#markup'];
       }
@@ -88,7 +88,7 @@ class PoolQuestion extends QuestionPlugin {
     foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
       // When referencing entity is deleted
       if ($question = $wrapper_question->value()) {
-        $score += $question->getPlugin()->getMaximumScore();
+        $score += $question->getHandler()->getMaximumScore();
       }
     }
     return $score;

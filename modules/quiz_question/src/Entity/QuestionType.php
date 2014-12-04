@@ -13,7 +13,7 @@ class QuestionType extends Entity {
   public $label;
 
   /** @var string */
-  public $plugin;
+  public $handler;
 
   /** @var string */
   public $description;
@@ -58,8 +58,8 @@ class QuestionType extends Entity {
    * Get module for a question type.
    * @return string
    */
-  public function getPluginModule() {
-    if ($plugin_info = quiz_question_get_plugin_info($this->plugin)) {
+  public function getHandlerModule() {
+    if ($plugin_info = quiz_question_get_handler_info($this->handler)) {
       return $plugin_info['module'];
     }
   }

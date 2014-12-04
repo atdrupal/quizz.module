@@ -2,14 +2,14 @@
 
 namespace Drupal\quizz_scale;
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quizz_scale\Form\ScaleQuestionForm;
 
 /**
  * @TODO: We mix the names answer_collection and alternatives. Use either
  * alternative or answer consistently
  */
-class ScaleQuestion extends QuestionPlugin {
+class ScaleQuestion extends QuestionHandler {
 
   /**
    * Implementation of saveEntityProperties

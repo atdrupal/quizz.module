@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestion.
  */
-class DDLinesQuestion extends QuestionPlugin {
+class DDLinesQuestion extends QuestionHandler {
 
   /**
    * Get the form used to create a new question.

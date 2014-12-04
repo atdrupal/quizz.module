@@ -42,7 +42,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     }
 
     // We add the questions to the form array
-    $types = quiz_question_get_plugin_info();
+    $types = quiz_question_get_handler_info();
     $this->addQuestionsToForm($form, $relationships, $quiz, $types);
 
     // Show the number of questions in the table header.
@@ -156,12 +156,12 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     foreach ($relationships as $relationship) {
       $relationship = is_array($relationship) ? (object) $relationship : $relationship;
       $question = quiz_question_entity_load($relationship->qid);
-      $instance = $question->getPlugin();
+      $instance = $question->getHandler();
 
       $fieldset = 'question_list';
       $id = $question->qid . '-' . $question->vid;
 
-      $form['question_list']['#question_handlers'][$id] = $question->getQuestionType()->plugin;
+      $form['question_list']['#question_handlers'][$id] = $question->getQuestionType()->handler;
 
       $form[$fieldset]['weights'][$id] = array(
           '#type'          => 'textfield',
@@ -227,10 +227,10 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
         $question_titles = check_plain($question->title);
       }
 
-      $plugin_info = $question->getPluginInfo();
+      $handler_info = $question->getHandlerInfo();
       $form[$fieldset]['titles'][$id] = array('#markup' => $question_titles);
       $form[$fieldset]['types'][$id] = array(
-          '#markup'        => $plugin_info['name'],
+          '#markup'        => $handler_info['name'],
           '#question_type' => $question->type,
       );
 

@@ -126,7 +126,7 @@ class ResultController extends EntityAPIController {
 
   public function delete($result_ids, DatabaseTransaction $transaction = NULL) {
     $return = parent::delete($result_ids, $transaction);
-    $this->callPluginDeleteMethod($result_ids);
+    $this->callHandlerDeleteMethod($result_ids);
     return $return;
   }
 
@@ -135,7 +135,7 @@ class ResultController extends EntityAPIController {
    *
    * @param int[] $result_ids
    */
-  private function callPluginDeleteMethod($result_ids) {
+  private function callHandlerDeleteMethod($result_ids) {
     $select = db_select('quiz_results_answers', 'answer');
     $select->fields('answer', array('result_id', 'question_qid', 'question_vid'));
     $select->condition('answer.result_id', $result_ids);

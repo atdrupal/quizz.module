@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -12,7 +12,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestion.
  */
-class TrueFalseQuestion extends QuestionPlugin {
+class TrueFalseQuestion extends QuestionHandler {
 
   /**
    * Implementation of saveEntityProperties
@@ -258,8 +258,8 @@ class TrueFalseResponse extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    $plugin = new TrueFalseQuestion($this->question);
-    return ($this->getResponse() == $plugin->getCorrectAnswer()) ? 1 : 0;
+    $handler = new TrueFalseQuestion($this->question);
+    return ($this->getResponse() == $handler->getCorrectAnswer()) ? 1 : 0;
   }
 
   /**

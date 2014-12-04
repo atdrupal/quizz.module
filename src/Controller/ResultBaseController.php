@@ -73,7 +73,7 @@ abstract class ResultBaseController {
       }
     }
 
-    if (!$module = quiz_question_type_load($row->type)->getPluginModule()) {
+    if (!$module = quiz_question_type_load($row->type)->getHandlerModule()) {
       return;
     }
 

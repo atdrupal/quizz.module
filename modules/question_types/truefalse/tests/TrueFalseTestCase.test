@@ -5,7 +5,7 @@
  */
 class TrueFalseTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'truefalse';
+  protected $questionHandler = 'truefalse';
 
   public static function getInfo() {
     return array(
@@ -41,7 +41,7 @@ class TrueFalseTestCase extends QuizQuestionTestCase {
     $quiz = $this->drupalCreateQuiz();
 
     // Link the question.
-    $question->getPlugin()->saveRelationships($quiz->qid, $quiz->vid);
+    $question->getHandler()->saveRelationships($quiz->qid, $quiz->vid);
 
     // Test that question appears in lists.
     $this->drupalLogin($this->admin);

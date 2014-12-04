@@ -137,7 +137,7 @@ class QuestionUIController extends EntityDefaultUIController {
    * @param \Drupal\quiz_question\Entity\Question $question
    */
   protected function overviewTableRow($conditions, $id, $question, $additional_cols = array()) {
-    $plugin_info = $question->getPluginInfo();
+    $plugin_info = $question->getHandlerInfo();
     $plugin_name = $plugin_info['name'];
     $additional_cols[] = $question->getQuestionType()->label . ' (' . $plugin_name . ')';
     $columns = parent::overviewTableRow($conditions, $id, $question, $additional_cols);

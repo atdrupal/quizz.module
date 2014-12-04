@@ -16,7 +16,7 @@ Here are the steps:
 1. Create a new module
 2. Use your module's .install file to create the necessary tables
 3. Make sure you module implements hook_quiz_question_info()
-4. Define classes that extends Drupal\quiz_question\QuestionPlugin and Drupal\quiz_question\QuizQuestionResponse.
+4. Define classes that extends Drupal\quiz_question\QuestionHandler and Drupal\quiz_question\ResponseHandler.
    For a complete example, see multichoice.classes.inc.
 
 ==================================================

@@ -124,7 +124,7 @@ function quizz_scale_update_7600() {
  */
 function quizz_scale_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('scale' === $question_type->plugin) {
+    if ('scale' === $question_type->handler) {
       $question_type
         ->setConfig('scale_max_num_of_alts', variable_get('scale_max_num_of_alts', 10))
         ->save()

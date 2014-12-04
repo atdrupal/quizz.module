@@ -39,7 +39,7 @@ class AnswerForm {
     if ($wrapper->field_question_reference->count() > $this->session[$this->session_key]['delta']) {
       $delta = $this->session[$this->session_key]['delta'];
       $question = $wrapper->field_question_reference[$delta]->value();
-      $form[$question->qid] = $question->getPlugin()->getAnsweringForm($form_state, $this->result_id);
+      $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $this->result_id);
     }
 
     return array(

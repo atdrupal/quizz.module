@@ -21,7 +21,7 @@ class QuestionController extends EntityAPIController {
       $question->feedback = $question->feedback['value'];
     }
 
-    $question->max_score = $question->getPlugin()->getMaximumScore();
+    $question->max_score = $question->getHandler()->getMaximumScore();
     $question->feedback = !empty($question->feedback) ? $question->feedback : '';
     $question->feedback_format = !empty($question->feedback_format) ? $question->feedback_format : filter_default_format();
 
@@ -55,7 +55,7 @@ class QuestionController extends EntityAPIController {
 
     /* @var $question Question */
     foreach ($questions as $question) {
-      foreach ($question->getPlugin()->load() as $k => $v) {
+      foreach ($question->getHandler()->load() as $k => $v) {
         $question->$k = $v;
       }
     }
@@ -74,19 +74,19 @@ class QuestionController extends EntityAPIController {
 
     switch ($hook) {
       case 'insert':
-        $question->getPlugin()->save($is_new = TRUE);
+        $question->getHandler()->save($is_new = TRUE);
         break;
 
       case 'update':
-        $question->getPlugin()->save($is_new = FALSE);
+        $question->getHandler()->save($is_new = FALSE);
         break;
 
       case 'delete':
-        $question->getPlugin()->delete($only_this_version = FALSE);
+        $question->getHandler()->delete($only_this_version = FALSE);
         break;
 
       case 'revision_delete':
-        $question->getPlugin()->delete($only_this_version = TRUE);
+        $question->getHandler()->delete($only_this_version = TRUE);
         break;
     }
 
@@ -110,7 +110,7 @@ class QuestionController extends EntityAPIController {
    */
   public function buildContent($question, $view_mode = 'full', $langcode = NULL, $content = array()) {
     if ('teaser' !== $view_mode) {
-      $content += $question->getPlugin()->getEntityView();
+      $content += $question->getHandler()->getEntityView();
     }
     return parent::buildContent($question, $view_mode, $langcode, $content);
   }

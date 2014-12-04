@@ -114,7 +114,7 @@ function quiz_ddlines_update_7600() {
  */
 function quiz_ddlines_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('quiz_ddlines' === $question_type->plugin) {
+    if ('quiz_ddlines' === $question_type->handler) {
       $question_type
         ->setConfig('quiz_ddlines_feedback_correct', variable_get('quiz_ddlines_feedback_correct', t('Correct')))
         ->setConfig('quiz_ddlines_feedback_wrong', variable_get('quiz_ddlines_feedback_wrong', t('Wrong')))

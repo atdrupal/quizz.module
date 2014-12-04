@@ -22,7 +22,7 @@ use Drupal\quizz\Form\QuizQuestionsForm;
 use Drupal\quizz\Form\QuizReportForm;
 use Drupal\quizz\Form\QuizTypeForm;
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 
 /**
  * Form for /admin/quiz/settings/config.
@@ -271,7 +271,7 @@ function quiz_jumper_form_submit($form, &$form_state) {
 function quiz_answer_form($form, $form_state, QuizEntity $quiz, Question $question, $page_number, Result $result) {
   $obj = new QuizAnsweringForm($quiz, $question, $page_number, $result);
 
-  if (is_array($question) || ('quiz_page' !== $question->getQuestionType()->plugin)) {
+  if (is_array($question) || ('quiz_page' !== $question->getQuestionType()->handler)) {
     $form += $obj->getForm($form, $form_state, is_array($question) ? $question : array($question));
   }
   else {
@@ -317,7 +317,7 @@ function quiz_answer_form_submit($form, &$form_state) {
 }
 
 function quiz_question_element_validate(&$element, &$form_state) {
-  return QuestionPlugin::elementValidate($element, $form_state);
+  return QuestionHandler::elementValidate($element, $form_state);
 }
 
 function quiz_report_form_element_validate(&$element, &$form_state) {

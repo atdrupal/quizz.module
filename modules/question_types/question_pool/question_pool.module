@@ -46,7 +46,7 @@ function question_pool_forms($form_id, $args) {
  * @param QuestionType $question_type
  */
 function question_pool_quiz_question_type_insert($question_type) {
-  if ('pool' === $question_type->plugin) {
+  if ('pool' === $question_type->handler) {
     $installer = new QuestionTypeInstaller();
     $installer->setup($question_type);
   }
