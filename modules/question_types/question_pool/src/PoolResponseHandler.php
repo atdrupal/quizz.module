@@ -23,7 +23,6 @@ class PoolResponseHandler extends ResponseHandler {
       $this->answer = $correct->answer;
       $this->score = $correct->score;
     }
-    dsm($this->answer);
   }
 
   /**
@@ -38,21 +37,12 @@ class PoolResponseHandler extends ResponseHandler {
       ))->fetch();
   }
 
-  /**
-   * Implementation of isValid
-   * @see QuizQuestionResponse#isValid()
-   */
   public function isValid() {
-    return ($this->answer == 2) ? t("You haven't completed the quiz pool") : TRUE;
-  }
-
-  /**
-   * Indicate whether the response has been evaluated (scored) yet.
-   * Questions that require human scoring (e.g. essays) may need to manually
-   * toggle this.
-   */
-  public function isEvaluated() {
-    return TRUE;
+    if (2 == $this->answer) { // @TODO Number 2 here is too magic.
+      drupal_set_message(t("You haven't completed the quiz pool"), 'warning');
+      return FALSE;
+    }
+    return parent::isValid();
   }
 
   /**
