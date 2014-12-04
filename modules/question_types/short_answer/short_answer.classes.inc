@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * The main classes for the short answer question type.
@@ -271,7 +271,7 @@ class ShortAnswerQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class ShortAnswerResponse extends QuizQuestionResponse {
+class ShortAnswerResponse extends ResponseHandler {
 
   /**
    * Get all quiz scores that haven't been evaluated yet.

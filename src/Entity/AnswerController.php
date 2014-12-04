@@ -3,7 +3,7 @@
 namespace Drupal\quizz\Entity;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 use EntityAPIController;
 use RuntimeException;
 
@@ -34,7 +34,7 @@ class AnswerController extends EntityAPIController {
    * @param string $answer
    * @param int $question_qid
    * @param int $question_vid
-   * @return \Drupal\quiz_question\QuizQuestionResponse
+   * @return \Drupal\quiz_question\ResponseHandler
    *  The appropriate QuizQuestionResponce extension instance
    */
   public function getHandler($result_id, Question $question = NULL, $answer = NULL, $question_qid = NULL, $question_vid = NULL) {
@@ -70,7 +70,7 @@ class AnswerController extends EntityAPIController {
   private function doGetInstance(Question $question, $result_id, $answer) {
     $plugin_info = $question->getPluginInfo();
     $response_provider = new $plugin_info['response provider']($result_id, $question, $answer);
-    if (!$response_provider instanceof QuizQuestionResponse) {
+    if (!$response_provider instanceof ResponseHandler) {
       throw new RuntimeException('The question-response isn\'t a QuizQuestionResponse. It needs to extend the QuizQuestionResponse interface, or extend the abstractQuizQuestionResponse class.');
     }
 

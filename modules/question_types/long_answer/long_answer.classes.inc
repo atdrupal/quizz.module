@@ -2,7 +2,7 @@
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * Long answer classes.
@@ -198,7 +198,7 @@ class LongAnswerQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class LongAnswerResponse extends QuizQuestionResponse {
+class LongAnswerResponse extends ResponseHandler {
 
   /**
    * Get all scores that have not yet been evaluated.

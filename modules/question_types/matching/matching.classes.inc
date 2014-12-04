@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quiz_question\QuizQuestionResponse;
+use Drupal\quiz_question\ResponseHandler;
 
 /**
  * matching.classes
@@ -227,6 +227,7 @@ class MatchingQuestion extends QuestionPlugin {
       $response = new MatchingResponse($result_id, $this->question);
       $responses = $response->getResponse();
     }
+
     list($matches, $select_option) = $this->getSubquestions();
     //$form['#theme'] = 'matching_subquestion_form';
     foreach ($matches as $match) {
@@ -235,16 +236,21 @@ class MatchingQuestion extends QuestionPlugin {
           '#type'    => 'select',
           '#options' => $this->customShuffle($select_option),
       );
+
       if ($responses) {
         // If this question already has been answered
         $form[$match['match_id']]['#default_value'] = $responses[$match['match_id']];
       }
     }
+
     if ($this->question->getQuestionType()->getConfig('quiz_matching_shuffle_options', TRUE)) {
       $form = $this->customShuffle($form);
     }
+
     $form['scoring_info'] = array(
-        '#markup' => '<p><em>' . t('You lose points by selecting incorrect options. You may leave an option blank to avoid losing points.') . '</em></p>',
+        '#prefix' => '<p><em>',
+        '#markup' => t('You lose points by selecting incorrect options. You may leave an option blank to avoid losing points.'),
+        '#suffix' => '</em></p>',
     );
     return $form;
   }
@@ -433,7 +439,7 @@ class MatchingQuestion extends QuestionPlugin {
 /**
  * Extension of QuizQuestionResponse
  */
-class MatchingResponse extends QuizQuestionResponse {
+class MatchingResponse extends ResponseHandler {
 
   /**
    * Constructor
