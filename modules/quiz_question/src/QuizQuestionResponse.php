@@ -355,14 +355,6 @@ abstract class QuizQuestionResponse {
   }
 
   /**
-   * Saves the quiz result. This should only be called when an answer is
-   * provided.
-   */
-  public function saveResult() {
-    $this->save();
-  }
-
-  /**
    * Utility function that returns the format of the node body
    */
   protected function getFormat() {

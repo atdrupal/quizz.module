@@ -103,7 +103,7 @@ class ResultGenerator {
       // Override the existing response.
       if (('all' === $quiz->build_on_last) || $answer->isCorrect()) {
         $answer->setResultId($result->result_id);
-        $answer->saveResult();
+        $answer->save();
       }
     }
 
