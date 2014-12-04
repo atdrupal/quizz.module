@@ -64,7 +64,7 @@ class QuizReportForm {
    */
   public static function validateElement(&$element, &$form_state) {
     $question = quiz_question_entity_load($element['qid']['#value'], $element['vid']['#value']);
-    if ($quizQuestionResponse = quiz_answer_controller()->getInstance($element['result_id']['#value'], $question)) {
+    if ($quizQuestionResponse = quiz_answer_controller()->getHandler($element['result_id']['#value'], $question)) {
       $quizQuestionResponse->getReportFormValidate($element, $form_state);
     }
   }

@@ -37,7 +37,7 @@ class AnswerController extends EntityAPIController {
    * @return \Drupal\quiz_question\QuizQuestionResponse
    *  The appropriate QuizQuestionResponce extension instance
    */
-  public function getInstance($result_id, Question $question = NULL, $answer = NULL, $question_qid = NULL, $question_vid = NULL) {
+  public function getHandler($result_id, Question $question = NULL, $answer = NULL, $question_qid = NULL, $question_vid = NULL) {
     $responses = &drupal_static(__METHOD__, array());
 
     if (is_object($question) && isset($responses[$result_id][$question->vid])) {

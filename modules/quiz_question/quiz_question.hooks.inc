@@ -217,7 +217,7 @@ function quiz_question_field_extra_fields() {
  *  Node containing all of the items from the question plus the user's answer.
  */
 function quiz_question_get_report($qid, $vid, $result_id) {
-  if (!$response_instance = quiz_answer_controller()->getInstance($result_id, NULL, NULL, $qid, $vid)) {
+  if (!$response_instance = quiz_answer_controller()->getHandler($result_id, NULL, NULL, $qid, $vid)) {
     drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array('%qid' => $qid, '%vid' => $vid)), 'error');
     return FALSE;
   }
@@ -246,7 +246,7 @@ function quiz_question_quiz_question_score($quiz, Question $question, $result_id
   $score->question_vid = $question->vid;
 
   if (isset($result_id)) {
-    $handler = quiz_answer_controller()->getInstance($result_id, $plugin->question);
+    $handler = quiz_answer_controller()->getHandler($result_id, $plugin->question);
     $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
     $score->possible = $handler->getMaxScore();
     $score->is_evaluated = $handler->isEvaluated();
