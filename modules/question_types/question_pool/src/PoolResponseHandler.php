@@ -102,6 +102,7 @@ class PoolResponseHandler extends ResponseHandler {
 
   private function evaluateQuestion(Question $question) {
     $handler = quiz_answer_controller()->getHandler($this->result_id, $question, $this->answer);
+    $result = $handler->toBareObject();
 
     // If a result_id is set, we are taking a quiz.
     if (isset($this->answer)) {
@@ -117,8 +118,8 @@ class PoolResponseHandler extends ResponseHandler {
         ->fields($keys + array(
             'answer'       => serialize($this->answer),
             'is_evaluated' => (int) $handler->isEvaluated(),
-            'is_correct'   => $this->result->is_correct,
-            'score'        => (int) $this->result->score,
+            'is_correct'   => $result->is_correct,
+            'score'        => (int) $result->score,
         ))
         ->execute()
       ;
@@ -163,8 +164,7 @@ class PoolResponseHandler extends ResponseHandler {
   /**
    * Implementation of score
    *
-   * @return uint
-   *
+   * @return int
    * @see QuizQuestionResponse#score()
    */
   public function score() {
@@ -197,21 +197,20 @@ class PoolResponseHandler extends ResponseHandler {
    * @see getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
    */
   public function getReportFormResponse() {
-    $result = db_select('quiz_pool_user_answers_questions', 'p')
+    $question_vid = db_select('quiz_pool_user_answers_questions', 'p')
       ->fields('p', array('question_vid'))
       ->condition('pool_qid', $this->question->qid)
       ->condition('pool_vid', $this->question->vid)
       ->condition('result_id', $this->result_id)
-      ->condition('is_correct', 1)
       ->execute()
-      ->fetchAllKeyed();
+      ->fetchColumn();
 
-    if (empty($result)) {
+    if (empty($question_vid)) {
       return array('#markup' => t('No question passed.'));
     }
 
-    $question_vid = reset($result);
     $question = quiz_question_entity_load(NULL, $question_vid);
+
     return quiz_answer_controller()
         ->getHandler($this->result_id, $question)
         ->getReportFormResponse()
