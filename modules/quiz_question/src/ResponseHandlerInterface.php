@@ -60,6 +60,17 @@ interface ResponseHandlerInterface {
   public function getResponse();
 
   /**
+   * Creates the report form for the admin pages, and for when a user gets
+   * feedback after answering questions.
+   *
+   * The report is a form to allow editing scores and the likes while viewing
+   * the report form
+   *
+   * @return array $form
+   */
+  public function getReportForm();
+
+  /**
    * @return array
    */
   public function getReportFormScore();

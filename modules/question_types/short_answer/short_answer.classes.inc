@@ -242,8 +242,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   public function evaluateAnswer($user_answer) {
     $score = 0;
 
-    // Ignore white spaces for correct answer and user's answer.
-    $user_answer = trim($user_answer);
+    // Ignore white spaces for correct answer
     $this->question->correct_answer = trim($this->question->correct_answer);
 
     switch ($this->question->correct_answer_evaluation) {
@@ -345,18 +344,20 @@ class ShortAnswerResponse extends ResponseHandler {
   public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
     parent::__construct($result_id, $question, $answer);
     if (!isset($answer)) {
-      $r = db_query('SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
-        FROM {quiz_short_answer_user_answers}
-        WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(':qqid' => $question->qid, ':qvid' => $question->vid, ':rid' => $result_id)
-        )->fetch();
-
-      if (!empty($r)) {
-        $this->answer = $r->answer;
-        $this->score = $r->score;
-        $this->evaluated = $r->is_evaluated;
-        $this->answer_id = $r->answer_id;
-        $this->answer_feedback = $r->answer_feedback;
-        $this->answer_feedback_format = $r->answer_feedback_format;
+      $response = db_query(
+        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
+          FROM {quiz_short_answer_user_answers}
+          WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(
+          ':qqid' => $question->qid,
+          ':qvid' => $question->vid,
+          ':rid'  => $result_id))->fetch();
+      if (!empty($response)) {
+        $this->answer = $response->answer;
+        $this->score = $response->score;
+        $this->evaluated = $response->is_evaluated;
+        $this->answer_id = $response->answer_id;
+        $this->answer_feedback = $response->answer_feedback;
+        $this->answer_feedback_format = $response->answer_feedback_format;
       }
     }
     else {
@@ -441,16 +442,6 @@ class ShortAnswerResponse extends ResponseHandler {
     );
 
     return $data;
-  }
-
-  public function getReportFormAnswerFeedback() {
-    return array(
-        '#title'         => t('Enter feedback'),
-        '#type'          => 'text_format',
-        '#default_value' => $this->answer_feedback,
-        '#format'        => isset($this->answer_feedback_format) ? $this->answer_feedback_format : filter_default_format(),
-        '#attributes'    => array('class' => array('quiz-report-score')),
-    );
   }
 
   /**

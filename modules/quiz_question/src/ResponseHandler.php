@@ -4,13 +4,15 @@ namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quizz\Entity\Answer;
-use stdClass;
 
 /**
  * Each question type must store its own response data and be able to calculate a score for
  * that data.
  */
 abstract class ResponseHandler extends ResponseHandlerBase {
+
+  /** @var bool */
+  public $allow_feedback = FALSE;
 
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
@@ -124,37 +126,29 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   }
 
   /**
-   * Creates the report form for the admin pages, and for when a user gets
-   * feedback after answering questions.
-   *
-   * The report is a form to allow editing scores and the likes while viewing
-   * the report form
-   *
-   * @return array $form
+   * {@inheritdoc}
    */
-  public function getReportForm() {
+  public function getReportForm($form = array()) {
     global $user;
-
-    $form = array();
 
     // Add general data, and data from the question type implementation
     $form['qid'] = array('#type' => 'value', '#value' => $this->question->qid);
     $form['vid'] = array('#type' => 'value', '#value' => $this->question->vid);
     $form['result_id'] = array('#type' => 'value', '#value' => $this->result_id);
-
-    if ($this->result->canAccessOwnScore($user) && ($submit = $this->getReportFormSubmit())) {
-      $form['submit'] = array('#type' => 'value', '#value' => $submit);
-    }
+    $form['max_score'] = array('#type' => 'value', '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?');
     $form['question'] = $this->getReportFormQuestion();
 
     if ($this->result->canAccessOwnScore($user)) {
-      $form['answer_feedback'] = $this->getReportFormAnswerFeedback();
+      if ($submit = $this->getReportFormSubmit()) {
+        $form['submit'] = array('#type' => 'value', '#value' => $submit);
+      }
     }
 
-    $form['max_score'] = array(
-        '#type'  => 'value',
-        '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?',
-    );
+    if ($this->result->canAccessOwnScore($user)) {
+      if ($answer_feedback = $this->getReportFormAnswerFeedback()) {
+        $form['answer_feedback'] = $answer_feedback;
+      }
+    }
 
     $labels = array(
         'attempt'         => t('Your answer'),
@@ -175,26 +169,30 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       }
     }
 
-    if ($this->isEvaluated()) {
-      $score = $this->getScore();
-      $class = $this->isCorrect() ? 'q-correct' : 'q-wrong';
-    }
-    else {
-      $score = t('?');
-      $class = 'q-waiting';
-    }
-
     if (quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
       $form['score'] = $this->getReportFormScore();
     }
 
+    $score = t('?');
+    $class = 'q-waiting';
+    if ($this->isEvaluated()) {
+      $score = $this->getScore();
+      $class = $this->isCorrect() ? 'q-correct' : 'q-wrong';
+    }
+
     if ($this->canReview('score') || quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
-      $form['score_display']['#markup'] = theme('quiz_question_score', array('score' => $score, 'max_score' => $this->getQuestionMaxScore(), 'class' => $class));
+      $form['score_display']['#markup'] = theme('quiz_question_score', array(
+          'score'     => $score,
+          'max_score' => $this->getQuestionMaxScore(),
+          'class'     => $class
+      ));
     }
 
     $headers = array_intersect_key($labels, $rows[0]);
-    $type = $this->getQuizQuestion()->question->type;
-    $form['response']['#markup'] = theme('quiz_question_feedback__' . $type, array('labels' => $headers, 'data' => $rows));
+    $form['response']['#markup'] = theme('quiz_question_feedback__' . $this->question->type, array(
+        'labels' => $headers,
+        'data'   => $rows
+    ));
 
     if ($this->canReview('question_feedback')) {
       if (!empty($this->question_handler->question)) {
@@ -212,9 +210,8 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   /**
    * Get the question part of the reportForm
    * @return array
-   *  FAPI form array holding the question
    */
-  public function getReportFormQuestion() {
+  protected function getReportFormQuestion() {
     $question = clone ($this->question);
     $question->no_answer_form = TRUE;
     $output = entity_view('quiz_question', array($question), 'feedback');
@@ -223,28 +220,36 @@ abstract class ResponseHandler extends ResponseHandlerBase {
 
   /**
    * Get the response part of the report form
-   * @return array
+   * @return array[]
    *  Array of choices
    */
   public function getReportFormResponse() {
-    $data = array();
-
-    $data[] = array(
-        'choice'            => 'True',
-        'attempt'           => 'Did the user choose this?',
-        'correct'           => 'Was their answer correct?',
-        'score'             => 'Points earned for this answer',
-        'answer_feedback'   => 'Feedback specific to the answer',
-        'question_feedback' => 'General question feedback for any answer',
-        'solution'          => 'Is this choice the correct solution?',
-        'quiz_feedback'     => 'Quiz feedback at this time',
+    return array(
+        array(
+            'choice'            => 'True',
+            'attempt'           => 'Did the user choose this?',
+            'correct'           => 'Was their answer correct?',
+            'score'             => 'Points earned for this answer',
+            'answer_feedback'   => 'Feedback specific to the answer',
+            'question_feedback' => 'General question feedback for any answer',
+            'solution'          => 'Is this choice the correct solution?',
+            'quiz_feedback'     => 'Quiz feedback at this time',
+        )
     );
-
-    return $data;
   }
 
   public function getReportFormAnswerFeedback() {
-    return FALSE;
+    $feedback = isset($this->answer_feedback) ? $this->answer_feedback : '';
+    $format = isset($this->answer_feedback_format) ? $this->answer_feedback_format : filter_default_format();
+    if ($this->allow_feedback) {
+      return array(
+          '#title'         => t('Enter feedback'),
+          '#type'          => 'text_format',
+          '#default_value' => filter_xss_admin($feedback),
+          '#format'        => $format,
+          '#attributes'    => array('class' => array('quiz-report-score')),
+      );
+    }
   }
 
   /**

@@ -122,9 +122,7 @@ class QuizPagesResponse extends ResponseHandler {
    * @see QuizQuestionResponse#getReportForm()
    */
   public function getReportForm() {
-    return array(
-        '#no_report' => TRUE,
-    );
+    return array('#no_report' => TRUE);
   }
 
 }

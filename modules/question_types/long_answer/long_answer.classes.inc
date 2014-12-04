@@ -370,16 +370,6 @@ class LongAnswerResponse extends ResponseHandler {
     return $data;
   }
 
-  public function getReportFormAnswerFeedback() {
-    return array(
-        '#title'         => t('Enter feedback'),
-        '#type'          => 'text_format',
-        '#default_value' => isset($this->answer_feedback) ? check_markup($this->answer_feedback, $this->answer_feedback_format) : '',
-        '#format'        => isset($this->answer_feedback_format) ? $this->answer_feedback_format : filter_default_format(),
-        '#attributes'    => array('class' => array('quiz-report-score')),
-    );
-  }
-
   /**
    * Implementation of getReportFormSubmit
    *
@@ -396,7 +386,8 @@ class LongAnswerResponse extends ResponseHandler {
     $max = $this->question->max_score;
     // Check to make sure that entered score is not higher than max allowed score.
     if ($element['score']['#value'] > $max) {
-      form_error($element['score'], t('The score needs to be a number between @min and @max', array('@min' => 0, '@max' => $max)));
+      $msg = t('The score needs to be a number between @min and @max', array('@min' => 0, '@max' => $max));
+      form_error($element['score'], $msg);
     }
   }
 
