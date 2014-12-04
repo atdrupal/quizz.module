@@ -42,7 +42,7 @@ class AnswerController extends EntityAPIController {
 
     if (is_object($question) && isset($responses[$result_id][$question->vid])) {
       // We refresh the question in case it has been changed since we cached the response
-      $responses[$result_id][$question->vid]->refreshQuestionNode($question);
+      $responses[$result_id][$question->vid]->refreshQuestionEntity($question);
       if (FALSE !== $responses[$result_id][$question->vid]->is_skipped) {
         return $responses[$result_id][$question->vid];
       }

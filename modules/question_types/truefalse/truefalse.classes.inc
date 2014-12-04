@@ -263,15 +263,6 @@ class TrueFalseResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
-  }
-
-  /**
    * Implementation of getCorrectAnswer
    */
   public function getUserAnswer() {

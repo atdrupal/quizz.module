@@ -117,15 +117,6 @@ class QuizPagesResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
-  }
-
-  /**
    * Implementation of getReportForm
    *
    * @see QuizQuestionResponse#getReportForm()

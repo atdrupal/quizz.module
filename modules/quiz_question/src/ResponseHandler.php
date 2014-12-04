@@ -3,31 +3,14 @@
 namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionHandler;
-use Drupal\quizz\Entity\Result;
+use Drupal\quizz\Entity\Answer;
 use stdClass;
 
 /**
  * Each question type must store its own response data and be able to calculate a score for
  * that data.
  */
-abstract class ResponseHandler {
-
-  /** @var Result */
-  protected $result;
-  protected $result_id = 0;
-  protected $is_correct = FALSE;
-  protected $evaluated = TRUE;
-
-  /** @var Question */
-  public $question = NULL;
-
-  /** @var QuestionHandler */
-  public $question_handler = NULL;
-  protected $answer = NULL;
-  protected $score;
-  public $is_skipped;
-  public $is_doubtful;
+abstract class ResponseHandler extends ResponseHandlerBase {
 
   /**
    * Create a new user response.
@@ -53,37 +36,12 @@ abstract class ResponseHandler {
   }
 
   /**
-   * @return QuestionHandler
+   * {@inheritdoc}
+   * This default version returns TRUE if the score is equal to the maximum
+   * possible score.
    */
-  function getQuizQuestion() {
-    return $this->question_handler;
-  }
-
-  /**
-   * Used to refresh this instances question in case drupal has changed it.
-   *
-   * @param Question $newQuestion
-   */
-  public function refreshQuestionNode($newQuestion) {
-    $this->question = $newQuestion;
-  }
-
-  /**
-   * Indicate whether the response has been evaluated (scored) yet.
-   * Questions that require human scoring (e.g. essays) may need to manually
-   * toggle this.
-   */
-  public function isEvaluated() {
-    return (bool) $this->evaluated;
-  }
-
-  /**
-   * Check to see if the answer is marked as correct.
-   *
-   * This default version returns TRUE iff the score is equal to the maximum possible score.
-   */
-  function isCorrect() {
-    return ($this->getMaxScore() == $this->getScore());
+  public function isCorrect() {
+    return $this->getMaxScore() == $this->getScore();
   }
 
   /**
@@ -152,17 +110,6 @@ abstract class ResponseHandler {
   }
 
   /**
-   * Validates response from a quiz taker. If the response isn't valid the quiz taker won't be allowed to proceed.
-   *
-   * @return
-   *  True if the response is valid.
-   *  False otherwise
-   */
-  public function isValid() {
-    return TRUE;
-  }
-
-  /**
    * Get data suitable for reporting a user's score on the question.
    * This expects an object with the following attributes:
    *
@@ -198,7 +145,6 @@ abstract class ResponseHandler {
    * the report form
    *
    * @return array $form
-   *  Drupal form array
    */
   public function getReportForm() {
     global $user;
@@ -270,15 +216,16 @@ abstract class ResponseHandler {
       }
     }
 
-    $form['#theme'] = $this->getReportFormTheme();
+    if ($theme = $this->getReportFormTheme()) {
+      $form['#theme'] = $theme;
+    }
 
     return $form;
   }
 
   /**
-   * get the question part of the reportForm
-   *
-   * @return
+   * Get the question part of the reportForm
+   * @return array
    *  FAPI form array holding the question
    */
   public function getReportFormQuestion() {
@@ -290,8 +237,7 @@ abstract class ResponseHandler {
 
   /**
    * Get the response part of the report form
-
-   * @return
+   * @return array
    *  Array of choices
    */
   public function getReportFormResponse() {
@@ -316,16 +262,6 @@ abstract class ResponseHandler {
   }
 
   /**
-   * Get the submit function for the reportForm
-   *
-   * @return
-   *  Submit function as a string, or FALSE if no submit function
-   */
-  public function getReportFormSubmit() {
-    return FALSE;
-  }
-
-  /**
    * Get the validate function for the reportForm
    *
    * @return
@@ -346,34 +282,6 @@ abstract class ResponseHandler {
   }
 
   /**
-   * Utility function that returns the format of the node body
-   */
-  protected function getFormat() {
-    $body = field_get_items('node', $this->question, 'body');
-    return ($body ? $body[0]['format'] : NULL);
-  }
-
-  /**
-   * Save the current response.
-   */
-  abstract public function save();
-
-  /**
-   * Delete the response.
-   */
-  abstract public function delete();
-
-  /**
-   * Calculate the score for the response.
-   */
-  abstract public function score();
-
-  /**
-   * Get the user's response.
-   */
-  abstract public function getResponse();
-
-  /**
    * Can the quiz taker view the requested review?
    */
   public function canReview($option) {
@@ -385,11 +293,6 @@ abstract class ResponseHandler {
     return $can_review[$option];
   }
 
-  /**
-   * Implementation of getReportFormScore
-   *
-   * @see QuizQuestionResponse#getReportFormScore()
-   */
   public function getReportFormScore() {
     $score = ($this->isEvaluated()) ? $this->getScore() : '';
     return array(
@@ -403,15 +306,6 @@ abstract class ResponseHandler {
         '#required'         => TRUE,
         '#field_suffix'     => '/ ' . $this->getMaxScore(),
     );
-  }
-
-  /**
-   * Set the target result ID for this Question response.
-   *
-   * Useful for cloning entire result sets.
-   */
-  public function setResultId($result_id) {
-    $this->result_id = $result_id;
   }
 
 }

@@ -10,44 +10,40 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class PoolResponseHandler extends ResponseHandler {
 
-  /**
-   * ID of the answers.
-   */
   protected $user_answer_ids;
   protected $choice_order;
   protected $need_evaluated;
 
-  /**
-   * Constructor
-   */
   public function __construct($result_id, Question $question, $answer = NULL) {
     parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
-      $r = $this->getCorrectAnswer();
-      if (!empty($r)) {
-        $this->answer = $r->answer;
-        $this->score = $r->score;
-      }
-    }
-    else {
+    if (isset($answer)) {
       $this->answer = $answer;
     }
+    elseif ($correct = $this->getCorrectAnswer()) {
+      $this->answer = $correct->answer;
+      $this->score = $correct->score;
+    }
+    dsm($this->answer);
   }
 
   /**
    * Implementation of getCorrectAnswer
    */
   public function getCorrectAnswer() {
-    return db_query('SELECT answer, score FROM {quiz_pool_user_answers} WHERE question_vid = :qvid AND result_id = :rid', array(':qvid' => $this->question->vid, ':rid' => $this->result_id))->fetch();
+    return db_query('SELECT answer, score'
+        . ' FROM {quiz_pool_user_answers}'
+        . ' WHERE question_vid = :qvid AND result_id = :rid', array(
+          ':qvid' => $this->question->vid,
+          ':rid'  => $this->result_id
+      ))->fetch();
   }
 
   /**
    * Implementation of isValid
-   *
    * @see QuizQuestionResponse#isValid()
    */
   public function isValid() {
-    return ($this->answer == 2) ? t('You haven\'t completed the quiz pool') : TRUE;
+    return ($this->answer == 2) ? t("You haven't completed the quiz pool") : TRUE;
   }
 
   /**
@@ -172,16 +168,6 @@ class PoolResponseHandler extends ResponseHandler {
    */
   public function isAllWrong() {
     return FALSE;
-  }
-
-  /**
-   * Implementation of getResponse
-   *
-   * @return answer
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
   }
 
   /**

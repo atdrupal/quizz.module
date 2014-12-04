@@ -342,17 +342,13 @@ class LongAnswerResponse extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    return (int) db_query('SELECT score FROM {quiz_long_answer_user_answers}
-      WHERE result_id = :result_id AND question_vid = :question_vid', array(':result_id' => $this->result_id, ':question_vid' => $this->question->vid))->fetchField();
-  }
-
-  /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
+    return (int) db_query(
+        'SELECT score
+          FROM {quiz_long_answer_user_answers}
+          WHERE result_id = :result_id AND question_vid = :question_vid', array(
+          ':result_id'    => $this->result_id,
+          ':question_vid' => $this->question->vid
+      ))->fetchField();
   }
 
   /**

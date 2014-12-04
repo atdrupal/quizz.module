@@ -96,24 +96,6 @@ class QuizDirectionsQuestion extends QuestionHandler {
 class QuizDirectionsResponse extends ResponseHandler {
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
-   */
-  public function save() {
-
-  }
-
-  /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-
-  }
-
-  /**
    * Implementation of score
    *
    * @see QuizQuestionResponse#score()
@@ -135,22 +117,8 @@ class QuizDirectionsResponse extends ResponseHandler {
     return $this->score = 0;
   }
 
-  /**
-   * Implementation of isCorrect
-   *
-   * @see QuizQuestionResponse#isCorrect()
-   */
   public function isCorrect() {
     return TRUE;
-  }
-
-  /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
   }
 
   /**

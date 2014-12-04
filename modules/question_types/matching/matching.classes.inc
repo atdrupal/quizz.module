@@ -524,15 +524,6 @@ class MatchingResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
-  }
-
-  /**
    * Implementation of getReportFormResponse
    */
   public function getReportFormResponse() {
