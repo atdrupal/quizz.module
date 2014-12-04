@@ -92,7 +92,7 @@ function quiz_question_update_7601() {
         'label'       => $node_type->name,
         'description' => $node_type->description,
         'help'        => $node_type->help,
-        'plugin'      => $node_type->type,
+        'handler'     => $node_type->type,
         'data'        => array(
             'multilingual' => (int) variable_get('language_content_type_' . $node_type->type, 0)
         )
@@ -173,6 +173,8 @@ function quiz_question_update_7611() {
  * Rename {quiz_question_type}.plugin to *.handler
  */
 function quiz_question_update_7612() {
-  $spec = array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question handler type (shortanswer, longanswer, truefalse, …)');
-  db_change_field('quiz_question_type', 'plugin', 'handler', $spec);
+  if (!db_field_exists('quiz_question_type', 'handler')) {
+    $spec = array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question handler type (shortanswer, longanswer, truefalse, …)');
+    db_change_field('quiz_question_type', 'plugin', 'handler', $spec);
+  }
 }
