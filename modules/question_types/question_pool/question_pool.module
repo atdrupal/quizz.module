@@ -66,3 +66,19 @@ function question_pool_answer_form_rebuild($form) {
 
   return $form;
 }
+
+//require_once drupal_get_path('module', 'question_pool') . '/question_pool.pages.inc';
+//$form['navigation']['pool_btn'] = array(
+//    '#ajax'   => array(
+//        'callback' => 'question_pool_ajax_callback',
+//        'wrapper'  => 'quiz-question-answering-form',
+//    ),
+//    '#submit' => array('question_pool_answer_submit'),
+//);
+// $form['#after_build'][] = 'question_pool_answer_form_rebuild';
+// $form['#validate'][] = 'question_pool_form_validate';
+//$form['navigation']['retry'] = array(
+//    '#type'   => 'submit',
+//    '#submit' => array('question_pool_retry_submit'),
+//    '#value'  => 'Retry'
+//);

@@ -69,11 +69,15 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
     $this->assertText('Pool body text');
     $this->assertText('Choose one');
 
+    // @TODO: Test with quiz.repeat_until_correct = 1
+
     // Try failed answer, found retry button
     # …
 
     // Try correct answer
     # $this->drupalPost(NULL, array('question[1][0]' => 1), t('Finish'));
+
+    // Test result is saved correctly
   }
 
 }
