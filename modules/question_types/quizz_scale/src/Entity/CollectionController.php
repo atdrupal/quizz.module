@@ -19,6 +19,18 @@ class CollectionController extends EntityAPIControllerExportable {
     return $this->writing;
   }
 
+  public function save($entity, \DatabaseTransaction $transaction = NULL) {
+    if (!$entity->name) {
+      $entity->name = 'collection_' . REQUEST_TIME . rand(1, 1000);
+    }
+
+    if (!$entity->label) {
+      $entity->label = $entity->name;
+    }
+
+    return parent::save($entity, $transaction);
+  }
+
   public function load($ids = array(), $conditions = array()) {
     $collections = parent::load($ids, $conditions);
 
@@ -165,7 +177,8 @@ class CollectionController extends EntityAPIControllerExportable {
       $collection = entity_create('scale_collection', array(
           'question_type' => $question_type->type,
           'for_all'       => TRUE,
-          'uid'           => 1
+          'uid'           => 1,
+          'label'         => $_alternatives[0] . ' - ' . $_alternatives[count($_alternatives) - 1],
       ));
       $collection->save();
       $collection->insertAlternatives($_alternatives);
