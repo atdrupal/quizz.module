@@ -341,7 +341,7 @@ function quiz_results_page(QuizEntity $quiz) {
 
 function quiz_results_user_page(QuizEntity $quiz) {
   global $user;
-  return views_embed_view('quiz_user_results', 'page', $quiz->qid, $user->uid);
+  return views_embed_view('quiz_user_results', 'default', $quiz->qid, $user->uid);
 }
 
 /**
