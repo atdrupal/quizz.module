@@ -51,34 +51,3 @@ function question_pool_quiz_question_type_insert($question_type) {
     $installer->setup($question_type);
   }
 }
-
-function question_pool_answer_form_rebuild($form) {
-  $qid = $form['#qid'];
-  $pool = $form['#pool'];
-  $wrapper = entity_metadata_wrapper('quiz_question', $pool);
-  $total = $wrapper->field_question_reference->count();
-  $session = $_SESSION['quiz'][$qid];
-  $passed = $session['pool_' . $pool->qid]['passed'];
-
-  if (!$passed && $session['pool_' . $pool->qid]['delta'] < $total) {
-    $form['navigation']['submit']['#attributes']['class']['js-hide'] = 'js-hide';
-  }
-
-  return $form;
-}
-
-//require_once drupal_get_path('module', 'question_pool') . '/question_pool.pages.inc';
-//$form['navigation']['pool_btn'] = array(
-//    '#ajax'   => array(
-//        'callback' => 'question_pool_ajax_callback',
-//        'wrapper'  => 'quiz-question-answering-form',
-//    ),
-//    '#submit' => array('question_pool_answer_submit'),
-//);
-// $form['#after_build'][] = 'question_pool_answer_form_rebuild';
-// $form['#validate'][] = 'question_pool_form_validate';
-//$form['navigation']['retry'] = array(
-//    '#type'   => 'submit',
-//    '#submit' => array('question_pool_retry_submit'),
-//    '#value'  => 'Retry'
-//);

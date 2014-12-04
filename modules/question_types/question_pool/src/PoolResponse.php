@@ -65,6 +65,30 @@ class PoolResponse extends ResponseHandler {
    * @see QuizQuestionResponse#save()
    */
   public function save() {
+    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
+    $sess = &$_SESSION['quiz_' . $this->result->getQuiz()->qid];
+    $sess_key = "pool_{$this->question->qid}";
+    $passed = &$sess[$sess_key]['passed'];
+    $delta = $sess[$sess_key]['delta'];
+    if ($question = $wrapper->field_question_reference[$delta]->value()) {
+      $result = $this->evaluateQuestion($question);
+
+      if ($result->is_valid) {
+        if ($result->is_correct) {
+          $passed = true;
+        }
+
+        $total = $wrapper->field_question_reference->count();
+        if ($sess['pool_' . $this->question->qid]['delta'] < $total) {
+          $sess['pool_' . $this->question->qid]['delta'] ++;
+        }
+      }
+    }
+
+    if (!$passed) {
+      $question = $wrapper->field_question_reference[$delta - 1]->value();
+    }
+
     db_insert('quiz_pool_user_answers')
       ->fields(array(
           'question_qid' => $this->question->qid,
@@ -74,6 +98,38 @@ class PoolResponse extends ResponseHandler {
           'answer'       => (int) $this->answer,
       ))
       ->execute();
+  }
+
+  private function evaluateQuestion(Question $question) {
+    $handler = quiz_answer_controller()->getHandler($this->result_id, $question, $this->answer);
+
+    // If a result_id is set, we are taking a quiz.
+    if (isset($this->answer)) {
+      $keys = array(
+          'pool_qid'     => $this->question->qid,
+          'pool_vid'     => $this->question->vid,
+          'question_qid' => $this->result->qid,
+          'question_vid' => $this->result->vid,
+          'result_id'    => $this->result->result_id,
+      );
+      db_merge('quiz_pool_user_answers_questions')
+        ->key($keys)
+        ->fields($keys + array(
+            'answer'       => serialize($this->answer),
+            'is_evaluated' => (int) $handler->isEvaluated(),
+            'is_correct'   => $this->result->is_correct,
+            'score'        => (int) $this->result->score,
+        ))
+        ->execute()
+      ;
+    }
+
+    // fix error with score
+    if ($this->result->score < 0) {
+      $this->result->score = 0;
+    }
+
+    return $this->result;
   }
 
   /**
@@ -157,7 +213,7 @@ class PoolResponse extends ResponseHandler {
     $question_vid = reset($result);
     $question = quiz_question_entity_load(NULL, $question_vid);
     return quiz_answer_controller()
-        ->getInstance($this->result_id, $question)
+        ->getHandler($this->result_id, $question)
         ->getReportFormResponse()
     ;
   }
