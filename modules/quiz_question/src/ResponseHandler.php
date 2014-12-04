@@ -44,7 +44,7 @@ abstract class ResponseHandler {
     $this->answer = $input;
 
     /* @var $answer Answer */
-    $conds = array(':result_id' => $result_id, ':question_qid' => $question->qid, ':question_vid' => $question->vid);
+    $conds = array('result_id' => $result_id, 'question_qid' => $question->qid, 'question_vid' => $question->vid);
     if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
       $answer = reset($find);
       $this->is_doubtful = $answer->is_doubtful;
