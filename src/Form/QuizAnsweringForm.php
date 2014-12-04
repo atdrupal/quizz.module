@@ -206,10 +206,10 @@ class QuizAnsweringForm {
       return;
     }
 
+    // There was an answer submitted.
     foreach (array_keys($form_state['values']['question']) as $question_id) {
-      // There was an answer submitted.
-      if ($current_question = quiz_question_entity_load($question_id)) {
-        $current_question->getHandler()->getAnsweringFormValidate($form, $form_state);
+      if ($_question = quiz_question_entity_load($question_id)) {
+        $_question->getHandler()->getAnsweringFormValidate($form, $form_state);
       }
     }
   }

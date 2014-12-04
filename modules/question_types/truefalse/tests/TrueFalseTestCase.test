@@ -59,10 +59,6 @@ class TrueFalseTestCase extends QuizQuestionTestCase {
     $this->assertText('True');
     $this->assertText('False');
 
-    // Test validation.
-    $this->drupalPost(NULL, array(), t('Finish'));
-    $this->assertText('You must provide an answer.');
-
     // Test correct question.
     $this->drupalGet("quiz/$quiz->qid/take");
     $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
