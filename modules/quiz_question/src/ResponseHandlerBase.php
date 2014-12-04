@@ -4,7 +4,6 @@ namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
-use Drupal\quiz_question\QuestionHandler;
 use Drupal\quizz\Entity\Result;
 
 abstract class ResponseHandlerBase implements ResponseHandlerInterface {
