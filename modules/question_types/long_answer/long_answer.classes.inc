@@ -200,6 +200,9 @@ class LongAnswerQuestion extends QuestionHandler {
  */
 class LongAnswerResponse extends ResponseHandler {
 
+  /** @var bool */
+  protected $allow_feedback = TRUE;
+
   /**
    * Get all scores that have not yet been evaluated.
    *

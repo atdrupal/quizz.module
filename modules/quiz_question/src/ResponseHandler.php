@@ -12,7 +12,7 @@ use Drupal\quizz\Entity\Answer;
 abstract class ResponseHandler extends ResponseHandlerBase {
 
   /** @var bool */
-  public $allow_feedback = FALSE;
+  protected $allow_feedback = FALSE;
 
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);

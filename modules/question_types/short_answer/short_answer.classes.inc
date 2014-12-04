@@ -272,6 +272,9 @@ class ShortAnswerQuestion extends QuestionHandler {
  */
 class ShortAnswerResponse extends ResponseHandler {
 
+  /** @var bool */
+  protected $allow_feedback = TRUE;
+
   /**
    * Get all quiz scores that haven't been evaluated yet.
    *
