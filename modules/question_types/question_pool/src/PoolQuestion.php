@@ -74,19 +74,17 @@ class PoolQuestion extends QuestionPlugin {
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $quiz = quiz_result_load($result_id)->getQuiz();
     $form = parent::getAnsweringForm($form_state, $result_id);
-    $obj = new AnswerForm($quiz, $this->question, $_SESSION['quiz_' . $quiz->qid]);
+    $obj = new AnswerForm($quiz, $this->question, $_SESSION['quiz'][$quiz->qid]);
     return $obj->get($form);
   }
 
   /**
    * Implementation of getMaximumScore.
-   *
    * @see QuizQuestion#getMaximumScore()
    */
   public function getMaximumScore() {
     $score = 0;
-    $question_entity = quiz_question_entity_load($this->question->qid, $this->question->vid);
-    $wrapper = entity_metadata_wrapper('quiz_question', $question_entity);
+    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     /* @var $question Question */
     foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
       // When referencing entity is deleted

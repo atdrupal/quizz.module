@@ -1,15 +1,14 @@
 <?php
 
 /**
- * …
- * @param type $form
- * @param type $form_state
- * @param type $result_id
- * @param type $question
+ * @param array $form
+ * @param array $form_state
+ * @param int $result_id
+ * @param \Drupal\quiz_question\Entity\Question $question
  * @return string
  */
 function question_pool_form($form, &$form_state, $result_id, $question) {
-  $form += $question->getAnsweringForm($form_state, $result_id);
+  $form += $question->getPlugin()->getAnsweringForm($form_state, $result_id);
   $form['#validate'][] = 'question_pool_form_validate';
   return $form;
 }
