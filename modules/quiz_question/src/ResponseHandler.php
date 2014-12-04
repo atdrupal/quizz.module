@@ -79,24 +79,20 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    * Represent the response as a stdClass object.
    *
    * Convert data to an object that has the following properties:
-   * - $score
-   * - $result_id
-   * - $qid
-   * - $vid
-   * - $is_correct
+   *  score, result_id, question_qid, question_vid, is_correct, …
    */
-  function toBareObject() {
-    $response = new stdClass();
-    $response->score = $this->getScore(); // This can be 0 for unscored.
-    $response->question_qid = $this->question->qid;
-    $response->question_vid = $this->question->vid;
-    $response->result_id = $this->result_id;
-    $response->is_correct = (int) $this->isCorrect();
-    $response->is_evaluated = $this->isEvaluated();
-    $response->is_skipped = 0;
-    $response->is_doubtful = isset($_POST['is_doubtful']) ? (int) ($_POST['is_doubtful']) : 0;
-    $response->is_valid = $this->isValid();
-    return $response;
+  public function toBareObject() {
+    return (object) array(
+          'score'        => $this->getScore(),
+          'question_qid' => $this->question->qid,
+          'question_vid' => $this->question->vid,
+          'result_id'    => $this->result_id,
+          'is_correct'   => (int) $this->isCorrect(),
+          'is_evaluated' => $this->isEvaluated(),
+          'is_skipped'   => isset($this->is_skipped) ? (int) $this->is_skipped : 0,
+          'is_doubtful'  => isset($this->is_doubtful) ? (int) $this->is_doubtful : 0,
+          'is_valid'     => $this->isValid(),
+    );
   }
 
   /**
