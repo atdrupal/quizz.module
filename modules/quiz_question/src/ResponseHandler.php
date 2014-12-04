@@ -45,7 +45,7 @@ abstract class ResponseHandler {
 
     /* @var $answer Answer */
     $conds = array(':result_id' => $result_id, ':question_qid' => $question->qid, ':question_vid' => $question->vid);
-    if ($find = entity('quiz_result_answer', FALSE, $conds)) {
+    if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
       $answer = reset($find);
       $this->is_doubtful = $answer->is_doubtful;
       $this->is_skipped = $answer->is_skipped;
