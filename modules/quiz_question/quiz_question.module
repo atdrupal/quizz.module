@@ -142,7 +142,7 @@ function quiz_question_report_form(Result $result, Question $question) {
   $question->findLegacyMaxScore($result);
 
   return quiz_answer_controller()
-      ->getInstance($result->result_id, $question, $question->answers[0])
+      ->getHandler($result->result_id, $question, $question->answers[0])
       ->getReportForm();
 }
 

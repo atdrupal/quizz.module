@@ -62,7 +62,7 @@ class FormSubmission extends QuizTakeBaseController {
 
       // Delete the user's answer.
       quiz_answer_controller()
-        ->getInstance($this->result->result_id, $question)
+        ->getHandler($this->result->result_id, $question)
         ->delete();
 
       // Mark our question attempt as skipped, reset the correct and points flag.
@@ -112,7 +112,7 @@ class FormSubmission extends QuizTakeBaseController {
 
         $answer_value = $form_state['values']['question'][$question_id];
 
-        $instance = quiz_answer_controller()->getInstance($this->result->result_id, $current_question, $answer_value);
+        $instance = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $answer_value);
         $instance->delete();
         $instance->save();
         $response = $instance->toBareObject();
@@ -189,7 +189,7 @@ class FormSubmission extends QuizTakeBaseController {
 
       // Load the Quiz answer submission from the database.
       if (!$answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $qinfo['vid'])) {
-        $qi_instance = quiz_answer_controller()->getInstance($this->result->result_id, $current_question, NULL);
+        $qi_instance = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, NULL);
         $qi_instance->delete();
         $response = $qi_instance->toBareObject();
         quiz_result_controller()

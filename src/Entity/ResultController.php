@@ -141,7 +141,7 @@ class ResultController extends EntityAPIController {
     $select->condition('answer.result_id', $result_ids);
     $answers = $select->execute()->fetchAll();
     foreach ($answers as $answer) {
-      if ($answer_instance = quiz_answer_controller()->getInstance($answer->result_id, NULL, NULL, $answer->question_qid, $answer->question_vid)) {
+      if ($answer_instance = quiz_answer_controller()->getHandler($answer->result_id, NULL, NULL, $answer->question_qid, $answer->question_vid)) {
         $answer_instance->delete();
       }
     }

@@ -202,7 +202,7 @@ abstract class QuestionPlugin {
     $current_question = quiz_question_entity_load($question_qid);
 
     // There was an answer submitted.
-    $response = quiz_answer_controller()->getInstance($_SESSION['quiz'][$quiz->qid]['result_id'], $current_question, $answer);
+    $response = quiz_answer_controller()->getHandler($_SESSION['quiz'][$quiz->qid]['result_id'], $current_question, $answer);
     if ($quiz->repeat_until_correct && !$response->isCorrect()) {
       form_set_error('', t('The answer was incorrect. Please try again.'));
 
