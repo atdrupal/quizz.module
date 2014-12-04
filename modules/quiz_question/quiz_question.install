@@ -173,6 +173,8 @@ function quiz_question_update_7611() {
  * Rename {quiz_question_type}.plugin to *.handler
  */
 function quiz_question_update_7612() {
-  $spec = array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question handler type (shortanswer, longanswer, truefalse, …)');
-  db_change_field('quiz_question_type', 'plugin', 'handler', $spec);
+  if (db_field_exists('quiz_question_type', 'plugin')) {
+    $spec = array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question handler type (shortanswer, longanswer, truefalse, …)');
+    db_change_field('quiz_question_type', 'plugin', 'handler', $spec);
+  }
 }
