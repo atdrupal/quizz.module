@@ -11,6 +11,15 @@ use Drupal\quiz_question\QuestionPlugin;
  */
 class PoolQuestion extends QuestionPlugin {
 
+  public function save($is_new = FALSE) {
+    parent::save($is_new);
+
+    db_update('quiz_question_properties')
+      ->fields(array('max_score' => $this->question->getPlugin()->getMaximumScore()))
+      ->condition('qid', $this->question->qid)
+      ->condition('vid', $this->question->vid)
+      ->execute();
+  }
   /**
    * Implementation of delete
    * @see QuestionPlugin::delete()
