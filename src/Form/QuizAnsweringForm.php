@@ -173,6 +173,19 @@ class QuizAnsweringForm {
         '#access'                  => $this->quiz->allow_skipping,
     );
 
+    // Question plugin may provide extra buttons, merge buttons to master form.
+    foreach ($form['questions'] as $id => &$elements) {
+      if (!empty($elements['question']['navigation'])) {
+        $form['navigation'] += $elements['question']['navigation'];
+        unset($elements['question']['navigation']);
+      }
+
+      if (!empty($elements['question'][$id]['navigation'])) {
+        $form['navigation'] += $elements['question'][$id]['navigation'];
+        unset($elements['question'][$id]['navigation']);
+      }
+    }
+
     // Display a confirmation dialogue if this is the last question and a user
     // is able to navigate backwards but not forced to answer correctly.
     if ($is_last && $this->quiz->backwards_navigation && !$this->quiz->repeat_until_correct) {
