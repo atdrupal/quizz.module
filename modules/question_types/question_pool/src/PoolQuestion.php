@@ -11,14 +11,14 @@ use Drupal\quiz_question\QuestionPlugin;
  */
 class PoolQuestion extends QuestionPlugin {
 
-  public function save($is_new = FALSE) {
-    parent::save($is_new);
-
-    db_update('quiz_question_properties')
-      ->fields(array('max_score' => $this->question->getPlugin()->getMaximumScore()))
-      ->condition('qid', $this->question->qid)
-      ->condition('vid', $this->question->vid)
-      ->execute();
+  public function delete($single_revision = FALSE) {
+    parent::delete($single_revision);
+    $query = db_delete('quiz_pool_user_answers');
+    $query->condition('question_qid', $this->question->qid);
+    if ($single_revision) {
+      $query->condition('question_vid', $this->question->vid);
+    }
+    $query->execute();
   }
 
   public function load() {
@@ -40,20 +40,6 @@ class PoolQuestion extends QuestionPlugin {
     }
 
     return $properties;
-  }
-
-  /**
-   * Implementation of delete
-   * @see QuestionPlugin::delete()
-   */
-  public function delete($single_revision = FALSE) {
-    parent::delete($single_revision);
-    $delete_ans = db_delete('quiz_pool_user_answers');
-    $delete_ans->condition('question_qid', $this->question->qid);
-    if ($single_revision) {
-      $delete_ans->condition('question_vid', $this->question->vid);
-    }
-    $delete_ans->execute();
   }
 
   /**
