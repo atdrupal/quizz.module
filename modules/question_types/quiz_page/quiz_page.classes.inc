@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestion.
  */
-class QuizPagesQuestion extends QuestionPlugin {
+class QuizPagesQuestion extends QuestionHandler {
 
   /**
    * Implementation of validateNode

@@ -5,7 +5,7 @@
  */
 class ShortAnswerTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'short_answer';
+  protected $questionHandler = 'short_answer';
 
   public static function getInfo() {
     return array(
@@ -178,7 +178,7 @@ class ShortAnswerTestCase extends QuizQuestionTestCase {
     }
 
     return $this->drupalCreateQuestion(array(
-          'type'  => $this->questionPlugin,
+          'type'  => $this->questionHandler,
           'title' => 'SA 1 title',
           'body'  => 'SA 1 body text.',
         ) + $settings);

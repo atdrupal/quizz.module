@@ -3,7 +3,7 @@
 namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quizz\Entity\Result;
 use stdClass;
 
@@ -22,8 +22,8 @@ abstract class ResponseHandler {
   /** @var Question */
   public $question = NULL;
 
-  /** @var QuestionPlugin */
-  public $question_plugin = NULL;
+  /** @var QuestionHandler */
+  public $question_handler = NULL;
   protected $answer = NULL;
   protected $score;
   public $is_skipped;
@@ -40,7 +40,7 @@ abstract class ResponseHandler {
     $this->result_id = $result_id;
     $this->result = quiz_result_load($result_id);
     $this->question = $question;
-    $this->question_plugin = $question->getPlugin();
+    $this->question_handler = $question->getHandler();
     $this->answer = $input;
 
     /* @var $answer Answer */
@@ -53,10 +53,10 @@ abstract class ResponseHandler {
   }
 
   /**
-   * @return QuestionPlugin
+   * @return QuestionHandler
    */
   function getQuizQuestion() {
-    return $this->question_plugin;
+    return $this->question_handler;
   }
 
   /**
@@ -119,7 +119,7 @@ abstract class ResponseHandler {
    */
   public function getMaxScore($weight_adjusted = TRUE) {
     if (!isset($this->question->max_score)) {
-      $this->question->max_score = $this->question->getPlugin()->getMaximumScore();
+      $this->question->max_score = $this->question->getHandler()->getMaximumScore();
     }
     if (isset($this->question->score_weight) && $weight_adjusted) {
       return round($this->question->max_score * $this->question->score_weight);
@@ -265,8 +265,8 @@ abstract class ResponseHandler {
     $form['response']['#markup'] = theme('quiz_question_feedback__' . $type, array('labels' => $headers, 'data' => $rows));
 
     if ($this->canReview('question_feedback')) {
-      if (!empty($this->question_plugin->question)) {
-        $form['question_feedback']['#markup'] = check_markup($this->question_plugin->question->feedback, $this->question_plugin->question->feedback_format);
+      if (!empty($this->question_handler->question)) {
+        $form['question_feedback']['#markup'] = check_markup($this->question_handler->question->feedback, $this->question_handler->question->feedback_format);
       }
     }
 

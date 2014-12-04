@@ -98,7 +98,7 @@ function quizz_scale_update_7599() {
       ':name'     => 'scale',
   ));
 
-  db_query('UPDATE {quiz_question_type} SET plugin = :new_name WHERE plugin = :name', array(
+  db_query('UPDATE {quiz_question_type} SET handler = :new_name WHERE handler = :name', array(
       ':new_name' => 'quizz_scale',
       ':name'     => 'scale',
   ));
@@ -124,7 +124,7 @@ function quizz_scale_update_7600() {
  */
 function quizz_scale_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('scale' === $question_type->plugin) {
+    if ('scale' === $question_type->handler) {
       $question_type
         ->setConfig('scale_max_num_of_alts', variable_get('scale_max_num_of_alts', 10))
         ->save()
@@ -211,7 +211,7 @@ function quizz_scale_update_7606() {
   db_add_index('quiz_scale_collections', 'collection_name', array('name'));
   db_add_index('quiz_scale_collections', 'collection_status', array('status'));
 
-  if ($question_types = entity_load('quiz_question_type', FALSE, array('plugin' => 'quizz_scale'))) {
+  if ($question_types = entity_load('quiz_question_type', FALSE, array('handler' => 'quizz_scale'))) {
     $question_type = reset($question_types);
     db_update('quiz_scale_collections')
       ->fields(array('question_type' => $question_type->type))

@@ -1,0 +1,80 @@
+<?php
+
+class QuestionPoolTestCase extends QuizQuestionTestCase {
+
+  protected $questionHandler = 'pool';
+  protected $questionHandlers = array('truefalse');
+
+  public static function getInfo() {
+    return array(
+        'name'        => 'Question pool',
+        'description' => 'Test cases for pool question type.',
+        'group'       => 'Quiz question',
+    );
+  }
+
+  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
+    $modules[] = 'question_pool';
+    $modules[] = 'entityreference';
+    $modules[] = 'truefalse';
+    parent::setUp($modules, $admin_permissions, $user_permissions);
+  }
+
+  public function testCreateQuestion() {
+    $this->checkStructure();
+    $this->checkQuizChecking($pool_question = $this->createPool());
+  }
+
+  private function checkStructure() {
+    // Check new entity-reference field is created
+    $this->assertNotNull(field_info_field('field_question_reference'), 'Found field');
+    $this->assertNotNull(field_info_instance('quiz_question', 'field_question_reference', 'default_pool'), 'Found field instance');
+  }
+
+  private function createPool() {
+    $pool = $this->drupalCreateQuestion(array(
+        'type'  => $this->questionHandler,
+        'title' => 'Pool question title',
+        'body'  => 'Pool body text',
+    ));
+
+    // Create sub-questions, link it to pool
+    $question_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_3 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $pool->field_question_reference[LANGUAGE_NONE] = array(
+        array('target_id' => $question_1->qid),
+        array('target_id' => $question_2->qid),
+        array('target_id' => $question_3->qid),
+    );
+    $pool->save();
+
+    // @TODO: Test max-score — Removed old code
+    //    db_update('quiz_question_properties')
+    //      ->fields(array('max_score' => $this->question->getHandler()->getMaximumScore()))
+    //      ->condition('qid', $this->question->qid)
+    //      ->condition('vid', $this->question->vid)
+    //      ->execute();
+
+    return $pool;
+  }
+
+  private function checkQuizChecking($pool_question) {
+    // Create quiz, link pool to quiz
+    $quiz = $this->linkQuestionToQuiz($pool_question);
+
+    // Take quiz
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+    $this->assertText('Pool body text');
+    $this->assertText('Choose one');
+
+    // @TODO: Test with quiz.repeat_until_correct = 1
+    $this->drupalPost(NULL, array('question[1][2]' => 0), t('Finish'));
+
+    // Try correct answer
+    $this->drupalPost(NULL, array('question[1][2]' => 1), t('Finish'));
+    $this->assertText('Your score: 100%');
+  }
+
+}

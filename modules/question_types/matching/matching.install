@@ -106,7 +106,7 @@ function matching_update_7600() {
  */
 function matching_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('matching' === $question_type->plugin) {
+    if ('matching' === $question_type->handler) {
       $question_type
         ->setConfig('quiz_matching_form_size', variable_get('quiz_matching_form_size', TRUE))
         ->setConfig('quiz_matching_shuffle_options', variable_get('quiz_matching_shuffle_options', TRUE))

@@ -61,7 +61,7 @@ function quiz_question_form($form, &$form_state, $question, $op = 'edit') {
     }
   }
 
-  $form += $question->getPlugin()->getEntityForm($form_state, isset($quiz) ? $quiz : NULL);
+  $form += $question->getHandler()->getEntityForm($form_state, isset($quiz) ? $quiz : NULL);
 
   // question body is required.
   $form['quiz_question_body'][LANGUAGE_NONE][0]['#required'] = TRUE;
@@ -72,7 +72,7 @@ function quiz_question_form($form, &$form_state, $question, $op = 'edit') {
 function quiz_question_form_validate($form, &$form_state) {
   /* @var $question Question */
   $question = entity_ui_controller('quiz_question')->entityFormSubmitBuildEntity($form, $form_state);
-  $question->getPlugin()->validate($form);
+  $question->getHandler()->validate($form);
 }
 
 function quiz_question_form_submit($form, &$form_state) {
@@ -87,7 +87,7 @@ function quiz_question_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'quiz-question/' . $question->qid;
 
   if (!empty($quiz)) {
-    $question->getPlugin()->saveRelationships($quiz->qid, $quiz->vid);
+    $question->getHandler()->saveRelationships($quiz->qid, $quiz->vid);
   }
 }
 

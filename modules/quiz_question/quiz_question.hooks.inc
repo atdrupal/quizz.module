@@ -168,29 +168,29 @@ function quiz_question_field_extra_fields() {
   foreach (quiz_question_get_types() as $name => $question_type) {
     $extra['quiz_question'][$name] = array(
         'display' => array(
-            'title'           => array(
+            'title'            => array(
                 'label'       => t('Title'),
                 'description' => t("Question's title."),
                 'weight'      => -10,
             ),
-            'question_plugin' => array(
-                'label'       => t("Plugin fields"),
-                'description' => t("Custom fields defined by question plugin."),
+            'question_handler' => array(
+                'label'       => t("Handler fields"),
+                'description' => t("Custom fields defined by question handler."),
                 'weight'      => -5,
             ),
         ),
         'form'    => array(
-            'title'           => array(
+            'title'            => array(
                 'label'       => t('Title'),
                 'description' => t("Question's title."),
                 'weight'      => -10,
             ),
-            'question_plugin' => array(
-                'label'       => t("Plugin fields"),
-                'description' => t("Custom fields defined by question plugin."),
+            'question_handler' => array(
+                'label'       => t("Handler fields"),
+                'description' => t("Custom fields defined by question handler."),
                 'weight'      => -5,
             ),
-            'feedback'        => array(
+            'feedback'         => array(
                 'label'       => t('Question feedback'),
                 'description' => '',
                 'weight'      => -1,
@@ -236,17 +236,17 @@ function quiz_question_quiz_question_score($quiz, Question $question, $result_id
     return $question->max_score;
   }
 
-  if (!$plugin = $question->getPlugin()) {
+  if (!$handler = $question->getHandler()) {
     return FALSE;
   }
 
   $score = new stdClass();
-  $score->possible = $plugin->getMaximumScore();
+  $score->possible = $handler->getMaximumScore();
   $score->question_qid = $question->qid;
   $score->question_vid = $question->vid;
 
   if (isset($result_id)) {
-    $handler = quiz_answer_controller()->getHandler($result_id, $plugin->question);
+    $handler = quiz_answer_controller()->getHandler($result_id, $handler->question);
     $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
     $score->possible = $handler->getMaxScore();
     $score->is_evaluated = $handler->isEvaluated();
@@ -257,7 +257,7 @@ function quiz_question_quiz_question_score($quiz, Question $question, $result_id
 /**
  * Implements hook_modules_enable().
  *
- * Create default question bundle base on new question plugins enabled.
+ * Create default question bundle base on new question handlers enabled.
  *
  * @param string[] $modules
  */
@@ -267,19 +267,19 @@ function quiz_question_modules_enabled($modules) {
       continue;
     }
 
-    foreach ($info as $plugin_name => $plugin_info) {
+    foreach ($info as $handler_name => $handler_info) {
       // Do not create if already have one
-      $sql = 'SELECT 1 FROM {quiz_question_type} WHERE plugin = :plugin';
-      if (db_query($sql, array(':plugin' => $plugin_name))->fetchColumn()) {
+      $sql = 'SELECT 1 FROM {quiz_question_type} WHERE handler = :handler';
+      if (db_query($sql, array(':handler' => $handler_name))->fetchColumn()) {
         continue;
       }
 
       entity_create('quiz_question_type', array(
-          'type'        => 'default_' . $plugin_name,
-          'label'       => $plugin_info['name'],
+          'type'        => 'default_' . $handler_name,
+          'label'       => $handler_info['name'],
           'status'      => 0,
-          'plugin'      => $plugin_name,
-          'description' => isset($plugin_info['description']) ? $plugin_info['description'] : '',
+          'handler'     => $handler_name,
+          'description' => isset($handler_info['description']) ? $handler_info['description'] : '',
       ))->save();
     }
   }
@@ -291,18 +291,18 @@ function quiz_question_modules_enabled($modules) {
  * @param string[] $modules
  */
 function quiz_question_modules_disabled($modules) {
-  $plugin_names = array();
+  $handler_names = array();
 
   foreach ($modules as $module) {
     if ($info = module_invoke($module, 'quiz_question_info')) {
-      $plugin_names[] = $module;
+      $handler_names[] = $module;
     }
   }
 
-  if (!empty($plugin_names)) {
+  if (!empty($handler_names)) {
     db_update('quiz_question_type')
       ->fields(array('disabled' => 1))
-      ->condition('plugin', $plugin_names)
+      ->condition('handler', $handler_names)
       ->execute()
     ;
   }
@@ -322,7 +322,7 @@ function quiz_question_modules_disabled($modules) {
  */
 function _quiz_delete_question(&$question, $only_this_version) {
   // let each question class delete its own stuff
-  $question->getPlugin()->delete($only_this_version);
+  $question->getHandler()->delete($only_this_version);
 
   // FIXME QuizQuestion class makes these relationships, so it should handle their 'deletion' too
   // FIXME alternately, move the relationship handling out of QuizQuestion class

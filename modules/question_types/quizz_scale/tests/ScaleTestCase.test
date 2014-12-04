@@ -5,7 +5,7 @@
  */
 class ScaleTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'quizz_scale';
+  protected $questionHandler = 'quizz_scale';
 
   public static function getInfo() {
     return array(

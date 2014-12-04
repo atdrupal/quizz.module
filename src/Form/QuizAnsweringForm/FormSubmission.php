@@ -122,7 +122,7 @@ class FormSubmission extends QuizTakeBaseController {
 
         // Increment the counter.
         $this->redirect($this->quiz, $this->result->getNextPageNumber($this->page_number));
-        $feedback_count += $instance->question_plugin->hasFeedback();
+        $feedback_count += $instance->question_handler->hasFeedback();
       }
     }
 
