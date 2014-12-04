@@ -2,8 +2,8 @@
 
 namespace Drupal\question_pool;
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuizQuestionResponse;
-use stdClass;
 
 /**
  * Extension of QuizQuestionResponse
@@ -20,8 +20,8 @@ class PoolResponse extends QuizQuestionResponse {
   /**
    * Constructor
    */
-  public function __construct($result_id, stdClass $question_node, $answer = NULL) {
-    parent::__construct($result_id, $question_node, $answer);
+  public function __construct($result_id, Question $question, $answer = NULL) {
+    parent::__construct($result_id, $question, $answer);
     if (!isset($answer)) {
       $r = $this->getCorrectAnswer();
       if (!empty($r)) {
@@ -38,7 +38,7 @@ class PoolResponse extends QuizQuestionResponse {
    * Implementation of getCorrectAnswer
    */
   public function getCorrectAnswer() {
-    return db_query('SELECT answer, score FROM {quiz_pool_user_answers} WHERE question_vid = :qvid AND result_id = :rid', array(':qvid' => $this->question->vid, ':rid' => $this->rid))->fetch();
+    return db_query('SELECT answer, score FROM {quiz_pool_user_answers} WHERE question_vid = :qvid AND result_id = :rid', array(':qvid' => $this->question->vid, ':rid' => $this->result_id))->fetch();
   }
 
   /**
@@ -69,7 +69,7 @@ class PoolResponse extends QuizQuestionResponse {
       ->fields(array(
           'question_qid' => $this->question->qid,
           'question_vid' => $this->question->vid,
-          'result_id'    => $this->rid,
+          'result_id'    => $this->result_id,
           'score'        => (int) $this->getScore(),
           'answer'       => (int) $this->answer,
       ))
@@ -85,7 +85,7 @@ class PoolResponse extends QuizQuestionResponse {
     db_delete('quiz_pool_user_answers')
       ->condition('question_qid', $this->question->qid)
       ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->rid)
+      ->condition('result_id', $this->result_id)
       ->execute();
 
     // Please view quiz_question.module line 277.
@@ -99,7 +99,7 @@ class PoolResponse extends QuizQuestionResponse {
       db_delete('quiz_pool_user_answers_questions')
         ->condition('pool_qid', $this->question->qid)
         ->condition('pool_vid', $this->question->vid)
-        ->condition('result_id', $this->rid)
+        ->condition('result_id', $this->result_id)
         ->execute();
     }
   }
@@ -145,7 +145,7 @@ class PoolResponse extends QuizQuestionResponse {
       ->fields('p', array('question_qid', 'question_qid'))
       ->condition('pool_qid', $this->question->qid)
       ->condition('pool_vid', $this->question->vid)
-      ->condition('result_id', $this->rid)
+      ->condition('result_id', $this->result_id)
       ->condition('is_correct', 1)
       ->execute()
       ->fetchAllKeyed();

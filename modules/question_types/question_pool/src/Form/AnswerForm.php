@@ -20,7 +20,7 @@ class AnswerForm {
     $this->result_id = $this->session['result_id'];
   }
 
-  public function get(&$form) {
+  public function get($form, &$form_state) {
     $quiz_id = $this->quiz->qid;
 
     if (!isset($this->session['pool_' . $this->question->qid]['delta'])) {
@@ -47,10 +47,12 @@ class AnswerForm {
       $this->getPassed($form);
     }
     else {
-      $this->getUnpassed($form);
+      $this->getUnpassed($form, $form_state);
     }
 
     $form['#after_build'][] = 'question_pool_answer_form_rebuild';
+
+    return $form;
   }
 
   private function getPassed(&$form) {
@@ -67,10 +69,10 @@ class AnswerForm {
     unset($form['navigation']['pool_btn']);
   }
 
-  private function getUnpassed(&$form) {
+  private function getUnpassed(&$form, &$form_state) {
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     if ($wrapper->field_question_reference->count() > $this->session['pool_' . $this->question->qid]['delta']) {
-      $this->getGetUnpassed($wrapper, $form);
+      $this->getGetUnpassed($wrapper, $form, $form_state);
     }
 
     if ($this->quiz->repeat_until_correct) {
@@ -84,16 +86,11 @@ class AnswerForm {
     unset($form['navigation']['pool_btn']);
   }
 
-  private function getGetUnpassed($wrapper, &$form) {
-    $sub_question = $wrapper->field_question_reference[$this->session['pool_' . $this->question->qid]['delta']]->value();
-    $question_form = drupal_get_form($sub_question->type . '_question_pool_form__' . $sub_question->qid, $this->result_id, $sub_question);
-    $elements = element_children($question_form);
-    foreach ($elements as $element) {
-      if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id'))) {
-        $form[$element] = $question_form[$element];
-      }
-    }
-    return;
+  private function getGetUnpassed($wrapper, &$form, &$form_state) {
+    /* @var $_question \Drupal\quiz_question\Entity\Question */
+    $_question = $wrapper->field_question_reference[$this->session['pool_' . $this->question->qid]['delta']]->value();
+    $form[] = $_question->getPlugin()->getAnsweringForm($form_state, $this->result_id);
+    # $form['#validate'][] = 'question_pool_form_validate';
   }
 
 }

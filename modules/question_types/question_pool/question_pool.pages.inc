@@ -1,18 +1,5 @@
 <?php
 
-/**
- * @param array $form
- * @param array $form_state
- * @param int $result_id
- * @param \Drupal\quiz_question\Entity\Question $question
- * @return string
- */
-function question_pool_form($form, &$form_state, $result_id, $question) {
-  $form += $question->getPlugin()->getAnsweringForm($form_state, $result_id);
-  $form['#validate'][] = 'question_pool_form_validate';
-  return $form;
-}
-
 function question_pool_retry_submit(&$form, &$form_state) {
   $pool = $form['#pool'];
   $rid = $form['#rid'];
@@ -123,15 +110,15 @@ function question_pool_answer_submit(&$form, &$form_state) {
 function question_pool_answer_form_rebuild($form) {
   $qid = $form['#qid'];
   $pool = $form['#pool'];
-  $wrapper = entity_metadata_wrapper('node', $pool);
+  $wrapper = entity_metadata_wrapper('quiz_question', $pool);
   $total = $wrapper->field_question_reference->count();
-
-  $session = $_SESSION['quiz_' . $qid];
+  $session = $_SESSION['quiz'][$qid];
   $passed = $session['pool_' . $pool->qid]['passed'];
 
   if (!$passed && $session['pool_' . $pool->qid]['delta'] < $total) {
     $form['navigation']['submit']['#attributes']['class']['js-hide'] = 'js-hide';
   }
+
   return $form;
 }
 

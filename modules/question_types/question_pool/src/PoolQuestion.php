@@ -46,21 +46,19 @@ class PoolQuestion extends QuestionPlugin {
    * Implementation of getNodeView
    * @see QuizQuestion#getNodeView()
    */
-  public function getNodeView() {
-    $build = parent::getNodeView();
+  public function getEntityView() {
+    $build = parent::getEntityView();
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
-    $markup = '';
 
-    /* @var $question Question */
-    foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
-      $question = $wrapper_question->value();
-      $plugin = $question->getPlugin();
-      if ($content = $plugin->getNodeView()) {
-        $markup .= "<h3>{$question->title}</h3>";
-        $markup .= $content['answers']['#markup'];
+    /* @var $sub_question Question */
+    $markup = '';
+    foreach ($wrapper->field_question_reference->getIterator() as $sub_wrapper) {
+      $sub_question = $sub_wrapper->value();
+      if ($content = $sub_question->getPlugin()->getEntityView() && !empty($content['answer'])) {
+        $markup .= "<h3>{$sub_question->title}</h3>";
+        $markup .= $content['answer']['#markup'];
       }
     }
-
     $build['answers']['#markup'] = $markup;
     return $build;
   }
@@ -74,8 +72,9 @@ class PoolQuestion extends QuestionPlugin {
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $quiz = quiz_result_load($result_id)->getQuiz();
     $form = parent::getAnsweringForm($form_state, $result_id);
-    $obj = new AnswerForm($quiz, $this->question, $_SESSION['quiz'][$quiz->qid]);
-    return $obj->get($form);
+    $session = &$_SESSION['quiz'][$quiz->qid];
+    $obj = new AnswerForm($quiz, $this->question, $session);
+    return $obj->get($form, $form_state);
   }
 
   /**
