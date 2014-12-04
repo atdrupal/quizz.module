@@ -93,7 +93,7 @@ class PoolResponse extends ResponseHandler {
     // $response->saveResult();
     // The quiz question delete and resave instead update
     // We have a difference between $respone update and delete.
-    // Question update $this->question is node
+    // Question update $this->question is entity
     // Question delete $this->question is custom object.
     if (!isset($this->question->created)) {
       db_delete('quiz_pool_user_answers_questions')

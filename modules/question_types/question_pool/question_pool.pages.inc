@@ -5,7 +5,7 @@ function question_pool_retry_submit(&$form, &$form_state) {
   $rid = $form['#rid'];
   $qid = $form['#qid'];
 
-  $wrapper = entity_metadata_wrapper('node', $pool);
+  $wrapper = entity_metadata_wrapper('quiz_question', $pool);
   $question = $wrapper->field_question_reference[0]->value();
   $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $rid, $question);
   $elements = element_children($question_form);

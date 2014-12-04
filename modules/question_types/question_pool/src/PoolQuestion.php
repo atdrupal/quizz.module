@@ -43,8 +43,8 @@ class PoolQuestion extends QuestionPlugin {
   }
 
   /**
-   * Implementation of getNodeView
-   * @see QuizQuestion#getNodeView()
+   * Implementation of getEntityView
+   * @see QuestionPlugin#getEntityView()
    */
   public function getEntityView() {
     $build = parent::getEntityView();

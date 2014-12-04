@@ -157,15 +157,12 @@ abstract class QuestionPlugin {
    * Called by quiz_question_delete (hook_delete).
    * Child classes must call super
    *
-   * @param $only_this_version
-   *  If the $only_this_version flag is TRUE, then only the particular
-   *  qid/vid combo should be deleted. Otherwise, all questions with the
-   *  current qid can be deleted.
+   * @param bool $single_revision
    */
-  public function delete($only_this_version = FALSE) {
+  public function delete($single_revision = FALSE) {
     // Delete answeres & properties
     $remove_answer = db_delete('quiz_results_answers')->condition('question_qid', $this->question->qid);
-    if ($only_this_version) {
+    if ($single_revision) {
       $remove_answer->condition('question_vid', $this->question->vid);
     }
     $remove_answer->execute();
@@ -177,8 +174,7 @@ abstract class QuestionPlugin {
    * When a new question is created and initially submited, this is
    * called to validate that the settings are acceptible.
    *
-   * @param $form
-   *  The processed form.
+   * @param array $form
    */
   public function validate(array &$form) {
 
@@ -187,12 +183,9 @@ abstract class QuestionPlugin {
   /**
    * Get the form through which the user will answer the question.
    *
-   * @param $form_state
-   *  The FAPI form_state array
-   * @param $result_id
-   *  The result id.
-   * @return
-   *  Must return a FAPI array.
+   * @param array $form_state
+   * @param int $result_id
+   * @return array
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     return array('#element_validate' => array('quiz_question_element_validate'));
@@ -225,7 +218,7 @@ abstract class QuestionPlugin {
 
   /**
    * Get the form used to create a new question.
-   * @param array FAPI form state
+   * @param array $form state
    * @return array Must return a FAPI array.
    */
   public function getCreationForm(array &$form_state = NULL) {
