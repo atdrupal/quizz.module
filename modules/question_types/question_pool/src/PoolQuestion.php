@@ -23,6 +23,7 @@ class PoolQuestion extends QuestionPlugin {
 
   public function load() {
     $properties = parent::load();
+
     if (empty($this->question->field_question_reference['und'])) {
       return $properties;
     }

@@ -19,24 +19,45 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
   }
 
   public function testCreateQuestion() {
-    return $this->drupalCreateQuestion(array(
-          'type'  => 'question_pool',
-          'title' => 'Pool question title',
-          'body'  => 'Pool body text',
+    $this->checkStructure();
+    $pool_question = $this->checkCreatePoolQUestion();
+    $this->checkQuizChecking($pool_question);
+  }
+
+  private function checkStructure() {
     // Check new entity-reference field is created
     $this->assertNotNull(field_info_field('field_question_reference'));
     $this->assertNotNull(field_info_instance('quiz_question', 'field_question_reference', 'default_pool'));
+  }
 
-    // Create new pool question
-    $question = $this->drupalCreateQuestion(array(
+  private function checkCreatePoolQUestion() {
+    $pool_question = $this->drupalCreateQuestion(array(
         'type'  => 'question_pool',
         'title' => 'Pool question title',
         'body'  => 'Pool body text',
     ));
 
-    // Make sure custom field values are stored
+    // Create sub-questions, link it to pool
+    $sub_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $sub_2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $sub_3 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $pool_question->field_question_reference[LANGUAGE_NONE] = array(
+        array('target_id' => $sub_1->qid),
+        array('target_id' => $sub_2->qid),
+        array('target_id' => $sub_3->qid),
+    );
 
-    return $question;
+    return $pool_question;
+  }
+
+  private function checkQuizChecking($pool_question) {
+    // Create quiz, link pool to quiz
+    $quiz = $this->linkQuestionToQuiz($pool_question);
+
+    // Take quiz
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+    # $this->drupalPost(NULL, array(…), t('Finish'));
   }
 
 }
