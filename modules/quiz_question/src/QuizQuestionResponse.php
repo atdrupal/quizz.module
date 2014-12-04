@@ -23,7 +23,7 @@ abstract class QuizQuestionResponse {
   public $question = NULL;
 
   /** @var QuestionPlugin */
-  public $quizQuestion = NULL;
+  public $question_plugin = NULL;
   protected $answer = NULL;
   protected $score;
   public $is_skipped;
@@ -44,7 +44,7 @@ abstract class QuizQuestionResponse {
     $this->result_id = $result_id;
     $this->result = quiz_result_load($result_id);
     $this->question = $question;
-    $this->quizQuestion = $question->getPlugin();
+    $this->question_plugin = $question->getPlugin();
     $this->answer = $answer;
     $result = db_query('SELECT is_skipped, is_doubtful '
       . ' FROM {quiz_results_answers} '
@@ -65,7 +65,7 @@ abstract class QuizQuestionResponse {
    * @return QuestionPlugin
    */
   function getQuizQuestion() {
-    return $this->quizQuestion;
+    return $this->question_plugin;
   }
 
   /**
@@ -274,8 +274,8 @@ abstract class QuizQuestionResponse {
     $form['response']['#markup'] = theme('quiz_question_feedback__' . $type, array('labels' => $headers, 'data' => $rows));
 
     if ($this->canReview('question_feedback')) {
-      if (!empty($this->quizQuestion->question)) {
-        $form['question_feedback']['#markup'] = check_markup($this->quizQuestion->question->feedback, $this->quizQuestion->question->feedback_format);
+      if (!empty($this->question_plugin->question)) {
+        $form['question_feedback']['#markup'] = check_markup($this->question_plugin->question->feedback, $this->question_plugin->question->feedback_format);
       }
     }
 
