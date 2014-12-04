@@ -33,31 +33,22 @@ abstract class ResponseHandler {
    * Create a new user response.
    *
    * @param $result_id
-   *  The result ID for the user's result set. There is one result ID per time
-   *  the user takes a quiz.
    * @param Question $question
-   *  The question entity.
-   * @param $answer
-   *  The answer (dependent on question type).
+   * @param mixed $input (dependent on question type).
    */
-  public function __construct($result_id, Question $question, $answer = NULL) {
+  public function __construct($result_id, Question $question, $input = NULL) {
     $this->result_id = $result_id;
     $this->result = quiz_result_load($result_id);
     $this->question = $question;
     $this->question_plugin = $question->getPlugin();
-    $this->answer = $answer;
-    $result = db_query('SELECT is_skipped, is_doubtful '
-      . ' FROM {quiz_results_answers} '
-      . ' WHERE result_id = :result_id '
-      . '   AND question_qid = :question_qid '
-      . '   AND question_vid = :question_vid', array(
-        ':result_id'    => $result_id,
-        ':question_qid' => $question->qid,
-        ':question_vid' => $question->vid
-      ))->fetch();
-    if (is_object($result)) {
-      $this->is_doubtful = $result->is_doubtful;
-      $this->is_skipped = $result->is_skipped;
+    $this->answer = $input;
+
+    /* @var $answer Answer */
+    $conds = array(':result_id' => $result_id, ':question_qid' => $question->qid, ':question_vid' => $question->vid);
+    if ($find = entity('quiz_result_answer', FALSE, $conds)) {
+      $answer = reset($find);
+      $this->is_doubtful = $answer->is_doubtful;
+      $this->is_skipped = $answer->is_skipped;
     }
   }
 
