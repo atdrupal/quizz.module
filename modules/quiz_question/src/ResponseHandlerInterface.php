@@ -45,6 +45,15 @@ interface ResponseHandlerInterface {
   public function score();
 
   /**
+   * Returns stored max score if it exists, if not the max score is calculated and returned.
+   *
+   * @param bool $weight_adjusted
+   *  If the returned max score shall be adjusted according to the max_score the question has in a quiz
+   * @return int
+   */
+  public function getQuestionMaxScore($weight_adjusted = TRUE);
+
+  /**
    * Get the user's response.
    * @return mixed
    */

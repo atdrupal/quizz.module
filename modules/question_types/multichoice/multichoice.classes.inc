@@ -663,7 +663,7 @@ class MultichoiceResponse extends ResponseHandler {
    */
   public function score() {
     if ($this->question->choice_boolean || $this->isAllWrong()) {
-      $score = $this->getMaxScore();
+      $score = $this->getQuestionMaxScore();
       foreach ($this->question->alternatives as $key => $alt) {
         if (in_array($alt['id'], $this->user_answer_ids)) {
           if ($alt['score_if_chosen'] <= $alt['score_if_not_chosen']) {

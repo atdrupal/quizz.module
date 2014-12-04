@@ -35,7 +35,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    * possible score.
    */
   public function isCorrect() {
-    return $this->getMaxScore() == $this->getScore();
+    return $this->getQuestionMaxScore() == $this->getScore();
   }
 
   /**
@@ -58,22 +58,18 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     if (isset($this->question->score_weight) && $weight_adjusted) {
       return round($this->score * $this->question->score_weight);
     }
+
     return $this->score;
   }
 
   /**
-   * Returns stored max score if it exists, if not the max score is calculated and returned.
-   *
-   * @param $weight_adjusted
-   *  If the returned max score shall be adjusted according to the max_score the question has in a quiz
-   * @return
-   *  Max score(int)
+   * {@inheritdoc}
    */
-  public function getMaxScore($weight_adjusted = TRUE) {
+  public function getQuestionMaxScore($weight_adjusted = TRUE) {
     if (!isset($this->question->max_score)) {
       $this->question->max_score = $this->question->getHandler()->getMaximumScore();
     }
-    if (isset($this->question->score_weight) && $weight_adjusted) {
+    if ($weight_adjusted && isset($this->question->score_weight)) {
       return round($this->question->max_score * $this->question->score_weight);
     }
     return $this->question->max_score;
@@ -161,7 +157,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
 
     $form['max_score'] = array(
         '#type'  => 'value',
-        '#value' => $this->canReview('score') ? $this->getMaxScore() : '?',
+        '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?',
     );
 
     $labels = array(
@@ -197,7 +193,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     }
 
     if ($this->canReview('score') || quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
-      $form['score_display']['#markup'] = theme('quiz_question_score', array('score' => $score, 'max_score' => $this->getMaxScore(), 'class' => $class));
+      $form['score_display']['#markup'] = theme('quiz_question_score', array('score' => $score, 'max_score' => $this->getQuestionMaxScore(), 'class' => $class));
     }
 
     $headers = array_intersect_key($labels, $rows[0]);
@@ -298,7 +294,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
         '#attributes'       => array('class' => array('quiz-report-score')),
         '#element_validate' => array('element_validate_integer'),
         '#required'         => TRUE,
-        '#field_suffix'     => '/ ' . $this->getMaxScore(),
+        '#field_suffix'     => '/ ' . $this->getQuestionMaxScore(),
     );
   }
 

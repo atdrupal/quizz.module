@@ -157,7 +157,7 @@ class PoolResponseHandler extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    return $this->answer ? $this->getMaxScore() : 0;
+    return $this->answer ? $this->getQuestionMaxScore() : 0;
   }
 
   /**

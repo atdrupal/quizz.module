@@ -248,7 +248,7 @@ function quiz_question_quiz_question_score($quiz, Question $question, $result_id
   if (isset($result_id)) {
     $handler = quiz_answer_controller()->getHandler($result_id, $handler->question);
     $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
-    $score->possible = $handler->getMaxScore();
+    $score->possible = $handler->getQuestionMaxScore();
     $score->is_evaluated = $handler->isEvaluated();
   }
   return $score;
