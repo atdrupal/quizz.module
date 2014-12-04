@@ -50,6 +50,24 @@ function quizz_update_7599() {
   registry_rebuild();
   drupal_flush_all_caches();
   drupal_static_reset();
+
+  // Module scale is rename to quizz_scale.
+  $ssql = 'SELECT 1 FROM {system} WHERE name = :name AND type = :type';
+  if (db_query($ssql, array(':name' => 'scale', ':type' => 'module'))->fetchColumn()) {
+    $usql = 'UPDATE {system} SET name = :new_name, filename = :filename WHERE type = :module AND name = :name';
+    db_query($usql, array(
+        ':new_name' => 'quizz_scale',
+        ':filename' => drupal_get_path('module', 'quizz_scale'),
+        ':module'   => 'module',
+        ':name'     => 'scale',
+    ));
+
+    db_query('UPDATE {quiz_question_type} SET plugin = :new_name WHERE plugin = :name', array(
+        ':new_name' => 'quizz_scale',
+        ':name'     => 'scale',
+    ));
+    drupal_flush_all_caches();
+  }
 }
 
 /**
