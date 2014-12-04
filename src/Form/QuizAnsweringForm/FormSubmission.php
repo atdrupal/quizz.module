@@ -114,7 +114,7 @@ class FormSubmission extends QuizTakeBaseController {
 
         $instance = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $answer_value);
         $instance->delete();
-        $instance->saveResult();
+        $instance->save();
         $response = $instance->toBareObject();
         quiz_result_controller()
           ->getWriter()
