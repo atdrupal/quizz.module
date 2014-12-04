@@ -26,8 +26,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
   }
 
   private function checkStructure() {
-    // Check new entity-reference field is created
-    $this->assertNotNull(field_info_field('field_question_reference'), 'Found field');
+    $this->assertNotNull(field_info_field('field_question_reference'), 'Found field "field_question_reference"');
     $this->assertNotNull(field_info_instance('quiz_question', 'field_question_reference', 'default_pool'), 'Found field instance');
   }
 
