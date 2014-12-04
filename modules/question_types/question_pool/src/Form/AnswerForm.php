@@ -66,7 +66,6 @@ class AnswerForm {
         '#markup' => t('Pool is passed.'),
         '#suffix' => '</p>',
     );
-    unset($form['navigation']['pool_btn']);
   }
 
   private function getUnpassed(&$form, &$form_state) {
@@ -82,8 +81,6 @@ class AnswerForm {
       $form['tries'] = array('#type' => 'hidden', '#value' => 0, '#attributes' => array('class' => array('tries-pool-value')));
       $form['msg'] = array('#markup' => '<p class="pool-message">Pool is done.</p>');
     }
-
-    unset($form['navigation']['pool_btn']);
   }
 
   private function getGetUnpassed($wrapper, &$form, &$form_state) {

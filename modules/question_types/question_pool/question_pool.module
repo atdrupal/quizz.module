@@ -51,3 +51,18 @@ function question_pool_quiz_question_type_insert($question_type) {
     $installer->setup($question_type);
   }
 }
+
+function question_pool_answer_form_rebuild($form) {
+  $qid = $form['#qid'];
+  $pool = $form['#pool'];
+  $wrapper = entity_metadata_wrapper('quiz_question', $pool);
+  $total = $wrapper->field_question_reference->count();
+  $session = $_SESSION['quiz'][$qid];
+  $passed = $session['pool_' . $pool->qid]['passed'];
+
+  if (!$passed && $session['pool_' . $pool->qid]['delta'] < $total) {
+    $form['navigation']['submit']['#attributes']['class']['js-hide'] = 'js-hide';
+  }
+
+  return $form;
+}

@@ -12,6 +12,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
   protected $extraModules = array();
   protected $extraUserPermissions = array();
   protected $questionPlugin;
+  protected $questionPlugins = array();
 
   /**
    * Set up a question test case.
@@ -50,8 +51,11 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
     // Test case needs create question plugin
     if (!empty($this->questionPlugin) && $this->questionPlugin) {
-      $admin_permissions[] = "create default_{$this->questionPlugin} question";
-      $admin_permissions[] = "edit any default_{$this->questionPlugin} question";
+      $this->questionPlugins[] = $this->questionPlugin;
+      foreach ($this->questionPlugins as $plugin) {
+        $admin_permissions[] = "create default_{$plugin} question";
+        $admin_permissions[] = "edit any default_{$plugin} question";
+      }
     }
 
     $this->admin = $this->drupalCreateUser(array_unique($admin_permissions));

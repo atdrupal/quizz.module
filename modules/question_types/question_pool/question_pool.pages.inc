@@ -107,21 +107,6 @@ function question_pool_answer_submit(&$form, &$form_state) {
   $form['navigation']['#weight'] = 100;
 }
 
-function question_pool_answer_form_rebuild($form) {
-  $qid = $form['#qid'];
-  $pool = $form['#pool'];
-  $wrapper = entity_metadata_wrapper('quiz_question', $pool);
-  $total = $wrapper->field_question_reference->count();
-  $session = $_SESSION['quiz'][$qid];
-  $passed = $session['pool_' . $pool->qid]['passed'];
-
-  if (!$passed && $session['pool_' . $pool->qid]['delta'] < $total) {
-    $form['navigation']['submit']['#attributes']['class']['js-hide'] = 'js-hide';
-  }
-
-  return $form;
-}
-
 function _question_pool_evaluate_question($pool, $question, $result_id, $answer) {
   $response = _quiz_question_response_get_instance($result_id, $question, $answer);
   // Convert the response to a bare object.

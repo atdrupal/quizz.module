@@ -140,9 +140,9 @@ class PoolResponse extends QuizQuestionResponse {
    *
    * @see getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
    */
-  public function getReportFormResponse($showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE) {
+  public function getReportFormResponse() {
     $result = db_select('quiz_pool_user_answers_questions', 'p')
-      ->fields('p', array('question_qid', 'question_qid'))
+      ->fields('p', array('question_vid'))
       ->condition('pool_qid', $this->question->qid)
       ->condition('pool_vid', $this->question->vid)
       ->condition('result_id', $this->result_id)
@@ -151,14 +151,15 @@ class PoolResponse extends QuizQuestionResponse {
       ->fetchAllKeyed();
 
     if (empty($result)) {
-      $markup = t('No question passed.');
+      return array('#markup' => t('No question passed.'));
     }
-    else {
-      $question_id = reset($result);
-      $question = node_load($question_id);
-      $markup = t('Passed at @title', array('@title' => $question->title));
-    }
-    return array('#markup' => $markup);
+
+    $question_vid = reset($result);
+    $question = quiz_question_entity_load(NULL, $question_vid);
+    return quiz_answer_controller()
+        ->getInstance($this->result_id, $question)
+        ->getReportFormResponse()
+    ;
   }
 
 }

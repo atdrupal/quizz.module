@@ -3,6 +3,7 @@
 class QuestionPoolTestCase extends QuizQuestionTestCase {
 
   protected $questionPlugin = 'pool';
+  protected $questionPlugins = array('truefalse');
 
   public static function getInfo() {
     return array(
@@ -15,37 +16,38 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
   function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
     $modules[] = 'question_pool';
     $modules[] = 'entityreference';
+    $modules[] = 'truefalse';
     parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   public function testCreateQuestion() {
     $this->checkStructure();
-    $pool_question = $this->checkCreatePoolQUestion();
-    $this->checkQuizChecking($pool_question);
+    $this->checkQuizChecking($pool_question = $this->createPool());
   }
 
   private function checkStructure() {
     // Check new entity-reference field is created
-    $this->assertNotNull(field_info_field('field_question_reference'));
-    $this->assertNotNull(field_info_instance('quiz_question', 'field_question_reference', 'default_pool'));
+    $this->assertNotNull(field_info_field('field_question_reference'), 'Found field');
+    $this->assertNotNull(field_info_instance('quiz_question', 'field_question_reference', 'default_pool'), 'Found field instance');
   }
 
-  private function checkCreatePoolQUestion() {
-    $pool_question = $this->drupalCreateQuestion(array(
-        'type'  => 'question_pool',
+  private function createPool() {
+    $pool = $this->drupalCreateQuestion(array(
+        'type'  => $this->questionPlugin,
         'title' => 'Pool question title',
         'body'  => 'Pool body text',
     ));
 
     // Create sub-questions, link it to pool
-    $sub_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
-    $sub_2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
-    $sub_3 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
-    $pool_question->field_question_reference[LANGUAGE_NONE] = array(
-        array('target_id' => $sub_1->qid),
-        array('target_id' => $sub_2->qid),
-        array('target_id' => $sub_3->qid),
+    $question_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $question_3 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));
+    $pool->field_question_reference[LANGUAGE_NONE] = array(
+        array('target_id' => $question_1->qid),
+        array('target_id' => $question_2->qid),
+        array('target_id' => $question_3->qid),
     );
+    $pool->save();
 
     // @TODO: Test max-score — Removed old code
     //    db_update('quiz_question_properties')
@@ -54,7 +56,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
     //      ->condition('vid', $this->question->vid)
     //      ->execute();
 
-    return $pool_question;
+    return $pool;
   }
 
   private function checkQuizChecking($pool_question) {
@@ -64,7 +66,14 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
     // Take quiz
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz->qid}/take");
-    # $this->drupalPost(NULL, array(…), t('Finish'));
+    $this->assertText('Pool body text');
+    $this->assertText('Choose one');
+
+    // Try failed answer, found retry button
+    # …
+
+    // Try correct answer
+    # $this->drupalPost(NULL, array('question[1][0]' => 1), t('Finish'));
   }
 
 }
