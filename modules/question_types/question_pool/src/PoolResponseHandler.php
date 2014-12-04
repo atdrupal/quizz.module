@@ -108,8 +108,8 @@ class PoolResponseHandler extends ResponseHandler {
       $keys = array(
           'pool_qid'     => $this->question->qid,
           'pool_vid'     => $this->question->vid,
-          'question_qid' => $this->result->qid,
-          'question_vid' => $this->result->vid,
+          'question_qid' => $question->qid,
+          'question_vid' => $question->vid,
           'result_id'    => $this->result->result_id,
       );
       db_merge('quiz_pool_user_answers_questions')
