@@ -7,16 +7,11 @@ class ScaleTestCase extends QuizQuestionTestCase {
 
   protected $questionPlugin = 'quizz_scale';
 
-  /**
-   * The getInfo() method provides information about the test.
-   * In order for the test to be run, the getInfo() method needs
-   * to be implemented.
-   */
   public static function getInfo() {
     return array(
         'name'        => t('Scale'),
-        'description' => t('Unit test for scale question type.'),
-        'group'       => t('Quiz question'),
+        'description' => t('Test cases for scale question type.'),
+        'group'       => 'Quiz question',
     );
   }
 
@@ -40,7 +35,7 @@ class ScaleTestCase extends QuizQuestionTestCase {
           'alternative2' => 'This is alternative 3',
           'alternative3' => 'This is alternative 4',
           'alternative4' => 'This is alternative 5',
-          'body'         => array(LANGUAGE_NONE => array(array('value' => 'Scale 1 body text'))),
+          'body'         => 'Scale 1 body text',
     ));
   }
 
