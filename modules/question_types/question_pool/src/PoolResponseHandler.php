@@ -61,26 +61,19 @@ class PoolResponseHandler extends ResponseHandler {
 
   /**
    * Implementation of save
-   *
    * @see QuizQuestionResponse#save()
    */
   public function save() {
+    $sess = &$_SESSION['quiz_' . $this->result->getQuiz()->qid]["pool_{$this->question->qid}"];
+    $passed = &$sess['passed'];
+    $delta = &$sess['delta'];
+
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
-    $sess = &$_SESSION['quiz_' . $this->result->getQuiz()->qid];
-    $sess_key = "pool_{$this->question->qid}";
-    $passed = &$sess[$sess_key]['passed'];
-    $delta = $sess[$sess_key]['delta'];
     if ($question = $wrapper->field_question_reference[$delta]->value()) {
-      $result = $this->evaluateQuestion($question);
-
-      if ($result->is_valid) {
-        if ($result->is_correct) {
-          $passed = true;
-        }
-
-        $total = $wrapper->field_question_reference->count();
-        if ($sess['pool_' . $this->question->qid]['delta'] < $total) {
-          $sess['pool_' . $this->question->qid]['delta'] ++;
+      if (($result = $this->evaluateQuestion($question)) && $result->is_valid) {
+        $passed = $result->is_correct ? TRUE : $passed;
+        if ($delta < $wrapper->field_question_reference->count()) {
+          $delta++;
         }
       }
     }
