@@ -8,7 +8,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestionResponse
  */
-class PoolResponse extends ResponseHandler {
+class PoolResponseHandler extends ResponseHandler {
 
   /**
    * ID of the answers.

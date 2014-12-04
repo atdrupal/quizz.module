@@ -12,7 +12,7 @@ function question_pool_quiz_question_info() {
           'name'              => t('Question pool'),
           'description'       => t('This provides question pool for use by the Quiz module.'),
           'question provider' => 'Drupal\question_pool\PoolQuestion',
-          'response provider' => 'Drupal\question_pool\PoolResponse',
+          'response provider' => 'Drupal\question_pool\PoolResponseHandler',
           'module'            => 'quiz_question',
       ),
   );
