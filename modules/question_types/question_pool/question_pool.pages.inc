@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * …
+ * @param type $form
+ * @param type $form_state
+ * @param type $result_id
+ * @param type $question
+ * @return string
+ */
+function question_pool_form($form, &$form_state, $result_id, $question) {
+  $form += $question->getAnsweringForm($form_state, $result_id);
+  $form['#validate'][] = 'question_pool_form_validate';
+  return $form;
+}
+
 function question_pool_retry_submit(&$form, &$form_state) {
   $pool = $form['#pool'];
   $rid = $form['#rid'];

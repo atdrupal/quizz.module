@@ -13,6 +13,7 @@ class AnswerForm {
   private $result_id;
 
   public function __construct(QuizEntity $quiz, Question $question, &$session) {
+    require_once drupal_get_path('module', 'question_pool') . '/question_pool.pages.inc';
     $this->quiz = $quiz;
     $this->question = $question;
     $this->session = &$session;
@@ -60,46 +61,39 @@ class AnswerForm {
     );
     $form['msg'] = array(
         '#prefix' => '<p class="pool-message">',
+        '#markup' => t('Pool is passed.'),
         '#suffix' => '</p>',
-        '#markup' => t('Pool is passed.')
     );
-
     unset($form['navigation']['pool_btn']);
   }
 
   private function getUnpassed(&$form) {
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
-    $total = $wrapper->field_question_reference->count();
+    if ($wrapper->field_question_reference->count() > $this->session['pool_' . $this->question->qid]['delta']) {
+      $this->getGetUnpassed($wrapper, $form);
+    }
 
-    if ($this->session['pool_' . $this->question->qid]['delta'] < $total) {
-      $question = $wrapper->field_question_reference[$this->session['pool_' . $this->question->qid]['delta']]->value();
-      $question_form = drupal_get_form($question->type . '_question_pool_form__' . $question->qid, $this->result_id, $question);
-      $elements = element_children($question_form);
-      foreach ($elements as $element) {
-        if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id'))) {
-          $form[$element] = $question_form[$element];
-        }
-      }
+    if ($this->quiz->repeat_until_correct) {
+      $form['navigation']['retry'] = array('#type' => 'submit', '#submit' => array('question_pool_retry_submit'), '#value' => 'Retry');
     }
     else {
-      if ($this->quiz->repeat_until_correct) {
-        $form['navigation']['retry'] = array(
-            '#type'   => 'submit',
-            '#value'  => 'Retry',
-            '#submit' => array('question_pool_retry_submit'),
-        );
-      }
-      else {
-        $form['tries'] = array(
-            '#type'       => 'hidden',
-            '#value'      => 0,
-            '#attributes' => array('class' => array('tries-pool-value'))
-        );
-        $form['msg'] = array('#markup' => '<p class="pool-message">Pool is done.</p>');
-      }
-
-      unset($form['navigation']['pool_btn']);
+      $form['tries'] = array('#type' => 'hidden', '#value' => 0, '#attributes' => array('class' => array('tries-pool-value')));
+      $form['msg'] = array('#markup' => '<p class="pool-message">Pool is done.</p>');
     }
+
+    unset($form['navigation']['pool_btn']);
+  }
+
+  private function getGetUnpassed($wrapper, &$form) {
+    $sub_question = $wrapper->field_question_reference[$this->session['pool_' . $this->question->qid]['delta']]->value();
+    $question_form = drupal_get_form($sub_question->type . '_question_pool_form__' . $sub_question->qid, $this->result_id, $sub_question);
+    $elements = element_children($question_form);
+    foreach ($elements as $element) {
+      if (!in_array($element, array('question_qid', 'form_build_id', 'form_token', 'form_id'))) {
+        $form[$element] = $question_form[$element];
+      }
+    }
+    return;
   }
 
 }

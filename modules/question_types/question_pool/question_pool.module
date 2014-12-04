@@ -32,7 +32,7 @@ function question_pool_forms($form_id, $args) {
     return $forms;
   }
 
-  $question_types = _quiz_question_get_implementations();
+  $question_types = quiz_question_get_types();
   foreach (array_keys($question_types) as $type) {
     if ($question_form_id == $type . '_question_pool_form') {
       $forms[$form_id]['callback'] = 'question_pool_form';
@@ -52,27 +52,12 @@ function question_pool_quiz_question_type_insert($question_type) {
   }
 }
 
-
-/**
- * …
- * @param type $form
- * @param type $form_state
- * @param type $result_id
- * @param type $question
- * @return string
- */
-function question_pool_form($form, &$form_state, $result_id, $question) {
-  $form += $question->getAnsweringForm($form_state, $result_id);
-  $form['#validate'][] = 'question_pool_form_validate';
-  return $form;
-}
-
-function quiz_pool_question_get_result($pool_id, $rid, $question_id) {
+function quiz_pool_question_get_result($pool_id, $result_id, $question_id) {
   $result = db_select('quiz_pool_user_answers_questions', 'p')
     ->fields('p')
     ->condition('pool_qid', $pool_id)
     ->condition('question_qid', $question_id)
-    ->condition('result_id', $rid)
+    ->condition('result_id', $result_id)
     ->execute()
     ->fetchObject();
 
