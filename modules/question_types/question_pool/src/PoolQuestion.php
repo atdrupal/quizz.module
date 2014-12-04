@@ -20,6 +20,27 @@ class PoolQuestion extends QuestionPlugin {
       ->condition('vid', $this->question->vid)
       ->execute();
   }
+
+  public function load() {
+    $properties = parent::load();
+    if (empty($this->question->field_question_reference['und'])) {
+      return $properties;
+    }
+
+    // Referenced question maybe deleted. Remove them if it was
+    /// @TODO: This should be resolved at entityreference module
+    $ref_items = field_get_items('quiz_question', $this->question, 'field_question_reference');
+    $this->question->field_question_reference['und'] = array();
+    $field_items = &$this->question->field_question_reference['und'];
+    foreach ($ref_items as $ref_item) {
+      if ($ref_question = quiz_question_entity_load($ref_item['target_id'])) {
+        $field_items[]['target_id'] = $ref_item['target_id'];
+      }
+    }
+
+    return $properties;
+  }
+
   /**
    * Implementation of delete
    * @see QuestionPlugin::delete()
