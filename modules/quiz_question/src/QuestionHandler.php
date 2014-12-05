@@ -343,15 +343,6 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * Utility function that returns the format of the node body
-   */
-  protected function getFormat() {
-    $node = isset($this->question) ? $this->question : $this->question;
-    $body = field_get_items('node', $node, 'body');
-    return isset($body[0]['format']) ? $body[0]['format'] : NULL;
-  }
-
-  /**
    * This may be overridden in subclasses. If it returns true,
    * it means the max_score is updated for all occurrences of
    * this question in quizzes.
