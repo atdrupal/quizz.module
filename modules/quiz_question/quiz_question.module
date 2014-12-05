@@ -70,7 +70,7 @@ function quiz_question_type_load($name) {
  *  An array of information about quiz question implementations.
  * @see quiz_question_quiz_question_info() for an example of a quiz question info hook.
  */
-function quiz_question_get_plugin_info($name = NULL, $reset = FALSE) {
+function quiz_question_get_handler_info($name = NULL, $reset = FALSE) {
   $info = &drupal_static(__FUNCTION__, array());
 
   if (empty($info) || $reset) {
@@ -83,9 +83,9 @@ function quiz_question_get_plugin_info($name = NULL, $reset = FALSE) {
   }
 
   // Question provider must be instance of QuizQuestion class.
-  foreach ($info as $plugin_name => $plugin_info) {
-    if (!is_subclass_of($plugin_info['question provider'], 'Drupal\quiz_question\QuestionPlugin')) {
-      $msg = t("The question-type %name isn't a QuizQuestion. It needs to extend the QuizQuestion class.", array('%name' => $plugin_name));
+  foreach ($info as $handler_name => $handler_info) {
+    if (!is_subclass_of($handler_info['question provider'], 'Drupal\quiz_question\QuestionHandler')) {
+      $msg = t("The question-type %name isn't a QuizQuestion. It needs to extend the QuizQuestion class.", array('%name' => $handler_name));
       drupal_set_message($msg, 'error', FALSE);
     }
   }

@@ -16,23 +16,23 @@ class QuestionTypeForm {
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form, $question_type);
 
-    $fn = $question_type->plugin . '_quiz_question_config';
-    if (function_exists($fn) && ($plugin_form = $fn($question_type))) {
-      if (!empty($plugin_form['#validate'])) {
-        foreach ($plugin_form['#validate'] as $validator) {
+    $fn = $question_type->handler . '_quiz_question_config';
+    if (function_exists($fn) && ($handler_form = $fn($question_type))) {
+      if (!empty($handler_form['#validate'])) {
+        foreach ($handler_form['#validate'] as $validator) {
           $form['#validate'][] = $validator;
         }
-        unset($plugin_form['#validate']);
+        unset($handler_form['#validate']);
       }
 
-      if (!empty($plugin_form['#submit'])) {
-        foreach ($plugin_form['#submit'] as $validator) {
+      if (!empty($handler_form['#submit'])) {
+        foreach ($handler_form['#submit'] as $validator) {
           $form['#submit'][] = $validator;
         }
-        unset($plugin_form['#submit']);
+        unset($handler_form['#submit']);
       }
 
-      $form['vtabs']['configuration'] = $plugin_form + array(
+      $form['vtabs']['configuration'] = $handler_form + array(
           '#type'  => 'fieldset',
           '#title' => t('Configuration'),
           '#tree'  => TRUE,
@@ -95,19 +95,19 @@ class QuestionTypeForm {
     );
 
     $provider_options = array();
-    foreach (quiz_question_get_plugin_info() as $name => $info) {
+    foreach (quiz_question_get_handler_info() as $name => $info) {
       $provider_options[$name] = $info['name'];
     }
 
-    $form['vtabs']['basic_information']['plugin'] = array(
+    $form['vtabs']['basic_information']['handler'] = array(
         '#weight'        => -10,
         '#type'          => 'select',
         '#required'      => TRUE,
-        '#title'         => t('Question plugin'),
+        '#title'         => t('Question handler'),
         '#description'   => t('Can not be changed after question type created.'),
         '#options'       => $provider_options,
-        '#disabled'      => !empty($question_type->plugin),
-        '#default_value' => $question_type->plugin,
+        '#disabled'      => !empty($question_type->handler),
+        '#default_value' => $question_type->handler,
     );
 
     // Multilingual support

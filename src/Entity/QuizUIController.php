@@ -36,15 +36,15 @@ class QuizUIController extends EntityDefaultUIController {
     $items['quiz/%quiz/view'] = array(
         'title'  => 'View',
         'type'   => MENU_DEFAULT_LOCAL_TASK,
-        'weight' => -10,
+        'weight' => -30,
     );
 
     // Define menu item structure for /quiz/%/edit
     $items['quiz/%entity_object/edit'] = $items['admin/content/quiz/manage/%entity_object'];
-    $items['quiz/%entity_object/edit']['title'] = 'Settings';
+    $items['quiz/%entity_object/edit']['title'] = 'Edit';
     unset($items['quiz/%entity_object/edit']['title callback'], $items['quiz/%entity_object/edit']['title arguments']);
-    $items['quiz/%entity_object/edit']['type'] = MENU_LOCAL_ACTION;
-    $items['quiz/%entity_object/edit']['weight'] = -20;
+    $items['quiz/%entity_object/edit']['type'] = MENU_LOCAL_TASK;
+    $items['quiz/%entity_object/edit']['weight'] = -25;
     $items['quiz/%entity_object/edit']['page arguments'][1] = 1;
     $items['quiz/%entity_object/edit']['access arguments'][2] = 1;
 
@@ -62,11 +62,12 @@ class QuizUIController extends EntityDefaultUIController {
     // Define menu structure for /quiz/%/revisions
     $items['quiz/%quiz/revisions'] = $base + array(
         'title'            => 'Revisions',
-        'type'             => MENU_LOCAL_ACTION,
+        'type'             => MENU_LOCAL_TASK,
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_entity', 1),
         'page callback'    => 'quiz_revisions_page',
         'page arguments'   => array(1),
+        'weight'           => -20,
     );
 
     // Define menu structure for /quiz/%/questions
@@ -117,7 +118,8 @@ class QuizUIController extends EntityDefaultUIController {
           'page arguments'   => array('quiz_entity', 1),
           'type'             => MENU_LOCAL_TASK,
           'file'             => 'devel.pages.inc',
-          'file path'        => drupal_get_path('module', 'devel')
+          'file path'        => drupal_get_path('module', 'devel'),
+          'weight'           => 20,
       );
     }
   }

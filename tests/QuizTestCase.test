@@ -11,8 +11,8 @@ abstract class QuizTestCase extends DrupalWebTestCase {
   protected $profile = 'testing';
   protected $extraModules = array();
   protected $extraUserPermissions = array();
-  protected $questionPlugin;
-  protected $questionPlugins = array();
+  protected $questionHandler;
+  protected $questionHandlers = array();
 
   /**
    * Set up a question test case.
@@ -49,12 +49,12 @@ abstract class QuizTestCase extends DrupalWebTestCase {
       }
     }
 
-    // Test case needs create question plugin
-    if (!empty($this->questionPlugin) && $this->questionPlugin) {
-      $this->questionPlugins[] = $this->questionPlugin;
-      foreach ($this->questionPlugins as $plugin) {
-        $admin_permissions[] = "create default_{$plugin} question";
-        $admin_permissions[] = "edit any default_{$plugin} question";
+    // Test case needs create question handler
+    if (!empty($this->questionHandler) && $this->questionHandler) {
+      $this->questionHandlers[] = $this->questionHandler;
+      foreach ($this->questionHandlers as $handler_name) {
+        $admin_permissions[] = "create default_{$handler_name} question";
+        $admin_permissions[] = "edit any default_{$handler_name} question";
       }
     }
 
@@ -108,7 +108,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     if (is_null($quiz)) {
       $quiz = $this->drupalCreateQuiz();
     }
-    $question->getPlugin()->saveRelationships($quiz->qid, $quiz->vid);
+    $question->getHandler()->saveRelationships($quiz->qid, $quiz->vid);
     return $quiz;
   }
 

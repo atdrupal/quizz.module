@@ -18,7 +18,7 @@ function quizz_scale_help($path) {
  * @param \Drupal\quiz_question\Entity\QuestionType $question_type
  */
 function quizz_scale_quiz_question_type_insert($question_type) {
-  if ('quizz_scale' === $question_type->plugin) {
+  if ('quizz_scale' === $question_type->handler) {
     quizz_scale_collection_controller()->generateDefaultCollections($question_type);
   }
 }

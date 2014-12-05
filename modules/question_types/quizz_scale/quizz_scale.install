@@ -88,21 +88,14 @@ function quizz_scale_uninstall() {
 }
 
 /**
- * Rename module to quizz_scale
+ * Script to fix name of question type handler per scale is renamed to quizz_scale
  */
 function quizz_scale_update_7599() {
-  db_query('UPDATE {system} SET name = :new_name, filename = :filename WHERE type = :module AND name = :name', array(
-      ':new_name' => 'quizz_scale',
-      ':filename' => drupal_get_path('module', 'quizz_scale'),
-      ':module'   => 'module',
-      ':name'     => 'scale',
-  ));
-
-  db_query('UPDATE {quiz_question_type} SET plugin = :new_name WHERE plugin = :name', array(
+  $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
+  db_query("UPDATE {quiz_question_type} SET {$handler} = :new_name WHERE plugin = :name", array(
       ':new_name' => 'quizz_scale',
       ':name'     => 'scale',
   ));
-
   drupal_flush_all_caches();
 }
 
@@ -124,7 +117,7 @@ function quizz_scale_update_7600() {
  */
 function quizz_scale_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('scale' === $question_type->plugin) {
+    if ('scale' === $question_type->handler) {
       $question_type
         ->setConfig('scale_max_num_of_alts', variable_get('scale_max_num_of_alts', 10))
         ->save()

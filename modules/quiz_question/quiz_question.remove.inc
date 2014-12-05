@@ -22,7 +22,7 @@ function quiz_node_presave($node) {
 function quiz_question_node_presave($node) {
   if (isset($node->is_quiz_question) && variable_get('quiz_auto_revisioning', 1)) {
     $node->revision = 0;
-    if (($plugin = quiz_question_get_provider($node, TRUE)) && $plugin->hasBeenAnswered()) {
+    if (($handler = quiz_question_get_provider($node, TRUE)) && $handler->hasBeenAnswered()) {
       $node->revision = 1;
     }
   }
@@ -34,7 +34,7 @@ function quiz_question_node_presave($node) {
 function quiz_question_node_prepare($node) {
   if (isset($node->is_quiz_question) && variable_get('quiz_auto_revisioning', 1)) {
     $node->revision = 0;
-    if (($plugin = quiz_question_get_provider($node, TRUE)) && $plugin->hasBeenAnswered()) {
+    if (($handler = quiz_question_get_provider($node, TRUE)) && $handler->hasBeenAnswered()) {
       $node->revision = 1;
     }
   }
@@ -47,7 +47,7 @@ function quiz_question_node_access_records($node) {
   $grants = array();
 
   // Restricting view access to question nodes outside quizzes.
-  $question_types = array_keys(quiz_question_get_plugin_info());
+  $question_types = array_keys(quiz_question_get_handler_info());
   if (in_array($node->type, $question_types)) {
     // This grant is for users having 'view quiz question outside of a quiz'
     // permission. We set a priority of 2 because OG has a 1 priority and we

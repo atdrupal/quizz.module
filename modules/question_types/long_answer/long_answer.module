@@ -6,12 +6,6 @@ use Drupal\quizz\Entity\Result;
 
 /**
  * This module defines a long answer question type for quizzes.
- *
- * Long answer questions make use of the quiz question framework (quiz_question.module).
- * The functions in this file are largely used for grading long answer questions. Most
- * of the real logic is in long_answer.classes.inc.
- *
- * @file
  */
 
 /**

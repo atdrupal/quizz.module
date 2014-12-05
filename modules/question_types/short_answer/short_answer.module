@@ -6,11 +6,6 @@ use Drupal\quizz\Entity\Result;
 
 /**
  * The main file for short_answer.
- *
- * Short answer is structurally similar to long answer. However, the module
- * mechanism makes it very difficult for these two modules (either one of
- * which may be disabled) to effectively share code.
- * @file
  */
 
 /**

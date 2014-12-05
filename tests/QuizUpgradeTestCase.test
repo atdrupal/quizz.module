@@ -43,7 +43,54 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   }
 
   public function testUpgrade() {
-    $this->assertTrue($this->performUpgrade(), 'The update was completed successfully.');
+    $upgrade_1 = $this->performUpgrade();
+
+    // Module renamed from scale to quizz_scale
+    db_delete('system')
+      ->condition('type', 'module')
+      ->condition('name', 'scale')
+      ->execute();
+
+    db_update('system')
+      ->fields(array(
+          'name'     => 'quizz_scale',
+          'filename' => drupal_get_path('module', 'quizz_scale'),
+      ))
+      ->condition('name', 'scale')
+      ->condition('type', 'module')
+      ->execute()
+    ;
+    registry_rebuild();
+
+    $upgrade_2 = $this->performUpgrade();
+    $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
+    if ($upgrade_1 && $upgrade_2) {
+      $modules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quiz_directions', 'quiz_page', 'quiz_question', 'quizz_scale', 'short_answer', 'truefalse'); // , 'question_pool'
+      foreach ($modules as $module) {
+        if ($schema = module_invoke($module, 'schema')) {
+          $this->checkSchema($schema);
+        }
+      }
+    }
+  }
+
+  private function checkSchema($schema) {
+    foreach ($schema as $table_name => $table) {
+      $this->assertTrue($table_exists = db_table_exists($table_name), "Table {$table_name} is available.");
+      if (!$table_exists) {
+        continue;
+      }
+
+      foreach (array_keys($table['fields']) as $field_name) {
+        $this->assertTrue(db_field_exists($table_name, $field_name), "Field {$table_name}.{$field_name} is available.");
+      }
+
+      if (!empty($table['indexes'])) {
+        foreach (array_keys($table['indexes']) as $index_name) {
+          $this->assertTrue(db_index_exists($table_name, $index_name), "Found index {$table_name}.{$index_name}");
+        }
+      }
+    }
   }
 
 }

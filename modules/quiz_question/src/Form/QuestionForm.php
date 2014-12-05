@@ -62,9 +62,9 @@ class QuestionForm {
       );
     }
 
-    $form['question_plugin'] = array(
+    $form['question_handler'] = array(
         '#weight' => 0,
-        $this->question->getPlugin()->getCreationForm($form_state)
+        $this->question->getHandler()->getCreationForm($form_state)
     );
 
     // Attach custom fields
@@ -128,7 +128,7 @@ class QuestionForm {
         '#description'   => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
 
-    if ($this->question->getPlugin()->hasBeenAnswered()) {
+    if ($this->question->getHandler()->hasBeenAnswered()) {
       $this->question->is_new_revision = 1;
       $this->question->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
     }

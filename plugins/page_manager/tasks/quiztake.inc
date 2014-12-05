@@ -60,7 +60,7 @@ function quiz_quiztake_menu_alter(&$items, $task) {
  * to run with it. If no one does, it passes through to the main node draft page.
  */
 function quiz_quiztake(QuizEntity $quiz) {
-  // Load my task plugin
+  // Load my task handler
   $task = page_manager_get_task('quiztake');
 
   // Load the node into a context.

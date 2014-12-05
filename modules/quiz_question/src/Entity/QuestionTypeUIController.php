@@ -16,12 +16,12 @@ class QuestionTypeUIController extends EntityDefaultUIController {
   }
 
   protected function overviewTableHeaders($conditions, $rows, $additional_header = array()) {
-    $additional_header[] = t('Plugin');
+    $additional_header[] = t('Handler');
     return parent::overviewTableHeaders($conditions, $rows, $additional_header);
   }
 
   protected function overviewTableRow($conditions, $id, $entity, $additional_cols = array()) {
-    $additional_cols[] = $entity->plugin;
+    $additional_cols[] = $entity->handler;
     $row = parent::overviewTableRow($conditions, $id, $entity, $additional_cols);
     return $row;
   }

@@ -65,7 +65,7 @@ before_script:
   # Prepare env for the module
   # ---------------------
   - drush vset --yes file_temporary_path /tmp
-  - drush en -y simpletest long_answer matching multichoice quiz_ddlines quiz_directions quiz_page quiz_question quizz_scale short_answer truefalse
+  - drush en -y simpletest long_answer matching multichoice quiz_ddlines quiz_directions quiz_page quiz_question quizz_scale short_answer truefalse question_pool
   - drush vset --yes simpletest_verbose FALSE
 
   # ---------------------
@@ -74,11 +74,11 @@ before_script:
   - drush cc all
 
 script:
+  - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --verbose --class 'QuizUpgradeFrom7x5xTestCase'
   - drush test-run --dirty --field-labels=0 'Quiz' --uri=http://localhost:80
   - drush test-run --dirty --field-labels=0 'Quiz question' --uri=http://localhost:80
   # Being failed on Traivs, but OK on local :/
   # - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --verbose --class 'QuizUpgradeFrom7x4xBeta2TestCase'
-  - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --class 'QuizUpgradeFrom7x5xTestCase'
 
 notifications:
   email: false

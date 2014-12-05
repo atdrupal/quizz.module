@@ -29,8 +29,8 @@ function long_answer_edit_score($question_vid, $result_id) {
     return drupal_not_found();
   }
 
-  if ('long_answer' !== $question->getQuestionType()->plugin) {
-    throw new \RuntimeException('Unexpected question type: ' . $question->getQuestionType()->plugin);
+  if ('long_answer' !== $question->getQuestionType()->handler) {
+    throw new \RuntimeException('Unexpected question type: ' . $question->getQuestionType()->handler);
   }
 
   if (!$answer = (object) long_answer_get_answer($question->qid, $question->vid, $result_id)) {
