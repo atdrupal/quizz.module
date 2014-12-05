@@ -405,7 +405,7 @@ class MultichoiceQuestion extends QuestionHandler {
   /**
    * Implementation of getEntityView
    *
-   * @see QuizQuestion#getEntityView()
+   * @see QuestionHandler#view
    */
   public function view() {
     $content = parent::view();

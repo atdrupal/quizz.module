@@ -2,31 +2,15 @@
 
 namespace Drupal\quiz_question;
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\Form\QuestionForm;
 use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 
 /**
- * QUESTION IMPLEMENTATION FUNCTIONS
- *
- * This part acts as a contract (interface) between the question-types and the
- * rest of the system.
- *
  * Question handlers are made by extending these generic methods and abstract
  * methods. Check multichoice question handler for example.
- *
- * A base implementation of a question handler, adding a layer of abstraction
- * between the node API, quiz API and the question handlers.
- *
- * It is required that question handlers extend this abstract class.
- *
- * This class has default behaviour that all question types must have. It also
- * handles the node API, but gives the question types oppurtunity to save,
- * delete and provide data specific to the question types.
- *
- * This abstract class also declares several abstract functions forcing
- * question-types to implement required methods.
  */
 abstract class QuestionHandler implements QuestionHandlerInterface {
 
@@ -36,18 +20,15 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    */
   public $question = NULL;
 
-  /**
-   * Extra node properties
-   */
+  /** @var mixed[] */
   public $properties = NULL;
 
   /**
    * QuizQuestion constructor stores the node object.
    *
-   * @param $question
-   *   The node object
+   * @param Question $question
    */
-  public function __construct(&$question) {
+  public function __construct(Question $question) {
     $this->question = $question;
   }
 
@@ -232,10 +213,10 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
       ->execute();
 
     if (!empty($update_quiz_ids)) {
-      quiz_update_max_score_properties($update_quiz_ids);
+      quiz_controller()->getMaxScoreWriter()->update($update_quiz_ids);
     }
 
-    quiz_update_max_score_properties(array($quiz->vid));
+    quiz_controller()->getMaxScoreWriter()->update(array($quiz->vid));
 
     return TRUE;
   }
