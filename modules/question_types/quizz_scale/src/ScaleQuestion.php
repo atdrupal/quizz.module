@@ -97,7 +97,7 @@ class ScaleQuestion extends QuestionHandler {
    *
    * @see QuizQuestion#view()
    */
-  public function getEntityView() {
+  public function view() {
     $content = parent::getEntityView();
     $alternatives = array();
     for ($i = 0; $i < $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {

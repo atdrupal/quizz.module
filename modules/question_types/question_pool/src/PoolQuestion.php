@@ -46,7 +46,7 @@ class PoolQuestion extends QuestionHandler {
    * Implementation of getEntityView
    * @see QuestionHandler#getEntityView()
    */
-  public function getEntityView() {
+  public function view() {
     $build = parent::getEntityView();
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
 
@@ -54,7 +54,7 @@ class PoolQuestion extends QuestionHandler {
     $markup = '';
     foreach ($wrapper->field_question_reference->getIterator() as $sub_wrapper) {
       $sub_question = $sub_wrapper->value();
-      if ($content = $sub_question->getHandler()->getEntityView() && !empty($content['answer'])) {
+      if ($content = $sub_question->getHandler()->view() && !empty($content['answer'])) {
         $markup .= "<h3>{$sub_question->title}</h3>";
         $markup .= $content['answer']['#markup'];
       }

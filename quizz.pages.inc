@@ -353,8 +353,7 @@ function quiz_results_user_page(QuizEntity $quiz) {
  * @ingroup themeable
  */
 function theme_quiz_answer_result($variables) {
-  $type = $variables['type'];
-  return '<div class="quiz-score-icon ' . $type . '"></div>';
+  return '<div class="quiz-score-icon ' . $variables['type'] . '"></div>';
 }
 
 /**
@@ -364,8 +363,7 @@ function theme_quiz_answer_result($variables) {
  *  The position of the current question in the sessions' array.
  * @param $num_of_question
  *  The number of questions for the quiz.
- * @return
- *  Themed html.
+ * @return string
  *
  * @ingroup themeable
  */

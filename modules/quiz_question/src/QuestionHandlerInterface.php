@@ -48,4 +48,10 @@ interface QuestionHandlerInterface {
    * @return array Drupal render array.
    */
   public function getEntityView();
+  /**
+   * Retrieve information relevant for viewing question. Called by question's
+   * controller ::buildContent().
+   * @return array
+   */
+  public function view();
 }

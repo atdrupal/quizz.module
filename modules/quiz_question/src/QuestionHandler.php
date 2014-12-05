@@ -76,29 +76,19 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * Retrieve information relevant for viewing the node.
-   *
-   * (This data is generally added to the node's extra field.)
-   *
-   * @return array
-   *  Content array
+   * {@inheritdoc}
    */
-  public function getEntityView() {
+  public function view() {
     $output['question_type'] = array(
         '#weight' => -2,
         '#prefix' => '<div class="question_type_name">',
         '#suffix' => '</div>',
     );
-    $output['#markup'] = $this->question->getQuestionType()->label;
-    return $output;
+    return array('#markup' => $this->question->getQuestionType()->label) + $output;
   }
 
   /**
-   * Getter function returning properties to be loaded when the node is loaded.
-   *
-   * @see load hook in quiz_question.module (quiz_question_load)
-   *
-   * @return array
+   * {@inheritdoc}
    */
   public function load() {
     if (isset($this->properties)) {

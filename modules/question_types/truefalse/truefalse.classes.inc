@@ -101,7 +101,7 @@ class TrueFalseQuestion extends QuestionHandler {
    *
    * @see QuizQuestion#getEntityView()
    */
-  public function getEntityView() {
+  public function view() {
     $content = parent::getEntityView();
     if ($this->viewCanRevealCorrect()) {
       $answer = !empty($this->question->correct_answer) ? t('True') : t('False');

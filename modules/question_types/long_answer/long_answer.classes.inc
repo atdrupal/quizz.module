@@ -109,7 +109,7 @@ class LongAnswerQuestion extends QuestionHandler {
    *
    * @see QuizQuestion#getEntityView()
    */
-  public function getEntityView() {
+  public function view() {
     $content = parent::getEntityView();
 
     if ($this->viewCanRevealCorrect()) {
