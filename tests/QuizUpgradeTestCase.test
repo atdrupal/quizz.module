@@ -38,17 +38,15 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     ;
 
     // Module renamed from scale to quizz_scaled
-    // Module scale is rename to quizz_scale.
-    $ssql = 'SELECT 1 FROM {system} WHERE name = :name AND type = :type';
-    if (db_query($ssql, array(':name' => 'scale', ':type' => 'module'))->fetchColumn()) {
-      $usql = 'UPDATE {system} SET name = :new_name, filename = :filename WHERE type = :module AND name = :name';
-      db_query($usql, array(
-          ':new_name' => 'quizz_scale',
-          ':filename' => drupal_get_path('module', 'quizz_scale'),
-          ':module'   => 'module',
-          ':name'     => 'scale',
-      ));
-    }
+    db_update('system')
+      ->fields(array(
+          'name'     => 'quizz_scale',
+          'filename' => drupal_get_path('module', 'quizz_scale'),
+      ))
+      ->condition('name', 'scale')
+      ->condition('type', 'module')
+      ->execute()
+    ;
 
     module_enable(static::$dependencies);
     registry_rebuild();
