@@ -82,10 +82,12 @@ class QuestionController extends EntityAPIController {
         break;
 
       case 'delete':
+        db_delete('quiz_results_answers')->condition('question_qid', $question->qid)->execute();
         $question->getHandler()->delete($only_this_version = FALSE);
         break;
 
       case 'revision_delete':
+        db_delete('quiz_results_answers')->condition('question_vid', $question->vid)->execute();
         $question->getHandler()->delete($only_this_version = TRUE);
         break;
     }

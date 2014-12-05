@@ -112,7 +112,7 @@ class ShortAnswerQuestion extends QuestionHandler {
    * @see QuizQuestion#getEntityView()
    */
   public function view() {
-    $content = parent::getEntityView();
+    $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
       $content['answers'] = array(
           '#markup' => '<div class="quiz-solution">' . check_plain($this->question->correct_answer) . '</div>',

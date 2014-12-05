@@ -13,6 +13,13 @@ interface QuestionHandlerInterface {
   public function getMaximumScore();
 
   /**
+   * Get the form used to create a new question.
+   * @param array $form_state
+   * @return array Form structure
+   */
+  public function getCreationForm(array &$form_state = NULL);
+
+  /**
    * Provides validation for question before it is created.
    *
    * When a new question is created and initially submited, this is
@@ -21,6 +28,12 @@ interface QuestionHandlerInterface {
    * @param array $form
    */
   public function validate(array &$form);
+
+  /**
+   * Save question type specific node properties
+   * @return bool
+   */
+  public function saveEntityProperties($is_new = FALSE);
 
   /**
    * Method is called when user retry.
@@ -45,9 +58,18 @@ interface QuestionHandlerInterface {
   public function hasFeedback();
 
   /**
-   * @return array Drupal render array.
+   * Delete question data from the database. Called by question's controller.
+   * @param bool $delete_revision
    */
-  public function getEntityView();
+  public function delete($delete_revision);
+
+  /**
+   * Getter function returning properties to be loaded when question is loaded.
+   * Called by question's controler.
+   * @return array
+   */
+  public function load();
+
   /**
    * Retrieve information relevant for viewing question. Called by question's
    * controller ::buildContent().

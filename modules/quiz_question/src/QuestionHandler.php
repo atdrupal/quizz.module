@@ -144,30 +144,6 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * Delete question data from the database.
-   *
-   * Called by quiz_question_delete (hook_delete).
-   * Child classes must call super
-   *
-   * @param bool $single_revision
-   */
-  public function delete($single_revision = FALSE) {
-    // Delete answeres & properties
-    $remove_answer = db_delete('quiz_results_answers')->condition('question_qid', $this->question->qid);
-    if ($single_revision) {
-      $remove_answer->condition('question_vid', $this->question->vid);
-    }
-    $remove_answer->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validate(array &$form) {
-
-  }
-
-  /**
    * Get the form through which the user will answer the question.
    *
    * @param array $form_state
@@ -203,22 +179,6 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
         '#weight' => 100,
         '#markup' => drupal_render($feedback),
     );
-  }
-
-  /**
-   * Get the form used to create a new question.
-   * @param array $form state
-   * @return array Must return a FAPI array.
-   */
-  public function getCreationForm(array &$form_state = NULL) {
-    return array();
-  }
-
-  /**
-   * Save question type specific node properties
-   */
-  public function saveEntityProperties($is_new = FALSE) {
-
   }
 
   /**
@@ -288,7 +248,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    * This is because the question might have been rendered and a user is about
    * to answer it…
    *
-   * @return
+   * @return string
    *   true if question has been answered or is about to be answered…
    */
   public function hasBeenAnswered() {
@@ -320,6 +280,34 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     if (array_filter($reveal_correct)) {
       return TRUE;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete($delete_revision) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(array &$form) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreationForm(array &$form_state = NULL) {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveEntityProperties($is_new = FALSE) {
+
   }
 
   /**

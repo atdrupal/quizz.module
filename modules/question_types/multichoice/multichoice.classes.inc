@@ -408,7 +408,7 @@ class MultichoiceQuestion extends QuestionHandler {
    * @see QuizQuestion#getEntityView()
    */
   public function view() {
-    $content = parent::getEntityView();
+    $content = parent::view();
     if ($this->question->choice_random) {
       $this->shuffle($this->question->alternatives);
     }

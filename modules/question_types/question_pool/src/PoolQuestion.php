@@ -47,7 +47,7 @@ class PoolQuestion extends QuestionHandler {
    * @see QuestionHandler#getEntityView()
    */
   public function view() {
-    $build = parent::getEntityView();
+    $build = parent::view();
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
 
     /* @var $sub_question Question */
