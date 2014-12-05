@@ -171,12 +171,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * Provides validation for question before it is created.
-   *
-   * When a new question is created and initially submited, this is
-   * called to validate that the settings are acceptible.
-   *
-   * @param array $form
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
 
@@ -228,11 +223,6 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   public function getCreationForm(array &$form_state = NULL) {
     return array();
   }
-
-  /**
-   * Get the maximum possible score for this question.
-   */
-  abstract public function getMaximumScore();
 
   /**
    * Save question type specific node properties
@@ -343,12 +333,12 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * This may be overridden in subclasses. If it returns true,
-   * it means the max_score is updated for all occurrences of
+   * If it returns true, it means the max_score is updated for all occurrences of
    * this question in quizzes.
+   * @return bool
    */
   protected function autoUpdateMaxScore() {
-    return false;
+    return FALSE;
   }
 
   public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
@@ -356,26 +346,14 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * Is this question graded?
-   *
-   * Questions like Quiz Directions, Quiz Page, and Scale are not.
-   *
-   * By default, questions are expected to be gradeable
-   *
-   * @return bool
+   * {@inheritdoc}
    */
   public function isGraded() {
     return TRUE;
   }
 
   /**
-   * Does this question type give feedback?
-   *
-   * Questions like Quiz Directions and Quiz Pages do not.
-   *
-   * By default, questions give feedback
-   *
-   * @return bool
+   * {@inheritdoc}
    */
   public function hasFeedback() {
     return TRUE;
