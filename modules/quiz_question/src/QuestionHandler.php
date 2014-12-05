@@ -10,7 +10,7 @@ use Drupal\quizz\Entity\Result;
 /**
  * QUESTION IMPLEMENTATION FUNCTIONS
  *
- * This part acts as a contract(/interface) between the question-types and the
+ * This part acts as a contract (interface) between the question-types and the
  * rest of the system.
  *
  * Question handlers are made by extending these generic methods and abstract
@@ -28,7 +28,7 @@ use Drupal\quizz\Entity\Result;
  * This abstract class also declares several abstract functions forcing
  * question-types to implement required methods.
  */
-abstract class QuestionHandler {
+abstract class QuestionHandler implements QuestionHandlerInterface {
 
   /**
    * @var \Drupal\quiz_question\Entity\Question
@@ -197,21 +197,27 @@ abstract class QuestionHandler {
    * Element validator (for repeat until correct).
    */
   public function elementValidate(Result $result, &$element, &$form_state) {
-    $quiz = $result->getQuiz();
-    $answer = $form_state['values']['question'][$this->question->qid];
-
-    // There was an answer submitted.
-    $response = quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer);
-    if ($quiz->repeat_until_correct && !$response->isCorrect()) {
-      form_set_error('', t('The answer was incorrect. Please try again.'));
-
-      $controller = new QuestionFeedbackController($quiz, $result);
-      $feedback = $controller->buildRenderArray($this->question);
-      $element['feedback'] = array(
-          '#weight' => 100,
-          '#markup' => drupal_render($feedback),
-      );
+    if ((!$quiz = $result->getQuiz()) || !$quiz->repeat_until_correct) {
+      return;
     }
+
+    $answer = $form_state['values']['question'][$this->question->qid];
+    if (!quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer)->isCorrect()) {
+      $this->onRepeatUntiCorrect($result, $element);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onRepeatUntiCorrect(Result $result, array &$element) {
+    form_set_error('', t('The answer was incorrect. Please try again.'));
+    $obj = new QuestionFeedbackController($result);
+    $feedback = $obj->buildRenderArray($this->question);
+    $element['feedback'] = array(
+        '#weight' => 100,
+        '#markup' => drupal_render($feedback),
+    );
   }
 
   /**
