@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestion.
  */
-class MatchingQuestion extends QuestionPlugin {
+class MatchingQuestion extends QuestionHandler {
 
   /**
    * Constructor
@@ -524,21 +524,12 @@ class MatchingResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
-  }
-
-  /**
    * Implementation of getReportFormResponse
    */
   public function getReportFormResponse() {
     $data = array();
     $answers = $this->question->answers[0]['answer'];
-    $solution = $this->question_plugin->getSubquestions();
+    $solution = $this->question_handler->getSubquestions();
     foreach ($this->question->match as $match) {
       $data[] = array(
           'choice'            => $match['question'],

@@ -10,14 +10,8 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class ScaleResponse extends ResponseHandler {
 
-  /**
-   * ID of the answer.
-   */
   protected $answer_id = 0;
 
-  /**
-   * Constructor
-   */
   public function __construct($result_id, Question $question, $answer = NULL) {
     parent::__construct($result_id, $question, $answer);
 

@@ -58,7 +58,7 @@ class Schema7060 {
         'fields'      => array(
             'id'          => array('type' => 'serial', 'not null' => TRUE, 'description' => 'Primary Key: Unique question type ID.'),
             'type'        => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'The machine-readable name of this question type.'),
-            'plugin'      => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question plugin type (shortanswer, longanswer, truefalse, …)'),
+            'handler'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question handler type (shortanswer, longanswer, truefalse, …)'),
             'label'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this question type.'),
             'weight'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny', 'description' => 'The weight of this question type in relation to others.'),
             'data'        => array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this question type.'),
@@ -71,7 +71,7 @@ class Schema7060 {
         'primary key' => array('id'),
         'unique keys' => array('type' => array('type')),
         'indexes'     => array(
-            'plugin'      => array('plugin'),
+            'handler'     => array('handler'),
             'is_disabled' => array('disabled')
         ),
     );

@@ -74,7 +74,7 @@ class QuizAnsweringForm {
     $form['#result'] = $this->result;
 
     foreach ($questions as $question) {
-      $this->buildQuestionItem($question->getPlugin(), $form, $form_state);
+      $this->buildQuestionItem($question->getHandler(), $form, $form_state);
     }
 
     // Build buttons
@@ -173,7 +173,7 @@ class QuizAnsweringForm {
         '#access'                  => $this->quiz->allow_skipping,
     );
 
-    // Question plugin may provide extra buttons, merge buttons to master form.
+    // Question handler may provide extra buttons, merge buttons to master form.
     foreach ($form['questions'] as $id => &$elements) {
       if (!empty($elements['question']['navigation'])) {
         $form['navigation'] += $elements['question']['navigation'];
@@ -206,10 +206,10 @@ class QuizAnsweringForm {
       return;
     }
 
+    // There was an answer submitted.
     foreach (array_keys($form_state['values']['question']) as $question_id) {
-      // There was an answer submitted.
-      if ($current_question = quiz_question_entity_load($question_id)) {
-        $current_question->getPlugin()->getAnsweringFormValidate($form, $form_state);
+      if ($_question = quiz_question_entity_load($question_id)) {
+        $_question->getHandler()->getAnsweringFormValidate($form, $form_state);
       }
     }
   }

@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_question\Entity;
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Entity;
 use RuntimeException;
 use Drupal\quizz\Entity\Result;
@@ -19,8 +19,8 @@ class Question extends Entity {
   /** @var string */
   public $type;
 
-  /** @var QuestionPlugin */
-  private $plugin;
+  /** @var QuestionHandler */
+  private $handler;
 
   /** @var string */
   public $language = LANGUAGE_NONE;
@@ -75,33 +75,33 @@ class Question extends Entity {
   }
 
   /**
-   * @return QuestionPlugin
+   * @return QuestionHandler
    */
-  public function getPlugin() {
-    if (NULL === $this->plugin) {
-      $this->plugin = $this->doGetPlugin();
+  public function getHandler() {
+    if (NULL === $this->handler) {
+      $this->handler = $this->doGetHandler();
     }
-    return $this->plugin;
+    return $this->handler;
   }
 
   /**
-   * Get plugin info.
+   * Get handler info.
    * @return array
    * @throws RuntimeException
    */
-  public function getPluginInfo() {
+  public function getHandlerInfo() {
     if ($question_type = $this->getQuestionType()) {
-      return quiz_question_get_plugin_info($question_type->plugin);
+      return quiz_question_get_handler_info($question_type->handler);
     }
-    throw new RuntimeException('Question plugin not found for question #' . $this->qid . ' (type: ' . $this->type . ')');
+    throw new RuntimeException('Question handler not found for question #' . $this->qid . ' (type: ' . $this->type . ')');
   }
 
   /**
-   * @return QuestionPlugin
+   * @return QuestionHandler
    */
-  private function doGetPlugin() {
-    $plugin_info = $this->getPluginInfo();
-    return new $plugin_info['question provider']($this);
+  private function doGetHandler() {
+    $handler_info = $this->getHandlerInfo();
+    return new $handler_info['question provider']($this);
   }
 
   /**
@@ -134,11 +134,11 @@ class Question extends Entity {
   }
 
   /**
-   * Get module of question plugin.
+   * Get module of question handler.
    * @return string
    */
   public function getModule() {
-    return $this->getQuestionType()->getPluginModule();
+    return $this->getQuestionType()->getHandlerModule();
   }
 
   /**

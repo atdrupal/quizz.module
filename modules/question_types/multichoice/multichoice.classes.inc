@@ -2,7 +2,7 @@
 
 use Drupal\multichoice\FormDefinition;
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -23,7 +23,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestion.
  */
-class MultichoiceQuestion extends QuestionPlugin {
+class MultichoiceQuestion extends QuestionHandler {
 
   /**
    * Forgive some possible logical flaws in the user input.
@@ -663,7 +663,7 @@ class MultichoiceResponse extends ResponseHandler {
    */
   public function score() {
     if ($this->question->choice_boolean || $this->isAllWrong()) {
-      $score = $this->getMaxScore();
+      $score = $this->getQuestionMaxScore();
       foreach ($this->question->alternatives as $key => $alt) {
         if (in_array($alt['id'], $this->user_answer_ids)) {
           if ($alt['score_if_chosen'] <= $alt['score_if_not_chosen']) {

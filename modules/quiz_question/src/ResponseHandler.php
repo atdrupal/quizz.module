@@ -3,49 +3,28 @@
 namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionPlugin;
-use Drupal\quizz\Entity\Result;
-use stdClass;
+use Drupal\quizz\Entity\Answer;
 
 /**
  * Each question type must store its own response data and be able to calculate a score for
  * that data.
  */
-abstract class ResponseHandler {
+abstract class ResponseHandler extends ResponseHandlerBase {
 
-  /** @var Result */
-  protected $result;
-  protected $result_id = 0;
-  protected $is_correct = FALSE;
-  protected $evaluated = TRUE;
+  /** @var bool */
+  protected $allow_feedback = FALSE;
 
-  /** @var Question */
-  public $question = NULL;
-
-  /** @var QuestionPlugin */
-  public $question_plugin = NULL;
-  protected $answer = NULL;
-  protected $score;
-  public $is_skipped;
-  public $is_doubtful;
-
-  /**
-   * Create a new user response.
-   *
-   * @param $result_id
-   * @param Question $question
-   * @param mixed $input (dependent on question type).
-   */
   public function __construct($result_id, Question $question, $input = NULL) {
-    $this->result_id = $result_id;
-    $this->result = quiz_result_load($result_id);
-    $this->question = $question;
-    $this->question_plugin = $question->getPlugin();
-    $this->answer = $input;
+    parent::__construct($result_id, $question, $input);
 
-    /* @var $answer Answer */
-    $conds = array('result_id' => $result_id, 'question_qid' => $question->qid, 'question_vid' => $question->vid);
+    $conds = array(
+        'result_id'    => $this->result_id,
+        'question_qid' => $this->question->qid,
+        'question_vid' => $this->question->vid
+    );
+
     if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
+      /* @var $answer Answer */
       $answer = reset($find);
       $this->is_doubtful = $answer->is_doubtful;
       $this->is_skipped = $answer->is_skipped;
@@ -53,37 +32,12 @@ abstract class ResponseHandler {
   }
 
   /**
-   * @return QuestionPlugin
+   * {@inheritdoc}
+   * This default version returns TRUE if the score is equal to the maximum
+   * possible score.
    */
-  function getQuizQuestion() {
-    return $this->question_plugin;
-  }
-
-  /**
-   * Used to refresh this instances question in case drupal has changed it.
-   *
-   * @param Question $newQuestion
-   */
-  public function refreshQuestionNode($newQuestion) {
-    $this->question = $newQuestion;
-  }
-
-  /**
-   * Indicate whether the response has been evaluated (scored) yet.
-   * Questions that require human scoring (e.g. essays) may need to manually
-   * toggle this.
-   */
-  public function isEvaluated() {
-    return (bool) $this->evaluated;
-  }
-
-  /**
-   * Check to see if the answer is marked as correct.
-   *
-   * This default version returns TRUE iff the score is equal to the maximum possible score.
-   */
-  function isCorrect() {
-    return ($this->getMaxScore() == $this->getScore());
+  public function isCorrect() {
+    return $this->getQuestionMaxScore() == $this->getScore();
   }
 
   /**
@@ -106,22 +60,18 @@ abstract class ResponseHandler {
     if (isset($this->question->score_weight) && $weight_adjusted) {
       return round($this->score * $this->question->score_weight);
     }
+
     return $this->score;
   }
 
   /**
-   * Returns stored max score if it exists, if not the max score is calculated and returned.
-   *
-   * @param $weight_adjusted
-   *  If the returned max score shall be adjusted according to the max_score the question has in a quiz
-   * @return
-   *  Max score(int)
+   * {@inheritdoc}
    */
-  public function getMaxScore($weight_adjusted = TRUE) {
+  public function getQuestionMaxScore($weight_adjusted = TRUE) {
     if (!isset($this->question->max_score)) {
-      $this->question->max_score = $this->question->getPlugin()->getMaximumScore();
+      $this->question->max_score = $this->question->getHandler()->getMaximumScore();
     }
-    if (isset($this->question->score_weight) && $weight_adjusted) {
+    if ($weight_adjusted && isset($this->question->score_weight)) {
       return round($this->question->max_score * $this->question->score_weight);
     }
     return $this->question->max_score;
@@ -131,35 +81,20 @@ abstract class ResponseHandler {
    * Represent the response as a stdClass object.
    *
    * Convert data to an object that has the following properties:
-   * - $score
-   * - $result_id
-   * - $qid
-   * - $vid
-   * - $is_correct
+   *  score, result_id, question_qid, question_vid, is_correct, …
    */
-  function toBareObject() {
-    $response = new stdClass();
-    $response->score = $this->getScore(); // This can be 0 for unscored.
-    $response->question_qid = $this->question->qid;
-    $response->question_vid = $this->question->vid;
-    $response->result_id = $this->result_id;
-    $response->is_correct = (int) $this->isCorrect();
-    $response->is_evaluated = $this->isEvaluated();
-    $response->is_skipped = 0;
-    $response->is_doubtful = isset($_POST['is_doubtful']) ? (int) ($_POST['is_doubtful']) : 0;
-    $response->is_valid = $this->isValid();
-    return $response;
-  }
-
-  /**
-   * Validates response from a quiz taker. If the response isn't valid the quiz taker won't be allowed to proceed.
-   *
-   * @return
-   *  True if the response is valid.
-   *  False otherwise
-   */
-  public function isValid() {
-    return TRUE;
+  public function toBareObject() {
+    return (object) array(
+          'score'        => $this->getScore(),
+          'question_qid' => $this->question->qid,
+          'question_vid' => $this->question->vid,
+          'result_id'    => $this->result_id,
+          'is_correct'   => (int) $this->isCorrect(),
+          'is_evaluated' => $this->isEvaluated(),
+          'is_skipped'   => isset($this->is_skipped) ? (int) $this->is_skipped : 0,
+          'is_doubtful'  => isset($this->is_doubtful) ? (int) $this->is_doubtful : 0,
+          'is_valid'     => $this->isValid(),
+    );
   }
 
   /**
@@ -191,38 +126,29 @@ abstract class ResponseHandler {
   }
 
   /**
-   * Creates the report form for the admin pages, and for when a user gets
-   * feedback after answering questions.
-   *
-   * The report is a form to allow editing scores and the likes while viewing
-   * the report form
-   *
-   * @return array $form
-   *  Drupal form array
+   * {@inheritdoc}
    */
-  public function getReportForm() {
+  public function getReportForm($form = array()) {
     global $user;
-
-    $form = array();
 
     // Add general data, and data from the question type implementation
     $form['qid'] = array('#type' => 'value', '#value' => $this->question->qid);
     $form['vid'] = array('#type' => 'value', '#value' => $this->question->vid);
     $form['result_id'] = array('#type' => 'value', '#value' => $this->result_id);
-
-    if ($this->result->canAccessOwnScore($user) && ($submit = $this->getReportFormSubmit())) {
-      $form['submit'] = array('#type' => 'value', '#value' => $submit);
-    }
+    $form['max_score'] = array('#type' => 'value', '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?');
     $form['question'] = $this->getReportFormQuestion();
 
     if ($this->result->canAccessOwnScore($user)) {
-      $form['answer_feedback'] = $this->getReportFormAnswerFeedback();
+      if ($submit = $this->getReportFormSubmit()) {
+        $form['submit'] = array('#type' => 'value', '#value' => $submit);
+      }
     }
 
-    $form['max_score'] = array(
-        '#type'  => 'value',
-        '#value' => $this->canReview('score') ? $this->getMaxScore() : '?',
-    );
+    if ($this->result->canAccessOwnScore($user)) {
+      if ($answer_feedback = $this->getReportFormAnswerFeedback()) {
+        $form['answer_feedback'] = $answer_feedback;
+      }
+    }
 
     $labels = array(
         'attempt'         => t('Your answer'),
@@ -243,45 +169,49 @@ abstract class ResponseHandler {
       }
     }
 
-    if ($this->isEvaluated()) {
-      $score = $this->getScore();
-      $class = $this->isCorrect() ? 'q-correct' : 'q-wrong';
-    }
-    else {
-      $score = t('?');
-      $class = 'q-waiting';
-    }
-
     if (quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
       $form['score'] = $this->getReportFormScore();
     }
 
+    $score = t('?');
+    $class = 'q-waiting';
+    if ($this->isEvaluated()) {
+      $score = $this->getScore();
+      $class = $this->isCorrect() ? 'q-correct' : 'q-wrong';
+    }
+
     if ($this->canReview('score') || quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
-      $form['score_display']['#markup'] = theme('quiz_question_score', array('score' => $score, 'max_score' => $this->getMaxScore(), 'class' => $class));
+      $form['score_display']['#markup'] = theme('quiz_question_score', array(
+          'score'     => $score,
+          'max_score' => $this->getQuestionMaxScore(),
+          'class'     => $class
+      ));
     }
 
     $headers = array_intersect_key($labels, $rows[0]);
-    $type = $this->getQuizQuestion()->question->type;
-    $form['response']['#markup'] = theme('quiz_question_feedback__' . $type, array('labels' => $headers, 'data' => $rows));
+    $form['response']['#markup'] = theme('quiz_question_feedback__' . $this->question->type, array(
+        'labels' => $headers,
+        'data'   => $rows
+    ));
 
     if ($this->canReview('question_feedback')) {
-      if (!empty($this->question_plugin->question)) {
-        $form['question_feedback']['#markup'] = check_markup($this->question_plugin->question->feedback, $this->question_plugin->question->feedback_format);
+      if (!empty($this->question_handler->question)) {
+        $form['question_feedback']['#markup'] = check_markup($this->question_handler->question->feedback, $this->question_handler->question->feedback_format);
       }
     }
 
-    $form['#theme'] = $this->getReportFormTheme();
+    if ($theme = $this->getReportFormTheme()) {
+      $form['#theme'] = $theme;
+    }
 
     return $form;
   }
 
   /**
-   * get the question part of the reportForm
-   *
-   * @return
-   *  FAPI form array holding the question
+   * Get the question part of the reportForm
+   * @return array
    */
-  public function getReportFormQuestion() {
+  protected function getReportFormQuestion() {
     $question = clone ($this->question);
     $question->no_answer_form = TRUE;
     $output = entity_view('quiz_question', array($question), 'feedback');
@@ -290,39 +220,36 @@ abstract class ResponseHandler {
 
   /**
    * Get the response part of the report form
-
-   * @return
+   * @return array[]
    *  Array of choices
    */
   public function getReportFormResponse() {
-    $data = array();
-
-    $data[] = array(
-        'choice'            => 'True',
-        'attempt'           => 'Did the user choose this?',
-        'correct'           => 'Was their answer correct?',
-        'score'             => 'Points earned for this answer',
-        'answer_feedback'   => 'Feedback specific to the answer',
-        'question_feedback' => 'General question feedback for any answer',
-        'solution'          => 'Is this choice the correct solution?',
-        'quiz_feedback'     => 'Quiz feedback at this time',
+    return array(
+        array(
+            'choice'            => 'True',
+            'attempt'           => 'Did the user choose this?',
+            'correct'           => 'Was their answer correct?',
+            'score'             => 'Points earned for this answer',
+            'answer_feedback'   => 'Feedback specific to the answer',
+            'question_feedback' => 'General question feedback for any answer',
+            'solution'          => 'Is this choice the correct solution?',
+            'quiz_feedback'     => 'Quiz feedback at this time',
+        )
     );
-
-    return $data;
   }
 
   public function getReportFormAnswerFeedback() {
-    return FALSE;
-  }
-
-  /**
-   * Get the submit function for the reportForm
-   *
-   * @return
-   *  Submit function as a string, or FALSE if no submit function
-   */
-  public function getReportFormSubmit() {
-    return FALSE;
+    $feedback = isset($this->answer_feedback) ? $this->answer_feedback : '';
+    $format = isset($this->answer_feedback_format) ? $this->answer_feedback_format : filter_default_format();
+    if ($this->allow_feedback) {
+      return array(
+          '#title'         => t('Enter feedback'),
+          '#type'          => 'text_format',
+          '#default_value' => filter_xss_admin($feedback),
+          '#format'        => $format,
+          '#attributes'    => array('class' => array('quiz-report-score')),
+      );
+    }
   }
 
   /**
@@ -346,34 +273,6 @@ abstract class ResponseHandler {
   }
 
   /**
-   * Utility function that returns the format of the node body
-   */
-  protected function getFormat() {
-    $body = field_get_items('node', $this->question, 'body');
-    return ($body ? $body[0]['format'] : NULL);
-  }
-
-  /**
-   * Save the current response.
-   */
-  abstract public function save();
-
-  /**
-   * Delete the response.
-   */
-  abstract public function delete();
-
-  /**
-   * Calculate the score for the response.
-   */
-  abstract public function score();
-
-  /**
-   * Get the user's response.
-   */
-  abstract public function getResponse();
-
-  /**
    * Can the quiz taker view the requested review?
    */
   public function canReview($option) {
@@ -385,11 +284,6 @@ abstract class ResponseHandler {
     return $can_review[$option];
   }
 
-  /**
-   * Implementation of getReportFormScore
-   *
-   * @see QuizQuestionResponse#getReportFormScore()
-   */
   public function getReportFormScore() {
     $score = ($this->isEvaluated()) ? $this->getScore() : '';
     return array(
@@ -401,17 +295,8 @@ abstract class ResponseHandler {
         '#attributes'       => array('class' => array('quiz-report-score')),
         '#element_validate' => array('element_validate_integer'),
         '#required'         => TRUE,
-        '#field_suffix'     => '/ ' . $this->getMaxScore(),
+        '#field_suffix'     => '/ ' . $this->getQuestionMaxScore(),
     );
-  }
-
-  /**
-   * Set the target result ID for this Question response.
-   *
-   * Useful for cloning entire result sets.
-   */
-  public function setResultId($result_id) {
-    $this->result_id = $result_id;
   }
 
 }

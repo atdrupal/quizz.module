@@ -30,8 +30,8 @@ function short_answer_edit_score($question_vid, $result_id) {
     return drupal_not_found();
   }
 
-  if ('short_answer' !== $question->getQuestionType()->plugin) {
-    throw new \RuntimeException('Unexpected question type: ' . $question->getQuestionType()->plugin);
+  if ('short_answer' !== $question->getQuestionType()->handler) {
+    throw new \RuntimeException('Unexpected question type: ' . $question->getQuestionType()->handler);
   }
 
   if (!$answer = (object) short_answer_get_answer($question->qid, $question->vid, $result_id)) {

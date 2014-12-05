@@ -26,8 +26,8 @@ abstract class QuizQuestionTestCase extends QuizTestCase {
    * Test the subclass's quiz question implementation.
    */
   public function testQuizQuestionImplementation() {
-    $info = quiz_question_get_plugin_info();
-    $this->assertTrue(isset($info[$this->questionPlugin]), t('Check that the question implementation is correct.'));
+    $info = quiz_question_get_handler_info();
+    $this->assertTrue(isset($info[$this->questionHandler]), t('Check that the question implementation is correct.'));
   }
 
 }

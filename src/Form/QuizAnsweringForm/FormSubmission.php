@@ -112,17 +112,17 @@ class FormSubmission extends QuizTakeBaseController {
 
         $answer_value = $form_state['values']['question'][$question_id];
 
-        $instance = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $answer_value);
-        $instance->delete();
-        $instance->save();
-        $response = $instance->toBareObject();
+        $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $answer_value);
+        $handler->delete();
+        $handler->save();
+        $response = $handler->toBareObject();
         quiz_result_controller()
           ->getWriter()
           ->saveQuestionResult($this->quiz, $response, array('set_msg' => TRUE, 'question_data' => $question_array));
 
         // Increment the counter.
         $this->redirect($this->quiz, $this->result->getNextPageNumber($this->page_number));
-        $feedback_count += $instance->question_plugin->hasFeedback();
+        $feedback_count += $handler->question_handler->hasFeedback();
       }
     }
 

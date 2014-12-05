@@ -128,7 +128,7 @@ function multichoice_theme($existing, $type, $theme, $path) {
  * ajax callback function used when adding alternatives to the node-form
  */
 function multichoice_add_alternative_ajax_callback($form, &$form_state) {
-  return $form['question_plugin'][0]['alternatives'];
+  return $form['question_handler'][0]['alternatives'];
 }
 
 /**

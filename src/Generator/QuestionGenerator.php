@@ -29,7 +29,7 @@ class QuestionGenerator {
         'body'      => array(LANGUAGE_NONE => array(array('value' => devel_create_para(rand(20, 50), 1)))),
     );
 
-    switch (quiz_question_type_load($question_type)->plugin) {
+    switch (quiz_question_type_load($question_type)->handler) {
       case 'truefalse':
         $question_array += $this->dummyTrueFalseQuestion();
         break;
@@ -46,7 +46,7 @@ class QuestionGenerator {
       case 'quiz_page':
         break;
       default:
-        throw new RuntimeException('Unsupported question: ' . quiz_question_type_load($question_type)->plugin);
+        throw new RuntimeException('Unsupported question: ' . quiz_question_type_load($question_type)->handler);
     }
 
     /* @var $question Question */

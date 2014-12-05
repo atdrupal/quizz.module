@@ -42,7 +42,7 @@ class AnswerController extends EntityAPIController {
 
     if (is_object($question) && isset($responses[$result_id][$question->vid])) {
       // We refresh the question in case it has been changed since we cached the response
-      $responses[$result_id][$question->vid]->refreshQuestionNode($question);
+      $responses[$result_id][$question->vid]->refreshQuestionEntity($question);
       if (FALSE !== $responses[$result_id][$question->vid]->is_skipped) {
         return $responses[$result_id][$question->vid];
       }
@@ -55,7 +55,7 @@ class AnswerController extends EntityAPIController {
     // If the question isn't set we fetch it from the QuizQuestion instance
     // this responce belongs to
     if (!$question && ($_question = quiz_question_entity_load($question_qid, $question_vid))) {
-      $question = $_question->getPlugin()->question;
+      $question = $_question->getHandler()->question;
     }
 
     // Cache the responce instance
@@ -68,8 +68,8 @@ class AnswerController extends EntityAPIController {
   }
 
   private function doGetInstance(Question $question, $result_id, $answer) {
-    $plugin_info = $question->getPluginInfo();
-    $response_provider = new $plugin_info['response provider']($result_id, $question, $answer);
+    $handler_info = $question->getHandlerInfo();
+    $response_provider = new $handler_info['response provider']($result_id, $question, $answer);
     if (!$response_provider instanceof ResponseHandler) {
       throw new RuntimeException('The question-response isn\'t a QuizQuestionResponse. It needs to extend the QuizQuestionResponse interface, or extend the abstractQuizQuestionResponse class.');
     }

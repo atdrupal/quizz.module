@@ -5,7 +5,7 @@
  */
 class LongAnswerTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'long_answer';
+  protected $questionHandler = 'long_answer';
 
   public static function getInfo() {
     return array(
@@ -30,7 +30,7 @@ class LongAnswerTestCase extends QuizQuestionTestCase {
     }
 
     return $this->drupalCreateQuestion(array(
-          'type'  => $this->questionPlugin,
+          'type'  => $this->questionHandler,
           'title' => 'LA 1 title',
           'body'  => 'LA 1 body text.',
         ) + $settings);
