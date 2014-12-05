@@ -39,7 +39,7 @@ class QuestionIO {
    * Builds the questionlist for quizzes with categorized random questions
    */
   public function buildCategoziedQuestionList() {
-    if (!$question_types = array_keys(quiz_question_get_plugin_info())) {
+    if (!$question_types = array_keys(quiz_question_get_handler_info())) {
       return array();
     }
 

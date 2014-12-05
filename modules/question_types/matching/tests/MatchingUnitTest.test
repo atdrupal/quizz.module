@@ -5,7 +5,7 @@
  */
 class MatchingTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'matching';
+  protected $questionHandler = 'matching';
 
   public static function getInfo() {
     return array(
@@ -25,7 +25,7 @@ class MatchingTestCase extends QuizQuestionTestCase {
    */
   private function createQuizQuestion() {
     $settings = array(
-        'type'           => $this->questionPlugin,
+        'type'           => $this->questionHandler,
         'title'          => $this->randomName(),
         'body'           => $this->randomString(),
         'revisions'      => TRUE,

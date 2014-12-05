@@ -5,7 +5,7 @@
  */
 class MultichoiceTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'multichoice';
+  protected $questionHandler = 'multichoice';
 
   public static function getInfo() {
     return array(

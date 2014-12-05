@@ -113,7 +113,8 @@ class QuestionUIController extends EntityDefaultUIController {
           'page arguments'   => array('quiz_question', 1),
           'type'             => MENU_LOCAL_TASK,
           'file'             => 'devel.pages.inc',
-          'file path'        => drupal_get_path('module', 'devel')
+          'file path'        => drupal_get_path('module', 'devel'),
+          'weight'           => 20,
       );
     }
 
@@ -137,9 +138,9 @@ class QuestionUIController extends EntityDefaultUIController {
    * @param \Drupal\quiz_question\Entity\Question $question
    */
   protected function overviewTableRow($conditions, $id, $question, $additional_cols = array()) {
-    $plugin_info = $question->getPluginInfo();
-    $plugin_name = $plugin_info['name'];
-    $additional_cols[] = $question->getQuestionType()->label . ' (' . $plugin_name . ')';
+    $handler_info = $question->getHandlerInfo();
+    $handler_name = $handler_info['name'];
+    $additional_cols[] = $question->getQuestionType()->label . ' (' . $handler_name . ')';
     $columns = parent::overviewTableRow($conditions, $id, $question, $additional_cols);
 
     // change manage prefix from '/admin/content/quiz-questions/manage/' to 'quiz-question/'

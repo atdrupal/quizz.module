@@ -71,3 +71,11 @@ function hook_quiz_finished(QuizEntity $quiz, $score, $data) {
 function hook_quiz_scored(QuizEntity $quiz, $score, $result_id) {
 
 }
+
+/**
+ * @see \Drupal\quiz_question\ResponseHandler::getReportForm()
+ * @param array $labels Associated string[]
+ */
+function hook_quiz_feedback_labels_alter(&$labels) {
+
+}

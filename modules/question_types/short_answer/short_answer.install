@@ -90,7 +90,7 @@ function short_answer_update_7600() {
  */
 function short_answer_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('short_answer' === $question_type->plugin) {
+    if ('short_answer' === $question_type->handler) {
       $question_type
         ->setConfig('short_answer_default_max_score', variable_get('short_answer_default_max_score', 5))
         ->save()

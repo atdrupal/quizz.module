@@ -129,7 +129,7 @@ function multichoice_update_7600() {
  */
 function multichoice_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
-    if ('multichoice' === $question_type->plugin) {
+    if ('multichoice' === $question_type->handler) {
       $question_type
         ->setConfig('multichoice_def_num_of_alts', variable_get('multichoice_def_num_of_alts', 2))
         ->setConfig('multichoice_def_scoring', variable_get('multichoice_def_scoring', 0))

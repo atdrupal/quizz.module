@@ -22,7 +22,7 @@ function quiz_question_schema() {
  * Make the question body visible by default for the question view mode
  */
 function quiz_question_update_7401() {
-  foreach (array_keys(quiz_question_get_plugin_info()) as $question_type) {
+  foreach (array_keys(quiz_question_get_handler_info()) as $question_type) {
     $instance = field_read_instance('node', 'body', $question_type);
 
     $instance['display']['question'] = array(
@@ -167,4 +167,14 @@ function quiz_question_update_7610() {
 function quiz_question_update_7611() {
   db_drop_table('quiz_question_properties');
   return 'Dropped {quiz_question_properties} table.';
+}
+
+/**
+ * Rename {quiz_question_type}.plugin to *.handler
+ */
+function quiz_question_update_7612() {
+  if (db_field_exists('quiz_question_type', 'plugin')) {
+    $spec = array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'description' => 'Question handler type (shortanswer, longanswer, truefalse, …)');
+    db_change_field('quiz_question_type', 'plugin', 'handler', $spec);
+  }
 }

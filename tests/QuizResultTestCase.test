@@ -11,7 +11,7 @@ class QuizResultTestCase extends QuizTestCase {
   }
 
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionPlugin = 'truefalse';
+    $modules[] = $this->questionHandler = 'truefalse';
     $modules[] = 'text';
     parent::setUp($modules, $admin_permissions, $user_permissions);
   }

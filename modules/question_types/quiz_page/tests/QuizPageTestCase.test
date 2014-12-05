@@ -2,7 +2,7 @@
 
 class QuizPageTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'quiz_page';
+  protected $questionHandler = 'quiz_page';
 
   public static function getInfo() {
     return array(
@@ -23,7 +23,7 @@ class QuizPageTestCase extends QuizQuestionTestCase {
    */
   public function testCreateQuizQuestion($settings = array()) {
     return $this->drupalCreateQuestion(array(
-          'type'  => $this->questionPlugin,
+          'type'  => $this->questionHandler,
           'title' => 'PG 1 title',
           'body'  => 'PG 1 body text.',
         ) + $settings);

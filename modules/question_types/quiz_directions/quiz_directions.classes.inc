@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\QuestionPlugin;
+use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestion.
  */
-class QuizDirectionsQuestion extends QuestionPlugin {
+class QuizDirectionsQuestion extends QuestionHandler {
 
   /**
    * Implementation of validateNode
@@ -96,24 +96,6 @@ class QuizDirectionsQuestion extends QuestionPlugin {
 class QuizDirectionsResponse extends ResponseHandler {
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
-   */
-  public function save() {
-
-  }
-
-  /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-
-  }
-
-  /**
    * Implementation of score
    *
    * @see QuizQuestionResponse#score()
@@ -135,22 +117,8 @@ class QuizDirectionsResponse extends ResponseHandler {
     return $this->score = 0;
   }
 
-  /**
-   * Implementation of isCorrect
-   *
-   * @see QuizQuestionResponse#isCorrect()
-   */
   public function isCorrect() {
     return TRUE;
-  }
-
-  /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
   }
 
   /**

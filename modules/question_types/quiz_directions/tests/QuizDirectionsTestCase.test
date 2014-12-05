@@ -12,7 +12,7 @@ use Drupal\quiz_question\Entity\Question;
  */
 class QuizDirectionsTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'quiz_directions';
+  protected $questionHandler = 'quiz_directions';
 
   public static function getInfo() {
     return array(
@@ -32,7 +32,7 @@ class QuizDirectionsTestCase extends QuizQuestionTestCase {
    */
   private function createQuizQuestion($settings = array()) {
     return $this->drupalCreateQuestion(array(
-          'type'  => $this->questionPlugin,
+          'type'  => $this->questionHandler,
           'title' => 'QD 1 title',
           'body'  => 'QD 1 body text.'
         ) + $settings);
@@ -41,7 +41,7 @@ class QuizDirectionsTestCase extends QuizQuestionTestCase {
   public function testBasicDirectionsQuestion() {
     $question = $this->createQuizQuestion();
     $this->assertTrue($question instanceof Question);
-    $this->assertEqual($this->questionPlugin, $question->getQuestionType()->plugin);
+    $this->assertEqual($this->questionHandler, $question->getQuestionType()->handler);
   }
 
 }

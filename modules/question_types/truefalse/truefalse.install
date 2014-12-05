@@ -78,7 +78,7 @@ function truefalse_schema() {
 /**
  * Change schema per question structure changed.
  */
-function truefalse_schema_update_7600() {
+function truefalse_update_7600() {
   db_rename_table('quiz_truefalse_node', 'quiz_truefalse');
   $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
   db_change_field('quiz_truefalse', 'nid', 'qid', $spec);

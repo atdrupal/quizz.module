@@ -47,7 +47,7 @@ $handler->display->display_options['fields']['time_end']['date_format'] = 'short
 $handler->display->display_options['fields']['score']['id'] = 'score';
 $handler->display->display_options['fields']['score']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['score']['field'] = 'score';
-/* Field: Quiz result: Quiz result ID */
+/* Field: Quiz result: Label */
 $handler->display->display_options['fields']['result_id']['id'] = 'result_id';
 $handler->display->display_options['fields']['result_id']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['result_id']['field'] = 'result_id';
@@ -87,20 +87,16 @@ $handler->display->display_options['filters']['is_evaluated']['field'] = 'is_eva
 $handler->display->display_options['filters']['is_evaluated']['value'] = '1';
 
 /* Display: Page */
-$handler = $view->new_display('page', 'Page', 'page');
-$handler->display->display_options['path'] = 'quiz/%/quiz-results';
-$handler->display->display_options['menu']['type'] = 'tab';
-$handler->display->display_options['menu']['title'] = 'My results';
-$handler->display->display_options['menu']['weight'] = '0';
-$handler->display->display_options['menu']['context'] = 0;
-$handler->display->display_options['menu']['context_only_inline'] = 0;
-$handler->display->display_options['tab_options']['type'] = 'tab';
-$handler->display->display_options['tab_options']['title'] = 'Quiz';
-$handler->display->display_options['tab_options']['weight'] = '0';
-
-/* Display: Page */
 $handler = $view->new_display('page', 'Page', 'page_1');
 $handler->display->display_options['defaults']['arguments'] = FALSE;
+/* Contextual filter: Quiz result: Quiz_qid */
+$handler->display->display_options['arguments']['quiz_qid']['id'] = 'quiz_qid';
+$handler->display->display_options['arguments']['quiz_qid']['table'] = 'quiz_results';
+$handler->display->display_options['arguments']['quiz_qid']['field'] = 'quiz_qid';
+$handler->display->display_options['arguments']['quiz_qid']['default_argument_type'] = 'fixed';
+$handler->display->display_options['arguments']['quiz_qid']['summary']['number_of_records'] = '0';
+$handler->display->display_options['arguments']['quiz_qid']['summary']['format'] = 'default_summary';
+$handler->display->display_options['arguments']['quiz_qid']['summary_options']['items_per_page'] = '25';
 /* Contextual filter: Quiz result: Uid */
 $handler->display->display_options['arguments']['uid']['id'] = 'uid';
 $handler->display->display_options['arguments']['uid']['table'] = 'quiz_results';
