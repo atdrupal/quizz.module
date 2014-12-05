@@ -48,11 +48,21 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   /**
+   * @return \Drupal\quiz_question\Entity\Question
+   */
+  private function getCurrentQuestion() {
+    $sess = &$_SESSION['quiz'][$this->result->getQuiz()->qid]["pool_{$this->question->qid}"];
+    $delta = &$sess['delta'];
+    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
+    return $wrapper->field_question_reference[$delta]->value();
+  }
+
+  /**
    * Implementation of save
    * @see QuizQuestionResponse#save()
    */
   public function save() {
-    $sess = &$_SESSION['quiz_' . $this->result->getQuiz()->qid]["pool_{$this->question->qid}"];
+    $sess = &$_SESSION['quiz'][$this->result->getQuiz()->qid]["pool_{$this->question->qid}"];
     $passed = &$sess['passed'];
     $delta = &$sess['delta'];
 
@@ -150,6 +160,12 @@ class PoolResponseHandler extends ResponseHandler {
    */
   public function score() {
     return $this->answer ? $this->getQuestionMaxScore() : 0;
+  }
+
+  public function isCorrect() {
+    $question = $this->getCurrentQuestion();
+    $handler = quiz_answer_controller()->getHandler($this->result_id, $question, $this->answer);
+    return $handler->isCorrect();
   }
 
   /**
