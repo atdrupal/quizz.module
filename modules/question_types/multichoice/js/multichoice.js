@@ -89,12 +89,9 @@ var Multichoice = Multichoice || {};
   };
 
   Drupal.behaviors.multichoiceAlternativeBehavior = {
-    attach: function (context, settings) {
-      $('.multichoice-row')
-              .once()
-              .filter(':has(:checkbox:checked)')
-              .addClass('selected')
-              .end()
+    attach: function (context) {
+      $('.multichoice-row', context).once()
+              .filter(':has(:checkbox:checked)').addClass('selected').end()
               .click(function (event) {
                 $(this).toggleClass('selected');
                 if (event.target.type !== 'checkbox') {
@@ -103,7 +100,7 @@ var Multichoice = Multichoice || {};
                   });
                   $(':radio', this).attr('checked', true);
                   if ($(':radio', this).html() != null) {
-                    $('.multichoice-row').removeClass('selected');
+                    $(this).parent().find('.multichoice-row').removeClass('selected');
                     $(this).addClass('selected');
                   }
                 }

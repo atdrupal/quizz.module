@@ -9,40 +9,6 @@
  * Implements hook_install().
  */
 function truefalse_install() {
-  if (!db_table_exists('quiz_truefalse_node')) {
-
-  }
-  else {
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query("UPDATE {system} SET name = 'truefalse' WHERE name = 'true_false'") */
-    db_update('system')
-      ->fields(array('name' => 'truefalse'))
-      ->condition('name', 'true_false')
-      ->execute();
-
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query("UPDATE {node} SET type = 'truefalse' WHERE type = 'true_false'") */
-    db_update('node')
-      ->fields(array('type' => 'truefalse'))
-      ->condition('type', 'true_false')
-      ->execute();
-
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query("UPDATE {system} SET type = 'truefalse' WHERE type = 'true_false'") */
-    db_update('system')
-      ->fields(array('type' => 'truefalse'))
-      ->condition('type', 'true_false')
-      ->execute();
-
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query("UPDATE {taxonomy_vocabulary_node_type} SET type = 'truefalse' WHERE type = 'true_false'") */
-    /*
-      db_update('taxonomy_vocabulary_node_type')
-      ->fields(array('type' =>  'truefalse'))
-      ->condition('type', 'true_false')
-      ->execute();
-     */
-  }
   variable_set('node_options_truefalse', array('status'));
 }
 

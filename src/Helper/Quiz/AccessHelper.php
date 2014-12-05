@@ -123,7 +123,7 @@ class AccessHelper {
   public function canAccessQuestion($quiz, $page_number) {
     global $user;
 
-    if (!$page_number) {
+    if (!$page_number || empty($_SESSION['quiz'][$quiz->qid]['result_id'])) {
       return FALSE;
     }
 
@@ -133,6 +133,10 @@ class AccessHelper {
       if (FALSE === $controller->initQuizResume()) {
         return FALSE;
       }
+    }
+
+    if (empty($_SESSION['quiz'][$quiz->qid]['result_id'])) {
+      return FALSE;
     }
 
     // Access to go to any question.
