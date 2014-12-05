@@ -317,7 +317,10 @@ function quiz_answer_form_submit($form, &$form_state) {
 }
 
 function quiz_question_element_validate(&$element, &$form_state) {
-  return QuestionHandler::elementValidate($element, $form_state);
+  /* @var $question \Drupal\quiz_question\Entity\Question */
+  $question = $form_state['build_info']['args'][1];
+  $result = $form_state['build_info']['args'][3];
+  return $question->getHandler()->elementValidate($result, $element, $form_state);
 }
 
 function quiz_report_form_element_validate(&$element, &$form_state) {

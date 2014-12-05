@@ -2,8 +2,10 @@
 
 namespace Drupal\quiz_question;
 
+use Drupal\quiz_question\Form\QuestionForm;
 use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 
 /**
  * QUESTION IMPLEMENTATION FUNCTIONS
@@ -69,7 +71,7 @@ abstract class QuestionHandler {
    * @return unknown_type
    */
   public function getEntityForm(array &$form_state = NULL, QuizEntity $quiz = NULL) {
-    $obj = new \Drupal\quiz_question\Form\QuestionForm($this->question);
+    $obj = new QuestionForm($this->question);
     return $obj->getForm($form_state, $quiz);
   }
 
@@ -194,21 +196,17 @@ abstract class QuestionHandler {
   /**
    * Element validator (for repeat until correct).
    */
-  public static function elementValidate(&$element, &$form_state) {
-    $quiz = quiz_load(quiz_get_id_from_url());
-
-    $question_qid = $element['#array_parents'][1];
-    $answer = $form_state['values']['question'][$question_qid];
-    $current_question = quiz_question_entity_load($question_qid);
+  public function elementValidate(Result $result, &$element, &$form_state) {
+    $quiz = $result->getQuiz();
+    $answer = $form_state['values']['question'][$this->question->qid];
 
     // There was an answer submitted.
-    $response = quiz_answer_controller()->getHandler($_SESSION['quiz'][$quiz->qid]['result_id'], $current_question, $answer);
+    $response = quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer);
     if ($quiz->repeat_until_correct && !$response->isCorrect()) {
       form_set_error('', t('The answer was incorrect. Please try again.'));
 
-      $result = $form_state['build_info']['args'][3];
       $controller = new QuestionFeedbackController($quiz, $result);
-      $feedback = $controller->buildRenderArray($current_question);
+      $feedback = $controller->buildRenderArray($this->question);
       $element['feedback'] = array(
           '#weight' => 100,
           '#markup' => drupal_render($feedback),
