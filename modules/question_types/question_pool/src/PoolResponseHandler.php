@@ -5,6 +5,8 @@ namespace Drupal\question_pool;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\ResponseHandler;
 
+# Retry: unset($_SESSION['quiz_' . $quiz_id]['pool_' . $pool->qid]);
+
 /**
  * Extension of QuizQuestionResponse
  */

@@ -19,29 +19,6 @@ function question_pool_quiz_question_info() {
 }
 
 /**
- * Implement hook_forms.
- */
-function question_pool_forms($form_id, $args) {
-  $forms = array();
-
-  $form_ids = explode("__", $form_id);
-  if (!empty($form_ids) && count($form_ids) == 2) {
-    $question_form_id = reset($form_ids);
-  }
-  else {
-    return $forms;
-  }
-
-  $question_types = quiz_question_get_types();
-  foreach (array_keys($question_types) as $type) {
-    if ($question_form_id == $type . '_question_pool_form') {
-      $forms[$form_id]['callback'] = 'question_pool_form';
-    }
-  }
-  return $forms;
-}
-
-/**
  * Implements hook_ENTITYTYPE_insert()
  * @param QuestionType $question_type
  */
