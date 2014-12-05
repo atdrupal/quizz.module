@@ -472,6 +472,10 @@ class MultichoiceQuestion extends QuestionHandler {
       }
     }
 
+    $element['#attached']['js'] = array(
+        drupal_get_path('module', 'multichoice') . '/js/multichoice.js',
+    );
+
     return $element;
   }
 
