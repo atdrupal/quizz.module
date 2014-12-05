@@ -95,9 +95,9 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
 }
 
-class QuizUpgradeFrom7x4xBeta2TestCase extends QuizUpgradeBaseTestCase {
+class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
 
-  protected static $testDumpFile = 'quiz-4x-beta2.php.gz';
+  protected static $testDumpFile = 'quiz-4x.php.gz';
 
   public static function getInfo() {
     return array(
