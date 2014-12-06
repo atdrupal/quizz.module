@@ -26,27 +26,4 @@ class AnswerForm {
     }
   }
 
-  public function get($form, &$form_state) {
-    // passed
-    if ($this->session[$this->session_key]['passed']) {
-      $form['tries'] = array('#type' => 'hidden', '#value' => 1, '#attributes' => array('class' => array('tries-pool-value')));
-      $form['msg'] = array('#markup' => t('Pool is passed.'), '#prefix' => '<p class="pool-message">', '#suffix' => '</p>');
-      return $form;
-    }
-
-    // unpassed
-    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
-    if ($wrapper->field_question_reference->count() > $this->session[$this->session_key]['delta']) {
-      $delta = $this->session[$this->session_key]['delta'];
-      $question = $wrapper->field_question_reference[$delta]->value();
-      $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $this->result_id);
-    }
-
-    return array(
-        '#rid'  => $this->result_id,
-        '#qid'  => $this->quiz->qid,
-        '#pool' => $this->question
-      ) + $form;
-  }
-
 }
