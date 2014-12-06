@@ -177,10 +177,10 @@ class MatchingQuestion extends QuestionHandler {
   /**
    * Implementation of getEntityView
    *
-   * @see QuizQuestion#getEntityView()
+   * @see QuestionHandler#view
    */
-  public function getEntityView() {
-    $content = parent::getEntityView();
+  public function view() {
+    $content = parent::view();
 
     list($matches, $select_option) = $this->getSubquestions();
     $subquestions = array();

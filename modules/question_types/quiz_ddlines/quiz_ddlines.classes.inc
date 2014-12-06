@@ -99,9 +99,10 @@ class DDLinesQuestion extends QuestionHandler {
   /**
    * This makes max_score beeing updated for all occurrences of
    * this question in quizzes.
+   * @return bool
    */
   protected function autoUpdateMaxScore() {
-    return true;
+    return TRUE;
   }
 
   /**

@@ -99,10 +99,10 @@ class TrueFalseQuestion extends QuestionHandler {
   /**
    * Implementation of getEntityView
    *
-   * @see QuizQuestion#getEntityView()
+   * @see QuestionHandler#view
    */
-  public function getEntityView() {
-    $content = parent::getEntityView();
+  public function view() {
+    $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
       $answer = !empty($this->question->correct_answer) ? t('True') : t('False');
       $content['answers']['#markup'] = '<div class="quiz-solution">' . $answer . '</div>';

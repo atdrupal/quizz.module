@@ -40,7 +40,7 @@ class QuestionController extends EntityAPIController {
 
   /**
    * Force save revision author ID.
-   * 
+   *
    * @global \stdClass $user
    * @param \Drupal\quiz_question\Entity\Question $question
    */
@@ -110,7 +110,7 @@ class QuestionController extends EntityAPIController {
    */
   public function buildContent($question, $view_mode = 'full', $langcode = NULL, $content = array()) {
     if ('teaser' !== $view_mode) {
-      $content += $question->getHandler()->getEntityView();
+      $content += $question->getHandler()->view();
     }
     return parent::buildContent($question, $view_mode, $langcode, $content);
   }
