@@ -97,8 +97,8 @@ class ScaleQuestion extends QuestionHandler {
    *
    * @see QuizQuestion#view()
    */
-  public function getEntityView() {
-    $content = parent::getEntityView();
+  public function view() {
+    $content = parent::view();
     $alternatives = array();
     for ($i = 0; $i < $this->question->getQuestionType()->getConfig('scale_max_num_of_alts', 10); $i++) {
       if (isset($this->question->{$i}->answer) && drupal_strlen($this->question->{$i}->answer) > 0) {
