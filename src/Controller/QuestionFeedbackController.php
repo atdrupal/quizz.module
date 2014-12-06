@@ -10,9 +10,7 @@ class QuestionFeedbackController {
   /** @var Result */
   private $result;
 
-  public function __construct(QuizEntity $quiz, Result $result) {
-    $this->quiz = $quiz;
-    $this->quiz_id = $this->quiz->qid;
+  public function __construct(Result $result) {
     $this->result = $result;
   }
 

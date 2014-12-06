@@ -331,8 +331,8 @@ function quiz_report_form_element_validate(&$element, &$form_state) {
 function quiz_question_feedback_page(QuizEntity $quiz, $page_number) {
   $result_id = empty($_SESSION['quiz'][$quiz->qid]['result_id']) ? $_SESSION['quiz']['temp']['result_id'] : $_SESSION['quiz'][$quiz->qid]['result_id'];
   $result = quiz_result_load($result_id);
-  $controller = new QuestionFeedbackController($quiz, $result);
-  return $controller->render($page_number);
+  $obj = new QuestionFeedbackController($result);
+  return $obj->render($page_number);
 }
 
 function quiz_results_page(QuizEntity $quiz) {
