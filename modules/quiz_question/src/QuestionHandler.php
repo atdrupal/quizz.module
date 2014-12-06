@@ -138,47 +138,28 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   /**
    * Element validator (for repeat until correct).
    */
-  public static function elementValidate(&$element, &$form_state) {
-    $quiz = quiz_load(quiz_get_id_from_url());
+  public function elementValidate(Result $result, &$element, &$form_state) {
+    if ((!$quiz = $result->getQuiz()) || !$quiz->repeat_until_correct) {
+      return;
+    }
 
-    $question_qid = $element['#array_parents'][1];
-    $answer = $form_state['values']['question'][$question_qid];
-    $current_question = quiz_question_entity_load($question_qid);
-
-    // There was an answer submitted.
-    $response = quiz_answer_controller()->getHandler($_SESSION['quiz'][$quiz->qid]['result_id'], $current_question, $answer);
-    if ($quiz->repeat_until_correct && !$response->isCorrect()) {
-      form_set_error('', t('The answer was incorrect. Please try again.'));
-
-      $result = $form_state['build_info']['args'][3];
-      $controller = new QuestionFeedbackController($quiz, $result);
-      $feedback = $controller->buildRenderArray($current_question);
-      $element['feedback'] = array(
-          '#weight' => 100,
-          '#markup' => drupal_render($feedback),
-      );
+    $answer = $form_state['values']['question'][$this->question->qid];
+    if (!quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer)->isCorrect()) {
+      $this->onRepeatUntiCorrect($result, $element);
     }
   }
 
   /**
-   * Get the form used to create a new question.
-   * @param array $form state
-   * @return array Must return a FAPI array.
+   * {@inheritdoc}
    */
-  public function getCreationForm(array &$form_state = NULL) {
-    return array();
-  }
-
-  /**
-   * Get the maximum possible score for this question.
-   */
-  abstract public function getMaximumScore();
-
-  /**
-   * Save question type specific node properties
-   */
-  public function saveEntityProperties($is_new = FALSE) {
-
+  public function onRepeatUntiCorrect(Result $result, array &$element) {
+    form_set_error('', t('The answer was incorrect. Please try again.'));
+    $obj = new QuestionFeedbackController($result);
+    $feedback = $obj->buildRenderArray($this->question);
+    $element['feedback'] = array(
+        '#weight' => 100,
+        '#markup' => drupal_render($feedback),
+    );
   }
 
   /**
@@ -285,6 +266,29 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function delete($delete_revision) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(array &$form) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreationForm(array &$form_state = NULL) {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveEntityProperties($is_new = FALSE) {
+
   }
 
   /**
