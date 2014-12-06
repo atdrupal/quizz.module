@@ -335,10 +335,6 @@ abstract class QuestionHandler {
   /**
    * Utility function that returns the format of the node body
    */
-  protected function getFormat() {
-    $node = isset($this->question) ? $this->question : $this->question;
-    $body = field_get_items('node', $node, 'body');
-    return isset($body[0]['format']) ? $body[0]['format'] : NULL;
   }
 
   /**
