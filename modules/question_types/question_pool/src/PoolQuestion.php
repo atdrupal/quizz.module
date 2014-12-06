@@ -63,6 +63,15 @@ class PoolQuestion extends QuestionHandler {
     return $build;
   }
 
+  private function getCurrentQuestion($quiz_id) {
+    $session = &$_SESSION['quiz'][$quiz_id];
+    $key = "pool_{$this->question->qid}";
+    $delta = isset($session[$key]['delta']) ? $session[$key]['delta'] : 0;
+    return entity_metadata_wrapper('quiz_question', $this->question)
+        ->field_question_reference[$delta]
+        ->value();
+  }
+
   /**
    * Generates the question form.
    *
@@ -72,9 +81,9 @@ class PoolQuestion extends QuestionHandler {
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $quiz = quiz_result_load($result_id)->getQuiz();
     $form = parent::getAnsweringForm($form_state, $result_id);
-    $session = &$_SESSION['quiz'][$quiz->qid];
-    $obj = new AnswerForm($quiz, $this->question, $session);
-    return $obj->get($form, $form_state);
+    $question = $this->getCurrentQuestion($quiz->qid);
+    $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $result_id);
+    return $form;
   }
 
   /**

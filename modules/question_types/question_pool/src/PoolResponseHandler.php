@@ -5,7 +5,7 @@ namespace Drupal\question_pool;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\ResponseHandler;
 
-# Retry: unset($_SESSION['quiz_' . $quiz_id]['pool_' . $pool->qid]);
+# Retry: unset($_SESSION['quiz'][$quiz_id]['pool_' . $pool->qid]);
 
 /**
  * Extension of QuizQuestionResponse
@@ -16,12 +16,14 @@ class PoolResponseHandler extends ResponseHandler {
   protected $choice_order;
   protected $need_evaluated;
 
-  public function __construct($result_id, Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (isset($answer)) {
-      $this->answer = $answer;
+  public function __construct($result_id, Question $question, $input = NULL) {
+    if (NULL !== $input && is_array($input)) {
+      $this->answer = reset($input);
     }
-    elseif ($correct = $this->getCorrectAnswer()) {
+
+    parent::__construct($result_id, $question, $input);
+
+    if ($correct = $this->getCorrectAnswer()) {
       $this->answer = $correct->answer;
       $this->score = $correct->score;
     }
@@ -87,7 +89,8 @@ class PoolResponseHandler extends ResponseHandler {
 
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     if ($question = $wrapper->field_question_reference[$delta]->value()) {
-      if (($result = $this->evaluateQuestion($question)) && $result->is_valid) {
+      $result = $this->evaluateQuestion($question);
+      if ($result->is_valid) {
         $passed = $result->is_correct ? TRUE : $passed;
         if ($delta < $wrapper->field_question_reference->count()) {
           $delta++;
@@ -140,7 +143,7 @@ class PoolResponseHandler extends ResponseHandler {
       $this->result->score = 0;
     }
 
-    return $this->result;
+    return $result;
   }
 
   /**
@@ -178,7 +181,8 @@ class PoolResponseHandler extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    return $this->answer ? $this->getQuestionMaxScore() : 0;
+    // @TODO: This maybe wrong. Text/long answer has no static
+    return $this->isCorrect() ? $this->getQuestionMaxScore() : 0;
   }
 
   public function isCorrect() {
