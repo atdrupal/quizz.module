@@ -55,7 +55,7 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    * {@inheritdoc}
    */
   public function getResponse() {
-    return is_string($this->answer) ? trim($this->answer) : '';
+    return is_string($this->answer) ? trim($this->answer) : $this->answer;
   }
 
   /**
