@@ -50,11 +50,30 @@ class PoolResponseHandler extends ResponseHandler {
   /**
    * @return \Drupal\quiz_question\Entity\Question
    */
-  private function getCurrentQuestion() {
-    $sess = &$_SESSION['quiz'][$this->result->getQuiz()->qid]["pool_{$this->question->qid}"];
-    $delta = &$sess['delta'];
-    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
-    return $wrapper->field_question_reference[$delta]->value();
+  private function getQuestion() {
+    $quiz_id = $this->result->getQuiz()->qid;
+    $key = "pool_{$this->question->qid}";
+
+    if (!empty($_SESSION['quiz'][$quiz_id][$key])) {
+      $sess = $_SESSION['quiz'][$quiz_id][$key];
+      $passed = isset($sess['passed']) ? $sess['passed'] : FALSE;
+      $delta = isset($sess['delta']) ? $sess['delta'] : 0;
+      return entity_metadata_wrapper('quiz_question', $this->question)
+          ->field_question_reference[$passed ? $delta - 1 : $delta]
+          ->value();
+    }
+
+    $question_vid = db_select('quiz_pool_user_answers_questions', 'p')
+      ->fields('p', array('question_vid'))
+      ->condition('pool_qid', $this->question->qid)
+      ->condition('pool_vid', $this->question->vid)
+      ->condition('result_id', $this->result_id)
+      ->execute()
+      ->fetchColumn();
+
+    if (!empty($question_vid)) {
+      return $question = quiz_question_entity_load(NULL, $question_vid);
+    }
   }
 
   /**
@@ -163,9 +182,9 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   public function isCorrect() {
-    $question = $this->getCurrentQuestion();
-    $handler = quiz_answer_controller()->getHandler($this->result_id, $question, $this->answer);
-    return $handler->isCorrect();
+    return quiz_answer_controller()
+        ->getHandler($this->result_id, $this->getQuestion(), $this->answer)
+        ->isCorrect();
   }
 
   /**
@@ -184,19 +203,9 @@ class PoolResponseHandler extends ResponseHandler {
    * @see getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
    */
   public function getReportFormResponse() {
-    $question_vid = db_select('quiz_pool_user_answers_questions', 'p')
-      ->fields('p', array('question_vid'))
-      ->condition('pool_qid', $this->question->qid)
-      ->condition('pool_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
-      ->execute()
-      ->fetchColumn();
-
-    if (empty($question_vid)) {
+    if (!$question = $this->getQuestion()) {
       return array('#markup' => t('No question passed.'));
     }
-
-    $question = quiz_question_entity_load(NULL, $question_vid);
 
     return quiz_answer_controller()
         ->getHandler($this->result_id, $question)
