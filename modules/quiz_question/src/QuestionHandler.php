@@ -2,31 +2,17 @@
 
 namespace Drupal\quiz_question;
 
+use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\Form\QuestionForm;
 use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 
 /**
- * QUESTION IMPLEMENTATION FUNCTIONS
- *
- * This part acts as a contract(/interface) between the question-types and the
- * rest of the system.
- *
  * Question handlers are made by extending these generic methods and abstract
  * methods. Check multichoice question handler for example.
- *
- * A base implementation of a question handler, adding a layer of abstraction
- * between the node API, quiz API and the question handlers.
- *
- * It is required that question handlers extend this abstract class.
- *
- * This class has default behaviour that all question types must have. It also
- * handles the node API, but gives the question types oppurtunity to save,
- * delete and provide data specific to the question types.
- *
- * This abstract class also declares several abstract functions forcing
- * question-types to implement required methods.
  */
-abstract class QuestionHandler {
+abstract class QuestionHandler implements QuestionHandlerInterface {
 
   /**
    * @var \Drupal\quiz_question\Entity\Question
@@ -34,18 +20,15 @@ abstract class QuestionHandler {
    */
   public $question = NULL;
 
-  /**
-   * Extra node properties
-   */
+  /** @var mixed[] */
   public $properties = NULL;
 
   /**
    * QuizQuestion constructor stores the node object.
    *
-   * @param $question
-   *   The node object
+   * @param Question $question
    */
-  public function __construct(&$question) {
+  public function __construct(Question $question) {
     $this->question = $question;
   }
 
@@ -69,7 +52,7 @@ abstract class QuestionHandler {
    * @return unknown_type
    */
   public function getEntityForm(array &$form_state = NULL, QuizEntity $quiz = NULL) {
-    $obj = new \Drupal\quiz_question\Form\QuestionForm($this->question);
+    $obj = new QuestionForm($this->question);
     return $obj->getForm($form_state, $quiz);
   }
 
@@ -86,11 +69,7 @@ abstract class QuestionHandler {
   }
 
   /**
-   * Getter function returning properties to be loaded when the node is loaded.
-   *
-   * @see load hook in quiz_question.module (quiz_question_load)
-   *
-   * @return array
+   * {@inheritdoc}
    */
   public function load() {
     if (isset($this->properties)) {
@@ -143,35 +122,6 @@ abstract class QuestionHandler {
         drupal_form_submit('quiz_question_revision_actions', $form_state, $this->question->qid, $this->question->vid);
       }
     }
-  }
-
-  /**
-   * Delete question data from the database.
-   *
-   * Called by quiz_question_delete (hook_delete).
-   * Child classes must call super
-   *
-   * @param bool $single_revision
-   */
-  public function delete($single_revision = FALSE) {
-    // Delete answeres & properties
-    $remove_answer = db_delete('quiz_results_answers')->condition('question_qid', $this->question->qid);
-    if ($single_revision) {
-      $remove_answer->condition('question_vid', $this->question->vid);
-    }
-    $remove_answer->execute();
-  }
-
-  /**
-   * Provides validation for question before it is created.
-   *
-   * When a new question is created and initially submited, this is
-   * called to validate that the settings are acceptible.
-   *
-   * @param array $form
-   */
-  public function validate(array &$form) {
-
   }
 
   /**
@@ -282,10 +232,10 @@ abstract class QuestionHandler {
       ->execute();
 
     if (!empty($update_quiz_ids)) {
-      quiz_update_max_score_properties($update_quiz_ids);
+      quiz_controller()->getMaxScoreWriter()->update($update_quiz_ids);
     }
 
-    quiz_update_max_score_properties(array($quiz->vid));
+    quiz_controller()->getMaxScoreWriter()->update(array($quiz->vid));
 
     return TRUE;
   }
@@ -298,7 +248,7 @@ abstract class QuestionHandler {
    * This is because the question might have been rendered and a user is about
    * to answer it…
    *
-   * @return
+   * @return string
    *   true if question has been answered or is about to be answered…
    */
   public function hasBeenAnswered() {
@@ -333,17 +283,17 @@ abstract class QuestionHandler {
   }
 
   /**
-   * Utility function that returns the format of the node body
+   * {@inheritdoc}
    */
   }
 
   /**
-   * This may be overridden in subclasses. If it returns true,
-   * it means the max_score is updated for all occurrences of
+   * If it returns true, it means the max_score is updated for all occurrences of
    * this question in quizzes.
+   * @return bool
    */
   protected function autoUpdateMaxScore() {
-    return false;
+    return FALSE;
   }
 
   public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
@@ -351,26 +301,14 @@ abstract class QuestionHandler {
   }
 
   /**
-   * Is this question graded?
-   *
-   * Questions like Quiz Directions, Quiz Page, and Scale are not.
-   *
-   * By default, questions are expected to be gradeable
-   *
-   * @return bool
+   * {@inheritdoc}
    */
   public function isGraded() {
     return TRUE;
   }
 
   /**
-   * Does this question type give feedback?
-   *
-   * Questions like Quiz Directions and Quiz Pages do not.
-   *
-   * By default, questions give feedback
-   *
-   * @return bool
+   * {@inheritdoc}
    */
   public function hasFeedback() {
     return TRUE;

@@ -208,17 +208,15 @@ class TrueFalseResponse extends ResponseHandler {
   /**
    * Constructor
    */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
-      if ($response = $this->getUserAnswer()) {
-        $this->answer = $response->answer;
-        $this->score = $response->score;
-      }
+  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
+    if (isset($input)) {
+      $this->answer = $input;
     }
-    else {
-      // Load from input
-      $this->answer = $answer;
+
+    if ($response = $this->getUserAnswer()) {
+      $this->answer = $response->answer;
+      $this->score = $response->score;
     }
   }
 
@@ -258,8 +256,7 @@ class TrueFalseResponse extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    $handler = new TrueFalseQuestion($this->question);
-    return ($this->getResponse() == $handler->getCorrectAnswer()) ? 1 : 0;
+    return $this->getResponse() == $this->question->getHandler()->getCorrectAnswer() ? 1 : 0;
   }
 
   /**
@@ -278,7 +275,7 @@ class TrueFalseResponse extends ResponseHandler {
    * Implementation of getReportFormResponse
    */
   public function getReportFormResponse() {
-    $answer = $this->question->answers[0]['answer'];
+    $answer = $this->answer;
     $correct_answer = !empty($this->question->correct_answer);
 
     return array(
