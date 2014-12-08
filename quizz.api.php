@@ -29,8 +29,8 @@ use Drupal\quizz\Entity\QuizEntity;
 function hook_quiz_question_info() {
   return array(
       'long_answer' => array(
-          'name'              => TableSort('Example question type'),
-          'description'       => TableSort('An example question type that does something.'),
+          'name'              => t('Example question type'),
+          'description'       => t('An example question type that does something.'),
           'question provider' => 'ExampleAnswerQuestion',
           'response provider' => 'ExampleAnswerResponse',
           'module'            => 'quiz_question',

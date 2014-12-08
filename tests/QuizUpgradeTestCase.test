@@ -5,6 +5,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   protected static $testDumpFile = '…';
   protected static $dependencies = array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload');
   protected static $testDescription = 'Test an upgrade from various Quiz versions.';
+  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quiz_directions', 'quiz_page', 'quiz_question', 'quizz_scale', 'short_answer', 'truefalse');
 
   /**
    * Some warnings are produced by other modules, we cann't do anything, just
@@ -65,9 +66,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
     if ($upgrade_1 && $upgrade_2) {
       drupal_flush_all_caches();
-
-      $modules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quiz_directions', 'quiz_page', 'quiz_question', 'quizz_scale', 'short_answer', 'truefalse');
-      foreach ($modules as $module) {
+      foreach (static::$subModules as $module) {
         $this->assertTrue(module_exists($module), "Module {$module} is enabled.");
         if ($schema = module_invoke($module, 'schema')) {
           $this->checkSchema($schema);
@@ -100,6 +99,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
 
   protected static $testDumpFile = 'quiz-4x.php.gz';
+  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quiz_directions', 'quiz_question', 'quizz_scale', 'short_answer', 'truefalse');
 
   public static function getInfo() {
     return array(
