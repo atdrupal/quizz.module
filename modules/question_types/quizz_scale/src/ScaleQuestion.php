@@ -92,11 +92,6 @@ class ScaleQuestion extends QuestionHandler {
     return $this->properties;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuizQuestion#view()
-   */
   public function view() {
     $content = parent::view();
     $alternatives = array();

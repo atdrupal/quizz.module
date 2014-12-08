@@ -104,11 +104,6 @@ class LongAnswerQuestion extends QuestionHandler {
     return $this->properties = $properties;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuestionHandler#view
-   */
   public function view() {
     $content = parent::view();
 

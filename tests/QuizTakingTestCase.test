@@ -153,7 +153,7 @@ class QuizTakingTestCase extends QuizTestCase {
   /**
    * Test allow/restrict changing of answers.
    */
-  function testChangeAnswer() {
+  public function testChangeAnswer() {
     $quiz = $this->drupalCreateQuiz(array('review_options' => array('question' => array('score' => 'score'))));
 
     $question_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1));

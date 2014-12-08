@@ -22,7 +22,6 @@ use Drupal\quizz\Form\QuizQuestionsForm;
 use Drupal\quizz\Form\QuizReportForm;
 use Drupal\quizz\Form\QuizTypeForm;
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionHandler;
 
 /**
  * Form for /admin/quiz/settings/config.

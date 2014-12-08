@@ -96,11 +96,6 @@ class TrueFalseQuestion extends QuestionHandler {
     return $props;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuestionHandler#view
-   */
   public function view() {
     $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
@@ -210,13 +205,15 @@ class TrueFalseResponse extends ResponseHandler {
    */
   public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
-    if (isset($input)) {
-      $this->answer = $input;
-    }
 
-    if ($response = $this->getUserAnswer()) {
-      $this->answer = $response->answer;
-      $this->score = $response->score;
+    if (!isset($input)) {
+      if ($response = $this->getUserAnswer()) {
+        $this->answer = $response->answer;
+        $this->score = $response->score;
+      }
+    }
+    else {
+      $this->answer = $input;
     }
   }
 

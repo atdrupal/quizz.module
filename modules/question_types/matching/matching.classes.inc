@@ -174,11 +174,6 @@ class MatchingQuestion extends QuestionHandler {
     return $props;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuestionHandler#view
-   */
   public function view() {
     $content = parent::view();
 

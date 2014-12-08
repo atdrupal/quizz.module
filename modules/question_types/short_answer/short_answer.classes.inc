@@ -106,11 +106,6 @@ class ShortAnswerQuestion extends QuestionHandler {
     return $this->properties;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuestionHandler#view
-   */
   public function view() {
     $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
