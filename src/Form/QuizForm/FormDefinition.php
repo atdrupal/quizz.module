@@ -116,88 +116,113 @@ class FormDefinition extends FormHelper {
     $form['taking'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Taking options'),
-        '#collapsed'   => FALSE,
         '#collapsible' => TRUE,
         '#attributes'  => array('id' => 'taking-fieldset'),
         '#group'       => 'vtabs',
         '#weight'      => -2,
-    );
-    $form['taking']['allow_resume'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Allow resume'),
-        '#default_value' => $this->quiz->allow_resume,
-        '#description'   => t('Allow users to leave this @quiz incomplete and then resume it from where they left off.', array('@quiz' => QUIZ_NAME)),
-    );
-    $form['taking']['allow_skipping'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Allow skipping'),
-        '#default_value' => $this->quiz->allow_skipping,
-        '#description'   => t('Allow users to skip questions in this @quiz.', array('@quiz' => QUIZ_NAME)),
-    );
-    $form['taking']['allow_jumping'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Allow jumping'),
-        '#default_value' => $this->quiz->allow_jumping,
-        '#description'   => t('Allow users to jump to any question using a menu or pager in this @quiz.', array('@quiz' => QUIZ_NAME)),
-    );
-    $form['taking']['allow_change'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Allow changing answers'),
-        // https://www.drupal.org/node/2354355#comment-9241781
-        '#default_value' => isset($this->quiz->allow_change) ? $this->quiz->allow_change : 1,
-        '#description'   => t('If the user is able to visit a previous question, allow them to change the answer.'),
-    );
-    $form['taking']['backwards_navigation'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Backwards navigation'),
-        '#default_value' => $this->quiz->backwards_navigation,
-        '#description'   => t('Allow users to go back and revisit questions already answered.'),
-    );
-    $form['taking']['repeat_until_correct'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Repeat until correct'),
-        '#default_value' => $this->quiz->repeat_until_correct,
-        '#description'   => t('Require the user to retry the question until answered correctly.'),
-    );
-    $form['taking']['build_on_last'] = array(
-        '#type'          => 'radios',
-        '#options'       => array(
-            ''        => t('Fresh attempt every time'),
-            'correct' => t('Prepopulate with correct answers from last result'),
-            'all'     => t('Prepopulate with all answers from last result'),
-        ),
-        '#title'         => t('Each attempt builds on the last'),
-        '#default_value' => $this->quiz->build_on_last,
-        '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZ_NAME)),
-    );
-    $form['taking']['mark_doubtful'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Mark doubtful'),
-        '#default_value' => $this->quiz->mark_doubtful,
-        '#description'   => t('Allow users to mark their answers as doubtful.'),
-    );
-    $form['taking']['show_passed'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Show passed status'),
-        '#default_value' => $this->quiz->show_passed,
-        '#description'   => t('Show a message if the user has previously passed the @quiz.', array('@quiz' => QUIZ_NAME)),
+        'taking_tabs'  => array('#type' => 'vertical_tabs')
     );
 
-    $form['taking']['randomization'] = array(
-        '#type'          => 'radios',
-        '#title'         => t('Randomize questions'),
-        '#options'       => array(
-            t('No randomization'),
-            t('Random order'),
-            t('Random questions'),
-            t('Categorized random questions'),
+    $form['taking']['taking_tabs']['basic'] = array(
+        '#type'                => 'fieldset',
+        '#title'               => t('Basic'),
+        '#collapsible'         => TRUE,
+        'allow_resume'         => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Allow resume'),
+            '#default_value' => $this->quiz->allow_resume,
+            '#description'   => t('Allow users to leave this @quiz incomplete and then resume it from where they left off.', array('@quiz' => QUIZ_NAME)),
         ),
-        '#description'   => t('<strong>Random order</strong> - all questions display in random order')
-        . '<br/>' . t("<strong>Random questions</strong> - specific number of questions are drawn randomly from this @quiz's pool of questions", array('@quiz' => QUIZ_NAME))
-        . '<br/>' . t('<strong>Categorized random questions</strong> - specific number of questions are drawn from each specified taxonomy term'),
-        '#default_value' => $this->quiz->randomization,
+        'allow_skipping'       => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Allow skipping'),
+            '#default_value' => $this->quiz->allow_skipping,
+            '#description'   => t('Allow users to skip questions in this @quiz.', array('@quiz' => QUIZ_NAME)),
+        ),
+        'allow_jumping'        => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Allow jumping'),
+            '#default_value' => $this->quiz->allow_jumping,
+            '#description'   => t('Allow users to jump to any question using a menu or pager in this @quiz.', array('@quiz' => QUIZ_NAME)),
+        ),
+        'allow_change'         => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Allow changing answers'),
+            // https://www.drupal.org/node/2354355#comment-9241781
+            '#default_value' => isset($this->quiz->allow_change) ? $this->quiz->allow_change : 1,
+            '#description'   => t('If the user is able to visit a previous question, allow them to change the answer.'),
+        ),
+        'backwards_navigation' => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Backwards navigation'),
+            '#default_value' => $this->quiz->backwards_navigation,
+            '#description'   => t('Allow users to go back and revisit questions already answered.'),
+        ),
+        'repeat_until_correct' => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Repeat until correct'),
+            '#default_value' => $this->quiz->repeat_until_correct,
+            '#description'   => t('Require the user to retry the question until answered correctly.'),
+        ),
+        'mark_doubtful'        => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Mark doubtful'),
+            '#default_value' => $this->quiz->mark_doubtful,
+            '#description'   => t('Allow users to mark their answers as doubtful.'),
+        ),
+        'show_passed'          => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Show passed status'),
+            '#default_value' => $this->quiz->show_passed,
+            '#description'   => t('Show a message if the user has previously passed the @quiz.', array('@quiz' => QUIZ_NAME)),
+        ),
+        'time_limit'           => array(
+            '#type'          => 'textfield',
+            '#title'         => t('Time limit'),
+            '#default_value' => isset($this->quiz->time_limit) ? $this->quiz->time_limit : 0,
+            '#description'   => t('Set the maximum allowed time in seconds for this @quiz. Use 0 for no limit.', array('@quiz' => QUIZ_NAME))
+            . '<br/>' . t('It is recommended to install the !countdown module, and enable the option in !link to show the time left to the user.', array(
+                '!link'      => l('Quiz configuration', 'admin/quiz/settings/config'),
+                '!countdown' => l('jquery_countdown', 'http://drupal.org/project/jquery_countdown'),
+            ))
+        ),
     );
-    $form['taking']['review_options'] = array(
+
+    $form['taking']['taking_tabs']['build_on_last_tab'] = array(
+        '#type'         => 'fieldset',
+        '#title'        => t('Build on last'),
+        'build_on_last' => array(
+            '#type'          => 'radios',
+            '#options'       => array(
+                ''        => t('Fresh attempt every time'),
+                'correct' => t('Prepopulate with correct answers from last result'),
+                'all'     => t('Prepopulate with all answers from last result'),
+            ),
+            '#title'         => t('Each attempt builds on the last'),
+            '#default_value' => $this->quiz->build_on_last,
+            '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZ_NAME)),
+        ),
+    );
+
+    $form['taking']['taking_tabs']['randomization_tab'] = array(
+        '#type'         => 'fieldset',
+        '#title'        => t('Randomize questions'),
+        'randomization' => array(
+            '#type'          => 'radios',
+            '#title'         => t('Randomize questions'),
+            '#options'       => array(
+                t('No randomization'),
+                t('Random order'),
+                t('Random questions'),
+                t('Categorized random questions'),
+            ),
+            '#description'   => t('<strong>Random order</strong> - all questions display in random order')
+            . '<br/>' . t("<strong>Random questions</strong> - specific number of questions are drawn randomly from this @quiz's pool of questions", array('@quiz' => QUIZ_NAME))
+            . '<br/>' . t('<strong>Categorized random questions</strong> - specific number of questions are drawn from each specified taxonomy term'),
+            '#default_value' => $this->quiz->randomization,
+        ),
+    );
+    $form['taking']['taking_tabs']['review_options'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Review options'),
         '#collapsible' => FALSE,
@@ -207,7 +232,7 @@ class FormDefinition extends FormHelper {
 
     $review_options = quiz_controller()->getFeedbackOptions();
     foreach (array('question' => t('After the question'), 'end' => t('After the @quiz', array('@quiz' => QUIZ_NAME))) as $key => $when) {
-      $form['taking']['review_options'][$key] = array(
+      $form['taking']['taking_tabs']['review_options'][$key] = array(
           '#title'         => $when,
           '#type'          => 'checkboxes',
           '#options'       => $review_options,
@@ -215,7 +240,7 @@ class FormDefinition extends FormHelper {
       );
     }
 
-    $form['taking']['multiple_takes'] = array(
+    $form['taking']['taking_tabs']['multiple_takes'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Multiple takes'),
         '#collapsible' => FALSE,
@@ -223,14 +248,14 @@ class FormDefinition extends FormHelper {
         '#attributes'  => array('id' => 'multiple-takes-fieldset'),
         '#description' => t('Allow users to take this quiz multiple times.'),
     );
-    $form['taking']['multiple_takes']['takes'] = array(
+    $form['taking']['taking_tabs']['multiple_takes']['takes'] = array(
         '#type'          => 'select',
         '#title'         => t('Allowed number of attempts'),
         '#default_value' => $this->quiz->takes,
         '#options'       => array(t('Unlimited')) + range(0, 10),
         '#description'   => t('The number of times a user is allowed to take this @quiz. <strong>Anonymous users are only allowed to take @quiz that allow an unlimited number of attempts.</strong>', array('@quiz' => QUIZ_NAME)),
     );
-    $form['taking']['multiple_takes']['show_attempt_stats'] = array(
+    $form['taking']['taking_tabs']['multiple_takes']['show_attempt_stats'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Display allowed number of attempts'),
         '#default_value' => $this->quiz->show_attempt_stats,
@@ -238,7 +263,7 @@ class FormDefinition extends FormHelper {
     );
 
     if (user_access('delete any quiz results') || user_access('delete results for own quiz')) {
-      $form['taking']['multiple_takes']['keep_results'] = array(
+      $form['taking']['taking_tabs']['multiple_takes']['keep_results'] = array(
           '#type'          => 'radios',
           '#title'         => t('Store results'),
           '#description'   => t('These results should be stored for each user.'),
@@ -247,21 +272,11 @@ class FormDefinition extends FormHelper {
       );
     }
     else {
-      $form['taking']['multiple_takes']['keep_results'] = array(
+      $form['taking']['taking_tabs']['multiple_takes']['keep_results'] = array(
           '#type'  => 'value',
           '#value' => $this->quiz->keep_results,
       );
     }
-
-    $form['taking']['time_limit'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Time limit'),
-        '#default_value' => isset($node->time_limit) ? $node->time_limit : 0,
-        '#description'   => t('Set the maximum allowed time in seconds for this @quiz. Use 0 for no limit.', array('@quiz' => QUIZ_NAME))
-        . '<br/>' . t('It is recommended to install the !countdown module, and enable the option in !link to show the time left to the user.', array(
-            '!link'      => l('Quiz configuration', 'admin/quiz/settings/config'),
-            '!countdown' => l('jquery_countdown', 'http://drupal.org/project/jquery_countdown'),
-    )));
   }
 
   private function defineUserPointOptionsFields($form) {
