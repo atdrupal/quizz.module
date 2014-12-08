@@ -77,6 +77,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->assertText('Pool body text');
     $this->assertText('Choose one');
+    $this->assertNoText('other question');
 
     // Try correct answer
     $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish'));
@@ -95,6 +96,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
     $quiz->save();
 
     $this->drupalGet("quiz/{$quiz->qid}/take");
+    $this->assertText('other question');
     $this->drupalPost(NULL, array('question[1][2]' => "0"), t('Finish'));
     $this->assertText('The answer was incorrect. Please try again.');
     $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish'));

@@ -66,6 +66,9 @@ class PoolQuestion extends QuestionHandler {
   private function getCurrentQuestion($quiz_id, $retry = FALSE) {
     $session = &$_SESSION['quiz'][$quiz_id];
     $key = "pool_{$this->question->qid}";
+    if (!isset($_SESSION['quiz'][$quiz_id][$key])) {
+      $_SESSION['quiz'][$quiz_id][$key] = array('passed' => FALSE, 'delta' => 0);
+    }
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     $delta = &$session[$key]['delta'];
 
@@ -94,7 +97,7 @@ class PoolQuestion extends QuestionHandler {
     $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $result_id);
 
     if ($quiz->repeat_until_correct) {
-      $form['navigation']['retry'] = array(
+      $form['navigation']['pool_retry'] = array(
           '#type'   => 'markup',
           '#markup' => t('Try an <a href="!url">other question</a>', array(
               '!url' => url($_GET['q'], array('query' => array('retry' => 1)))
