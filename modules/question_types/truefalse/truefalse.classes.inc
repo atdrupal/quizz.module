@@ -96,13 +96,8 @@ class TrueFalseQuestion extends QuestionHandler {
     return $props;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuizQuestion#getEntityView()
-   */
-  public function getEntityView() {
-    $content = parent::getEntityView();
+  public function view() {
+    $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
       $answer = !empty($this->question->correct_answer) ? t('True') : t('False');
       $content['answers']['#markup'] = '<div class="quiz-solution">' . $answer . '</div>';
@@ -208,17 +203,17 @@ class TrueFalseResponse extends ResponseHandler {
   /**
    * Constructor
    */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
+  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
+
+    if (!isset($input)) {
       if ($response = $this->getUserAnswer()) {
         $this->answer = $response->answer;
         $this->score = $response->score;
       }
     }
     else {
-      // Load from input
-      $this->answer = $answer;
+      $this->answer = $input;
     }
   }
 
@@ -258,8 +253,7 @@ class TrueFalseResponse extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    $handler = new TrueFalseQuestion($this->question);
-    return ($this->getResponse() == $handler->getCorrectAnswer()) ? 1 : 0;
+    return $this->getResponse() == $this->question->getHandler()->getCorrectAnswer() ? 1 : 0;
   }
 
   /**
@@ -278,7 +272,7 @@ class TrueFalseResponse extends ResponseHandler {
    * Implementation of getReportFormResponse
    */
   public function getReportFormResponse() {
-    $answer = $this->question->answers[0]['answer'];
+    $answer = $this->answer;
     $correct_answer = !empty($this->question->correct_answer);
 
     return array(

@@ -40,7 +40,7 @@ class QuestionController extends EntityAPIController {
 
   /**
    * Force save revision author ID.
-   * 
+   *
    * @global \stdClass $user
    * @param \Drupal\quiz_question\Entity\Question $question
    */
@@ -82,10 +82,12 @@ class QuestionController extends EntityAPIController {
         break;
 
       case 'delete':
+        db_delete('quiz_results_answers')->condition('question_qid', $question->qid)->execute();
         $question->getHandler()->delete($only_this_version = FALSE);
         break;
 
       case 'revision_delete':
+        db_delete('quiz_results_answers')->condition('question_vid', $question->vid)->execute();
         $question->getHandler()->delete($only_this_version = TRUE);
         break;
     }
@@ -110,7 +112,7 @@ class QuestionController extends EntityAPIController {
    */
   public function buildContent($question, $view_mode = 'full', $langcode = NULL, $content = array()) {
     if ('teaser' !== $view_mode) {
-      $content += $question->getHandler()->getEntityView();
+      $content += $question->getHandler()->view();
     }
     return parent::buildContent($question, $view_mode, $langcode, $content);
   }

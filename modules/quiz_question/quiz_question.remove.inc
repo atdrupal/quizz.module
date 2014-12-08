@@ -99,7 +99,7 @@ function quiz_question_view($node, $view_mode) {
 
   // normal node view
   if ($view_mode !== 'teaser') {
-    $node->content += quiz_question_get_provider($node, TRUE)->getEntityView();
+    $node->content += quiz_question_get_provider($node, TRUE)->view();
   }
 
   return $node;

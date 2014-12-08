@@ -104,13 +104,8 @@ class LongAnswerQuestion extends QuestionHandler {
     return $this->properties = $properties;
   }
 
-  /**
-   * Implementation of getEntityView
-   *
-   * @see QuizQuestion#getEntityView()
-   */
-  public function getEntityView() {
-    $content = parent::getEntityView();
+  public function view() {
+    $content = parent::view();
 
     if ($this->viewCanRevealCorrect()) {
       if (!empty($this->question->rubric)) {
@@ -119,7 +114,7 @@ class LongAnswerQuestion extends QuestionHandler {
             '#title'  => t('Rubric'),
             '#prefix' => '<div class="quiz-solution">',
             '#suffix' => '</div>',
-            '#markup' => check_markup($this->question->rubric, $this->getFormat()),
+            '#markup' => _filter_autop($this->question->rubric),
             '#weight' => 1,
         );
       }
@@ -130,6 +125,7 @@ class LongAnswerQuestion extends QuestionHandler {
           '#weight' => 1,
       );
     }
+
     return $content;
   }
 

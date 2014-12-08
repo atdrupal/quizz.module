@@ -43,30 +43,32 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   }
 
   public function testUpgrade() {
-    $upgrade_1 = $this->performUpgrade();
+    $scale = db_query('SELECT * FROM {system} WHERE name = :name AND type = :module', array(':name' => 'scale', ':module' => 'module'))->fetchObject();
+    db_delete('system')->condition('type', 'module')->condition('name', 'scale')->execute();
 
-    // Module renamed from scale to quizz_scale
-    db_delete('system')
-      ->condition('type', 'module')
-      ->condition('name', 'scale')
-      ->execute();
+    $upgrade_1 = $this->performUpgrade();
 
     db_update('system')
       ->fields(array(
-          'name'     => 'quizz_scale',
-          'filename' => drupal_get_path('module', 'quizz_scale'),
+          'schema_version' => $scale->schema_version,
+          'status'         => 1
       ))
-      ->condition('name', 'scale')
       ->condition('type', 'module')
+      ->condition('name', 'quizz_scale')
       ->execute()
     ;
+
     registry_rebuild();
+    drupal_flush_all_caches();
 
     $upgrade_2 = $this->performUpgrade();
     $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
     if ($upgrade_1 && $upgrade_2) {
+      drupal_flush_all_caches();
+
       $modules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quiz_directions', 'quiz_page', 'quiz_question', 'quizz_scale', 'short_answer', 'truefalse');
       foreach ($modules as $module) {
+        $this->assertTrue(module_exists($module), "Module {$module} is enabled.");
         if ($schema = module_invoke($module, 'schema')) {
           $this->checkSchema($schema);
         }

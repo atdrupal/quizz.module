@@ -91,12 +91,7 @@ function quizz_scale_uninstall() {
  * Script to fix name of question type handler per scale is renamed to quizz_scale
  */
 function quizz_scale_update_7599() {
-  $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
-  db_query("UPDATE {quiz_question_type} SET {$handler} = :new_name WHERE plugin = :name", array(
-      ':new_name' => 'quizz_scale',
-      ':name'     => 'scale',
-  ));
-  drupal_flush_all_caches();
+
 }
 
 /**
@@ -110,12 +105,32 @@ function quizz_scale_update_7600() {
 
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
   db_change_field('quiz_scale_user_answers', 'question_nid', 'question_qid', $spec_2);
+
+  db_rename_table('quiz_scale_answer_collection', 'quiz_scale_collections');
+  db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'));
+  db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
+  db_add_field('quiz_scale_collections', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'));
+  db_add_field('quiz_scale_collections', 'data', array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'));
+  db_add_field('quiz_scale_collections', 'module', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'));
+  db_add_field('quiz_scale_collections', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'));
+  db_add_field('quiz_scale_collections', 'question_type', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this collection.'));
+  db_add_index('quiz_scale_collections', 'question_type', array('question_type'));
+  db_add_index('quiz_scale_collections', 'collection_name', array('name'));
+  db_add_index('quiz_scale_collections', 'collection_status', array('status'));
+  drupal_flush_all_caches();
+
+  $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
+  db_query("UPDATE {quiz_question_type} SET {$handler} = :new_name WHERE {$handler} = :name", array(
+      ':new_name' => 'quizz_scale',
+      ':name'     => 'scale',
+  ));
+  drupal_flush_all_caches();
 }
 
 /**
  * Convert global configuration for questions to question type entity.
  */
-function quizz_scale_update_7601() {
+function quizz_scale_update_7602() {
   foreach (quiz_question_get_types() as $question_type) {
     if ('scale' === $question_type->handler) {
       $question_type
@@ -127,24 +142,9 @@ function quizz_scale_update_7601() {
 }
 
 /**
- * Rename {quiz_scale_answer_collection} to {quiz_scale_collections}
- */
-function quizz_scale_update_7602() {
-  db_rename_table('quiz_scale_answer_collection', 'quiz_scale_collections');
-}
-
-/**
  * Add more columns for {quiz_scale_collections}
  */
 function quizz_scale_update_7603() {
-  db_add_field('quiz_scale_collections', 'name', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The machine-readable name of this collection.'));
-  db_add_field('quiz_scale_collections', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The human-readable name of this collection.'));
-  db_add_field('quiz_scale_collections', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of collection.'));
-  db_add_field('quiz_scale_collections', 'data', array('type' => 'text', 'not null' => FALSE, 'size' => 'big', 'serialize' => TRUE, 'description' => 'A serialized array of additional data related to this collection.'));
-  db_add_field('quiz_scale_collections', 'module', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'description' => 'The name of the providing module if the entity has been defined in code.'));
-  db_add_field('quiz_scale_collections', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0x01, 'size' => 'tiny', 'description' => 'The exportable status of the entity.'));
-  drupal_flush_all_caches();
-
   // Create default name for current collections
   $collections = entity_load('scale_collection', FALSE, array());
   foreach ($collections as $collection) {
@@ -199,18 +199,13 @@ function quizz_scale_update_7605() {
  * Add {quiz_scale_collections}.question_type and missing indexes
  */
 function quizz_scale_update_7606() {
-  db_add_field('quiz_scale_collections', 'question_type', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this collection.'));
-  db_add_index('quiz_scale_collections', 'question_type', array('question_type'));
-  db_add_index('quiz_scale_collections', 'collection_name', array('name'));
-  db_add_index('quiz_scale_collections', 'collection_status', array('status'));
-
-  if ($question_types = entity_load('quiz_question_type', FALSE, array('plugin' => 'quizz_scale'))) {
+  $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
+  if ($question_types = entity_load('quiz_question_type', FALSE, array($handler => 'quizz_scale'))) {
     $question_type = reset($question_types);
     db_update('quiz_scale_collections')
       ->fields(array('question_type' => $question_type->type))
       ->execute()
     ;
   }
-
   db_change_field('quiz_scale_collections', 'question_type', 'question_type', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '', 'description' => 'The {quiz_question_type}.type of this collection.'));
 }

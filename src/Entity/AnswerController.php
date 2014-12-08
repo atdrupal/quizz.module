@@ -34,7 +34,7 @@ class AnswerController extends EntityAPIController {
    * @param string $answer
    * @param int $question_qid
    * @param int $question_vid
-   * @return \Drupal\quiz_question\ResponseHandler
+   * @return \Drupal\quiz_question\ResponseHandlerInterface
    *  The appropriate QuizQuestionResponce extension instance
    */
   public function getHandler($result_id, Question $question = NULL, $answer = NULL, $question_qid = NULL, $question_vid = NULL) {

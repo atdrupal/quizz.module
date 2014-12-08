@@ -22,7 +22,6 @@ use Drupal\quizz\Form\QuizQuestionsForm;
 use Drupal\quizz\Form\QuizReportForm;
 use Drupal\quizz\Form\QuizTypeForm;
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionHandler;
 
 /**
  * Form for /admin/quiz/settings/config.
@@ -317,7 +316,10 @@ function quiz_answer_form_submit($form, &$form_state) {
 }
 
 function quiz_question_element_validate(&$element, &$form_state) {
-  return QuestionHandler::elementValidate($element, $form_state);
+  /* @var $question \Drupal\quiz_question\Entity\Question */
+  $question = $form_state['build_info']['args'][1];
+  $result = $form_state['build_info']['args'][3];
+  return $question->getHandler()->elementValidate($result, $element, $form_state);
 }
 
 function quiz_report_form_element_validate(&$element, &$form_state) {
@@ -331,8 +333,8 @@ function quiz_report_form_element_validate(&$element, &$form_state) {
 function quiz_question_feedback_page(QuizEntity $quiz, $page_number) {
   $result_id = empty($_SESSION['quiz'][$quiz->qid]['result_id']) ? $_SESSION['quiz']['temp']['result_id'] : $_SESSION['quiz'][$quiz->qid]['result_id'];
   $result = quiz_result_load($result_id);
-  $controller = new QuestionFeedbackController($quiz, $result);
-  return $controller->render($page_number);
+  $obj = new QuestionFeedbackController($result);
+  return $obj->render($page_number);
 }
 
 function quiz_results_page(QuizEntity $quiz) {
@@ -350,8 +352,7 @@ function quiz_results_user_page(QuizEntity $quiz) {
  * @ingroup themeable
  */
 function theme_quiz_answer_result($variables) {
-  $type = $variables['type'];
-  return '<div class="quiz-score-icon ' . $type . '"></div>';
+  return '<div class="quiz-score-icon ' . $variables['type'] . '"></div>';
 }
 
 /**
@@ -361,8 +362,7 @@ function theme_quiz_answer_result($variables) {
  *  The position of the current question in the sessions' array.
  * @param $num_of_question
  *  The number of questions for the quiz.
- * @return
- *  Themed html.
+ * @return string
  *
  * @ingroup themeable
  */
