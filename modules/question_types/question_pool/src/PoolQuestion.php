@@ -92,6 +92,17 @@ class PoolQuestion extends QuestionHandler {
     $question = $this->getCurrentQuestion($quiz->qid, $retry);
     $form = array();
     $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $result_id);
+
+    if ($quiz->repeat_until_correct) {
+      $form['navigation']['retry'] = array(
+          '#type'   => 'markup',
+          '#markup' => t('Try an <a href="!url">other question</a>', array(
+              '!url' => url($_GET['q'], array('query' => array('retry' => 1)))
+          )),
+          '#weight' => 50,
+      );
+    }
+
     return $form;
   }
 
