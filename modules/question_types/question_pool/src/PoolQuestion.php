@@ -63,13 +63,21 @@ class PoolQuestion extends QuestionHandler {
     return $build;
   }
 
-  private function getCurrentQuestion($quiz_id) {
+  private function getCurrentQuestion($quiz_id, $retry = FALSE) {
     $session = &$_SESSION['quiz'][$quiz_id];
     $key = "pool_{$this->question->qid}";
-    $delta = isset($session[$key]['delta']) ? $session[$key]['delta'] : 0;
-    return entity_metadata_wrapper('quiz_question', $this->question)
-        ->field_question_reference[$delta]
-        ->value();
+    $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
+    $delta = &$session[$key]['delta'];
+
+    if ($retry) {
+      $delta++;
+      if (!isset($wrapper->field_question_reference[$delta])) {
+        $delta = 0;
+      }
+      drupal_goto($_GET['q']);
+    }
+
+    return $wrapper->field_question_reference[$delta]->value();
   }
 
   /**
@@ -80,8 +88,9 @@ class PoolQuestion extends QuestionHandler {
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $quiz = quiz_result_load($result_id)->getQuiz();
+    $retry = $quiz->repeat_until_correct && !empty($_GET['retry']);
+    $question = $this->getCurrentQuestion($quiz->qid, $retry);
     $form = array();
-    $question = $this->getCurrentQuestion($quiz->qid);
     $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $result_id);
     return $form;
   }
