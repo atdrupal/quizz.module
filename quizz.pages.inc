@@ -249,10 +249,7 @@ function quiz_jumper_form($form, $form_state, $questions, $current) {
 
 function quiz_jumper_form_submit($form, &$form_state) {
   $quiz = quiz_load(quiz_get_id_from_url());
-  quiz()
-    ->getQuizHelper()
-    ->getQuestionHelper()
-    ->redirect($quiz, $form_state['values']['question_number'] - 1);
+  $_SESSION['quiz'][$quiz->qid]['current'] = $form_state['values']['question_number'] - 1;
   $form_state['redirect'] = "quiz/" . $quiz->qid . "/take/" . $form_state['values']['question_number'];
 }
 
