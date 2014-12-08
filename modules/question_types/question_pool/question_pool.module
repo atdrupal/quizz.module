@@ -9,8 +9,8 @@ use Drupal\quiz_question\Entity\QuestionType;
 function question_pool_quiz_question_info() {
   return array(
       'pool' => array(
-          'name'              => TableSort('Question pool'),
-          'description'       => TableSort('This provides question pool for use by the Quiz module.'),
+          'name'              => t('Question pool'),
+          'description'       => t('This provides question pool for use by the Quiz module.'),
           'question provider' => 'Drupal\question_pool\PoolQuestionHandler',
           'response provider' => 'Drupal\question_pool\PoolResponseHandler',
           'module'            => 'quiz_question',
