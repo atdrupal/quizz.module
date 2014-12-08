@@ -21,9 +21,13 @@ class QuestionTypeInstaller {
   }
 
   public function addNewTarget(QuestionType $question_type) {
-    $field = field_info_field($this->field_name);
-    $field['settings']['handler_settings']['target_bundles'][$question_type->type] = $question_type->type;
-    field_update_field($field);
+    if ($field = field_info_field($this->field_name)) {
+      if (empty($field['settings']['handler_settings']['target_bundles'])) {
+        $field['settings']['handler_settings']['target_bundles'] = $this->getTargetBundles();
+      }
+      $field['settings']['handler_settings']['target_bundles'][$question_type->type] = $question_type->type;
+      field_update_field($field);
+    }
   }
 
   private function doCreateField() {
@@ -61,7 +65,7 @@ class QuestionTypeInstaller {
   protected function getTargetBundles() {
     $targets = array();
     foreach (quiz_question_get_types() as $name => $question_type) {
-      if ('pool' !== $question_type->handler) {
+      if (!in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
         $targets[] = $name;
       }
     }
