@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
@@ -203,7 +204,7 @@ class TrueFalseResponse extends ResponseHandler {
   /**
    * Constructor
    */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $input = NULL) {
+  public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
     if (!isset($input)) {

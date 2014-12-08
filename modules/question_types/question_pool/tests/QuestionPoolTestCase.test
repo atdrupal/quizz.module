@@ -1,9 +1,11 @@
 <?php
 
+use Drupal\quizz\Entity\QuizEntity;
+
 class QuestionPoolTestCase extends QuizQuestionTestCase {
 
-  protected $questionPlugin = 'pool';
-  protected $questionPlugins = array('truefalse');
+  protected $questionHandler = 'pool';
+  protected $questionHandlers = array('truefalse');
 
   public static function getInfo() {
     return array(
@@ -33,7 +35,7 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
 
   private function createPool() {
     $pool = $this->drupalCreateQuestion(array(
-        'type'  => $this->questionPlugin,
+        'type'  => $this->questionHandler,
         'title' => 'Pool question title',
         'body'  => 'Pool body text',
     ));
@@ -61,20 +63,42 @@ class QuestionPoolTestCase extends QuizQuestionTestCase {
 
   private function checkQuizChecking($pool_question) {
     // Create quiz, link pool to quiz
-    $quiz = $this->drupalCreateQuiz(array('repeat_until_correct' => 1));
+    $quiz = $this->drupalCreateQuiz(array('review_options' => array('end' => array('score' => 'score'))));
     $this->linkQuestionToQuiz($pool_question, $quiz);
 
-    // Take quiz
+    // Check cases
     $this->drupalLogin($this->user);
+    $this->checkCorrectAnswer($quiz);
+    $this->checkIncorrectAnswer($quiz);
+    $this->checkRepeatUntilCorrect($quiz);
+  }
+
+  private function checkCorrectAnswer(QuizEntity $quiz) {
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->assertText('Pool body text');
     $this->assertText('Choose one');
 
-    $this->drupalPost(NULL, array('question[1][2]' => 0), t('Finish'));
-    $this->assertText('The answer was incorrect. Please try again.');
-
     // Try correct answer
-    $this->drupalPost(NULL, array('question[1][2]' => 1), t('Finish'));
+    $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish'));
+    $this->assertText('Your score: 100%');
+  }
+
+  private function checkIncorrectAnswer(QuizEntity $quiz) {
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+    $this->drupalPost(NULL, array('question[1][2]' => "0"), t('Finish'));
+    $this->assertText('Your score: 0%');
+  }
+
+  private function checkRepeatUntilCorrect(QuizEntity $quiz) {
+    $quiz->repeat_until_correct = 1;
+    $quiz->is_new_revision = FALSE;
+    $quiz->save();
+
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+    $this->drupalPost(NULL, array('question[1][2]' => "0"), t('Finish'));
+    $this->assertText('The answer was incorrect. Please try again.');
+    $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish'));
+    $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish')); // Not sure why, in manual test case, we just need click once.
     $this->assertText('Your score: 100%');
   }
 

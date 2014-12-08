@@ -5,8 +5,6 @@ namespace Drupal\question_pool;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\ResponseHandler;
 
-# Retry: unset($_SESSION['quiz'][$quiz_id]['pool_' . $pool->qid]);
-
 /**
  * Extension of QuizQuestionResponse
  */
@@ -18,14 +16,27 @@ class PoolResponseHandler extends ResponseHandler {
 
   public function __construct($result_id, Question $question, $input = NULL) {
     if (NULL !== $input && is_array($input)) {
-      $this->answer = reset($input);
+      $input = reset($input);
     }
 
     parent::__construct($result_id, $question, $input);
 
-    if ($correct = $this->getCorrectAnswer()) {
-      $this->answer = $correct->answer;
-      $this->score = $correct->score;
+    if (!isset($input)) {
+      if ($response = $this->getCorrectAnswer()) {
+        $this->answer = $response->answer;
+        $this->score = $response->score;
+      }
+    }
+    else {
+      $this->answer = $input;
+    }
+
+    $quiz_id = $this->result->getQuiz()->qid;
+    if (!isset($_SESSION['quiz'][$quiz_id]["pool_{$this->question->qid}"])) {
+      $_SESSION['quiz'][$quiz_id]["pool_{$this->question->qid}"] = array(
+          'passed' => FALSE,
+          'delta'  => 0,
+      );
     }
   }
 
@@ -50,7 +61,7 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   /**
-   * @return \Drupal\quiz_question\Entity\Question
+   * @return Question
    */
   private function getQuestion() {
     $quiz_id = $this->result->getQuiz()->qid;
@@ -176,7 +187,6 @@ class PoolResponseHandler extends ResponseHandler {
 
   /**
    * Implementation of score
-   *
    * @return int
    * @see QuizQuestionResponse#score()
    */
@@ -189,16 +199,6 @@ class PoolResponseHandler extends ResponseHandler {
     return quiz_answer_controller()
         ->getHandler($this->result_id, $this->getQuestion(), $this->answer)
         ->isCorrect();
-  }
-
-  /**
-   * If all answers in a question is wrong
-   *
-   * @return boolean
-   *  TRUE if all answers are wrong. False otherwise.
-   */
-  public function isAllWrong() {
-    return FALSE;
   }
 
   /**
