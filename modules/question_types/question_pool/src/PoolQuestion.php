@@ -118,7 +118,6 @@ class PoolQuestion extends QuestionHandler {
     $wrapper = entity_metadata_wrapper('quiz_question', $this->question);
     /* @var $question Question */
     foreach ($wrapper->field_question_reference->getIterator() as $wrapper_question) {
-      // When referencing entity is deleted
       if ($question = $wrapper_question->value()) {
         $score += $question->getHandler()->getMaximumScore();
       }

@@ -20,6 +20,12 @@ class QuestionTypeInstaller {
     }
   }
 
+  public function addNewTarget(QuestionType $question_type) {
+    $field = field_info_field($this->field_name);
+    $field['settings']['handler_settings']['target_bundles'][$question_type->type] = $question_type->type;
+    field_update_field($field);
+  }
+
   private function doCreateField() {
     if (!field_info_field($this->field_name)) {
       field_create_field(array(
@@ -43,13 +49,23 @@ class QuestionTypeInstaller {
               'target_type'      => 'quiz_question',
               'handler'          => 'base',
               'handler_settings' => array(
-                  'target_bundles' => array_keys(quiz_question_get_types()),
+                  'target_bundles' => $this->getTargetBundles(),
                   'sort'           => array('type' => 'property', 'property' => 'title', 'direction' => 'ASC'),
                   'behaviors'      => array(),
               ),
           ),
       ));
     }
+  }
+
+  protected function getTargetBundles() {
+    $targets = array();
+    foreach (quiz_question_get_types() as $name => $question_type) {
+      if ('pool' !== $question_type->handler) {
+        $targets[] = $name;
+      }
+    }
+    return $targets;
   }
 
   private function doCreateFieldInstance(QuestionType $question_type) {
