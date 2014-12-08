@@ -65,7 +65,7 @@ class QuestionTypeInstaller {
   protected function getTargetBundles() {
     $targets = array();
     foreach (quiz_question_get_types() as $name => $question_type) {
-      if (!in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
+      if (in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
         $targets[] = $name;
       }
     }

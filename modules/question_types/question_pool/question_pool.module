@@ -28,7 +28,7 @@ function question_pool_quiz_question_type_insert($question_type) {
     return $installer->setup($question_type);
   }
 
-  if (!in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
+  if (in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
     return $installer->addNewTarget($question_type);
   }
 }
@@ -40,8 +40,11 @@ function question_pool_field_update_field($field, $prior_field, $has_data) {
   if ('field_question_reference' === $field['field_name']) {
     $types = $field['settings']['handler_settings']['target_bundles'];
     foreach ($types as $type) {
-      if (!in_array(quiz_question_type_load($type)->handler, array('multichoice', 'truefalse', 'matching'))) {
-        throw new RuntimeException('Pool question is only currently supporting multichoice, truefalse, matching question handlers.');
+      $handler = quiz_question_type_load($type)->handler;
+      if (!in_array($handler, array('multichoice', 'truefalse', 'matching'))) {
+        throw new RuntimeException('Pool question is only currently supporting '
+        . 'multichoice, truefalse, matching question handlers. '
+        . 'Given: ' . $handler);
       }
     }
   }
