@@ -27,7 +27,10 @@ function question_pool_quiz_question_type_insert($question_type) {
   if ('pool' === $question_type->handler) {
     return $installer->setup($question_type);
   }
-  return $installer->addNewTarget($question_type);
+
+  if (!in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
+    return $installer->addNewTarget($question_type);
+  }
 }
 
 /**
