@@ -2,9 +2,9 @@
 
 namespace Drupal\question_pool;
 
-use Drupal\question_pool\Form\AnswerForm;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
+use Drupal\quizz\Entity\Result;
 
 /**
  * Extension of QuizQuestion.
@@ -80,7 +80,7 @@ class PoolQuestion extends QuestionHandler {
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $quiz = quiz_result_load($result_id)->getQuiz();
-    $form = parent::getAnsweringForm($form_state, $result_id);
+    $form = array();
     $question = $this->getCurrentQuestion($quiz->qid);
     $form[$question->qid] = $question->getHandler()->getAnsweringForm($form_state, $result_id);
     return $form;
@@ -101,6 +101,17 @@ class PoolQuestion extends QuestionHandler {
       }
     }
     return $score;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onRepeatUntiCorrect(Result $result, array &$element) {
+    $msg = t('The answer was incorrect. Please try again.');
+    $msg .= ' ' . t('You can try with <a href="!url">another question</a>.', array(
+          '!url' => url($_GET['q'], array('query' => array('retry' => 1)))
+    ));
+    return parent::onRepeatUntiCorrect($result, $element, $msg);
   }
 
 }
