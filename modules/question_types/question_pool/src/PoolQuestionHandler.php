@@ -9,7 +9,7 @@ use Drupal\quizz\Entity\Result;
 /**
  * Extension of QuizQuestion.
  */
-class PoolQuestion extends QuestionHandler {
+class PoolQuestionHandler extends QuestionHandler {
 
   public function delete($single_revision = FALSE) {
     parent::delete($single_revision);

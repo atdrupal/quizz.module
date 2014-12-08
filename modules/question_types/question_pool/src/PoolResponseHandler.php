@@ -169,9 +169,6 @@ class PoolResponseHandler extends ResponseHandler {
       ->condition('result_id', $this->result_id)
       ->execute();
 
-    // Please view quiz_question.module line 277.
-    // $response->delete();
-    // $response->saveResult();
     // The quiz question delete and resave instead update
     // We have a difference between $respone update and delete.
     // Question update $this->question is entity
@@ -191,7 +188,6 @@ class PoolResponseHandler extends ResponseHandler {
    * @see QuizQuestionResponse#score()
    */
   public function score() {
-    // @TODO: This maybe wrong. Text/long answer has no static
     return $this->isCorrect() ? $this->getQuestionMaxScore() : 0;
   }
 
