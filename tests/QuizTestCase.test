@@ -64,8 +64,10 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
     if (!empty($this->questionHandlers)) {
       $info = quiz_question_get_handler_info();
+      $question_types = quiz_question_get_types();
       foreach ($this->questionHandlers as $handler_name) {
         $this->assertTrue(isset($info[$this->questionHandler]), "Found {$handler_name} question handler info.");
+        $this->assertTrue(isset($question_types['default_'. $handler_name]), "Default question type for {$handler_name} is created.");
       }
     }
   }
