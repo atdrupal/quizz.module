@@ -113,8 +113,7 @@ function quiz_entity_form_submit($form, &$form_state) {
   return $obj->submit($form, $form_state);
 }
 
-function quiz_question_admin_page(QuizEntity $quiz) {
-  module_load_include('pages.inc', 'quiz_question');
+function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
   ctools_include('dropdown.theme');
 
   if ($quiz->randomization >= 3) {
@@ -131,6 +130,7 @@ function quiz_question_admin_page(QuizEntity $quiz) {
           )
       )
   );
+
   foreach (quiz_question_get_types() as $name => $question_type) {
     $links['links'][] = array(
         'title'      => $question_type->label,
@@ -140,12 +140,11 @@ function quiz_question_admin_page(QuizEntity $quiz) {
     );
   }
 
-  return array(
+  $form['vtabs'] = array(
       '#type'            => 'vertical_tabs',
       'question_admin'   => array(
           '#type'  => 'fieldset',
           '#title' => t('Manage questions'),
-          '#value' => '',
           'links'  => array('#markup' => theme_ctools_dropdown($links)),
           'form'   => drupal_get_form('quiz_questions_form', $quiz),
       ),
@@ -155,6 +154,12 @@ function quiz_question_admin_page(QuizEntity $quiz) {
           '#value' => views_get_view('quiz_question_bank')->preview(),
       ),
   );
+
+  // Vertical tabs does not play well without form.
+  $form['hack_prefix'] = array('#weight' => -1000, '#markup' => '</div></form>');
+  $form['hack_suffix'] = array('#weight' => 1000, '#markup' => '<form><div>');
+
+  return $form;
 }
 
 /**
