@@ -107,7 +107,7 @@ abstract class ResultBaseController {
   public function getSummaryText() {
     $summary = array();
     $admin = arg(0) === 'admin';
-    $quiz_format = (isset($this->quiz_revision->body[LANGUAGE_NONE][0]['format'])) ? $this->quiz_revision->body[LANGUAGE_NONE][0]['format'] : NULL;
+    $quiz_format = (isset($this->quiz_revision->quiz_question_body[LANGUAGE_NONE][0]['format'])) ? $this->quiz_revision->quiz_question_body[LANGUAGE_NONE][0]['format'] : NULL;
 
     if (!$admin) {
       if (!empty($this->score['result_option'])) {

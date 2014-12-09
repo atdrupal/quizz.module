@@ -35,7 +35,7 @@ class ClozeQuestionHandler extends QuestionHandler {
   }
 
   public function validate(array &$form) {
-    if (substr_count($this->question->body[LANGUAGE_NONE]['0']['value'], '[') !== substr_count($this->question->body[LANGUAGE_NONE]['0']['value'], ']')) {
+    if (substr_count($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value'], '[') !== substr_count($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value'], ']')) {
       form_set_error('body', t('Please check the question format.'));
     }
   }
@@ -67,9 +67,9 @@ class ClozeQuestionHandler extends QuestionHandler {
   public function view() {
     $content = parent::view();
     $content['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
-    $chunks = $this->clozeHelper->getQuestionChunks($this->question->body[LANGUAGE_NONE][0]['value']);
+    $chunks = $this->clozeHelper->getQuestionChunks($this->question->quiz_question_body[LANGUAGE_NONE][0]['value']);
     if ($this->viewCanRevealCorrect() && !empty($chunks)) {
-      $solution = $this->question->body[LANGUAGE_NONE][0]['value'];
+      $solution = $this->question->quiz_question_body[LANGUAGE_NONE][0]['value'];
       foreach ($chunks as $position => $chunk) {
         if (strpos($chunk, '[') === FALSE) {
           continue;
@@ -133,7 +133,7 @@ class ClozeQuestionHandler extends QuestionHandler {
     $form['open_wrapper'] = array(
         '#markup' => '<div class="cloze-question">',
     );
-    foreach ($this->clozeHelper->getQuestionChunks($this->question->body[LANGUAGE_NONE]['0']['value']) as $position => $chunk) {
+    foreach ($this->clozeHelper->getQuestionChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']) as $position => $chunk) {
       if (strpos($chunk, '[') === FALSE) {
         // this "tries[foobar]" hack is needed becaues question handler engine
         // checks for input field with name tries
@@ -195,10 +195,10 @@ class ClozeQuestionHandler extends QuestionHandler {
         '#weight' => -10,
     );
     $form['learning_mode'] = array(
-        '#type'        => 'checkbox',
-        '#title'       => t('Allow right answers only'),
+        '#type'          => 'checkbox',
+        '#title'         => t('Allow right answers only'),
         '#default_value' => isset($this->question->learning_mode) ? $this->question->learning_mode : 0,
-        '#description' => t('This is meant to be used for learning purpose. If this option is enabled only the right answers will be accepted.'),
+        '#description'   => t('This is meant to be used for learning purpose. If this option is enabled only the right answers will be accepted.'),
     );
     return $form;
   }
@@ -217,7 +217,7 @@ class ClozeQuestionHandler extends QuestionHandler {
    * Evaluate the correctness of an answer based on the correct answer and evaluation method.
    */
   public function evaluateAnswer($user_answer) {
-    $correct_answer = $this->clozeHelper->getCorrectAnswerChunks($this->question->body[LANGUAGE_NONE]['0']['value']);
+    $correct_answer = $this->clozeHelper->getCorrectAnswerChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']);
     $total_answer = count($correct_answer);
     $correct_answer_count = 0;
     if ($total_answer == 0) {

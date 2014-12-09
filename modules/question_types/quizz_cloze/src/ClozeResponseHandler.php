@@ -169,7 +169,7 @@ class ClozeResponseHelper extends ResponseHandler {
       return $form;
     }
     $this->question = node_load($this->question->qid);
-    $question = $this->question->body[LANGUAGE_NONE][0]['value'];
+    $question = $this->question->quiz_question_body[LANGUAGE_NONE][0]['value'];
     $correct_answer = $this->clozeHelper->getCorrectAnswer($question);
     $user_answer = $this->clozeHelper->getUserAnswer($question, $this->answer);
     $form['answer']['#markup'] = theme('cloze_user_answer', array('answer' => $user_answer, 'correct' => $correct_answer));
