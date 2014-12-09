@@ -41,6 +41,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     $admin_permissions[] = 'edit any quiz content';
     $admin_permissions[] = 'edit question titles';
     $admin_permissions[] = 'access quiz';
+    $admin_permissions[] = 'view any questions';
 
     $user_permissions[] = 'access quiz';
     foreach ($this->extraUserPermissions as $perm) {
@@ -60,6 +61,13 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
     $this->admin = $this->drupalCreateUser(array_unique($admin_permissions));
     $this->user = $this->drupalCreateUser(array_unique($user_permissions));
+
+    if (!empty($this->questionHandlers)) {
+      $info = quiz_question_get_handler_info();
+      foreach ($this->questionHandlers as $handler_name) {
+        $this->assertTrue(isset($info[$this->questionHandler]), "Found {$handler_name} question handler info.");
+      }
+    }
   }
 
   /**

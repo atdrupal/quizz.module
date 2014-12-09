@@ -3,7 +3,7 @@
 /**
  * Test class for matching questions.
  */
-class MatchingTestCase extends QuizQuestionTestCase {
+class MatchingTestCase extends QuizTestCase {
 
   protected $questionHandler = 'matching';
 

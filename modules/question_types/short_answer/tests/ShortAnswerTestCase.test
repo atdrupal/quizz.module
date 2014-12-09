@@ -3,7 +3,7 @@
 /**
  * Test class for short answer.
  */
-class ShortAnswerTestCase extends QuizQuestionTestCase {
+class ShortAnswerTestCase extends QuizTestCase {
 
   protected $questionHandler = 'short_answer';
 

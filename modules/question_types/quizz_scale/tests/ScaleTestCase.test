@@ -3,7 +3,7 @@
 /**
  * Test class for scale questions.
  */
-class ScaleTestCase extends QuizQuestionTestCase {
+class ScaleTestCase extends QuizTestCase {
 
   protected $questionHandler = 'quizz_scale';
 

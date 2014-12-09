@@ -10,7 +10,7 @@ use Drupal\quiz_question\Entity\Question;
 /**
  * Test class for short answer.
  */
-class QuizDirectionsTestCase extends QuizQuestionTestCase {
+class QuizDirectionsTestCase extends QuizTestCase {
 
   protected $questionHandler = 'quiz_directions';
 

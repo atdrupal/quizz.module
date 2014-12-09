@@ -3,7 +3,7 @@
 /**
  * Test class for long answer.
  */
-class LongAnswerTestCase extends QuizQuestionTestCase {
+class LongAnswerTestCase extends QuizTestCase {
 
   protected $questionHandler = 'long_answer';
 
