@@ -19,13 +19,21 @@ function quizz_cloze_quiz_question_info() {
  * Implementation of hook_form_alter()
  */
 function quizz_cloze_form_alter(&$form, &$form_state, $form_id) {
-  // To prevent wysiwyg editor messing with question syntax.
-  if ($form_id === 'cloze_node_form') {
-    $form['#after_build'][] = function($form) {
-      $form['body'][LANGUAGE_NONE]['0']['format']['#access'] = FALSE;
-      return $form;
-    };
+  if (!empty($form['#entity_type']) && 'quiz_question' === $form['#entity_type']) {
+    $question_type = quiz_question_type_load($form['#entity']->type);
+    if ('cloze' === $question_type->handler) {
+      $form['#after_build'][] = 'quizz_cloze_form_alter_after_build';
+    }
   }
+}
+
+/**
+ * After build callback for (cloze) question form to prevent wysiwyg editor
+ * messing with question syntax.
+ */
+function quizz_cloze_form_alter_after_build($form) {
+  $form['quiz_question_body'][LANGUAGE_NONE][0]['value']['#wysiwyg'] = FALSE;
+  return $form;
 }
 
 /**
