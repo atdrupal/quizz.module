@@ -115,9 +115,29 @@ function quiz_entity_form_submit($form, &$form_state) {
 
 function quiz_question_admin_page(QuizEntity $quiz) {
   module_load_include('pages.inc', 'quiz_question');
+  ctools_include('dropdown.theme');
 
   if ($quiz->randomization >= 3) {
     return drupal_get_form('quiz_categorized_form', $quiz);
+  }
+
+  $links = array(
+      'title' => t('Create new question'),
+      'class' => 'quiz-add-question ctools-button ctools-dropbutton',
+      'image' => '',
+      'links' => array(
+          'options' => array(
+              'query' => array('destination' => 'quiz/' . $quiz->identifier() . '/questions')
+          )
+      )
+  );
+  foreach (quiz_question_get_types() as $name => $question_type) {
+    $links['links'][] = array(
+        'title'      => $question_type->label,
+        'href'       => 'quiz-question/add/' . str_replace('_', '-', $name),
+        'query'      => array('destination' => 'quiz/' . $quiz->identifier() . '/questions'),
+        'attributes' => array('title' => strip_tags($question_type->description)),
+    );
   }
 
   return array(
@@ -126,13 +146,7 @@ function quiz_question_admin_page(QuizEntity $quiz) {
           '#type'  => 'fieldset',
           '#title' => t('Manage questions'),
           '#value' => '',
-          'links'  => array(
-              '#type'        => 'fieldset',
-              '#title'       => t('Create new question'),
-              '#collapsible' => TRUE,
-              '#collapsed'   => TRUE,
-              '#value'       => quiz_question_adding_landing_page('quiz/' . $quiz->identifier() . '/questions'),
-          ),
+          'links'  => array('#markup' => theme_ctools_dropdown($links)),
           'form'   => drupal_get_form('quiz_questions_form', $quiz),
       ),
       'global_questions' => array(
