@@ -189,14 +189,15 @@ class ClozeQuestionHandler extends QuestionHandler {
   public function getCreationForm(array &$form_state = NULL) {
     $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
     $form['instructions'] = array(
-        '#markup' => '<div class="cloze-instruction">' .
-        t('For free text cloze, mention the correct answer inside the square bracket. For multichoice cloze, provide the options separated by commas with correct answer as first. <br/>Example question: [The] Sun raises in the [east, west, north, south]. <br/>Answer: <span class="answer correct correct-answer">The</span> Sun raises in the <span class="answer correct correct-answer">east</span>.') .
-        '</div>',
+        '#prefix' => '<div class="cloze-instruction">',
+        '#markup' => t('For free text cloze, mention the correct answer inside the square bracket. For multichoice cloze, provide the options separated by commas with correct answer as first. <br/>Example question: [The] Sun raises in the [east, west, north, south]. <br/>Answer: <span class="answer correct correct-answer">The</span> Sun raises in the <span class="answer correct correct-answer">east</span>.'),
+        '#suffix' => '</div>',
         '#weight' => -10,
     );
     $form['learning_mode'] = array(
         '#type'        => 'checkbox',
         '#title'       => t('Allow right answers only'),
+        '#default_value' => isset($this->question->learning_mode) ? $this->question->learning_mode : 0,
         '#description' => t('This is meant to be used for learning purpose. If this option is enabled only the right answers will be accepted.'),
     );
     return $form;
