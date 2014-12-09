@@ -1,9 +1,11 @@
 <?php
 
-class QuizzClozeTestCase extends QuizQuestionTestCase {
+use Drupal\quiz_question\Entity\Question;
+
+class QuizzClozeTestCase extends QuizTestCase {
 
   protected $questionHandler = 'cloze';
-  protected $extraModules = array('quizz_close');
+  protected $extraModules = array('quizz_cloze');
 
   public static function getInfo() {
     return array(
@@ -20,7 +22,7 @@ class QuizzClozeTestCase extends QuizQuestionTestCase {
         'body'  => 'Cloze question body',
     ));
 
-    $this->assertTrue($question instanceof \Drupal\quiz_question\Entity\Question);
+    $this->assertTrue($question instanceof Question);
     $this->assertEqual('cloze', $question->getQuestionType()->handler);
   }
 

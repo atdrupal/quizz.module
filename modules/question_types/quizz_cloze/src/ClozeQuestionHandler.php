@@ -22,24 +22,16 @@ class ClozeQuestionHandler extends QuestionHandler {
   }
 
   public function saveEntityProperties($is_new = FALSE) {
-    if ($is_new || $this->question->revision == 1) {
-      db_insert('quiz_cloze_question_properties')
-        ->fields(array(
-            'qid'           => $this->question->qid,
-            'vid'           => $this->question->vid,
-            'learning_mode' => $this->question->learning_mode,
-        ))
-        ->execute();
-    }
-    else {
-      db_update('quiz_cloze_question_properties')
-        ->fields(array(
-            'learning_mode' => $this->question->learning_mode,
-        ))
-        ->condition('qid', $this->question->qid)
-        ->condition('vid', $this->question->vid)
-        ->execute();
-    }
+    db_merge('quiz_cloze_question_properties')
+      ->key(array(
+          'qid' => $this->question->qid,
+          'vid' => $this->question->vid,
+      ))
+      ->fields(array(
+          'learning_mode' => isset($this->question->learning_mode) ? $this->question->learning_mode : 0,
+      ))
+      ->execute()
+    ;
   }
 
   public function validate(array &$form) {
