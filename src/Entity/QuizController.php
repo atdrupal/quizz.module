@@ -153,6 +153,45 @@ class QuizController extends EntityAPIController {
     }
   }
 
+  /**
+   * Force save revision author ID.
+   *
+   * @global stdClass $user
+   * @param QuizEntity $quiz
+   */
+  protected function saveRevision($quiz) {
+    global $user;
+    $quiz->revision_uid = $user->uid;
+    $return = parent::saveRevision($quiz);
+
+    if (!empty($quiz->clone_relationships) && ($quiz->vid != $quiz->old_vid)) {
+      $this->cloneRelationship($quiz, $quiz->old_vid);
+    }
+
+    return $return;
+  }
+
+  private function cloneRelationship(QuizEntity $quiz, $previous_vid) {
+    // The cloning logic implemented somewhere. This legacy code should be removed later.
+    if ($quiz->getQuestionIO()->getQuestionList()) {
+      return;
+    }
+
+    if (!$revision = quiz_load(NULL, $previous_vid, TRUE)) {
+      return;
+    }
+
+    foreach ($revision->getQuestionIO()->getQuestionList() as $relationship) {
+      if (empty($relationship['random'])) {
+        if ($relationship = quiz_relationship_load($relationship['qr_id'])) {
+          $relationship->qr_id = NULL;
+          $relationship->quiz_vid = $quiz->vid;
+          $relationship->save();
+        }
+      }
+    }
+  }
+
   private function saveResultOptions(QuizEntity $quiz) {
     db_delete('quiz_result_options')
       ->condition('quiz_vid', $quiz->vid)
@@ -187,18 +226,6 @@ class QuizController extends EntityAPIController {
     }
 
     $query->execute();
-  }
-
-  /**
-   * Force save revision author ID.
-   *
-   * @global stdClass $user
-   * @param QuizEntity $entity
-   */
-  protected function saveRevision($entity) {
-    global $user;
-    $entity->revision_uid = $user->uid;
-    return parent::saveRevision($entity);
   }
 
   public function delete($ids, DatabaseTransaction $transaction = NULL) {

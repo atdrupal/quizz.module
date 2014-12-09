@@ -211,8 +211,7 @@ class QuestionIO {
    *   - All weights are updated.
    *   - All status flags are updated.
    *
-   * @return
-   *   Boolean TRUE if update was successful, FALSE otherwise.
+   * @return boolean TRUE if update was successful, FALSE otherwise.
    */
   public function setRelationships(array $relationships) {
     if (empty($this->quiz->old_vid)) {
@@ -235,14 +234,15 @@ class QuestionIO {
    * @param Relationship[] $relationships
    */
   private function doSetRelationships($relationships) {
-    foreach ($relationships as &$relationship) {
-      if ($relationship->state == QUIZ_QUESTION_NEVER) {
+    foreach ($relationships as $relationship) {
+      if (isset($relationship->state) && ($relationship->state == QUIZ_QUESTION_NEVER)) {
         continue;
       }
 
       // Update to latest OR use the version given.
-      $question_vid = $relationship->vid;
-      if ($relationship->refresh) {
+      $question_qid = isset($relationship->question_qid) ? $relationship->question_qid : $relationship->qid;
+      $question_vid = isset($relationship->question_vid) ? $relationship->question_vid : $relationship->vid;
+      if (!empty($relationship->refresh)) {
         $sql = 'SELECT vid FROM {quiz_question} WHERE qid = :qid';
         $question_vid = db_query($sql, array(':qid' => $relationship->qid))->fetchField();
       }
@@ -250,9 +250,9 @@ class QuestionIO {
       $values = array(
           'quiz_qid'              => $this->quiz->qid,
           'quiz_vid'              => $this->quiz->vid,
-          'question_qid'          => $relationship->qid,
+          'question_qid'          => $question_qid,
           'question_vid'          => $question_vid,
-          'question_status'       => $relationship->state,
+          'question_status'       => isset($relationship->state) ? $relationship->state : NULL,
           'weight'                => $relationship->weight,
           'max_score'             => (int) $relationship->max_score,
           'auto_update_max_score' => (int) $relationship->auto_update_max_score,

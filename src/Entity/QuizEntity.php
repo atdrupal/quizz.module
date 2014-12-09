@@ -77,6 +77,9 @@ class QuizEntity extends Entity {
   /** @var QuestionIO */
   private $question_io;
 
+  /** @var bool Set to TRUE if we want clone relationships on save new quiz revision. */
+  public $clone_relationships;
+
   public function __construct(array $values = array()) {
     parent::__construct($values, 'quiz_entity');
   }
