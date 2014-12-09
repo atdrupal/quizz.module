@@ -1,5 +1,8 @@
 <?php
 
+namespace Drupal\quizz_cloze;
+
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
@@ -9,17 +12,28 @@ class ClozeResponse extends ResponseHandler {
 
   protected $answer_id = 0;
 
-  /**
-   * Constructor
-   */
-  public function __construct($result_id, stdClass $question_node, $input = NULL) {
-    parent::__construct($result_id, $question_node, $input);
-    if (!isset($input)) {
-      $r = db_query("SELECT answer_id, answer, score, question_vid, question_nid, result_id FROM {quiz_cloze_user_answers} WHERE question_nid = :question_nid AND question_vid = :question_vid AND result_id = :result_id", array(':question_nid' => $question_node->nid, ':question_vid' => $question_node->vid, ':result_id' => $result_id))->fetch();
-      if (!empty($r)) {
-        $this->answer = unserialize($r->answer);
-        $this->score = $r->score;
-        $this->answer_id = $r->answer_id;
+  /** @var \Drupal\quizz_cloze\Helper */
+  private $clozeHelper;
+
+  public function __construct($result_id, Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
+    $this->clozeHelper = new \Drupal\quizz_cloze\Helper();
+
+    if (NULL === $input) {
+      $stored_input = db_query(
+        "SELECT answer_id, answer, score, question_vid, question_qid, result_id"
+        . " FROM {quiz_cloze_user_answers}"
+        . " WHERE question_qid = :question_qid"
+        . "   AND question_vid = :question_vid"
+        . "   AND result_id = :result_id", array(
+          ':question_qid' => $question->qid,
+          ':question_vid' => $question->vid,
+          ':result_id'    => $result_id
+        ))->fetch();
+      if (!empty($stored_input)) {
+        $this->answer = unserialize($stored_input->answer);
+        $this->score = $stored_input->score;
+        $this->answer_id = $stored_input->answer_id;
       }
     }
     else {
@@ -45,7 +59,7 @@ class ClozeResponse extends ResponseHandler {
     $this->answer_id = db_insert('quiz_cloze_user_answers')
       ->fields(array(
           'answer'       => serialize($this->answer),
-          'question_nid' => $this->question->nid,
+          'question_qid' => $this->question->qid,
           'question_vid' => $this->question->vid,
           'result_id'    => $this->rid,
           'score'        => $this->getScore(FALSE),
@@ -60,7 +74,7 @@ class ClozeResponse extends ResponseHandler {
    */
   public function delete() {
     db_delete('quiz_cloze_user_answers')
-      ->condition('question_nid', $this->question->nid)
+      ->condition('question_qid', $this->question->qid)
       ->condition('question_vid', $this->question->vid)
       ->condition('result_id', $this->rid)
       ->execute();
@@ -97,7 +111,7 @@ class ClozeResponse extends ResponseHandler {
     $question_form['open_wrapper'] = array(
         '#markup' => '<div class="cloze-question">',
     );
-    foreach (_cloze_get_question_chunks($question) as $position => $chunk) {
+    foreach ($this->clozeHelper->getQuestionChunks($question) as $position => $chunk) {
       if (strpos($chunk, '[') === FALSE) {
         // this "tries[foobar]" hack is needed becaues response handler engine checks for input field
         // with name tries
@@ -114,7 +128,7 @@ class ClozeResponse extends ResponseHandler {
           $question_form['tries[' . $position . ']'] = array(
               '#type'     => 'select',
               '#title'    => '',
-              '#options'  => _cloze_shuffle_choices(drupal_map_assoc($choices)),
+              '#options'  => $this->clozeHelper->shuffleChoices(drupal_map_assoc($choices)),
               '#required' => FALSE,
           );
         }
@@ -131,9 +145,8 @@ class ClozeResponse extends ResponseHandler {
         }
       }
     }
-    $question_form['close_wrapper'] = array(
-        '#markup' => '</div>',
-    );
+
+    $question_form['close_wrapper']['#markup'] = '</div>';
     $form['question']['#markup'] = drupal_render($question_form);
     return $form;
   }
@@ -147,7 +160,7 @@ class ClozeResponse extends ResponseHandler {
     $form = array();
     $form['#theme'] = 'cloze_response_form';
     $form['#attached']['css'] = array(
-        drupal_get_path('module', 'cloze') . '/theme/cloze.css'
+        drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css'
     );
     if (($this->question) && !empty($this->question->answers)) {
       $answer = (object) current($this->question->answers);
@@ -155,14 +168,27 @@ class ClozeResponse extends ResponseHandler {
     else {
       return $form;
     }
-    $this->question = node_load($this->question->nid);
+    $this->question = node_load($this->question->qid);
     $question = $this->question->body[LANGUAGE_NONE][0]['value'];
-    $correct_answer = _cloze_get_correct_answer($question);
-    $user_answer = _cloze_get_user_answer($question, $this->answer);
-    $form['answer'] = array(
-        '#markup' => theme('cloze_user_answer', array('answer' => $user_answer, 'correct' => $correct_answer)),
-    );
+    $correct_answer = $this->clozeHelper->getCorrectAnswer($question);
+    $user_answer = $this->clozeHelper->getUserAnswer($question, $this->answer);
+    $form['answer']['#markup'] = theme('cloze_user_answer', array('answer' => $user_answer, 'correct' => $correct_answer));
     return $form;
+  }
+
+  private function getCorrectAnswer($question) {
+    $chunks = $this->clozeHelper->getQuestionChunks($question);
+    $answer = $this->clozeHelper->getCorrectAnswerChunks($question);
+    $correct_answer = array();
+    foreach ($chunks as $key => $chunk) {
+      if (isset($answer[$key])) {
+        $correct_answer[] = '<span class="answer correct correct-answer">' . $answer[$key] . '</span>';
+      }
+      else {
+        $correct_answer[] = $chunk;
+      }
+    }
+    return str_replace("\n", "<br/>", implode(' ', $correct_answer));
   }
 
   /**
@@ -171,9 +197,7 @@ class ClozeResponse extends ResponseHandler {
    * @see ResponseHandler#getReportFormScore($showpoints, $showfeedback, $allow_scoring)
    */
   public function getReportFormScore($showfeedback = TRUE, $showpoints = TRUE, $allow_scoring = FALSE) {
-    return array(
-        '#markup' => $this->getScore(),
-    );
+    return array('#markup' => $this->getScore());
   }
 
 }

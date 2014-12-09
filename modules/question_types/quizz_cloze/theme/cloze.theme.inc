@@ -25,7 +25,7 @@ function theme_cloze_response_form(&$variables) {
 function theme_cloze_answering_form(&$variables) {
   $form = &$variables['form'];
   unset($form['question']);
-  drupal_add_css(drupal_get_path('module', 'cloze') . '/theme/cloze.css');
+  drupal_add_css(drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css');
   return drupal_render_children($form);
 }
 

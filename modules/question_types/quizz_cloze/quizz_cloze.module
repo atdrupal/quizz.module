@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * Implementation of hook_quiz_question_info().
+ */
+function quizz_cloze_quiz_question_info() {
+  return array(
+      'cloze' => array(
+          'name'              => t('Cloze question'),
+          'description'       => t('Quiz questions that allow a user to fill-in the missing words.'),
+          'question provider' => 'ClozeQuestion',
+          'response provider' => 'ClozeResponse',
+          'module'            => 'quiz_question', // All wrapper functions are in that module.
+      ),
+  );
+}
+
+/**
+ * Implementation of hook_form_alter()
+ */
+function quizz_cloze_form_alter(&$form, &$form_state, $form_id) {
+  // To prevent wysiwyg editor messing with question syntax.
+  if ($form_id === 'cloze_node_form') {
+    $form['#after_build'][] = function($form) {
+      $form['body'][LANGUAGE_NONE]['0']['format']['#access'] = FALSE;
+      return $form;
+    };
+  }
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function quizz_cloze_theme() {
+  $path = drupal_get_path('module', 'quizz_cloze') . '/theme';
+  return array(
+      'cloze_response_form'  => array(
+          'render element' => 'form',
+          'path'           => $path,
+          'file'           => 'cloze.theme.inc',
+      ),
+      'cloze_user_answer'    => array(
+          'arguments' => array('answer' => NULL, 'correct' => NULL),
+          'path'      => $path,
+          'file'      => 'cloze.theme.inc',
+      ),
+      'cloze_answering_form' => array(
+          'render element' => 'form',
+          'path'           => $path,
+          'file'           => 'cloze.theme.inc',
+      ),
+  );
+}

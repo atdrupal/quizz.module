@@ -1,12 +1,10 @@
-
-Cloze README
-
 CONTENTS OF THIS FILE
 ----------------------
-  * Introduction
-  * Installation
-  * Usage
-  * Credit
+
+* Introduction
+* Installation
+* Usage
+* Credit
 
 INTRODUCTION
 ------------
