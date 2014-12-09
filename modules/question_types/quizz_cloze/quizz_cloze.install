@@ -1,17 +1,10 @@
 <?php
 
 /**
- * The installer file for short_answer.
- * @file
- */
-
-/**
  * Implementation of hook_install().
  */
 function quizz_cloze_install() {
-  quiz_question_add_body_field('cloze');
-  variable_set('node_options_cloze', array('status'));
-  cache_clear_all('autoload:', 'cache');
+  // variable_set('node_options_cloze', array('status'));
 }
 
 /**

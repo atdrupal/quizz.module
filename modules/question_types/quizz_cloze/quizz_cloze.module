@@ -8,8 +8,8 @@ function quizz_cloze_quiz_question_info() {
       'cloze' => array(
           'name'              => t('Cloze question'),
           'description'       => t('Quiz questions that allow a user to fill-in the missing words.'),
-          'question provider' => 'ClozeQuestion',
-          'response provider' => 'ClozeResponse',
+          'question provider' => 'Drupal\quizz_cloze\ClozeQuestionHandler',
+          'response provider' => 'Drupal\quizz_cloze\ClozeResponseHelper',
           'module'            => 'quiz_question', // All wrapper functions are in that module.
       ),
   );

@@ -2,6 +2,7 @@
 
 namespace Drupal\quizz_cloze;
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 
 /**
@@ -10,14 +11,14 @@ use Drupal\quiz_question\QuestionHandler;
  * This could have extended long answer, except that that would have entailed
  * adding long answer as a dependency.
  */
-class ClozeQuestion extends QuestionHandler {
+class ClozeQuestionHandler extends QuestionHandler {
 
-  /** @var \Drupal\quizz_cloze\Helper */
+  /** @var Helper */
   private $clozeHelper;
 
-  public function __construct(\Drupal\quiz_question\Entity\Question $question) {
+  public function __construct(Question $question) {
     parent::__construct($question);
-    $this->clozeHelper = new \Drupal\quizz_cloze\Helper();
+    $this->clozeHelper = new Helper();
   }
 
   public function saveEntityProperties($is_new = FALSE) {

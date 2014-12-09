@@ -8,7 +8,7 @@ use Drupal\quiz_question\ResponseHandler;
 /**
  * Extension of QuizQuestionResponse
  */
-class ClozeResponse extends ResponseHandler {
+class ClozeResponseHelper extends ResponseHandler {
 
   protected $answer_id = 0;
 

@@ -1,0 +1,27 @@
+<?php
+
+class QuizzClozeTestCase extends QuizQuestionTestCase {
+
+  protected $questionHandler = 'cloze';
+  protected $extraModules = array('quizz_close');
+
+  public static function getInfo() {
+    return array(
+        'name'        => 'Cloze',
+        'description' => 'Test cases for cloze question handler.',
+        'group'       => 'Quiz question',
+    );
+  }
+
+  public function testCreateQuestion() {
+    $question = $this->drupalCreateQuestion(array(
+        'type'  => $this->questionHandler,
+        'title' => 'Cloze question title',
+        'body'  => 'Cloze question body',
+    ));
+
+    $this->assertTrue($question instanceof \Drupal\quiz_question\Entity\Question);
+    $this->assertEqual('cloze', $question->getQuestionType()->handler);
+  }
+
+}
