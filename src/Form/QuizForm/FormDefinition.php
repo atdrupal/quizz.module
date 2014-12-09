@@ -530,6 +530,9 @@ class FormDefinition extends FormHelper {
         '#description'   => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
 
+    // @see QuizController::cloneRelationship()
+    $form['clone_relationships'] = array('#type' => 'hidden', '#value' => TRUE);
+
     if ($this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
       $form['revision_information']['revision']['#type'] = 'value';
       $form['revision_information']['revision']['#value'] = 1;

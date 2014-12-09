@@ -255,6 +255,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->assertEqual(1, count($quiz->getQuestionIO()->getQuestionList()));
 
     $quiz->is_new_revision = TRUE;
+    $quiz->clone_relationships = TRUE;
     $quiz->save();
     $quiz = quiz_load($quiz->qid, NULL, TRUE);
     $this->assertEqual(1, count($quiz->getQuestionIO()->getQuestionList()));
