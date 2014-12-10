@@ -76,14 +76,12 @@ class ScaleResponse extends ResponseHandler {
   }
 
   /**
-   * Implmenets QuizQuestionResponse::getReportFormResponse().
+   * Implmenets QuizQuestionResponse::getFeedbackValues().
    */
   public function getFeedbackValues() {
-    $data = array();
-    $data[] = array(
-        'choice' => $this->answer,
+    return array(
+        array('choice' => $this->answer)
     );
-    return $data;
   }
 
 }

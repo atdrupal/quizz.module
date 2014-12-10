@@ -199,8 +199,6 @@ class PoolResponseHandler extends ResponseHandler {
 
   /**
    * Implementation of getFeedbackValues.
-   *
-   * @see getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
    */
   public function getFeedbackValues() {
     if (!$question = $this->getQuestion()) {
@@ -209,7 +207,7 @@ class PoolResponseHandler extends ResponseHandler {
 
     return quiz_answer_controller()
         ->getHandler($this->result_id, $question)
-        ->getReportFormResponse()
+        ->getFeedbackValues()
     ;
   }
 
