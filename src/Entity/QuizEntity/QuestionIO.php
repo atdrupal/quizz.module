@@ -204,19 +204,7 @@ class QuestionIO {
   }
 
   /**
-   * Sets the questions that are assigned to a quiz.
-   *
    * @param Relationship[] $relationships
-   *   An array of relationship.
-   * @param bool $new_revision
-   *   If TRUE, a new revision will be generated. Note that saving
-   *   quiz questions unmodified will still generate a new revision of the quiz if
-   *   this is set to TRUE. Why? For a few reasons:
-   *   - All of the questions are updated to their latest VID. That is supposed to
-   *     be a feature.
-   *   - All weights are updated.
-   *   - All status flags are updated.
-   *
    * @return boolean TRUE if update was successful, FALSE otherwise.
    */
   public function setRelationships(array $relationships) {
@@ -230,7 +218,6 @@ class QuestionIO {
     if (!empty($relationships)) {
       $this->doSetRelationships($relationships);
       $this->quiz->getController()->getMaxScoreWriter()->update(array($this->quiz->vid));
-      return TRUE;
     }
 
     return TRUE;
@@ -241,16 +228,19 @@ class QuestionIO {
    */
   private function doSetRelationships($relationships) {
     foreach ($relationships as $relationship) {
-      if (isset($relationship->state) && ($relationship->state == QUIZ_QUESTION_NEVER)) {
-        continue;
+      if (isset($relationship->question_status)) {
+        if (QUIZ_QUESTION_NEVER == $relationship->question_status) {
+          continue;
+        }
       }
 
       // Update to latest OR use the version given.
-      $question_qid = isset($relationship->question_qid) ? $relationship->question_qid : $relationship->qid;
-      $question_vid = isset($relationship->question_vid) ? $relationship->question_vid : $relationship->vid;
+      $question_qid = $relationship->question_qid;
+      $question_vid = $relationship->question_vid;
+
       if (!empty($relationship->refresh)) {
         $sql = 'SELECT vid FROM {quiz_question} WHERE qid = :qid';
-        $question_vid = db_query($sql, array(':qid' => $relationship->qid))->fetchField();
+        $question_vid = db_query($sql, array(':qid' => $relationship->question_qid))->fetchField();
       }
 
       $values = array(
@@ -258,7 +248,7 @@ class QuestionIO {
           'quiz_vid'              => $this->quiz->vid,
           'question_qid'          => $question_qid,
           'question_vid'          => $question_vid,
-          'question_status'       => isset($relationship->state) ? $relationship->state : NULL,
+          'question_status'       => isset($relationship->question_status) ? $relationship->question_status : NULL,
           'weight'                => $relationship->weight,
           'max_score'             => (int) $relationship->max_score,
           'auto_update_max_score' => (int) $relationship->auto_update_max_score,
