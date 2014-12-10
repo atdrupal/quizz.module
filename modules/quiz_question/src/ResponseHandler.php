@@ -158,6 +158,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
         'answer_feedback' => t('Feedback'),
         'solution'        => t('Correct answer'),
     );
+
     drupal_alter('quiz_feedback_labels', $labels);
 
     $rows = array();
