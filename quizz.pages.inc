@@ -114,11 +114,16 @@ function quiz_entity_form_submit($form, &$form_state) {
 }
 
 function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
-  ctools_include('dropdown.theme');
+  // Vertical tabs does not play well without form.
+  $form['hack_prefix'] = array('#weight' => -1000, '#markup' => '</div></form>');
+  $form['hack_suffix'] = array('#weight' => 1000, '#markup' => '<form><div>');
 
   if ($quiz->randomization >= 3) {
-    return drupal_get_form('quiz_categorized_form', $quiz);
+    $form['quiz_categorized_form'] = drupal_get_form('quiz_categorized_form', $quiz);
+    return $form;
   }
+
+  ctools_include('dropdown.theme');
 
   $links = array(
       'title' => t('Create new question'),
@@ -154,10 +159,6 @@ function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
           '#value' => views_get_view('quiz_question_bank')->preview(),
       ),
   );
-
-  // Vertical tabs does not play well without form.
-  $form['hack_prefix'] = array('#weight' => -1000, '#markup' => '</div></form>');
-  $form['hack_suffix'] = array('#weight' => 1000, '#markup' => '<form><div>');
 
   return $form;
 }
