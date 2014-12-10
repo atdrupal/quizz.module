@@ -5,7 +5,9 @@ namespace Drupal\quizz;
 use Drupal\quizz\Helper\HookImplementation;
 use Drupal\quizz\Helper\MailHelper;
 use Drupal\quizz\Helper\NodeHelper;
+use Drupal\quizz\Helper\QuestionCategoryFieldInfo;
 use Drupal\quizz\Helper\QuizHelper;
+use Drupal\quizz\Quiz;
 
 /**
  * Wrapper for helper classes. We just use classes to organise functions, make
