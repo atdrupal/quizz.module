@@ -127,6 +127,39 @@ class QuestionIO {
 
     // Shuffle questions if required.
     if ($this->quiz->randomization > 0) {
+      return $this->doShuffle($relationships);
+    }
+
+    return $relationships;
+  }
+
+  private function doShuffle($relationships) {
+    $items = array();
+    $mark = NULL;
+    foreach ($relationships as $i => $relationship) {
+      if ($mark) {
+        if ($relationship['type'] === 'quiz_page') {
+          // Found another page.
+          shuffle($items);
+          array_splice($relationships, $mark, $i - $mark - 1, $items);
+          $mark = 0;
+          $items = array();
+        }
+        else {
+          $items[] = $relationship;
+        }
+      }
+
+      if ($relationship['type'] === 'quiz_page') {
+        $mark = $i;
+      }
+    }
+
+    if ($mark) {
+      shuffle($items);
+      array_splice($relationships, $mark, $i - $mark, $items);
+    }
+    elseif (is_null($mark)) {
       shuffle($relationships);
     }
 
