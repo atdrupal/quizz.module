@@ -128,7 +128,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function getReportForm($form = array()) {
+  public function getReportForm(array $form = array()) {
     global $user;
 
     // Add general data, and data from the question type implementation
@@ -158,6 +158,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
         'answer_feedback' => t('Feedback'),
         'solution'        => t('Correct answer'),
     );
+
     drupal_alter('quiz_feedback_labels', $labels);
 
     $rows = array();

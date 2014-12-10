@@ -15,6 +15,10 @@ class Helper {
     return $new_array;
   }
 
+  /**
+   * @param string $question
+   * @return string
+   */
   public function getQuestionChunks($question) {
     $chunks = array();
     while (strlen($question) > 0) {
@@ -41,6 +45,9 @@ class Helper {
     return $chunks;
   }
 
+  /**
+   * @param string $question
+   */
   public function getCorrectAnswerChunks($question) {
     $correct_answer = array();
     $chunks = $this->getQuestionChunks($question);

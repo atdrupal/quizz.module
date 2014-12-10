@@ -15,7 +15,7 @@ class QuizzClozeTestCase extends QuizTestCase {
     );
   }
 
-  public function testCreateQuestion() {
+  private function createQuestion() {
     $question = $this->drupalCreateQuestion(array(
         'type'  => $this->questionHandler,
         'title' => 'Cloze question title',
@@ -24,6 +24,14 @@ class QuizzClozeTestCase extends QuizTestCase {
 
     $this->assertTrue($question instanceof Question);
     $this->assertEqual('cloze', $question->getQuestionType()->handler);
+
+    return $question;
+  }
+
+  public function testTaking() {
+    $quiz = $this->linkQuestionToQuiz($question = $this->createQuestion());
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/{$quiz->qid}/take");
   }
 
 }

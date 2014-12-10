@@ -103,6 +103,9 @@ class ClozeQuestionHandler extends QuestionHandler {
     return $content;
   }
 
+  /**
+   * @param string $question
+   */
   private function includeAnswerJs($question) {
     $answers = array();
     $chunks = $this->clozeHelper->getCorrectAnswerChunks($question);
@@ -120,19 +123,16 @@ class ClozeQuestionHandler extends QuestionHandler {
    *
    * @see QuizQuestion#getAnsweringForm($form_state, $rid)
    */
-  public function getAnsweringForm(array $form_state = NULL, $rid) {
-    $form = parent::getAnsweringForm($form_state, $rid);
+  public function getAnsweringForm(array $form_state = NULL, $result_id) {
+    $form = parent::getAnsweringForm($form_state, $result_id);
     $form['#theme'] = 'cloze_answering_form';
-    $module_path = drupal_get_path('module', 'quizz_cloze');
-    if (isset($this->question->learning_mode) && $this->question->learning_mode) {
-      $form['#attached']['js'][] = $module_path . '/theme/cloze.js';
-      $question = $form['question']['#markup'];
+    if (!empty($this->question->learning_mode)) {
+      $form['#attached']['js'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.js';
+      $question = $this->question->quiz_question_body[LANGUAGE_NONE][0]['safe_value'];
       $this->includeAnswerJs($question);
     }
-    $form['#attached']['css'][] = $module_path . '/theme/cloze.css';
-    $form['open_wrapper'] = array(
-        '#markup' => '<div class="cloze-question">',
-    );
+    $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
+    $form['open_wrapper']['#markup'] = '<div class="cloze-question">';
     foreach ($this->clozeHelper->getQuestionChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']) as $position => $chunk) {
       if (strpos($chunk, '[') === FALSE) {
         // this "tries[foobar]" hack is needed becaues question handler engine
@@ -168,10 +168,12 @@ class ClozeQuestionHandler extends QuestionHandler {
         }
       }
     }
+
     $form['close_wrapper']['#markup'] = '</div>';
-    if (isset($rid)) {
-      $cloze_esponse = new ClozeResponse($rid, $this->question);
-      $response = $cloze_esponse->getResponse();
+
+    if (isset($result_id)) {
+      $handler = quiz_answer_controller()->getHandler($result_id, $this->question);
+      $response = $handler->getResponse();
       if (is_array($response)) {
         foreach ($response as $key => $value) {
           $form["tries[$key]"]['#default_value'] = $value;
