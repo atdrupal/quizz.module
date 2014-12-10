@@ -92,10 +92,10 @@ class ResultController extends EntityAPIController {
 
       if ($extra = $select->execute()->fetchObject()) {
         $result->layout[$answer->number] += array(
-          'qr_id'          => $extra->qr_id,
-          'qr_pid'         => $extra->qr_pid,
-      );
-    }
+            'qr_id'  => $extra->qr_id,
+            'qr_pid' => $extra->qr_pid,
+        );
+      }
     }
     ksort($result->layout, SORT_NUMERIC);
   }
