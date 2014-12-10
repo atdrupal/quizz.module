@@ -131,17 +131,19 @@ class Result extends Entity {
    * settings apply. So we check to make sure that we are in question taking
    * and the feedback is viewed within 5 seconds of completing the question/quiz.
    */
-  public function canReview($option) {
+  public function canReview($op) {
     // Check what context the result is in.
     if ($this->time_end && arg(2) !== 'take') {
       // Quiz is over. Pull from the "at quiz end" settings.
-      return !empty($this->getQuiz()->review_options['end'][$option]);
+      return !empty($this->getQuiz()->review_options['end'][$op]);
     }
 
     // Quiz ongoing. Pull from the "after question" settings.
-    if (!$this->time_end || $this->time_end >= REQUEST_TIME - 5) {
-      return !empty($this->getQuiz()->review_options['question'][$option]);
+    if (TRUE || !$this->time_end || $this->time_end >= REQUEST_TIME - 5) {
+      return !empty($this->getQuiz()->review_options['question'][$op]);
     }
+
+    return FALSE;
   }
 
   /**
