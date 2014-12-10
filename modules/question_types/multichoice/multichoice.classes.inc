@@ -713,9 +713,9 @@ class MultichoiceResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
+   * Implementation of getFeedbackValues.
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     $this->orderAlternatives($this->question->alternatives);
     $simple_scoring = $this->question->choice_boolean;
 

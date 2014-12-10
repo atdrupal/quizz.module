@@ -519,9 +519,9 @@ class MatchingResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
+   * Implementation of getFeedbackValues.
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     $data = array();
     $answers = $this->question->answers[0]['answer'];
     $solution = $this->question_handler->getSubquestions();

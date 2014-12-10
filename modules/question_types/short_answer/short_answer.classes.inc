@@ -424,9 +424,9 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
+   * Implementation of getFeedbackValues.
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     $data = array();
 
     $data[] = array(

@@ -270,9 +270,9 @@ class TrueFalseResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
+   * Implementation of getFeedbackValues.
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     $answer = $this->answer;
     $correct_answer = !empty($this->question->correct_answer);
 

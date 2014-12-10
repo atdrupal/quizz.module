@@ -161,7 +161,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     drupal_alter('quiz_feedback_labels', $labels);
 
     $rows = array();
-    foreach ($this->getReportFormResponse() as $idx => $row) {
+    foreach ($this->getFeedbackValues() as $idx => $row) {
       foreach (array_keys($labels) as $reviewType) {
         if (('choice' === $reviewType) || (isset($row[$reviewType]) && $this->canReview($reviewType))) {
           $rows[$idx][$reviewType] = $row[$reviewType];
@@ -223,7 +223,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    * @return array[]
    *  Array of choices
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     return array(
         array(
             'choice'            => 'True',

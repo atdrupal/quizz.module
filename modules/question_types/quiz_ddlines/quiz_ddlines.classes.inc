@@ -405,7 +405,7 @@ class DDLinesResponse extends ResponseHandler {
     return $this->user_answers;
   }
 
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     // Have to do node_load, since quiz does not do this. Need the field_image…
     $img_field = field_get_items('quiz_question', quiz_question_entity_load($this->question->qid), 'field_image');
     $img_rendered = theme('image', array('path' => image_style_url('large', $img_field[0]['uri'])));

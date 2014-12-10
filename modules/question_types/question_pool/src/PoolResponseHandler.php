@@ -198,11 +198,11 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
+   * Implementation of getFeedbackValues.
    *
    * @see getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     if (!$question = $this->getQuestion()) {
       return array('#markup' => t('No question passed.'));
     }
