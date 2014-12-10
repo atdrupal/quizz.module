@@ -148,12 +148,10 @@ class QuizEntity extends Entity {
    *  Array with all terms that belongs to the quiz as objects
    */
   public function getTermsByVid() {
-    return db_query('SELECT td.name, qt.*
-        FROM {quiz_terms} qt
-        JOIN {taxonomy_term_data} td ON qt.tid = td.tid
-        WHERE qt.vid = :vid ORDER BY qt.weight', array(
-          ':vid' => $this->vid
-      ))->fetchAll();
+    return db_query(
+        'SELECT td.name, qt.*
+          FROM {quiz_terms} qt INNER JOIN {taxonomy_term_data} td ON qt.tid = td.tid
+          WHERE qt.vid = :vid ORDER BY qt.weight', array(':vid' => $this->vid))->fetchAll();
   }
 
   /**

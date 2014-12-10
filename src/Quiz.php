@@ -33,6 +33,7 @@ class Quiz {
   private $nodeHelper;
   private $quizHelper;
   private $mailHelper;
+  private $questionCategoryField;
 
   /**
    * @return HookImplementation
@@ -149,6 +150,16 @@ class Quiz {
       }
     }
     return $vocabularies;
+  }
+
+  /**
+   * @return QuestionCategoryFieldInfo
+   */
+  public function getQuestionCategoryField() {
+    if (NULL == $this->questionCategoryField) {
+      $this->questionCategoryField = new QuestionCategoryFieldInfo();
+    }
+    return $this->questionCategoryField;
   }
 
 }

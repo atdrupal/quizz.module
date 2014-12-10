@@ -81,7 +81,7 @@ class Writer {
         ))->fetchField();
     }
 
-    if ($quiz->randomization == 2) {
+    if ($quiz->randomization == QUIZ_QUESTION_NEVER) {
       return db_query("
           SELECT (max_score_for_random/{$ssql}) as scale
           FROM {quiz_entity_revision}
@@ -92,7 +92,7 @@ class Writer {
         ))->fetchField();
     }
 
-    if ($quiz->randomization == 3) {
+    if ($quiz->randomization == QUIZ_QUESTION_CATEGORIZED_RANDOM) {
       if (isset($options['question_data']['tid'])) {
         $response->tid = $options['question_data']['tid'];
       }
