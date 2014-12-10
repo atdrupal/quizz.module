@@ -130,7 +130,7 @@ class QuizController extends EntityAPIController {
         ->condition('ro.quiz_vid', $vids)
         ->execute();
       foreach ($result_options->fetchAll() as $result_option) {
-        $entities[$result_option->quiz_qid]->resultoptions[] = (array) $result_option;
+        $entities[$result_option->quiz_qid]->result_options[] = (array) $result_option;
       }
     }
 
@@ -200,7 +200,7 @@ class QuizController extends EntityAPIController {
     $query = db_insert('quiz_result_options')
       ->fields(array('quiz_qid', 'quiz_vid', 'option_name', 'option_summary', 'option_summary_format', 'option_start', 'option_end'));
 
-    foreach ($quiz->resultoptions as $option) {
+    foreach ($quiz->result_options as $option) {
       if (empty($option['option_name'])) {
         continue;
       }

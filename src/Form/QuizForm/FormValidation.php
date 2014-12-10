@@ -42,9 +42,9 @@ class FormValidation {
       }
     }
 
-    if (isset($this->quiz->resultoptions) && count($this->quiz->resultoptions) > 0) {
+    if (isset($this->quiz->result_options) && count($this->quiz->result_options) > 0) {
       $taken_values = array();
-      foreach ($this->quiz->resultoptions as $option) {
+      foreach ($this->quiz->result_options as $option) {
         $this->validateResultOption($option, $taken_values);
       }
     }

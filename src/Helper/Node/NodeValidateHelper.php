@@ -34,13 +34,13 @@ class NodeValidateHelper {
   }
 
   private function validateResultOptions($node) {
-    if (!isset($node->resultoptions) || !count($node->resultoptions)) {
+    if (!isset($node->result_options) || !count($node->result_options)) {
       return;
     }
 
     $taken_values = array();
     $num_options = 0;
-    foreach ($node->resultoptions as $option) {
+    foreach ($node->result_options as $option) {
       $this->validateResultOption($node, $option, $taken_values, $num_options);
     }
   }

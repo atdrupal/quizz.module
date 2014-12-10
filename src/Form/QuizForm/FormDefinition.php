@@ -418,7 +418,7 @@ class FormDefinition extends FormHelper {
   }
 
   private function defineResultFeedbackFields(&$form) {
-    $options = !empty($this->quiz->resultoptions) ? $this->quiz->resultoptions : array();
+    $options = !empty($this->quiz->result_options) ? $this->quiz->result_options : array();
     $num_options = max(count($options), $this->quiz->getQuizType()->getConfig('quiz_max_result_options', 5));
 
     if ($num_options > 0) {
