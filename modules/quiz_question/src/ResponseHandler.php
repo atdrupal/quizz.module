@@ -145,6 +145,10 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       }
     }
 
+    if (quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
+      $form['score'] = $this->getReportFormScore();
+    }
+
     foreach ($this->getFeedback() as $type => $render) {
       $form[$type] = $render;
     }
