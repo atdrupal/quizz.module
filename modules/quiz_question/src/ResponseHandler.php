@@ -200,10 +200,6 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       }
     }
 
-    if ($theme = $this->getReportFormTheme()) {
-      $form['#theme'] = $theme;
-    }
-
     return $form;
   }
 
@@ -259,16 +255,6 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    *  Validate function as a string, or FALSE if no validate function
    */
   public function getReportFormValidate(&$element, &$form_state) {
-    return FALSE;
-  }
-
-  /**
-   * Get the theme key for the reportForm
-   *
-   * @return
-   *  Theme key as a string, or FALSE if no submit function
-   */
-  public function getReportFormTheme() {
     return FALSE;
   }
 
