@@ -214,7 +214,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   protected function getReportFormQuestion() {
     $question = clone ($this->question);
     $question->no_answer_form = TRUE;
-    $output = entity_view('quiz_question', array($question), 'feedback');
+    $output = entity_view('quiz_question', array($question), 'feedback', NULL, TRUE);
     return $output['quiz_question'][$this->question->qid];
   }
 
