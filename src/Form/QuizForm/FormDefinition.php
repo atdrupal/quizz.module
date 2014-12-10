@@ -359,25 +359,25 @@ class FormDefinition extends FormHelper {
 
   private function definePassFailOptionsFields(&$form) {
     // Quiz summary options.
-    $form['summaryoptions'] = array(
+    $form['summary_options'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Pass/fail options'),
         '#collapsible' => TRUE,
         '#collapsed'   => TRUE,
-        '#attributes'  => array('id' => 'summaryoptions-fieldset'),
+        '#attributes'  => array('id' => 'summary_options-fieldset'),
         '#group'       => 'vtabs',
     );
 
     // If pass/fail option is checked, present the form elements.
     if ($this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1)) {
-      $form['summaryoptions']['pass_rate'] = array(
+      $form['summary_options']['pass_rate'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Passing rate for @quiz (%)', array('@quiz' => QUIZ_NAME)),
           '#default_value' => $this->quiz->pass_rate,
           '#description'   => t('Passing rate for this @quiz as a percentage score.', array('@quiz' => QUIZ_NAME)),
           '#required'      => FALSE,
       );
-      $form['summaryoptions']['summary_pass'] = array(
+      $form['summary_options']['summary_pass'] = array(
           '#type'          => 'text_format',
           '#base_type'     => 'textarea',
           '#title'         => t('Summary text if passed'),
@@ -389,7 +389,7 @@ class FormDefinition extends FormHelper {
     }
     // If the pass/fail option is unchecked, use the default and hide it.
     else {
-      $form['summaryoptions']['pass_rate'] = array(
+      $form['summary_options']['pass_rate'] = array(
           '#type'     => 'hidden',
           '#value'    => $this->quiz->pass_rate,
           '#required' => FALSE,
@@ -397,7 +397,7 @@ class FormDefinition extends FormHelper {
     }
     // We use a helper to enable the wysiwyg module to add an editor to the
     // textarea.
-    $form['summaryoptions']['helper']['summary_default'] = array(
+    $form['summary_options']['helper']['summary_default'] = array(
         '#type'          => 'text_format',
         '#base_type'     => 'textarea',
         '#title'         => t('Default summary text'),
@@ -422,25 +422,25 @@ class FormDefinition extends FormHelper {
     $num_options = max(count($options), $this->quiz->getQuizType()->getConfig('quiz_max_result_options', 5));
 
     if ($num_options > 0) {
-      $form['resultoptions'] = array(
+      $form['result_options'] = array(
           '#type'        => 'fieldset',
           '#title'       => t('Result feedback'),
           '#collapsible' => TRUE,
           '#collapsed'   => TRUE,
           '#tree'        => TRUE,
-          '#attributes'  => array('id' => 'resultoptions-fieldset'),
+          '#attributes'  => array('id' => 'result_options-fieldset'),
           '#group'       => 'vtabs',
       );
 
       for ($i = 0; $i < $num_options; $i++) {
         $option = (count($options) > 0) ? array_shift($options) : NULL; // grab each option in the array
-        $form['resultoptions'][$i] = array(
+        $form['result_options'][$i] = array(
             '#type'        => 'fieldset',
             '#title'       => t('Result Option ') . ($i + 1),
             '#collapsible' => TRUE,
             '#collapsed'   => FALSE,
         );
-        $form['resultoptions'][$i]['option_name'] = array(
+        $form['result_options'][$i]['option_name'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Range title'),
             '#default_value' => isset($option['option_name']) ? $option['option_name'] : '',
@@ -448,21 +448,21 @@ class FormDefinition extends FormHelper {
             '#size'          => 40,
             '#description'   => t('e.g., "A" or "Passed"'),
         );
-        $form['resultoptions'][$i]['option_start'] = array(
+        $form['result_options'][$i]['option_start'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Percentage low'),
             '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZ_NAME)),
             '#default_value' => isset($option['option_start']) ? $option['option_start'] : '',
             '#size'          => 5,
         );
-        $form['resultoptions'][$i]['option_end'] = array(
+        $form['result_options'][$i]['option_end'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Percentage high'),
             '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZ_NAME)),
             '#default_value' => isset($option['option_end']) ? $option['option_end'] : '',
             '#size'          => 5,
         );
-        $form['resultoptions'][$i]['option_summary'] = array(
+        $form['result_options'][$i]['option_summary'] = array(
             '#type'          => 'text_format',
             '#base_type'     => 'textarea',
             '#title'         => t('Feedback'),
@@ -471,7 +471,7 @@ class FormDefinition extends FormHelper {
             '#format'        => isset($option['option_summary_format']) ? $option['option_summary_format'] : NULL,
         );
         if (isset($option['option_id'])) {
-          $form['resultoptions'][$i]['option_id'] = array(
+          $form['result_options'][$i]['option_id'] = array(
               '#type'  => 'hidden',
               '#value' => isset($option['option_id']) ? $option['option_id'] : '',
           );

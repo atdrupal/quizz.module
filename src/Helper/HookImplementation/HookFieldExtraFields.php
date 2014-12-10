@@ -84,12 +84,12 @@ class HookFieldExtraFields {
             'description' => t('Fieldset for customizing when a @quiz is available', array('@quiz' => QUIZ_NAME)),
             'weight'      => 6,
         ),
-        'summaryoptions'    => array(
+        'summary_options'   => array(
             'label'       => t('Summary options'),
             'description' => t('Fieldset for customizing summaries in the @quiz reports', array('@quiz' => QUIZ_NAME)),
             'weight'      => 7,
         ),
-        'resultoptions'     => array(
+        'result_options'    => array(
             'label'       => t('Result options'),
             'description' => t('Fieldset for customizing result comments in @quiz reports', array('@quiz' => QUIZ_NAME)),
             'weight'      => 8,

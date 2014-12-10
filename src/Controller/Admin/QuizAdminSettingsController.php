@@ -173,7 +173,7 @@ class QuizAdminSettingsController {
     }
 
     if (!quiz_valid_integer($form_state['values']['quiz_max_result_options'], 0, 100)) {
-      form_set_error('quiz_max_result_options', t('The number of resultoptions must be an integer between 0 and 100.'));
+      form_set_error('quiz_max_result_options', t('The number of result options must be an integer between 0 and 100.'));
     }
 
     if (!$this->isPlain($form_state['values']['quiz_name'])) {
