@@ -194,7 +194,7 @@ class MultichoiceTestCase extends QuizQuestionTestCase {
         'alternatives[2][weight]' => 1,
         'revision'                => TRUE,
         'log'                     => 'Save new question revision'), t('Save question'));
-    $question = quiz_question_entity_load($question->qid, NULL, TRUE);
+
     $this->drupalGet("quiz/$quiz->qid/questions");
     $this->drupalPost(NULL, array("revision[{$question->qid}-{$question->vid}]" => TRUE), t('Submit'));
 

@@ -228,9 +228,6 @@ class QuizEntityTestCase extends QuizTestCase {
         'revision'                          => 1,
         'log'                               => 'Revision FALSE'), t('Save question'));
 
-    // Reload to have latest revision
-    $question = quiz_question_entity_load($question->qid, NULL, TRUE);
-
     // Finish on same revision.
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
