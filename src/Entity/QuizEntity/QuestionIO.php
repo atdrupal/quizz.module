@@ -39,7 +39,7 @@ class QuestionIO {
    * Builds the questionlist for quizzes with categorized random questions
    */
   public function buildCategoziedQuestionList() {
-    if (!$question_types = array_keys(quiz_question_get_handler_info())) {
+    if (!$question_types = array_keys(quiz_question_get_types())) {
       return array();
     }
 
@@ -47,22 +47,27 @@ class QuestionIO {
     $question_ids = array();
     $total_count = 0;
     foreach ($this->quiz->getTermsByVid() as $term) {
-      $query = db_select('quiz_question', 'question');
+      $select = db_select('quiz_question', 'question');
       if (!empty($question_ids)) {
-        $query->condition('question.qid', $question_ids, 'NOT IN');
+        $select->condition('question.qid', $question_ids, 'NOT IN');
       }
-      $query->join('taxonomy_index', 'tn', 'question.qid = tn.qid');
-      $result = $query
-        ->fields('question', array('qid', 'vid'))
-        ->fields('tn', array('tid'))
+
+      $table = quiz()->getQuestionCategoryField()->getTableName();
+      $column = quiz()->getQuestionCategoryField()->getColumnName();
+
+      $select->join($table, 'tn', 'question.qid = tn.entity_id AND entity_type = :quiz_question', array(':quiz_question' => 'quiz_question'));
+      $find = $select
+        ->fields('question', array('qid', 'vid', 'type'))
+        ->fields('tn', array($column))
         ->condition('question.status', 1)
         ->condition('question.type', $question_types)
-        ->condition('question.tid', $term->tid)
+        ->condition('tn.' . $column, $term->tid)
         ->range(0, $term->number)
         ->orderRandom()
-        ->execute();
+        ->execute()
+      ;
       $count = 0;
-      while ($question = $result->fetchAssoc()) {
+      while ($question = $find->fetchAssoc()) {
         $count++;
         $question['tid'] = $term->tid;
         $question['number'] = $count + $total_count;
@@ -74,6 +79,7 @@ class QuestionIO {
         return array(); // Not enough questions
       }
     }
+
     return $questions;
   }
 
@@ -121,6 +127,39 @@ class QuestionIO {
 
     // Shuffle questions if required.
     if ($this->quiz->randomization > 0) {
+      return $this->doShuffle($relationships);
+    }
+
+    return $relationships;
+  }
+
+  private function doShuffle($relationships) {
+    $items = array();
+    $mark = NULL;
+    foreach ($relationships as $i => $relationship) {
+      if ($mark) {
+        if ($relationship['type'] === 'quiz_page') {
+          // Found another page.
+          shuffle($items);
+          array_splice($relationships, $mark, $i - $mark - 1, $items);
+          $mark = 0;
+          $items = array();
+        }
+        else {
+          $items[] = $relationship;
+        }
+      }
+
+      if ($relationship['type'] === 'quiz_page') {
+        $mark = $i;
+      }
+    }
+
+    if ($mark) {
+      shuffle($items);
+      array_splice($relationships, $mark, $i - $mark, $items);
+    }
+    elseif (is_null($mark)) {
       shuffle($relationships);
     }
 
@@ -198,19 +237,7 @@ class QuestionIO {
   }
 
   /**
-   * Sets the questions that are assigned to a quiz.
-   *
    * @param Relationship[] $relationships
-   *   An array of relationship.
-   * @param bool $new_revision
-   *   If TRUE, a new revision will be generated. Note that saving
-   *   quiz questions unmodified will still generate a new revision of the quiz if
-   *   this is set to TRUE. Why? For a few reasons:
-   *   - All of the questions are updated to their latest VID. That is supposed to
-   *     be a feature.
-   *   - All weights are updated.
-   *   - All status flags are updated.
-   *
    * @return boolean TRUE if update was successful, FALSE otherwise.
    */
   public function setRelationships(array $relationships) {
@@ -224,7 +251,6 @@ class QuestionIO {
     if (!empty($relationships)) {
       $this->doSetRelationships($relationships);
       $this->quiz->getController()->getMaxScoreWriter()->update(array($this->quiz->vid));
-      return TRUE;
     }
 
     return TRUE;
@@ -235,16 +261,19 @@ class QuestionIO {
    */
   private function doSetRelationships($relationships) {
     foreach ($relationships as $relationship) {
-      if (isset($relationship->state) && ($relationship->state == QUIZ_QUESTION_NEVER)) {
-        continue;
+      if (isset($relationship->question_status)) {
+        if (QUIZ_QUESTION_NEVER == $relationship->question_status) {
+          continue;
+        }
       }
 
       // Update to latest OR use the version given.
-      $question_qid = isset($relationship->question_qid) ? $relationship->question_qid : $relationship->qid;
-      $question_vid = isset($relationship->question_vid) ? $relationship->question_vid : $relationship->vid;
+      $question_qid = $relationship->question_qid;
+      $question_vid = $relationship->question_vid;
+
       if (!empty($relationship->refresh)) {
         $sql = 'SELECT vid FROM {quiz_question} WHERE qid = :qid';
-        $question_vid = db_query($sql, array(':qid' => $relationship->qid))->fetchField();
+        $question_vid = db_query($sql, array(':qid' => $relationship->question_qid))->fetchField();
       }
 
       $values = array(
@@ -252,7 +281,7 @@ class QuestionIO {
           'quiz_vid'              => $this->quiz->vid,
           'question_qid'          => $question_qid,
           'question_vid'          => $question_vid,
-          'question_status'       => isset($relationship->state) ? $relationship->state : NULL,
+          'question_status'       => isset($relationship->question_status) ? $relationship->question_status : NULL,
           'weight'                => $relationship->weight,
           'max_score'             => (int) $relationship->max_score,
           'auto_update_max_score' => (int) $relationship->auto_update_max_score,

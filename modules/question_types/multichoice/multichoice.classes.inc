@@ -467,9 +467,7 @@ class MultichoiceQuestion extends QuestionHandler {
       }
     }
 
-    $element['#attached']['js'] = array(
-        drupal_get_path('module', 'multichoice') . '/js/multichoice.js',
-    );
+    $element['#attached']['js'][] = drupal_get_path('module', 'multichoice') . '/js/multichoice.js';
 
     return $element;
   }
@@ -715,9 +713,9 @@ class MultichoiceResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
+   * Implementation of getFeedbackValues.
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     $this->orderAlternatives($this->question->alternatives);
     $simple_scoring = $this->question->choice_boolean;
 

@@ -128,7 +128,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function getReportForm($form = array()) {
+  public function getReportForm(array $form = array()) {
     global $user;
 
     // Add general data, and data from the question type implementation
@@ -158,10 +158,11 @@ abstract class ResponseHandler extends ResponseHandlerBase {
         'answer_feedback' => t('Feedback'),
         'solution'        => t('Correct answer'),
     );
+
     drupal_alter('quiz_feedback_labels', $labels);
 
     $rows = array();
-    foreach ($this->getReportFormResponse() as $idx => $row) {
+    foreach ($this->getFeedbackValues() as $idx => $row) {
       foreach (array_keys($labels) as $reviewType) {
         if (('choice' === $reviewType) || (isset($row[$reviewType]) && $this->canReview($reviewType))) {
           $rows[$idx][$reviewType] = $row[$reviewType];
@@ -200,10 +201,6 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       }
     }
 
-    if ($theme = $this->getReportFormTheme()) {
-      $form['#theme'] = $theme;
-    }
-
     return $form;
   }
 
@@ -214,7 +211,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   protected function getReportFormQuestion() {
     $question = clone ($this->question);
     $question->no_answer_form = TRUE;
-    $output = entity_view('quiz_question', array($question), 'feedback');
+    $output = entity_view('quiz_question', array($question), 'feedback', NULL, TRUE);
     return $output['quiz_question'][$this->question->qid];
   }
 
@@ -223,7 +220,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    * @return array[]
    *  Array of choices
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     return array(
         array(
             'choice'            => 'True',
@@ -259,16 +256,6 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    *  Validate function as a string, or FALSE if no validate function
    */
   public function getReportFormValidate(&$element, &$form_state) {
-    return FALSE;
-  }
-
-  /**
-   * Get the theme key for the reportForm
-   *
-   * @return
-   *  Theme key as a string, or FALSE if no submit function
-   */
-  public function getReportFormTheme() {
     return FALSE;
   }
 

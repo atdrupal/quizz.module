@@ -90,7 +90,7 @@ class QuizAnsweringForm {
     // Element for a single question
     $element = $question_provider->getAnsweringForm($form_state, $this->result->result_id);
 
-    $output = entity_view('quiz_question', array($question));
+    $output = entity_view('quiz_question', array($question), 'default', NULL, TRUE);
     unset($output['quiz_question'][$question->qid]['answers']);
 
     $form['questions'][$question->qid] = array(

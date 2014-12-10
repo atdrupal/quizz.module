@@ -1,6 +1,6 @@
 <?php
 
-class QuizPageTestCase extends QuizQuestionTestCase {
+class QuizPageTestCase extends QuizTestCase {
 
   protected $questionHandler = 'quiz_page';
 

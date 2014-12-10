@@ -106,20 +106,12 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     $this->saveEntityProperties($is_new);
 
     // Save what quizzes this question belongs to.
-    $quizzes_kept = $this->saveRelationships();
-    if ($quizzes_kept && $this->question->revision) {
+    $this->saveRelationships();
+    if ($this->question->revision) {
       if (user_access('manual quiz revisioning') && !variable_get('quiz_auto_revisioning', 1)) {
         unset($_GET['destination']);
         unset($_REQUEST['edit']['destination']);
-        drupal_goto('quiz-question/' . $this->question->qid . '/' . $this->question->vid . '/revision-actions');
-      }
-      // For users without the 'manual quiz revisioning' permission we submit the revision_actions form
-      // silently with its default values set.
-      else {
-        $form_state = array();
-        $form_state['values']['op'] = t('Submit');
-        require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'quiz_question') . '/quiz_question.pages.inc';
-        drupal_form_submit('quiz_question_revision_actions', $form_state, $this->question->qid, $this->question->vid);
+        drupal_goto("quiz-question/{$this->question->qid}/revision-actions");
       }
     }
   }

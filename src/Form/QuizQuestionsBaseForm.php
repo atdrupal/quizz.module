@@ -11,10 +11,10 @@ abstract class QuizQuestionsBaseForm {
    * @param stdClass $quiz Quiz entity(object)
    */
   protected function addRevisionCheckbox(&$form, &$quiz) {
-    // Recomend and preselect to create the quiz as a new revision if it already has been answered
+    // Recommend and preselect to create the quiz as a new revision if it already has been answered
     if (quiz()->getQuizHelper()->isAnswered($quiz)) {
       $rev_default = TRUE;
-      $rev_description = t('This quiz has been answered. To maintain correctnes of existing answer reports changes should be saved as a new revision.');
+      $rev_description = t('This quiz has been answered. To maintain correctness of existing answers and reports, changes should be saved as a new revision.');
     }
     else {
       $rev_default = in_array('revision', variable_get('node_options_quiz', array()));

@@ -186,6 +186,22 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->assertText(t('Start !quiz', array('!quiz' => QUIZ_NAME)));
   }
 
+  private function checkQuizSaveRevionLostRelationships() {
+    $quiz = $this->linkQuestionToQuiz($question = $this->drupalCreateQuestion(array(
+        'type'           => 'truefalse',
+        'title'          => 'Revision TRUE',
+        'body'           => 'Revision TRUE',
+        'correct_answer' => 1,
+    )));
+    $this->assertEqual(1, count($quiz->getQuestionIO()->getQuestionList()));
+
+    $quiz->is_new_revision = TRUE;
+    $quiz->clone_relationships = TRUE;
+    $quiz->save();
+    $quiz_reload = quiz_load($quiz->qid, NULL, TRUE);
+    $this->assertEqual(1, count($quiz_reload->getQuestionIO()->getQuestionList()));
+  }
+
   /**
    * Test quiz revisioning.
    */
@@ -211,9 +227,6 @@ class QuizEntityTestCase extends QuizTestCase {
         'correct_answer'                    => 0,
         'revision'                          => 1,
         'log'                               => 'Revision FALSE'), t('Save question'));
-
-    // Reload to have latest revision
-    $question = quiz_question_entity_load($question->qid, NULL, TRUE);
 
     // Finish on same revision.
     $this->drupalLogin($this->user);
@@ -243,22 +256,6 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->assertText('Revision FALSE');
     $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
     $this->assertText('You got 0 of 1 possible points.');
-  }
-
-  private function checkQuizSaveRevionLostRelationships() {
-    $quiz = $this->linkQuestionToQuiz($question = $this->drupalCreateQuestion(array(
-        'type'           => 'truefalse',
-        'title'          => 'Revision TRUE',
-        'body'           => 'Revision TRUE',
-        'correct_answer' => 1,
-    )));
-    $this->assertEqual(1, count($quiz->getQuestionIO()->getQuestionList()));
-
-    $quiz->is_new_revision = TRUE;
-    $quiz->clone_relationships = TRUE;
-    $quiz->save();
-    $quiz = quiz_load($quiz->qid, NULL, TRUE);
-    $this->assertEqual(1, count($quiz->getQuestionIO()->getQuestionList()));
   }
 
 }

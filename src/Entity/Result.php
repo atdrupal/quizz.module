@@ -63,7 +63,7 @@ class Result extends Entity {
   public function countPages() {
     $count = 0;
     foreach ($this->layout as $item) {
-      if (('quiz_page' === $item['type']) || !$item['qr_pid']) {
+      if (('quiz_page' === $item['type']) || empty($item['qr_pid'])) {
         $count++;
       }
     }
@@ -84,7 +84,7 @@ class Result extends Entity {
   public function getPageItem($page_number) {
     $number = 0;
     foreach ($this->layout as $item) {
-      if (('quiz_page' === $item['type']) || !$item['qr_pid']) {
+      if (('quiz_page' === $item['type']) || empty($item['qr_pid'])) {
         if (++$number == $page_number) {
           return $item;
         }

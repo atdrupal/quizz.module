@@ -55,6 +55,7 @@ class ResultGenerator {
     // correct item numbers
     $count = $display_count = 0;
     $question_list = array();
+
     foreach ($questions as &$question) {
       $display_count++;
       $question['number'] = ++$count;
@@ -78,6 +79,7 @@ class ResultGenerator {
           'result_id'    => $result->result_id,
           'question_qid' => $question['qid'],
           'question_vid' => $question['vid'],
+          'tid'          => isset($question['tid']) ? $question['tid'] : NULL,
           'number'       => $i,
       ))->save();
     }

@@ -14,6 +14,12 @@ abstract class QuizTestCase extends DrupalWebTestCase {
   protected $questionHandler;
   protected $questionHandlers = array();
 
+  /** @var \stdClass Normal user account. */
+  protected $user;
+
+  /** @var \stdClass Admin account. */
+  protected $admin;
+
   /**
    * Set up a question test case.
    *
@@ -41,6 +47,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     $admin_permissions[] = 'edit any quiz content';
     $admin_permissions[] = 'edit question titles';
     $admin_permissions[] = 'access quiz';
+    $admin_permissions[] = 'view any questions';
 
     $user_permissions[] = 'access quiz';
     foreach ($this->extraUserPermissions as $perm) {
@@ -60,6 +67,15 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
     $this->admin = $this->drupalCreateUser(array_unique($admin_permissions));
     $this->user = $this->drupalCreateUser(array_unique($user_permissions));
+
+    if (!empty($this->questionHandlers)) {
+      $info = quiz_question_get_handler_info();
+      $question_types = quiz_question_get_types();
+      foreach ($this->questionHandlers as $handler_name) {
+        $this->assertTrue(isset($info[$this->questionHandler]), "Found {$handler_name} question handler info.");
+        $this->assertTrue(isset($question_types['default_' . $handler_name]), "Default question type for {$handler_name} is created.");
+      }
+    }
   }
 
   /**
@@ -146,6 +162,11 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     }
 
     $question = entity_create('quiz_question', $values);
+
+    if (isset($values['question_category']) && !is_array($values['question_category'])) {
+      $question->question_category = array('und' => array(array('tid' => $values['question_category'])));
+    }
+
     $question->save();
     return $question;
   }

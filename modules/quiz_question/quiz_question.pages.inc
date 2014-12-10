@@ -96,17 +96,17 @@ function quiz_question_form_submit_delete($form, &$form_state) {
 }
 
 /**
- * Callback for /quiz-question/%/%/revision-actions
+ * Callback for /quiz-question/%/question-revision-actions
  */
-function quiz_question_revision_actions($form, $form_state, $question_qid, $question_vid) {
+function quiz_question_revision_actions_form($form, $form_state, \Drupal\quiz_question\Entity\Question $question) {
   $obj = new RevisionActionsForm();
-  return $obj->get($form, $form_state, $question_qid, $question_vid);
+  return $obj->get($form, $form_state, $question);
 }
 
 /**
  * Submit callback for the revision actions page
  */
-function quiz_question_revision_actions_submit($form, &$form_state) {
+function quiz_question_revision_actions_form_submit($form, &$form_state) {
   $obj = new RevisionActionsForm();
   return $obj->submit($form, $form_state);
 }
@@ -120,7 +120,7 @@ function quiz_question_revision_actions_submit($form, &$form_state) {
  * @return string|array
  */
 function quiz_question_page(Question $question, $view_mode = 'default', $langcode = NULL) {
-  return entity_view('quiz_entity', array($question), $view_mode, $langcode, TRUE);
+  return entity_view('quiz_question', array($question), $view_mode, $langcode, TRUE);
 }
 
 /**

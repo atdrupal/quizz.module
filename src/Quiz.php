@@ -5,7 +5,9 @@ namespace Drupal\quizz;
 use Drupal\quizz\Helper\HookImplementation;
 use Drupal\quizz\Helper\MailHelper;
 use Drupal\quizz\Helper\NodeHelper;
+use Drupal\quizz\Helper\QuestionCategoryFieldInfo;
 use Drupal\quizz\Helper\QuizHelper;
+use Drupal\quizz\Quiz;
 
 /**
  * Wrapper for helper classes. We just use classes to organise functions, make
@@ -31,6 +33,7 @@ class Quiz {
   private $nodeHelper;
   private $quizHelper;
   private $mailHelper;
+  private $questionCategoryField;
 
   /**
    * @return HookImplementation
@@ -147,6 +150,16 @@ class Quiz {
       }
     }
     return $vocabularies;
+  }
+
+  /**
+   * @return QuestionCategoryFieldInfo
+   */
+  public function getQuestionCategoryField() {
+    if (NULL == $this->questionCategoryField) {
+      $this->questionCategoryField = new QuestionCategoryFieldInfo();
+    }
+    return $this->questionCategoryField;
   }
 
 }

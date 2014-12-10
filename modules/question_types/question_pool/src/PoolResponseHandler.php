@@ -198,18 +198,16 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormResponse
-   *
-   * @see getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
+   * Implementation of getFeedbackValues.
    */
-  public function getReportFormResponse() {
+  public function getFeedbackValues() {
     if (!$question = $this->getQuestion()) {
       return array('#markup' => t('No question passed.'));
     }
 
     return quiz_answer_controller()
         ->getHandler($this->result_id, $question)
-        ->getReportFormResponse()
+        ->getFeedbackValues()
     ;
   }
 

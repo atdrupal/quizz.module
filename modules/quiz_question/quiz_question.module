@@ -85,7 +85,7 @@ function quiz_question_get_handler_info($name = NULL, $reset = FALSE) {
   // Question provider must be instance of QuizQuestion class.
   foreach ($info as $handler_name => $handler_info) {
     if (!is_subclass_of($handler_info['question provider'], 'Drupal\quiz_question\QuestionHandler')) {
-      $msg = t("The question-type %name isn't a QuizQuestion. It needs to extend the QuizQuestion class.", array('%name' => $handler_name));
+      $msg = t("The question-type %name isn't a Drupal\quiz_question\QuestionHandler.", array('%name' => $handler_name));
       drupal_set_message($msg, 'error', FALSE);
     }
   }

@@ -8,17 +8,15 @@
  */
 class QuizRandomTestCase extends QuizTestCase {
 
+  protected $questionHandler = 'truefalse';
+  protected $extraModules = array('quiz_page', 'taxonomy', 'truefalse');
+
   public static function getInfo() {
     return array(
-        'name'        => t('Quiz random'),
-        'description' => t('Test cases for random quiz question behavior'),
-        'group'       => t('Quiz'),
+        'name'        => 'Quiz random',
+        'description' => 'Test cases for random quiz question behavior',
+        'group'       => 'Quiz',
     );
-  }
-
-  public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionHandler = 'truefalse';
-    parent::setUp($modules);
   }
 
   /**
@@ -82,6 +80,123 @@ class QuizRandomTestCase extends QuizTestCase {
 
     // Also check that at least one of the orders is different.
     $this->assertNotEqual(count(array_unique($out)), 1, t('At least one set of questions were different.'));
+  }
+
+  private function setupCategorizedRandomQuestions() {
+    $v1 = new stdClass;
+    $v1->name = "Vocab 1";
+    $v1->machine_name = "vocab1";
+    taxonomy_vocabulary_save($v1);
+
+    // Add a field to quiz result and make it required for starting.
+    field_create_field(array(
+        'field_name' => 'question_category',
+        'type'       => 'taxonomy_term_reference',
+    ));
+
+    field_create_instance(array(
+        'field_name'  => 'question_category',
+        'entity_type' => 'quiz_question',
+        'bundle'      => 'default_truefalse',
+        'label'       => 'Question category',
+        'widget'      => array('active' => 1, 'module' => 'taxonomy', 'settings' => array('size' => 60), 'type' => 'options_select'),
+    ));
+
+    // Terms.
+    $term1 = new stdClass;
+    $term1->vid = $v1->vid;
+    $term1->name = 'Vocab 1 Term 1';
+    taxonomy_term_save($term1);
+
+    $term2 = new stdClass;
+    $term2->vid = $v1->vid;
+    $term2->name = 'Vocab 1 Term 2';
+    taxonomy_term_save($term2);
+
+    $base1 = array('type' => 'truefalse', 'correct_answer' => 1, 'question_category' => $term1->tid);
+    $base2 = array('type' => 'truefalse', 'correct_answer' => 1, 'question_category' => $term2->tid);
+
+    $questions[] = $this->drupalCreateQuestion($base1 + array('title' => 'tf 1 v1t1', 'body' => 'TF 1 body text'));
+    $questions[] = $this->drupalCreateQuestion($base1 + array('title' => 'tf 2 v1t1', 'body' => 'TF 1 body text'));
+    $questions[] = $this->drupalCreateQuestion($base1 + array('title' => 'tf 3 v1t1', 'body' => 'TF 1 body text'));
+    $questions[] = $this->drupalCreateQuestion($base2 + array('title' => 'tf 4 v1t2', 'body' => 'TF 1 body text'));
+    $questions[] = $this->drupalCreateQuestion($base2 + array('title' => 'tf 5 v1t2', 'body' => 'TF 1 body text'));
+    $questions[] = $this->drupalCreateQuestion($base2 + array('title' => 'tf 6 v1t2', 'body' => 'TF 1 body text'));
+
+    return array($term1, $term2);
+  }
+
+  /**
+   * Test pulling questions from categories.
+   */
+  public function testCategorizedRandomQuestions() {
+    list($term1, $term2) = $this->setupCategorizedRandomQuestions();
+
+    // Create quiz with two terms
+    $quiz = $this->drupalCreateQuiz(array('randomization' => QUIZ_QUESTION_CATEGORIZED_RANDOM));
+    $quiz_term1 = array('qid' => $quiz->qid, 'vid' => $quiz->vid, 'tid' => $term1->tid, 'max_score' => 1, 'number' => 2, 'weight' => 0);
+    $quiz_term2 = array('qid' => $quiz->qid, 'vid' => $quiz->vid, 'tid' => $term2->tid, 'max_score' => 1, 'number' => 2, 'weight' => 0);
+    drupal_write_record('quiz_terms', $quiz_term1);
+    drupal_write_record('quiz_terms', $quiz_term2);
+
+    $list = $quiz->getQuestionIO()->getQuestionList();
+    $this->assertEqual(count($list), 4, 'Quiz had 4 questions.');
+    $this->verbose(json_encode($list));
+
+    // Start the quiz.
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+  }
+
+  /**
+   * Test that questions inside of pages are shuffled.
+   */
+  function testRandomOrderInPages() {
+    $this->drupalLogin($this->admin);
+
+    $quiz = $this->drupalCreateQuiz(array('randomization' => 1));
+
+    // Create the questions & pages
+    $q1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'body' => 'TF 1 body text'));
+    $q2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'body' => 'TF 2 body text'));
+    $q3 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'body' => 'TF 3 body text'));
+    $p1 = $this->drupalCreateQuestion(array('type' => 'quiz_page'));
+    $p2 = $this->drupalCreateQuestion(array('type' => 'quiz_page'));
+    $this->linkQuestionToQuiz($q1, $quiz);
+    $this->linkQuestionToQuiz($q2, $quiz);
+    $this->linkQuestionToQuiz($q3, $quiz);
+    $this->linkQuestionToQuiz($p1, $quiz);
+    $this->linkQuestionToQuiz($p2, $quiz);
+
+    // Go to the manage questions form.
+    $this->drupalGet("quiz/$quiz->qid/questions");
+    $this->drupalPost(NULL, array(
+        // Make the questions have parents.
+        "qr_pids[{$q1->qid}-{$q1->vid}]" => 4,
+        "qr_pids[{$q2->qid}-{$q2->vid}]" => 4,
+        "qr_pids[{$q3->qid}-{$q3->vid}]" => 5,
+        // Mirror what JS would have done by adjusting the weights.
+        "weights[{$p1->qid}-{$p1->vid}]"  => 2,
+        "weights[{$q1->qid}-{$q1->vid}]"  => 3,
+        "weights[{$q2->qid}-{$q2->vid}]"  => 4,
+        "weights[{$p2->qid}-{$p2->vid}]"  => 3,
+        "weights[{$q3->qid}-{$q3->vid}]"  => 4,
+      ), t('Submit'));
+
+    for ($i = 1; $i <= 5; $i++) {
+      $questions = $quiz->getQuestionIO()->getQuestionList();
+      $out[$i] = '';
+      foreach ($questions as $question) {
+        $out[$i] .= $question['qid'];
+      }
+    }
+
+    // Check that at least one of the orders is different.
+    $this->assertNotEqual(count(array_unique($out)), 1, t('At least one set of questions was different.'));
+
+    // Start the quiz.
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/{$quiz->qid}/take");
   }
 
 }

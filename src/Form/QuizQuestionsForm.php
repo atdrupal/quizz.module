@@ -15,10 +15,8 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
    * This function is not used if the question assignment type "categorized random questions" is chosen
    *
    * @param $form_state
-   *  The form state variable
    * @param QuizEntity $quiz
    * @return string
-   *  HTML output to create page.
    */
   public function formGet(&$form, $form_state, QuizEntity $quiz) {
     // Display questions in this quiz.
@@ -159,7 +157,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       $handler = $question->getHandler();
 
       $fieldset = 'question_list';
-      $id = $question->qid . '-' . $question->vid;
+      $id = "{$relationship->qid}-{$relationship->vid}";
 
       $form['question_list']['#question_handlers'][$id] = $question->getQuestionType()->handler;
 
@@ -371,7 +369,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     if (empty($term_id)) {
       $assigned_random = 0;
       foreach ($relationships as $relationship) {
-        if (QUIZ_QUESTION_RANDOM == $relationship->state) {
+        if (QUIZ_QUESTION_RANDOM == $relationship->question_status) {
           ++$assigned_random;
         }
       }
@@ -464,18 +462,18 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       $relationship = entity_create('quiz_relationship', array(
           'quiz_qid'              => $quiz->qid,
           'quiz_vid'              => $quiz->vid,
-          'qid'                   => (int) $question_qid,
-          'vid'                   => (int) $question_vid,
+          'question_qid'          => (int) $question_qid,
+          'question_vid'          => (int) $question_vid,
           'weight'                => $weight,
           'auto_update_max_score' => $auto_update_max_scores[$id],
           'qr_pid'                => $qr_pids[$id] > 0 ? $qr_pids[$id] : NULL,
           'qr_id'                 => $qr_ids[$id] > 0 ? $qr_ids[$id] : NULL,
           'refresh'               => isset($refreshes[$id]) && $refreshes[$id] == 1,
-          'state'                 => QUIZ_QUESTION_ALWAYS,
+          'question_status'       => QUIZ_QUESTION_ALWAYS,
       ));
 
       if (isset($compulsories) && $compulsories[$id] != 1) {
-        $relationship->state = QUIZ_QUESTION_RANDOM;
+        $relationship->question_status = QUIZ_QUESTION_RANDOM;
         $max_scores[$id] = $quiz->max_score_for_random;
       }
 

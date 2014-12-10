@@ -3,7 +3,7 @@
 /**
  * Test class for true false questions.
  */
-class TrueFalseTestCase extends QuizQuestionTestCase {
+class TrueFalseTestCase extends QuizTestCase {
 
   protected $questionHandler = 'truefalse';
 

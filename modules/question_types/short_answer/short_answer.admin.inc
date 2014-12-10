@@ -65,7 +65,7 @@ function short_answer_score_form($form, $context, $question, $answer) {
   $form['question'] = array(
       '#type'   => 'item',
       '#title'  => t('Question'),
-      '#markup' => check_markup($question->body['und'][0]['value'], $question->body['und'][0]['format']),
+      '#markup' => check_markup($question->quiz_question_body['und'][0]['value'], $question->quiz_question_body['und'][0]['format']),
   );
   $form['answer'] = array(
       '#type'   => 'item',

@@ -68,6 +68,14 @@ class ResultController extends EntityAPIController {
     $layout = entity_load('quiz_result_answer', FALSE, array('result_id' => $result->result_id));
 
     foreach ($layout as $answer) {
+      $result->layout[$answer->number] = array(
+          'display_number' => $answer->number,
+          'qid'            => $answer->question_qid,
+          'vid'            => $answer->question_vid,
+          'number'         => $answer->number,
+          'type'           => quiz_question_entity_load($answer->question_qid)->type,
+      );
+
       // @kludge
       // This is bulky but now we have to manually find the type and parents of
       // the question. This is the only information that is not stored in the
@@ -76,23 +84,18 @@ class ResultController extends EntityAPIController {
       $select = db_select('quiz_results', 'result');
       $select->innerJoin('quiz_relationship', 'relationship', 'result.quiz_vid = relationship.quiz_vid');
       $select->innerJoin('quiz_question', 'question', 'relationship.question_qid = question.qid');
-      $extra = $select
+      $select
         ->fields('question', array('type'))
         ->fields('relationship', array('qr_id', 'qr_pid'))
         ->condition('result.result_id', $result->result_id)
-        ->condition('question.qid', $answer->question_qid)
-        ->execute()
-        ->fetch();
+        ->condition('question.qid', $answer->question_qid);
 
-      $result->layout[$answer->number] = array(
-          'display_number' => $answer->number,
-          'qid'            => $answer->question_qid,
-          'vid'            => $answer->question_vid,
-          'number'         => $answer->number,
-          'type'           => $extra->type,
-          'qr_id'          => $extra->qr_id,
-          'qr_pid'         => $extra->qr_pid,
-      );
+      if ($extra = $select->execute()->fetchObject()) {
+        $result->layout[$answer->number] += array(
+            'qr_id'  => $extra->qr_id,
+            'qr_pid' => $extra->qr_pid,
+        );
+      }
     }
     ksort($result->layout, SORT_NUMERIC);
   }
