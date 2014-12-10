@@ -128,7 +128,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function getReportForm($form = array()) {
+  public function getReportForm(array $form = array()) {
     global $user;
 
     // Add general data, and data from the question type implementation
