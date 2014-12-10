@@ -55,6 +55,7 @@ class ResultGenerator {
     // correct item numbers
     $count = $display_count = 0;
     $question_list = array();
+
     foreach ($questions as &$question) {
       $display_count++;
       $question['number'] = ++$count;

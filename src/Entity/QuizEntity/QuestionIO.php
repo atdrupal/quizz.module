@@ -39,7 +39,7 @@ class QuestionIO {
    * Builds the questionlist for quizzes with categorized random questions
    */
   public function buildCategoziedQuestionList() {
-    if (!$question_types = array_keys(quiz_question_get_handler_info())) {
+    if (!$question_types = array_keys(quiz_question_get_types())) {
       return array();
     }
 
@@ -47,22 +47,27 @@ class QuestionIO {
     $question_ids = array();
     $total_count = 0;
     foreach ($this->quiz->getTermsByVid() as $term) {
-      $query = db_select('quiz_question', 'question');
+      $select = db_select('quiz_question', 'question');
       if (!empty($question_ids)) {
-        $query->condition('question.qid', $question_ids, 'NOT IN');
+        $select->condition('question.qid', $question_ids, 'NOT IN');
       }
-      $query->join('taxonomy_index', 'tn', 'question.qid = tn.qid');
-      $result = $query
-        ->fields('question', array('qid', 'vid'))
-        ->fields('tn', array('tid'))
+
+      $table = quiz()->getQuestionCategoryField()->getTableName();
+      $column = quiz()->getQuestionCategoryField()->getColumnName();
+
+      $select->join($table, 'tn', 'question.qid = tn.entity_id AND entity_type = :quiz_question', array(':quiz_question' => 'quiz_question'));
+      $find = $select
+        ->fields('question', array('qid', 'vid', 'type'))
+        ->fields('tn', array($column))
         ->condition('question.status', 1)
         ->condition('question.type', $question_types)
-        ->condition('question.tid', $term->tid)
+        ->condition('tn.' . $column, $term->tid)
         ->range(0, $term->number)
         ->orderRandom()
-        ->execute();
+        ->execute()
+      ;
       $count = 0;
-      while ($question = $result->fetchAssoc()) {
+      while ($question = $find->fetchAssoc()) {
         $count++;
         $question['tid'] = $term->tid;
         $question['number'] = $count + $total_count;
@@ -74,6 +79,7 @@ class QuestionIO {
         return array(); // Not enough questions
       }
     }
+
     return $questions;
   }
 
