@@ -41,6 +41,15 @@ class QuestionUIController extends EntityDefaultUIController {
     unset($items['admin/content/quiz-questions/manage/%entity_object/clone']);
     unset($items['admin/content/quiz-questions/add']);
 
+    $items['quiz-question/%quiz_question_entity/revision-actions'] = array(
+        'title'            => 'Revision actions',
+        'page callback'    => 'drupal_get_form',
+        'page arguments'   => array('quiz_question_revision_actions_form', 1),
+        'access arguments' => array('manual quiz revisioning'),
+        'file'             => 'quiz_question.pages.inc',
+        'type'             => MENU_NORMAL_ITEM,
+    );
+
     $this->fixMenuItemPermissions($items);
 
     return $items + $this->getExtraMenuItems();

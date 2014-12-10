@@ -79,6 +79,7 @@ class ResultGenerator {
           'result_id'    => $result->result_id,
           'question_qid' => $question['qid'],
           'question_vid' => $question['vid'],
+          'tid'          => isset($question['tid']) ? $question['tid'] : NULL,
           'number'       => $i,
       ))->save();
     }
