@@ -176,10 +176,10 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     drupal_alter('quiz_feedback_labels', $labels);
 
     $rows = array();
-    foreach ($this->getFeedbackValues() as $idx => $row) {
+    foreach ($this->getFeedbackValues() as $i => $row) {
       foreach (array_keys($labels) as $review_type) {
         if (('choice' === $review_type) || (isset($row[$review_type]) && $this->canReview($review_type))) {
-          $rows[$idx][$review_type] = $row[$review_type];
+          $rows[$i][$review_type] = $row[$review_type];
         }
       }
     }

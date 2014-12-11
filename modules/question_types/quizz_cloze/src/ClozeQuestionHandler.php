@@ -91,7 +91,7 @@ class ClozeQuestionHandler extends QuestionHandler {
    */
   public function view() {
     $content = parent::view();
-    $content['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
+    $content['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/misc/cloze.css';
     $chunks = $this->clozeHelper->getQuestionChunks($this->question->quiz_question_body[LANGUAGE_NONE][0]['value']);
     if ($this->viewCanRevealCorrect() && !empty($chunks)) {
       $solution = $this->question->quiz_question_body[LANGUAGE_NONE][0]['value'];
@@ -149,10 +149,10 @@ class ClozeQuestionHandler extends QuestionHandler {
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $element = parent::getAnsweringForm($form_state, $result_id);
     $element['#theme'] = 'cloze_answering_form';
-    $element['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
+    $element['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/misc/cloze.css';
 
     if (!empty($this->question->learning_mode)) {
-      $element['#attached']['js'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.js';
+      $element['#attached']['js'][] = drupal_get_path('module', 'quizz_cloze') . '/misc/cloze.js';
       $question = $this->question->quiz_question_body[LANGUAGE_NONE][0]['safe_value'];
       $this->includeAnswerJs($question);
     }
@@ -212,7 +212,7 @@ class ClozeQuestionHandler extends QuestionHandler {
    * {@inheritdoc}
    */
   public function getCreationForm(array &$form_state = NULL) {
-    $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
+    $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/misc/cloze.css';
     $form['instructions'] = array(
         '#prefix' => '<div class="cloze-instruction">',
         '#markup' => t('For free text cloze, mention the correct answer inside the square bracket. For multichoice cloze, provide the options separated by commas with correct answer as first. <br/>Example question: [The] Sun raises in the [east, west, north, south]. <br/>Answer: <span class="answer correct correct-answer">The</span> Sun raises in the <span class="answer correct correct-answer">east</span>.'),

@@ -35,27 +35,3 @@ function quizz_cloze_form_alter_after_build($form) {
   $form['quiz_question_body'][LANGUAGE_NONE][0]['value']['#wysiwyg'] = FALSE;
   return $form;
 }
-
-/**
- * Implementation of hook_theme().
- */
-function quizz_cloze_theme() {
-  $path = drupal_get_path('module', 'quizz_cloze') . '/theme';
-  return array(
-      'cloze_response_form'  => array(
-          'render element' => 'form',
-          'path'           => $path,
-          'file'           => 'cloze.theme.inc',
-      ),
-      'cloze_user_answer'    => array(
-          'arguments' => array('answer' => NULL, 'correct' => NULL),
-          'path'      => $path,
-          'file'      => 'cloze.theme.inc',
-      ),
-      'cloze_answering_form' => array(
-          'render element' => 'form',
-          'path'           => $path,
-          'file'           => 'cloze.theme.inc',
-      ),
-  );
-}

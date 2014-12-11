@@ -2,6 +2,7 @@
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz_cloze\Helper;
 
 class QuizzClozeTestCase extends QuizTestCase {
 
@@ -39,7 +40,7 @@ class QuizzClozeTestCase extends QuizTestCase {
   }
 
   private function checkHelperClass() {
-    $helper = new \Drupal\quizz_cloze\Helper();
+    $helper = new Helper();
     $question_string = 'This is [a] demo [cloze] question?';
     $chunks = $helper->getQuestionChunks($question_string);
     $correct_chunks = $helper->getCorrectAnswerChunks($question_string);
@@ -52,19 +53,21 @@ class QuizzClozeTestCase extends QuizTestCase {
     $this->assertText('Cloze question body');
     $this->assertNoText('[hidden 1]');
     $this->assertNoText('[hidden 2]');
-    #$this->drupalPost(NULL, array(
-    #    'question[1][parts][1]' => 'incorrect 1',
-    #    'question[1][parts][3]' => 'incorrect 2'
-    #  ), "Finish");
+    $this->drupalPost(NULL, array(
+        'question[1][parts][1]' => 'incorrect 1',
+        'question[1][parts][3]' => 'incorrect 2'
+      ), "Finish");
+    $this->assertText('You got 0 of 10 possible points.');
   }
 
   private function checkTakingWithCorrectAnswer(QuizEntity $quiz) {
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->assertText('Cloze question body');
-    #$this->drupalPost(NULL, array(
-    #    'question[1][parts][1]' => 'hidden 1',
-    #    'question[1][parts][3]' => 'hidden 2'
-    #  ), "Finish");
+    $this->drupalPost(NULL, array(
+        'question[1][parts][1]' => 'hidden 1',
+        'question[1][parts][3]' => 'hidden 2'
+      ), "Finish");
+    $this->assertText('You got 10 of 10 possible points.');
   }
 
 }

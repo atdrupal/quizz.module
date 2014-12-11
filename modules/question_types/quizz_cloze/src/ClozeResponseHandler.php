@@ -76,11 +76,17 @@ class ClozeResponseHandler extends ResponseHandler {
     return $this->question->getHandler()->evaluateAnswer($this->answer);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getReportForm(array $form = array()) {
     $form += parent::getReportForm($form);
 
-    $s_question = strip_tags($form['question']['#markup']);
+    $s_question = strip_tags($this->question->quiz_question_body[LANGUAGE_NONE][0]['value']);
+    $question_form = array();
+    $question_form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/misc/cloze.css';
     $question_form['open_wrapper']['#markup'] = '<div class="cloze-question">';
+
     foreach ($this->helper->getQuestionChunks($s_question) as $position => $chunk) {
       if (strpos($chunk, '[') === FALSE) {
         $question_form['parts'][$position] = array(
@@ -106,6 +112,7 @@ class ClozeResponseHandler extends ResponseHandler {
           '#size'       => 32,
           '#required'   => FALSE,
           '#attributes' => array('autocomplete' => 'off'),
+          '#value'      => $this->answer['parts'][$position]
       );
     }
 
@@ -115,24 +122,28 @@ class ClozeResponseHandler extends ResponseHandler {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFeedbackValues() {
-    if (!$this->question || empty($this->question->answers)) {
-      return array();
+    if (!isset($this->question->quiz_question_body[LANGUAGE_NONE][0]['value'])) {
+      drupal_set_message(json_encode($this->question));
     }
 
-    $s_question = $this->question->quiz_question_body[LANGUAGE_NONE][0]['value'];
+    $s_question = strip_tags($this->question->quiz_question_body[LANGUAGE_NONE][0]['value']);
+    $inputs = isset($this->answer['parts']) ? $this->answer['parts'] : array();
+    $corrects = $this->helper->getCorrectAnswerChunks($s_question);
 
     return array(
-        '#attached' => array(
-            'css' => array(
-                drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css'
-            ),
-        ),
-        'answer'    => array(
-            '#theme'   => 'cloze_user_answer',
-            '#answer'  => $this->helper->getUserAnswer($s_question, $this->answer),
-            '#correct' => $this->getCorrectAnswer($s_question),
-        ),
+        array(
+            'choice'            => theme('item_list', array('items' => $inputs)),
+            'attempt'           => $this->answer,
+            'correct'           => quiz_icon($this->isCorrect() ? 'correct' : 'incorrect'),
+            'score'             => $this->getScore(),
+            'answer_feedback'   => '',
+            'question_feedback' => '',
+            'solution'          => theme('item_list', array('items' => $corrects)),
+        )
     );
   }
 
