@@ -76,7 +76,7 @@ interface ResponseHandlerInterface {
   public function getReportFormScore();
 
   /**
-   * Get the submit function for the reportForm.
+   * Get the submit function for the report Form.
    * @return string
    *  Submit function as a string, empty string if no submit function
    */

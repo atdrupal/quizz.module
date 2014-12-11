@@ -379,9 +379,9 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implements QuizQuestionResponse::getReportFormValidate().
+   * {@inheritdoc}
    */
-  public function getReportFormValidate(&$element, &$form_state) {
+  public function validateReportForm(&$element, &$form_state) {
     $max = $this->question->max_score;
     // Check to make sure that entered score is not higher than max allowed score.
     if ($element['score']['#value'] > $max) {

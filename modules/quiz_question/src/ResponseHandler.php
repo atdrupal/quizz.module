@@ -260,13 +260,10 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   }
 
   /**
-   * Get the validate function for the reportForm
-   *
-   * @return
-   *  Validate function as a string, or FALSE if no validate function
+   * Callback method to validate report form.
    */
-  public function getReportFormValidate(&$element, &$form_state) {
-    return FALSE;
+  public function validateReportForm(&$element, &$form_state) {
+
   }
 
   /**
