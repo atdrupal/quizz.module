@@ -80,37 +80,54 @@ function quiz_question_update_7600() {
  * Create question bundles from question node types.
  */
 function quiz_question_update_7601() {
+  $handler_info = quiz_question_get_handler_info();
+
   $node_types = db_select('node_type')
     ->condition('module', 'quiz_question')
     ->fields('node_type')
     ->execute()
     ->fetchAll();
+
+  $labels = array();
   foreach ($node_types as $node_type) {
-    $labels[] = $node_type->type;
-    $question_type = entity_create('quiz_question_type', array(
-        'type'        => $node_type->type,
-        'label'       => $node_type->name,
-        'description' => $node_type->description,
-        'help'        => $node_type->help,
-        'plugin'      => $node_type->type,
-        'data'        => array(
-            'multilingual' => (int) variable_get('language_content_type_' . $node_type->type, 0)
-        )
-    ));
-    $question_type->save();
+    // question node type is already converted to question-type entity
+    $sql = "SELECT 1 FROM {quiz_question_type} WHERE type = :type";
+    if (!db_query($sql, array(':type' => $node_type->type))->fetchColumn()) {
+      continue;
+    }
+
+    // The module for the module is not available yet. The module will upgrade itself.
+    if ($handler_info[$node_type->type]) {
+      continue;
+    }
+
+    if ($label = _quiz_question_update_7601_convert_node_type_to_question_type_entity($node_type)) {
+      $labels[] = $label;
+    }
   }
   return 'Created new question bundle: ' . implode(', ', $labels);
 }
 
-/**
- * Change owner for question node types.
- */
-function quiz_question_update_7602() {
+function _quiz_question_update_7601_convert_node_type_to_question_type_entity($node_type) {
+  $question_type = entity_create('quiz_question_type', array(
+      'type'        => $node_type->type,
+      'label'       => $node_type->name,
+      'description' => $node_type->description,
+      'help'        => $node_type->help,
+      'handler'     => $node_type->type,
+      'data'        => array(
+          'multilingual' => (int) variable_get('language_content_type_' . $node_type->type, 0)
+      )
+  ));
+  $question_type->save();
+
   db_update('node_type')
     ->fields(array('module' => 'node', 'base' => 'node_content', 'disabled' => 0))
     ->condition('base', 'quiz_question')
+    ->condition('type', $node_type->type)
     ->execute();
-  return 'Change owner for quiz node type.';
+
+  return $node_type->type;
 }
 
 /**

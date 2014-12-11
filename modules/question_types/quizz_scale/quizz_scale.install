@@ -119,11 +119,20 @@ function quizz_scale_update_7600() {
   db_add_index('quiz_scale_collections', 'collection_status', array('status'));
   drupal_flush_all_caches();
 
-  $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
-  db_query("UPDATE {quiz_question_type} SET {$handler} = :new_name WHERE {$handler} = :name", array(
-      ':new_name' => 'quizz_scale',
-      ':name'     => 'scale',
-  ));
+  $params = array(':name' => 'scale', ':new_name' => 'quizz_scale');
+  db_query("UPDATE {node_type} SET type = :new_name WHERE type = :name", $params);
+
+  // convert node type to question type entity.
+  $node_type = db_select('node_type')
+    ->fields('node_type')
+    ->condition('node_type.type', 'quizz_scale')
+    ->execute()
+    ->fetchObject();
+  if ($node_type) {
+    require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+    _quiz_question_update_7601_convert_node_type_to_question_type_entity($node_type);
+  }
+
   drupal_flush_all_caches();
 }
 
