@@ -228,14 +228,14 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   public function getFeedbackValues() {
     return array(
         array(
-            'choice'            => 'True',
-            'attempt'           => 'Did the user choose this?',
-            'correct'           => 'Was their answer correct?',
-            'score'             => 'Points earned for this answer',
-            'answer_feedback'   => 'Feedback specific to the answer',
-            'question_feedback' => 'General question feedback for any answer',
-            'solution'          => 'Is this choice the correct solution?',
-            'quiz_feedback'     => 'Quiz feedback at this time',
+            'choice'            => t('True'),
+            'attempt'           => t('Did the user choose this?'),
+            'correct'           => t('Was their answer correct?'),
+            'score'             => t('Points earned for this answer'),
+            'answer_feedback'   => t('Feedback specific to the answer'),
+            'question_feedback' => t('General question feedback for any answer'),
+            'solution'          => t('Is this choice the correct solution?'),
+            'quiz_feedback'     => t('Quiz feedback at this time'),
         )
     );
   }
