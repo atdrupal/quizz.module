@@ -480,7 +480,12 @@ class MatchingResponse extends ResponseHandler {
    * @see QuizQuestionResponse#delete()
    */
   public function delete() {
-    $match_id = db_query('SELECT match_id FROM {quiz_matching_question} WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchCol();
+    $match_id = db_query(
+      'SELECT match_id FROM {quiz_matching_question} WHERE qid = :qid AND vid = :vid', array(
+        ':qid' => $this->question->qid,
+        ':vid' => $this->question->vid
+      ))->fetchCol();
+
     db_delete('quiz_matching_user_answers')
       ->condition('match_id', is_array($match_id) ? $match_id : array(0), 'IN')
       ->condition('result_id', $this->result_id)

@@ -77,6 +77,9 @@ interface ResponseHandlerInterface {
 
   /**
    * Get the submit function for the report Form.
+   *
+   * @TODO: Should be a direct callback, ref to a global function, not cool.
+   *
    * @return string
    *  Submit function as a string, empty string if no submit function
    */

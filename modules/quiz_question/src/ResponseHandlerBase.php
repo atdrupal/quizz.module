@@ -38,6 +38,9 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   /** @var bool */
   public $is_doubtful;
 
+  /** @var string */
+  protected $base_table = NULL;
+
   /**
    * @param int $result_id
    * @param Question $question
@@ -112,7 +115,13 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    * {@inheritdoc}
    */
   public function delete() {
-
+    if (NULL !== $this->base_table) {
+      db_delete($this->base_table)
+        ->condition('question_qid', $this->question->qid)
+        ->condition('question_vid', $this->question->vid)
+        ->condition('result_id', $this->result_id)
+        ->execute();
+    }
   }
 
 }

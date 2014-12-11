@@ -10,6 +10,11 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class PoolResponseHandler extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table;
   protected $user_answer_ids;
   protected $choice_order;
   protected $need_evaluated;
@@ -158,16 +163,10 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
+   * {@inheritdoc}
    */
   public function delete() {
-    db_delete('quiz_pool_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
-      ->execute();
+    parent::delete();
 
     // The quiz question delete and resave instead update
     // We have a difference between $respone update and delete.

@@ -202,6 +202,12 @@ class TrueFalseQuestion extends QuestionHandler {
 class TrueFalseResponse extends ResponseHandler {
 
   /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_truefalse_user_answers';
+
+  /**
    * Constructor
    */
   public function __construct($result_id, Question $question, $input = NULL) {
@@ -232,19 +238,6 @@ class TrueFalseResponse extends ResponseHandler {
           'answer'       => (int) $this->answer,
           'score'        => (int) $this->getScore(),
       ))
-      ->execute();
-  }
-
-  /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-    db_delete('quiz_truefalse_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
       ->execute();
   }
 

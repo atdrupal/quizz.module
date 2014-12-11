@@ -225,7 +225,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   /**
    * Evaluate the correctness of an answer based on the correct answer and evaluation method.
    */
-  public function evaluateAnswer($user_answer) {
+  public function evaluateAnswer($input) {
     $score = 0;
 
     // Ignore white spaces for correct answer
@@ -233,17 +233,17 @@ class ShortAnswerQuestion extends QuestionHandler {
 
     switch ($this->question->correct_answer_evaluation) {
       case self::ANSWER_MATCH:
-        if ($user_answer == $this->question->correct_answer) {
+        if ($input == $this->question->correct_answer) {
           $score = $this->question->max_score;
         }
         break;
       case self::ANSWER_INSENSITIVE_MATCH:
-        if (drupal_strtolower($user_answer) == drupal_strtolower($this->question->correct_answer)) {
+        if (drupal_strtolower($input) == drupal_strtolower($this->question->correct_answer)) {
           $score = $this->question->max_score;
         }
         break;
       case self::ANSWER_REGEX:
-        if (preg_match($this->question->correct_answer, $user_answer) > 0) {
+        if (preg_match($this->question->correct_answer, $input) > 0) {
           $score = $this->question->max_score;
         }
         break;
@@ -258,6 +258,11 @@ class ShortAnswerQuestion extends QuestionHandler {
  */
 class ShortAnswerResponse extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_short_answer_user_answers';
   protected $answer_id = 0;
 
   /** @var bool */
@@ -365,17 +370,6 @@ class ShortAnswerResponse extends ResponseHandler {
           'score'        => $this->getScore(FALSE),
           'is_evaluated' => $this->is_evaluated,
       ))
-      ->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete() {
-    db_delete('quiz_short_answer_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
       ->execute();
   }
 

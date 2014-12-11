@@ -339,8 +339,12 @@ class DDLinesQuestion extends QuestionHandler {
  */
 class DDLinesResponse extends ResponseHandler {
 
-  // Contains a assoc array with label-ID as key
-  // and hotspot-ID as value:
+  protected $base_table = 'quiz_ddlines_user_answers';
+
+  /**
+   * Contains a assoc array with label-ID as key and hotspot-ID as value.
+   * @var array
+   */
   protected $user_answers = array();
 
   /**
@@ -396,7 +400,6 @@ class DDLinesResponse extends ResponseHandler {
    * Delete the response.
    */
   public function delete() {
-
     $user_answer_ids = array();
     $query = db_query('SELECT id FROM {quiz_ddlines_user_answers} WHERE question_qid = :qid AND question_vid = :vid AND result_id = :result_id', array(':qid' => $this->question->qid, ':vid' => $this->question->vid, ':result_id' => $this->result_id));
     while ($answer = $query->fetch()) {
@@ -409,11 +412,7 @@ class DDLinesResponse extends ResponseHandler {
         ->execute();
     }
 
-    db_delete('quiz_ddlines_user_answers')
-      ->condition('result_id', $this->result_id)
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->execute();
+    parent::delete();
   }
 
   /**

@@ -196,6 +196,15 @@ class LongAnswerQuestion extends QuestionHandler {
  */
 class LongAnswerResponse extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_long_answer_user_answers';
+
+  /** @var int */
+  protected $answer_id = 0;
+
   /** @var bool */
   protected $allow_feedback = TRUE;
 
@@ -271,11 +280,6 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * ID of the answer.
-   */
-  protected $answer_id = 0;
-
-  /**
    * Constructor
    */
   public function __construct($result_id, Question $question, $answer = NULL) {
@@ -307,9 +311,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
     $this->answer_id = db_insert('quiz_long_answer_user_answers')
@@ -323,22 +325,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-    db_delete('quiz_long_answer_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
-      ->execute();
-  }
-
-  /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     return (int) db_query(
@@ -351,7 +338,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getFeedbackValues.
+   * {@inheritdoc}
    */
   public function getFeedbackValues() {
     $data = array();
@@ -370,9 +357,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormSubmit
-   *
-   * @see QuizQuestionResponse#getReportFormSubmit()
+   * {@inheritdoc}
    */
   public function getReportFormSubmit() {
     return 'long_answer_report_submit';

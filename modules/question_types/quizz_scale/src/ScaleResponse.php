@@ -10,6 +10,11 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class ScaleResponse extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_scale_user_answers';
   protected $answer_id = 0;
 
   public function __construct($result_id, Question $question, $answer = NULL) {
@@ -29,12 +34,10 @@ class ScaleResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
-    $id = db_insert('quiz_scale_user_answers')
+    db_insert('quiz_scale_user_answers')
       ->fields(array(
           'answer_id'    => $this->answer_id,
           'result_id'    => $this->result_id,
@@ -45,43 +48,24 @@ class ScaleResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-    db_delete('quiz_scale_user_answers')
-      ->condition('result_id', $this->result_id)
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->execute();
-  }
-
-  /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     return $this->isValid() ? 1 : 0;
   }
 
   /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
+   * {@inheritdoc}
    */
   public function getResponse() {
     return $this->answer_id;
   }
 
   /**
-   * Implmenets QuizQuestionResponse::getFeedbackValues().
+   * {@inheritdoc}
    */
   public function getFeedbackValues() {
-    return array(
-        array('choice' => $this->answer)
-    );
+    return array(array('choice' => $this->answer));
   }
 
 }
