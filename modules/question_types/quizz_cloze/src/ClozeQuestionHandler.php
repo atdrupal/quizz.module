@@ -242,15 +242,18 @@ class ClozeQuestionHandler extends QuestionHandler {
    * Evaluate the correctness of an answer based on the correct answer and evaluation method.
    */
   public function evaluateAnswer($input) {
-    $correct_answer = $this->clozeHelper->getCorrectAnswerChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']);
-    $total_answer = count($correct_answer);
+    $question_string = $this->question->quiz_question_body[LANGUAGE_NONE]['0']['value'];
+    $correct_answer = $this->clozeHelper->getCorrectAnswerChunks($question_string);
     $correct_answer_count = 0;
-    if ($total_answer == 0) {
+
+    if (!$total_answer = count($correct_answer)) {
       return $this->getMaximumScore();
     }
 
     foreach (array_keys($correct_answer) as $k) {
-      if ($this->clozeHelper->getCleanText($correct_answer[$k]) == $this->clozeHelper->getCleanText($input[$k])) {
+      $correct = $this->clozeHelper->getCleanText($correct_answer[$k]);
+      $answer = $this->clozeHelper->getCleanText($input['parts'][$k]);
+      if ($correct === $answer) {
         $correct_answer_count++;
       }
     }

@@ -52,19 +52,12 @@ class Helper {
   public function getCorrectAnswerChunks($question) {
     $corrects = array();
     foreach ($this->getQuestionChunks($question) as $k => $v) {
-      if (strpos($v, '[') === FALSE) {
+      if (FALSE === strpos($v, '[')) {
         continue;
       }
-      else {
-        $answer_chunk = str_replace(array('[', ']'), '', $v);
-        $choice = explode(',', $answer_chunk);
-        if (count($choice) == 1) {
-          $corrects[$k] = $answer_chunk;
-        }
-        else {
-          $corrects[$k] = $choice[0];
-        }
-      }
+      $answer_chunk = str_replace(array('[', ']'), '', $v);
+      $choice = explode(',', $answer_chunk);
+      $corrects[$k] = count($choice) == 1 ? $answer_chunk : $choice[0];
     }
     return $corrects;
   }
