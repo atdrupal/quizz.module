@@ -20,10 +20,6 @@ class PoolResponseHandler extends ResponseHandler {
   protected $need_evaluated;
 
   public function __construct($result_id, Question $question, $input = NULL) {
-    if (NULL !== $input && is_array($input)) {
-      $input = reset($input);
-    }
-
     parent::__construct($result_id, $question, $input);
 
     if (!isset($input)) {
@@ -33,7 +29,7 @@ class PoolResponseHandler extends ResponseHandler {
       }
     }
     else {
-      $this->answer = $input;
+      $this->setAnswerInput($input);
     }
 
     $quiz_id = $this->result->getQuiz()->qid;
@@ -43,6 +39,13 @@ class PoolResponseHandler extends ResponseHandler {
           'delta'  => 0,
       );
     }
+  }
+
+  public function setAnswerInput($input) {
+    if (NULL !== $input && is_array($input)) {
+      $input = reset($input);
+    }
+    parent::setAnswerInput($input);
   }
 
   /**
