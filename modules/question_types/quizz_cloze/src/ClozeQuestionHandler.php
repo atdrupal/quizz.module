@@ -34,6 +34,9 @@ class ClozeQuestionHandler extends QuestionHandler {
     field_update_instance($instance);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function saveEntityProperties($is_new = FALSE) {
     db_merge('quiz_cloze_question_properties')
       ->key(array(
@@ -47,6 +50,9 @@ class ClozeQuestionHandler extends QuestionHandler {
     ;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validate(array &$form) {
     if (substr_count($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value'], '[') !== substr_count($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value'], ']')) {
       form_set_error('body', t('Please check the question format.'));
@@ -63,6 +69,9 @@ class ClozeQuestionHandler extends QuestionHandler {
     $delete_ans->execute();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function load() {
     if (isset($this->properties)) {
       return $this->properties;
@@ -77,6 +86,9 @@ class ClozeQuestionHandler extends QuestionHandler {
     return $this->properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function view() {
     $content = parent::view();
     $content['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
@@ -132,9 +144,7 @@ class ClozeQuestionHandler extends QuestionHandler {
   }
 
   /**
-   * Implementation of getAnsweringForm
-   *
-   * @see QuizQuestion#getAnsweringForm($form_state, $rid)
+   * {@inheritdoc}
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $form = parent::getAnsweringForm($form_state, $result_id);
@@ -197,9 +207,7 @@ class ClozeQuestionHandler extends QuestionHandler {
   }
 
   /**
-   * Implementation of getCreationForm
-   *
-   * @see QuizQuestion#getCreationForm($form_state)
+   * {@inheritdoc}
    */
   public function getCreationForm(array &$form_state = NULL) {
     $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
@@ -231,20 +239,21 @@ class ClozeQuestionHandler extends QuestionHandler {
   /**
    * Evaluate the correctness of an answer based on the correct answer and evaluation method.
    */
-  public function evaluateAnswer($user_answer) {
+  public function evaluateAnswer($input) {
     $correct_answer = $this->clozeHelper->getCorrectAnswerChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']);
     $total_answer = count($correct_answer);
     $correct_answer_count = 0;
     if ($total_answer == 0) {
       return $this->getMaximumScore();
     }
-    foreach ($correct_answer as $key => $value) {
-      if ($this->clozeHelper->getCleanText($correct_answer[$key]) == $this->clozeHelper->getCleanText($user_answer[$key])) {
+
+    foreach (array_keys($correct_answer) as $k) {
+      if ($this->clozeHelper->getCleanText($correct_answer[$k]) == $this->clozeHelper->getCleanText($input[$k])) {
         $correct_answer_count++;
       }
     }
-    $score = $correct_answer_count / $total_answer * $this->getMaximumScore();
-    return round($score);
+
+    return round($correct_answer_count / $total_answer * $this->getMaximumScore());
   }
 
 }

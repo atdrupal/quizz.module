@@ -10,6 +10,13 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class ClozeResponseHandler extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_cloze_user_answers';
+
+  /** @var int */
   protected $answer_id = 0;
 
   /** @var Helper */
@@ -20,17 +27,7 @@ class ClozeResponseHandler extends ResponseHandler {
     $this->helper = new Helper();
 
     if (NULL === $input) {
-      $stored_input = db_query(
-        "SELECT answer_id, answer, score, question_vid, question_qid, result_id"
-        . " FROM {quiz_cloze_user_answers}"
-        . " WHERE question_qid = :question_qid"
-        . "   AND question_vid = :question_vid"
-        . "   AND result_id = :result_id", array(
-          ':question_qid' => $question->qid,
-          ':question_vid' => $question->vid,
-          ':result_id'    => $result_id
-        ))->fetch();
-      if (!empty($stored_input)) {
+      if ($stored_input = $this->getStoredUserInput()) {
         $this->answer = unserialize($stored_input->answer);
         $this->score = $stored_input->score;
         $this->answer_id = $stored_input->answer_id;
@@ -41,10 +38,21 @@ class ClozeResponseHandler extends ResponseHandler {
     }
   }
 
+  private function getStoredUserInput() {
+    return db_query(
+        "SELECT answer_id, answer, score, question_vid, question_qid, result_id"
+        . " FROM {quiz_cloze_user_answers}"
+        . " WHERE question_qid = :question_qid"
+        . "   AND question_vid = :question_vid"
+        . "   AND result_id = :result_id", array(
+          ':question_qid' => $this->question->qid,
+          ':question_vid' => $this->question->vid,
+          ':result_id'    => $this->result_id
+      ))->fetch();
+  }
+
   /**
-   * Implementation of save
-   *
-   * @see ResponseHandler#save()
+   * {@inheritdoc}
    */
   public function save() {
     $this->answer_id = db_merge('quiz_cloze_user_answers')
@@ -62,34 +70,10 @@ class ClozeResponseHandler extends ResponseHandler {
   }
 
   /**
-   * Implementation of delete()
-   *
-   * @see ResponseHandler#delete()
-   */
-  public function delete() {
-    db_delete('quiz_cloze_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
-      ->execute();
-  }
-
-  /**
-   * Implementation of score()
-   *
-   * @see ResponseHandler#score()
+   * {@inheritdoc}
    */
   public function score() {
     return $this->question->getHandler()->evaluateAnswer($this->answer);
-  }
-
-  /**
-   * Implementation of getResponse()
-   *
-   * @see ResponseHandler#getResponse()
-   */
-  public function getResponse() {
-    return $this->answer;
   }
 
   public function getReportForm(array $form = array()) {
