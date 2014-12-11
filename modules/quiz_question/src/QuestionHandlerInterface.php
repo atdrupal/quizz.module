@@ -2,6 +2,7 @@
 
 namespace Drupal\quiz_question;
 
+use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\quizz\Entity\Result;
 
 interface QuestionHandlerInterface {
@@ -34,6 +35,11 @@ interface QuestionHandlerInterface {
    * @return bool
    */
   public function saveEntityProperties($is_new = FALSE);
+
+  /**
+   * To be called when new question type created.
+   */
+  public function onNewQuestionTypeCreated(QuestionType $question_type);
 
   /**
    * Method is called when user retry.

@@ -15,6 +15,48 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class DDLinesQuestion extends QuestionHandler {
 
+  public function onNewQuestionTypeCreated(QuestionType $question_type) {
+    // Create body textarea field
+    parent::onNewQuestionTypeCreated($question_type);
+
+    if (!field_info_instance('quiz_question', 'field_image', $question_type->type)) {
+      $bundle = $question_type->type;
+
+      if (!field_info_field('field_image')) {
+        field_create_field(array(
+            'field_name' => 'field_image',
+            'type'       => 'image'
+        ));
+      }
+
+      if (!field_info_instance('quiz_question', 'field_image', $bundle)) {
+        field_create_instance(array(
+            'field_name'  => 'field_image',
+            'entity_type' => 'quiz_question',
+            'bundle'      => 'quiz_ddlines',
+            'label'       => t('Background image'),
+            'required'    => TRUE,
+            'settings'    => array('no_ui' => TRUE),
+            'widget'      => array(
+                'settings' => array('no_ui' => TRUE, 'preview_image_style' => 'quiz_ddlines'),
+            ),
+            'description' => t("<p>Start by uploading a background image. The image is movable within the canvas.<br/>
+    				The next step is to add the alternatives, by clicking in the canvas.
+    				Each alternative consists of a circular hotspot, a label, and a connecting line. You need
+    				to double click the rectangular label to add the text, and move the hotspot to the correct
+    				position. When selecting a label, a popup-window is displayed, which gives you the following
+    				alternatives:
+    				<ul>
+    					<li>Set the alternative's feedback (only possible if feedback is enabled)</li>
+    					<li>Set the color of each alternative</li>
+    					<li>Delete the alternative</li>
+    				</ul>
+    				</p>")
+        ));
+      }
+    }
+  }
+
   /**
    * Get the form used to create a new question.
    *

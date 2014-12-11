@@ -54,14 +54,30 @@ class QuestionType extends Entity {
     return $default;
   }
 
+  public function getHandlerInfo() {
+    return quiz_question_get_handler_info($this->handler);
+  }
+
   /**
    * Get module for a question type.
    * @return string
    */
   public function getHandlerModule() {
-    if ($handler_info = quiz_question_get_handler_info($this->handler)) {
+    if ($handler_info = $this->getHandlerInfo()) {
       return $handler_info['module'];
     }
+  }
+
+  /**
+   * @param \Drupal\quiz_question\Entity\Question $question
+   * @return \Drupal\quiz_question\QuestionHandlerInterface
+   */
+  public function getHandler(Question $question = NULL) {
+    if (NULL === $question) {
+      $question = entity_create('quiz_question', array());
+    }
+    $handler_info = $this->getHandlerInfo();
+    return new $handler_info['question provider']($question);
   }
 
   public function setConfig($name, $value) {
