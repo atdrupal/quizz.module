@@ -51,8 +51,8 @@ class QuestionTypeController extends EntityAPIControllerExportable {
         ),
         'settings'    => array('display_summary' => FALSE),
         'display'     => array(
-            'default'  => array('label' => 'hidden', 'type' => 'text_default'),
-            'feedback' => array('label' => 'hidden', 'type' => 'text_default'),
+            'teaser' => array('label' => 'hidden', 'type' => 'text_summary_or_trimmed', 'settings' => array('trim_length' => 600)),
+            'full'   => array('label' => 'hidden', 'type' => 'text_default'),
         ),
     ));
   }
