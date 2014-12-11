@@ -24,25 +24,25 @@ class Helper {
     while (strlen($question) > 0) {
       $match = FALSE;
 
-      if (FALSE !== $pos = strpos($question, '[')) {
+      if ($pos = strpos($question, '[')) {
         $substring = substr($question, 0, $pos);
         $question = preg_replace('/' . preg_quote($substring) . '/', '', $question, 1);
         $chunks[] = $substring;
         $match = TRUE;
       }
 
-      if (FALSE !== strpos($question, ']')) {
+      if (FALSE !== ($pos = strpos($question, ']'))) {
         $substring = substr($question, 0, $pos + 1);
-        $question = preg_replace('`' . preg_quote($substring) . '`', '', $question, 1);
+        $question = preg_replace('/' . preg_quote($substring) . '/', '', $question, 1);
         $chunks[] = $substring;
         $match = TRUE;
       }
-
       if (!$match) {
         $chunks[] = $question;
         $question = '';
       }
     }
+
     return $chunks;
   }
 
@@ -50,24 +50,23 @@ class Helper {
    * @param string $question
    */
   public function getCorrectAnswerChunks($question) {
-    $correct_answer = array();
-    $chunks = $this->getQuestionChunks($question);
-    foreach ($chunks as $key => $value) {
-      if (strpos($value, '[') === FALSE) {
+    $corrects = array();
+    foreach ($this->getQuestionChunks($question) as $k => $v) {
+      if (strpos($v, '[') === FALSE) {
         continue;
       }
       else {
-        $answer_chunk = str_replace(array('[', ']'), '', $value);
+        $answer_chunk = str_replace(array('[', ']'), '', $v);
         $choice = explode(',', $answer_chunk);
         if (count($choice) == 1) {
-          $correct_answer[$key] = $answer_chunk;
+          $corrects[$k] = $answer_chunk;
         }
         else {
-          $correct_answer[$key] = $choice[0];
+          $corrects[$k] = $choice[0];
         }
       }
     }
-    return $correct_answer;
+    return $corrects;
   }
 
   public function getUserAnswer($question, $answer) {
