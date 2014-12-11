@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
@@ -30,13 +31,11 @@ class ShortAnswerQuestion extends QuestionHandler {
   const ANSWER_MANUAL = 3;
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
   public function saveEntityProperties($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
-      $id = db_insert('quiz_short_answer_properties')
+      db_insert('quiz_short_answer_properties')
         ->fields(array(
             'qid'                       => $this->question->qid,
             'vid'                       => $this->question->vid,
@@ -58,9 +57,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of validateNode
-   *
-   * @see QuizQuestion#validateNode($form)
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
     if ($this->question->correct_answer_evaluation != self::ANSWER_MANUAL && empty($this->question->correct_answer)) {
@@ -69,9 +66,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestion#delete($only_this_version)
+   * {@inheritdoc}
    */
   public function delete($only_this_version = FALSE) {
     parent::delete($only_this_version);
@@ -91,9 +86,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of load
-   *
-   * @see QuizQuestion#load()
+   * {@inheritdoc}
    */
   public function load() {
     if (isset($this->properties)) {
@@ -106,6 +99,9 @@ class ShortAnswerQuestion extends QuestionHandler {
     return $this->properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function view() {
     $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
@@ -124,13 +120,10 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getAnsweringForm
-   *
-   * @see QuizQuestion#getAnsweringForm($form_state, $result_id)
+   * {@inheritdoc}
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $form = parent::getAnsweringForm($form_state, $result_id);
-    //$form['#theme'] = 'short_answer_answering_form';
 
     $form = array(
         '#type'          => 'textfield',
@@ -223,9 +216,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getMaximumScore
-   *
-   * @see QuizQuestion#getMaximumScore()
+   * {@inheritdoc}
    */
   public function getMaximumScore() {
     return $this->question->getQuestionType()->getConfig('short_answer_default_max_score', 5);
@@ -267,19 +258,46 @@ class ShortAnswerQuestion extends QuestionHandler {
  */
 class ShortAnswerResponse extends ResponseHandler {
 
+  protected $answer_id = 0;
+
   /** @var bool */
   protected $allow_feedback = TRUE;
 
+  public function __construct($result_id, Question $question, $answer = NULL) {
+    parent::__construct($result_id, $question, $answer);
+    if (!isset($answer)) {
+      $response = db_query(
+        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
+          FROM {quiz_short_answer_user_answers}
+          WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(
+          ':qqid' => $question->qid,
+          ':qvid' => $question->vid,
+          ':rid'  => $result_id))->fetch();
+      if (!empty($response)) {
+        $this->answer = $response->answer;
+        $this->score = $response->score;
+        $this->evaluated = $response->is_evaluated;
+        $this->answer_id = $response->answer_id;
+        $this->answer_feedback = $response->answer_feedback;
+        $this->answer_feedback_format = $response->answer_feedback_format;
+      }
+    }
+    else {
+      if (is_array($answer)) {
+        $this->answer = $answer['answer'];
+      }
+      else {
+        $this->answer = $answer;
+        $this->evaluated = $this->question->correct_answer_evaluation != ShortAnswerQuestion::ANSWER_MANUAL;
+      }
+    }
+  }
+
   /**
    * Get all quiz scores that haven't been evaluated yet.
-   *
-   * @param $count
-   *  Number of items to return (default: 50).
-   * @param $offset
-   *  Where in the results we should start (default: 0).
-   *
-   * @return
-   *  Array of objects describing unanswered questions. Each object will have result_id, question_qid, and question_vid.
+   * @param int $count
+   * @param int $offset
+   * @return array Array of objects describing unanswered questions. Each object will have result_id, question_qid, and question_vid.
    */
   public static function fetchAllUnscoredAnswers($count = 50, $offset = 0) {
     global $user;
@@ -313,66 +331,27 @@ class ShortAnswerResponse extends ResponseHandler {
   /**
    * Given a question, return a list of all of the unscored answers.
    *
-   * @param $qid
-   *  Node ID for the question to check.
-   * @param $vid
-   *  Version ID for the question to check.
-   * @param $count
-   *  Number of items to return (default: 50).
-   * @param $offset
-   *  Where in the results we should start (default: 0).
-   *
-   * @return
-   *  Indexed array of result IDs that need to be scored.
+   * @param int $question_qid
+   * @param int $question_vid
+   * @param int $count
+   * @param int $offset
+   * @return array Indexed array of result IDs that need to be scored.
    */
-  public static function fetchUnscoredAnswersByQuestion($qid, $vid, $count = 50, $offset = 0) {
-    return db_query('SELECT result_id FROM {quiz_short_answer_user_answers}
-      WHERE is_evaluated = :is_evaluated AND question_qid = :question_qid AND question_vid = :question_vid', array(':is_evaluated' => 0, ':question_qid' => $qid, ':question_vid' => $vid)
-      )->fetchCol();
-  }
-
-  /**
-   * ID of the answer.
-   */
-  protected $answer_id = 0;
-
-  /**
-   * Constructor
-   */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
-      $response = db_query(
-        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
+  public static function fetchUnscoredAnswersByQuestion($question_qid, $question_vid, $count = 50, $offset = 0) {
+    return db_query(
+        'SELECT result_id
           FROM {quiz_short_answer_user_answers}
-          WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(
-          ':qqid' => $question->qid,
-          ':qvid' => $question->vid,
-          ':rid'  => $result_id))->fetch();
-      if (!empty($response)) {
-        $this->answer = $response->answer;
-        $this->score = $response->score;
-        $this->evaluated = $response->is_evaluated;
-        $this->answer_id = $response->answer_id;
-        $this->answer_feedback = $response->answer_feedback;
-        $this->answer_feedback_format = $response->answer_feedback_format;
-      }
-    }
-    else {
-      if (is_array($answer)) {
-        $this->answer = $answer['answer'];
-      }
-      else {
-        $this->answer = $answer;
-        $this->evaluated = $this->question->correct_answer_evaluation != ShortAnswerQuestion::ANSWER_MANUAL;
-      }
-    }
+          WHERE is_evaluated = :is_evaluated
+            AND question_qid = :question_qid
+            AND question_vid = :question_vid', array(
+          ':is_evaluated' => 0,
+          ':question_qid' => $question_qid,
+          ':question_vid' => $question_vid
+      ))->fetchCol();
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
     // We need to set is_evaluated depending on whether the type requires evaluation.
@@ -390,9 +369,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
+   * {@inheritdoc}
    */
   public function delete() {
     db_delete('quiz_short_answer_user_answers')
@@ -403,9 +380,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     // Manual scoring means we go with what is in the DB.
@@ -424,7 +399,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getFeedbackValues.
+   * {@inheritdoc}
    */
   public function getFeedbackValues() {
     $data = array();
@@ -443,9 +418,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormSubmit
-   *
-   * @see QuizQuestionResponse#getReportFormSubmit()
+   * {@inheritdoc}
    */
   public function getReportFormSubmit() {
     return 'short_answer_report_submit';
