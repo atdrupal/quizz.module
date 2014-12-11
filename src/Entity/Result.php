@@ -139,7 +139,7 @@ class Result extends Entity {
     }
 
     // Quiz ongoing. Pull from the "after question" settings.
-    if (TRUE || !$this->time_end || $this->time_end >= REQUEST_TIME - 5) {
+    if (!$this->time_end || $this->time_end >= REQUEST_TIME - 5) {
       return !empty($this->getQuiz()->review_options['question'][$op]);
     }
 
