@@ -1,0 +1,37 @@
+<?php
+
+use Drupal\quiz_question\Entity\Question;
+
+class QuizzClozeTestCase extends QuizTestCase {
+
+  protected $questionHandler = 'cloze';
+  protected $extraModules = array('quizz_cloze');
+
+  public static function getInfo() {
+    return array(
+        'name'        => 'Cloze',
+        'description' => 'Test cases for cloze question handler.',
+        'group'       => 'Quiz question',
+    );
+  }
+
+  private function createQuestion() {
+    $question = $this->drupalCreateQuestion(array(
+        'type'  => $this->questionHandler,
+        'title' => 'Cloze question title',
+        'body'  => 'Cloze question body',
+    ));
+
+    $this->assertTrue($question instanceof Question);
+    $this->assertEqual('cloze', $question->getQuestionType()->handler);
+
+    return $question;
+  }
+
+  public function testTaking() {
+    $quiz = $this->linkQuestionToQuiz($question = $this->createQuestion());
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+  }
+
+}
