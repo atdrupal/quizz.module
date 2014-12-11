@@ -23,20 +23,21 @@ class Helper {
     $chunks = array();
     while (strlen($question) > 0) {
       $match = FALSE;
-      $pos = strpos($question, '[');
-      if ($pos) {
+
+      if (FALSE !== $pos = strpos($question, '[')) {
         $substring = substr($question, 0, $pos);
         $question = preg_replace('/' . preg_quote($substring) . '/', '', $question, 1);
         $chunks[] = $substring;
         $match = TRUE;
       }
-      $pos = strpos($question, ']');
-      if ($pos !== FALSE) {
+
+      if (FALSE !== strpos($question, ']')) {
         $substring = substr($question, 0, $pos + 1);
-        $question = preg_replace('/' . preg_quote($substring) . '/', '', $question, 1);
+        $question = preg_replace('`' . preg_quote($substring) . '`', '', $question, 1);
         $chunks[] = $substring;
         $match = TRUE;
       }
+
       if (!$match) {
         $chunks[] = $question;
         $question = '';

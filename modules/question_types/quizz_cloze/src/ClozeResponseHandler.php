@@ -55,7 +55,7 @@ class ClozeResponseHandler extends ResponseHandler {
    * {@inheritdoc}
    */
   public function save() {
-    $this->answer_id = db_merge('quiz_cloze_user_answers')
+    db_merge('quiz_cloze_user_answers')
       ->key(array(
           'question_qid' => $this->question->qid,
           'question_vid' => $this->question->vid,
@@ -83,9 +83,7 @@ class ClozeResponseHandler extends ResponseHandler {
     $question_form['open_wrapper']['#markup'] = '<div class="cloze-question">';
     foreach ($this->helper->getQuestionChunks($s_question) as $position => $chunk) {
       if (strpos($chunk, '[') === FALSE) {
-        // this "tries[foobar]" hack is needed becaues response handler engine
-        // checks for input field with name tries
-        $question_form['tries[' . $position . ']'] = array(
+        $question_form['parts'][$position] = array(
             '#markup' => str_replace("\n", "<br/>", $chunk),
             '#prefix' => '<div class="form-item">',
             '#suffix' => '</div>',
@@ -95,7 +93,7 @@ class ClozeResponseHandler extends ResponseHandler {
 
       $choices = explode(',', str_replace(array('[', ']'), '', $chunk));
       if (count($choices) > 1) {
-        $question_form['tries[' . $position . ']'] = array(
+        $question_form['parts'][$position] = array(
             '#type'     => 'select',
             '#options'  => $this->helper->shuffleChoices(drupal_map_assoc($choices)),
             '#required' => FALSE,
@@ -103,7 +101,7 @@ class ClozeResponseHandler extends ResponseHandler {
         continue;
       }
 
-      $question_form['tries[' . $position . ']'] = array(
+      $question_form['parts'][$position] = array(
           '#type'       => 'textfield',
           '#size'       => 32,
           '#required'   => FALSE,

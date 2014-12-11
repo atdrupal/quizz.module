@@ -147,20 +147,22 @@ class ClozeQuestionHandler extends QuestionHandler {
    * {@inheritdoc}
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
-    $form = parent::getAnsweringForm($form_state, $result_id);
-    $form['#theme'] = 'cloze_answering_form';
+    $element = parent::getAnsweringForm($form_state, $result_id);
+    $element['#theme'] = 'cloze_answering_form';
+    $element['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
+
     if (!empty($this->question->learning_mode)) {
-      $form['#attached']['js'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.js';
+      $element['#attached']['js'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.js';
       $question = $this->question->quiz_question_body[LANGUAGE_NONE][0]['safe_value'];
       $this->includeAnswerJs($question);
     }
-    $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
-    $form['open_wrapper']['#markup'] = '<div class="cloze-question">';
+
+    $element['open_wrapper']['#markup'] = '<div class="cloze-question">';
     foreach ($this->clozeHelper->getQuestionChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']) as $position => $chunk) {
+      // this "parts[foobar]" hack is needed becaues question handler engine
+      // checks for input field with name parts
       if (strpos($chunk, '[') === FALSE) {
-        // this "tries[foobar]" hack is needed becaues question handler engine
-        // checks for input field with name tries
-        $form['tries[' . $position . ']'] = array(
+        $element['parts[' . $position . ']'] = array(
             '#prefix' => '<div class="form-item">',
             '#markup' => str_replace("\n", "<br/>", $chunk),
             '#suffix' => '</div>',
@@ -170,7 +172,7 @@ class ClozeQuestionHandler extends QuestionHandler {
         $chunk = str_replace(array('[', ']'), '', $chunk);
         $choices = explode(',', $chunk);
         if (count($choices) > 1) {
-          $form['tries[' . $position . ']'] = array(
+          $element['parts[' . $position . ']'] = array(
               '#type'     => 'select',
               '#title'    => '',
               '#options'  => $this->clozeHelper->shuffleChoices(drupal_map_assoc($choices)),
@@ -178,7 +180,7 @@ class ClozeQuestionHandler extends QuestionHandler {
           );
         }
         else {
-          $form['tries[' . $position . ']'] = array(
+          $element['parts'][$position] = array(
               '#type'       => 'textfield',
               '#title'      => '',
               '#size'       => 32,
@@ -192,18 +194,18 @@ class ClozeQuestionHandler extends QuestionHandler {
       }
     }
 
-    $form['close_wrapper']['#markup'] = '</div>';
+    $element['close_wrapper']['#markup'] = '</div>';
 
     if (isset($result_id)) {
       $handler = quiz_answer_controller()->getHandler($result_id, $this->question);
-      $response = $handler->getResponse();
-      if (is_array($response)) {
-        foreach ($response as $key => $value) {
-          $form["tries[$key]"]['#default_value'] = $value;
+      if ($response = $handler->getResponse()) {
+        foreach ($response['parts'] as $key => $value) {
+          $element["parts"][$key]['#default_value'] = $value;
         }
       }
     }
-    return $form;
+
+    return $element;
   }
 
   /**
