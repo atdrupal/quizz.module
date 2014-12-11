@@ -6,20 +6,27 @@
    * it to upper case.
    */
   var onKeyUp = function (e) {
-    var id = this.id;
-    var count = $('#' + id).val().length;
-    var present_class = $('#' + id).attr('class').replace('form-text', '').trim();
-    var field_answer = Drupal.settings.answer[present_class].toUpperCase();
-    var value = String.fromCharCode(e.keyCode);
-
-    if (value == field_answer.charAt(count - 1)) {
-      e.preventDefault();
-      return false;
+    switch (e.keyCode) {
+      case 9: // tab
+      case 17: // ctrl
+      case 18: // …
+      case 91: // cmd
+      case 16: // shift
+        return true;
     }
 
-    $('#' + id).val(function (index, value) {
-      return value.substr(0, value.length - 1);
-    });
+    var id = this.id;
+    var present_class = $('#' + id).attr('class').replace('form-text', '').trim();
+    var field_answer = Drupal.settings.answer[present_class].toUpperCase();
+    var input = $('#' + id).val();
+    var reg = new RegExp('^' + input.toUpperCase() + '.*$', 'g');
+
+    if (reg.test(field_answer)) {
+      e.preventDefault();
+    }
+    else {
+      $('#' + id).val(input.substr(0, input.length - 1));
+    }
   };
 
   Drupal.behaviors.cloze = {
