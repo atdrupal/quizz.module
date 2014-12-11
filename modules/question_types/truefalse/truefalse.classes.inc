@@ -6,8 +6,6 @@ use Drupal\quiz_question\ResponseHandler;
 
 /**
  * Defines the classes necessary for a True/False quiz.
- *
- * @file
  */
 
 /**
@@ -16,13 +14,11 @@ use Drupal\quiz_question\ResponseHandler;
 class TrueFalseQuestion extends QuestionHandler {
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
   public function saveEntityProperties($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
-      $id = db_insert('quiz_truefalse')
+      db_insert('quiz_truefalse')
         ->fields(array(
             'qid'            => $this->question->qid,
             'vid'            => $this->question->vid,
@@ -42,9 +38,7 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of validateNode
-   *
-   * @see QuizQuestion#validateNode($form)
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
     // This space intentionally left blank. :)
@@ -74,9 +68,7 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of load
-   *
-   * @see QuizQuestion#load()
+   * {@inheritdoc}
    */
   public function load() {
     if (isset($this->properties)) {
@@ -114,9 +106,7 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getAnsweringForm
-   *
-   * @see QuizQuestion#getAnsweringForm($form_state, $result_id)
+   * {@inheritdoc}
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $element = parent::getAnsweringForm($form_state, $result_id);
@@ -140,16 +130,14 @@ class TrueFalseQuestion extends QuestionHandler {
   /**
    * Question response validator.
    */
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     if (is_null($form_state['values']['question'][$this->question->qid])) {
       form_set_error('', t('You must provide an answer.'));
     }
   }
 
   /**
-   * Implementation of getBodyFieldTitle
-   *
-   * @see QuizQuestion#getBodyFieldTitle()
+   * {@inheritdoc}
    */
   public function getBodyFieldTitle() {
     return t('True/false statement');

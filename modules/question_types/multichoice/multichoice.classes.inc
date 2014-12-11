@@ -541,7 +541,7 @@ class MultichoiceQuestion extends QuestionHandler {
   /**
    * Question response validator.
    */
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     if (!$this->question->choice_multi && is_null($form_state['values']['question'][$this->question->qid]['user_answer'])) {
       form_set_error('', t('You must provide an answer.'));
     }

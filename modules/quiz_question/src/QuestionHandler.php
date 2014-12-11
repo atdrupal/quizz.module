@@ -325,7 +325,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     return FALSE;
   }
 
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
 
   }
 
