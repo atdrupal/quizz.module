@@ -3,6 +3,7 @@
 namespace Drupal\quizz_cloze;
 
 use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\quiz_question\QuestionHandler;
 
 /**
@@ -19,6 +20,18 @@ class ClozeQuestionHandler extends QuestionHandler {
   public function __construct(Question $question) {
     parent::__construct($question);
     $this->clozeHelper = new Helper();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onNewQuestionTypeCreated(QuestionType $question_type) {
+    parent::onNewQuestionTypeCreated($question_type);
+
+    // Hide full question to user on taking.
+    $instance = field_info_instance('quiz_question', 'quiz_question_body', $question_type->type);
+    $instance['display']['default']['type'] = 'hidden';
+    field_update_instance($instance);
   }
 
   public function saveEntityProperties($is_new = FALSE) {

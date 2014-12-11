@@ -93,9 +93,7 @@ class ClozeResponseHandler extends ResponseHandler {
   }
 
   public function getReportForm(array $form = array()) {
-    $form = parent::getReportForm($form);
-
-    # $showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE
+    $form += parent::getReportForm($form);
 
     $s_question = strip_tags($form['question']['#markup']);
     $question_form['open_wrapper']['#markup'] = '<div class="cloze-question">';
@@ -135,32 +133,25 @@ class ClozeResponseHandler extends ResponseHandler {
     return $form;
   }
 
-  /**
-   * Implementation of getReportFormResponse()
-   *
-   * @see ResponseHandler#getReportFormResponse($showpoints, $showfeedback, $allow_scoring)
-   */
-  public function getReportFormResponse($showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE) {
-    $form = array();
-    $form['#theme'] = 'cloze_response_form';
-    $form['#attached']['css'][] = drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css';
-    if (($this->question) && !empty($this->question->answers)) {
-      $answer = (object) current($this->question->answers);
-    }
-    else {
-      return $form;
+  public function getFeedbackValues() {
+    if (!$this->question || empty($this->question->answers)) {
+      return array();
     }
 
     $s_question = $this->question->quiz_question_body[LANGUAGE_NONE][0]['value'];
-    $correct_answer = $this->helper->getCorrectAnswerChunks($s_question);
-    $user_answer = $this->helper->getUserAnswer($s_question, $this->answer);
-    $form['answer']['#markup'] = theme(
-      'cloze_user_answer', array(
-        'answer'  => $user_answer,
-        'correct' => $correct_answer
-    ));
 
-    return $form;
+    return array(
+        '#attached' => array(
+            'css' => array(
+                drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css'
+            ),
+        ),
+        'answer'    => array(
+            '#theme'   => 'cloze_user_answer',
+            '#answer'  => $this->helper->getUserAnswer($s_question, $this->answer),
+            '#correct' => $this->getCorrectAnswer($s_question),
+        ),
+    );
   }
 
   private function getCorrectAnswer($question) {
@@ -178,12 +169,7 @@ class ClozeResponseHandler extends ResponseHandler {
     return str_replace("\n", "<br/>", implode(' ', $correct_answer));
   }
 
-  /**
-   * Implementation of getReportFormScore()
-   *
-   * @see ResponseHandler#getReportFormScore($showpoints, $showfeedback, $allow_scoring)
-   */
-  public function getReportFormScore($showfeedback = TRUE, $showpoints = TRUE, $allow_scoring = FALSE) {
+  public function getReportFormScore() {
     return array('#markup' => $this->getScore());
   }
 

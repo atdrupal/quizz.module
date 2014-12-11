@@ -19,7 +19,7 @@ class QuizzClozeTestCase extends QuizTestCase {
     $question = $this->drupalCreateQuestion(array(
         'type'  => $this->questionHandler,
         'title' => 'Cloze question title',
-        'body'  => 'Cloze question body',
+        'body'  => 'Cloze question body [hidden]',
     ));
 
     $this->assertTrue($question instanceof Question);
@@ -32,6 +32,8 @@ class QuizzClozeTestCase extends QuizTestCase {
     $quiz = $this->linkQuestionToQuiz($question = $this->createQuestion());
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz->qid}/take");
+    $this->assertText('Cloze question body');
+    $this->assertNoText('[hidden]');
   }
 
 }

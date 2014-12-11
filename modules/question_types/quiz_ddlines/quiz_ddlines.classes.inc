@@ -6,18 +6,8 @@ use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
- * The main classes for the drag and drop with lines question type.
- *
- * These inherit or implement code found in quiz_question.classes.inc.
- *
  * Sponsored by: Senter for IKT i utdanningen
  * Code: paalj
- *
- * Based on:
- * Other question types in the quiz framework.
- *
- * @file
- * Question type, enabling the creation of dragging a choice to the correct location in an image
  */
 
 /**

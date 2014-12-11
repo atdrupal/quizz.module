@@ -20,4 +20,3 @@ function theme_cloze_answering_form(&$variables) {
   drupal_add_css(drupal_get_path('module', 'quizz_cloze') . '/theme/cloze.css');
   return drupal_render_children($form);
 }
-
