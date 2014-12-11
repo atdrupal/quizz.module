@@ -12,14 +12,6 @@ function theme_cloze_user_answer($variables) {
 }
 
 /**
- * Theme the cloze response form
- */
-function theme_cloze_response_form(&$variables) {
-  $form = &$variables['form'];
-  return drupal_render_children($form);
-}
-
-/**
  * Theme the cloze answering form
  */
 function theme_cloze_answering_form(&$variables) {

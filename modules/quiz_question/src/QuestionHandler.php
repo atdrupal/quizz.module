@@ -3,6 +3,7 @@
 namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\quiz_question\Form\QuestionForm;
 use Drupal\quizz\Controller\QuestionFeedbackController;
 use Drupal\quizz\Entity\QuizEntity;
@@ -30,6 +31,41 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    */
   public function __construct(Question $question) {
     $this->question = $question;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Create body field for new entity bundle (question type).
+   */
+  public function onNewQuestionTypeCreated(QuestionType $question_type) {
+    if (!field_info_instance('quiz_question', 'quiz_question_body', $question_type->type)) {
+      $bundle = $question_type->type;
+      if (!field_info_field('quiz_question_body')) {
+        field_create_field(array(
+            'field_name'   => 'quiz_question_body',
+            'type'         => 'text_with_summary',
+            'entity_types' => array('quiz_question'),
+        ));
+      }
+
+      field_create_instance(array(
+          'field_name'  => 'quiz_question_body',
+          'entity_type' => 'quiz_question',
+          'bundle'      => $bundle,
+          'label'       => t('Question'),
+          'widget'      => array(
+              'type'     => 'text_textarea_with_summary',
+              'weight'   => -20,
+              'settings' => array('rows' => 5, 'summary_rows' => 3),
+          ),
+          'settings'    => array('display_summary' => FALSE),
+          'display'     => array(
+              'teaser' => array('label' => 'hidden', 'type' => 'text_summary_or_trimmed', 'settings' => array('trim_length' => 600)),
+              'full'   => array('label' => 'hidden', 'type' => 'text_default'),
+          ),
+      ));
+    }
   }
 
   /**
