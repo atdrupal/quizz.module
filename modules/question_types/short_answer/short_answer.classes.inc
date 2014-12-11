@@ -225,7 +225,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   /**
    * Evaluate the correctness of an answer based on the correct answer and evaluation method.
    */
-  public function evaluateAnswer($user_answer) {
+  public function evaluateAnswer($input) {
     $score = 0;
 
     // Ignore white spaces for correct answer
@@ -233,17 +233,17 @@ class ShortAnswerQuestion extends QuestionHandler {
 
     switch ($this->question->correct_answer_evaluation) {
       case self::ANSWER_MATCH:
-        if ($user_answer == $this->question->correct_answer) {
+        if ($input == $this->question->correct_answer) {
           $score = $this->question->max_score;
         }
         break;
       case self::ANSWER_INSENSITIVE_MATCH:
-        if (drupal_strtolower($user_answer) == drupal_strtolower($this->question->correct_answer)) {
+        if (drupal_strtolower($input) == drupal_strtolower($this->question->correct_answer)) {
           $score = $this->question->max_score;
         }
         break;
       case self::ANSWER_REGEX:
-        if (preg_match($this->question->correct_answer, $user_answer) > 0) {
+        if (preg_match($this->question->correct_answer, $input) > 0) {
           $score = $this->question->max_score;
         }
         break;
@@ -267,6 +267,36 @@ class ShortAnswerResponse extends ResponseHandler {
 
   /** @var bool */
   protected $allow_feedback = TRUE;
+
+  public function __construct($result_id, Question $question, $answer = NULL) {
+    parent::__construct($result_id, $question, $answer);
+    if (!isset($answer)) {
+      $response = db_query(
+        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
+          FROM {quiz_short_answer_user_answers}
+          WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(
+          ':qqid' => $question->qid,
+          ':qvid' => $question->vid,
+          ':rid'  => $result_id))->fetch();
+      if (!empty($response)) {
+        $this->answer = $response->answer;
+        $this->score = $response->score;
+        $this->evaluated = $response->is_evaluated;
+        $this->answer_id = $response->answer_id;
+        $this->answer_feedback = $response->answer_feedback;
+        $this->answer_feedback_format = $response->answer_feedback_format;
+      }
+    }
+    else {
+      if (is_array($answer)) {
+        $this->answer = $answer['answer'];
+      }
+      else {
+        $this->answer = $answer;
+        $this->evaluated = $this->question->correct_answer_evaluation != ShortAnswerQuestion::ANSWER_MANUAL;
+      }
+    }
+  }
 
   /**
    * Get all quiz scores that haven't been evaluated yet.
@@ -306,60 +336,23 @@ class ShortAnswerResponse extends ResponseHandler {
   /**
    * Given a question, return a list of all of the unscored answers.
    *
-   * @param $qid
-   *  Node ID for the question to check.
-   * @param $vid
-   *  Version ID for the question to check.
-   * @param $count
-   *  Number of items to return (default: 50).
-   * @param $offset
-   *  Where in the results we should start (default: 0).
-   *
-   * @return
-   *  Indexed array of result IDs that need to be scored.
+   * @param int $question_qid
+   * @param int $question_vid
+   * @param int $count
+   * @param int $offset
+   * @return array Indexed array of result IDs that need to be scored.
    */
-  public static function fetchUnscoredAnswersByQuestion($qid, $vid, $count = 50, $offset = 0) {
-    return db_query('SELECT result_id FROM {quiz_short_answer_user_answers}
-      WHERE is_evaluated = :is_evaluated AND question_qid = :question_qid AND question_vid = :question_vid', array(':is_evaluated' => 0, ':question_qid' => $qid, ':question_vid' => $vid)
-      )->fetchCol();
-  }
-
-  /**
-   * ID of the answer.
-   */
-  protected $answer_id = 0;
-
-  /**
-   * Constructor
-   */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
-      $response = db_query(
-        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
+  public static function fetchUnscoredAnswersByQuestion($question_qid, $question_vid, $count = 50, $offset = 0) {
+    return db_query(
+        'SELECT result_id
           FROM {quiz_short_answer_user_answers}
-          WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(
-          ':qqid' => $question->qid,
-          ':qvid' => $question->vid,
-          ':rid'  => $result_id))->fetch();
-      if (!empty($response)) {
-        $this->answer = $response->answer;
-        $this->score = $response->score;
-        $this->evaluated = $response->is_evaluated;
-        $this->answer_id = $response->answer_id;
-        $this->answer_feedback = $response->answer_feedback;
-        $this->answer_feedback_format = $response->answer_feedback_format;
-      }
-    }
-    else {
-      if (is_array($answer)) {
-        $this->answer = $answer['answer'];
-      }
-      else {
-        $this->answer = $answer;
-        $this->evaluated = $this->question->correct_answer_evaluation != ShortAnswerQuestion::ANSWER_MANUAL;
-      }
-    }
+          WHERE is_evaluated = :is_evaluated
+            AND question_qid = :question_qid
+            AND question_vid = :question_vid', array(
+          ':is_evaluated' => 0,
+          ':question_qid' => $question_qid,
+          ':question_vid' => $question_vid
+      ))->fetchCol();
   }
 
   /**

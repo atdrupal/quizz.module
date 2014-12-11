@@ -17,12 +17,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
-    $conds = array(
-        'result_id'    => $this->result_id,
-        'question_qid' => $this->question->qid,
-        'question_vid' => $this->question->vid
-    );
-
+    $conds = array('result_id' => $result_id, 'question_vid' => $question->vid);
     if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
       /* @var $answer Answer */
       $answer = reset($find);
@@ -181,10 +176,10 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     drupal_alter('quiz_feedback_labels', $labels);
 
     $rows = array();
-    foreach ($this->getFeedbackValues() as $idx => $row) {
+    foreach ($this->getFeedbackValues() as $i => $row) {
       foreach (array_keys($labels) as $review_type) {
         if (('choice' === $review_type) || (isset($row[$review_type]) && $this->canReview($review_type))) {
-          $rows[$idx][$review_type] = $row[$review_type];
+          $rows[$i][$review_type] = $row[$review_type];
         }
       }
     }
