@@ -209,7 +209,7 @@ class QuizAnsweringForm {
     // There was an answer submitted.
     foreach (array_keys($form_state['values']['question']) as $question_id) {
       if ($_question = quiz_question_entity_load($question_id)) {
-        $_question->getHandler()->getAnsweringFormValidate($form, $form_state);
+        $_question->getHandler()->validateAnsweringForm($form, $form_state);
       }
     }
   }

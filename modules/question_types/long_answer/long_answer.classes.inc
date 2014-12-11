@@ -156,7 +156,7 @@ class LongAnswerQuestion extends QuestionHandler {
   /**
    * Question response validator.
    */
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     if ($form_state['values']['question'][$this->question->qid] == '') {
       form_set_error('', t('You must provide an answer.'));
     }
@@ -307,9 +307,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
     $this->answer_id = db_insert('quiz_long_answer_user_answers')
@@ -336,9 +334,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     return (int) db_query(
@@ -351,7 +347,7 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getFeedbackValues.
+   * {@inheritdoc}
    */
   public function getFeedbackValues() {
     $data = array();
@@ -370,18 +366,16 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormSubmit
-   *
-   * @see QuizQuestionResponse#getReportFormSubmit()
+   * {@inheritdoc}
    */
   public function getReportFormSubmit() {
     return 'long_answer_report_submit';
   }
 
   /**
-   * Implements QuizQuestionResponse::getReportFormValidate().
+   * {@inheritdoc}
    */
-  public function getReportFormValidate(&$element, &$form_state) {
+  public function validateReportForm(&$element, &$form_state) {
     $max = $this->question->max_score;
     // Check to make sure that entered score is not higher than max allowed score.
     if ($element['score']['#value'] > $max) {

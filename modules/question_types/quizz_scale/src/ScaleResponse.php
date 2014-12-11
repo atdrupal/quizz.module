@@ -29,12 +29,10 @@ class ScaleResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
-    $id = db_insert('quiz_scale_user_answers')
+    db_insert('quiz_scale_user_answers')
       ->fields(array(
           'answer_id'    => $this->answer_id,
           'result_id'    => $this->result_id,
@@ -58,30 +56,24 @@ class ScaleResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     return $this->isValid() ? 1 : 0;
   }
 
   /**
-   * Implementation of getResponse
-   *
-   * @see QuizQuestionResponse#getResponse()
+   * {@inheritdoc}
    */
   public function getResponse() {
     return $this->answer_id;
   }
 
   /**
-   * Implmenets QuizQuestionResponse::getFeedbackValues().
+   * {@inheritdoc}
    */
   public function getFeedbackValues() {
-    return array(
-        array('choice' => $this->answer)
-    );
+    return array(array('choice' => $this->answer));
   }
 
 }

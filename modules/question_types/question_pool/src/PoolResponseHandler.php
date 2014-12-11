@@ -158,9 +158,7 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
+   * {@inheritdoc}
    */
   public function delete() {
     db_delete('quiz_pool_user_answers')

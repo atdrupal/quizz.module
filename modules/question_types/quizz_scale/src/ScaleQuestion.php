@@ -132,7 +132,7 @@ class ScaleQuestion extends QuestionHandler {
   /**
    * Question response validator.
    */
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     if ($form_state['values']['question'][$this->question->qid] == '') {
       form_set_error('', t('You must provide an answer.'));
     }

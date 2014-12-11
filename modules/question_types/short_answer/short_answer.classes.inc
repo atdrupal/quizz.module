@@ -58,9 +58,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of validateNode
-   *
-   * @see QuizQuestion#validateNode($form)
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
     if ($this->question->correct_answer_evaluation != self::ANSWER_MANUAL && empty($this->question->correct_answer)) {
@@ -69,9 +67,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestion#delete($only_this_version)
+   * {@inheritdoc}
    */
   public function delete($only_this_version = FALSE) {
     parent::delete($only_this_version);
@@ -91,9 +87,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of load
-   *
-   * @see QuizQuestion#load()
+   * {@inheritdoc}
    */
   public function load() {
     if (isset($this->properties)) {
@@ -106,6 +100,9 @@ class ShortAnswerQuestion extends QuestionHandler {
     return $this->properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function view() {
     $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
@@ -124,13 +121,10 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getAnsweringForm
-   *
-   * @see QuizQuestion#getAnsweringForm($form_state, $result_id)
+   * {@inheritdoc}
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $form = parent::getAnsweringForm($form_state, $result_id);
-    //$form['#theme'] = 'short_answer_answering_form';
 
     $form = array(
         '#type'          => 'textfield',
@@ -154,7 +148,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   /**
    * Question response validator.
    */
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     if ($form_state['values']['question'][$this->question->qid] == '') {
       form_set_error('', t('You must provide an answer.'));
     }
@@ -223,9 +217,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getMaximumScore
-   *
-   * @see QuizQuestion#getMaximumScore()
+   * {@inheritdoc}
    */
   public function getMaximumScore() {
     return $this->question->getQuestionType()->getConfig('short_answer_default_max_score', 5);
@@ -403,9 +395,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     // Manual scoring means we go with what is in the DB.
@@ -424,7 +414,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getFeedbackValues.
+   * {@inheritdoc}
    */
   public function getFeedbackValues() {
     $data = array();
@@ -443,21 +433,21 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of getReportFormSubmit
-   *
-   * @see QuizQuestionResponse#getReportFormSubmit()
+   * {@inheritdoc}
    */
   public function getReportFormSubmit() {
     return 'short_answer_report_submit';
   }
 
   /**
-   * Implements QuizQuestionResponse::getReportFormValidate().
+   * {@inheritdoc}
    */
-  public function getReportFormValidate(&$element, &$form_state) {
+  public function validateReportForm(&$element, &$form_state) {
     // Check to make sure that entered score is not higher than max allowed score.
     if ($element['score']['#value'] > $this->question->max_score) {
-      form_error($element['score'], t('The score needs to be a number between 0 and @max', array('@max' => $this->question->max_score)));
+      form_error($element['score'], t('The score needs to be a number between 0 and @max', array(
+          '@max' => $this->question->max_score
+      )));
     }
   }
 

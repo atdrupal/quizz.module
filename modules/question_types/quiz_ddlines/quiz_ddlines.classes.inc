@@ -1,21 +1,13 @@
 <?php
 
+use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
- * The main classes for the drag and drop with lines question type.
- *
- * These inherit or implement code found in quiz_question.classes.inc.
- *
  * Sponsored by: Senter for IKT i utdanningen
  * Code: paalj
- *
- * Based on:
- * Other question types in the quiz framework.
- *
- * @file
- * Question type, enabling the creation of dragging a choice to the correct location in an image
  */
 
 /**
@@ -305,14 +297,16 @@ class DDLinesQuestion extends QuestionHandler {
  */
 class DDLinesResponse extends ResponseHandler {
 
-  // Contains a assoc array with label-ID as key
-  // and hotspot-ID as value:
+  /**
+   * Contains a assoc array with label-ID as key and hotspot-ID as value.
+   * @var array
+   */
   protected $user_answers = array();
 
   /**
    * Constructor
    */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $tries = NULL) {
+  public function __construct($result_id, Question $question, $tries = NULL) {
     parent::__construct($result_id, $question, $tries);
 
     // Is answers set in form?
@@ -362,7 +356,6 @@ class DDLinesResponse extends ResponseHandler {
    * Delete the response.
    */
   public function delete() {
-
     $user_answer_ids = array();
     $query = db_query('SELECT id FROM {quiz_ddlines_user_answers} WHERE question_qid = :qid AND question_vid = :vid AND result_id = :result_id', array(':qid' => $this->question->qid, ':vid' => $this->question->vid, ':result_id' => $this->result_id));
     while ($answer = $query->fetch()) {

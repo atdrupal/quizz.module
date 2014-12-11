@@ -253,7 +253,7 @@ class MatchingQuestion extends QuestionHandler {
   /**
    * Question response validator.
    */
-  public function getAnsweringFormValidate(array &$form, array &$form_state = NULL) {
+  public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     $question_answer = $form_state['values']['question'][$this->question->qid];
     foreach ($question_answer as $value) {
       if ($value != 'def') {

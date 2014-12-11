@@ -14,45 +14,35 @@ use Drupal\quiz_question\ResponseHandler;
 class QuizPagesQuestion extends QuestionHandler {
 
   /**
-   * Implementation of validateNode
-   *
-   * @see QuizQuestion#validateNode($form)
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
 
   }
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
   public function saveEntityProperties($is_new = FALSE) {
 
   }
 
   /**
-   * Implementation of getBodyFieldTitle
-   *
-   * @see QuizQuestion#getBodyFieldTitle()
+   * {@inheritdoc}
    */
   public function getBodyFieldTitle() {
     return t('Page');
   }
 
   /**
-   * Implementation of getCreationForm
-   *
-   * @see QuizQuestion#getCreationForm($form_state)
+   * {@inheritdoc}
    */
   public function getCreationForm(array &$form_state = NULL) {
     return array();
   }
 
   /**
-   * Implementation of getMaximumScore
-   *
-   * @see QuizQuestion#getMaximumScore()
+   * {@inheritdoc}
    */
   public function getMaximumScore() {
     return 0;
@@ -81,45 +71,35 @@ class QuizPagesQuestion extends QuestionHandler {
 class QuizPagesResponse extends ResponseHandler {
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
 
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
+   * {@inheritdoc}
    */
   public function delete() {
 
   }
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
 
   }
 
   /**
-   * Implementation of isCorrect
-   *
-   * @see QuizQuestionResponse#isCorrect()
+   * {@inheritdoc}
    */
   public function isCorrect() {
     return TRUE;
   }
 
   /**
-   * Implementation of getReportForm
-   *
-   * @see QuizQuestionResponse#getReportForm()
+   * {@inheritdoc}
    */
   public function getReportForm() {
     return array('#no_report' => TRUE);
