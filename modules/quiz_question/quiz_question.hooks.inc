@@ -212,20 +212,20 @@ function quiz_question_field_extra_fields() {
 
 /**
  * Implements hook_get_report().
- *
- * @return
- *  Node containing all of the items from the question plus the user's answer.
  */
-function quiz_question_get_report($qid, $vid, $result_id) {
-  if (!$response_instance = quiz_answer_controller()->getHandler($result_id, NULL, NULL, $qid, $vid)) {
-    drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array('%qid' => $qid, '%vid' => $vid)), 'error');
+function quiz_question_get_report($question_id, $question_vid, $result_id) {
+  if (!$handler = quiz_answer_controller()->getHandler($result_id, NULL, NULL, $question_id, $question_vid)) {
+    drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array(
+        '%qid' => $question_id,
+        '%vid' => $question_vid
+      )), 'error');
     return FALSE;
   }
 
-  $result = $response_instance->getReport();
-  $response_instance->question->answers[$result['answer_id']] = $result;
-  $response_instance->question->correct = $result['is_correct'];
-  return $response_instance->question;
+  $report = $handler->getReport();
+  $handler->question->answers[$report['answer_id']] = $report;
+  $handler->question->correct = $report['is_correct'];
+  return $handler->question;
 }
 
 /**

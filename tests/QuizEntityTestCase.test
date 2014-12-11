@@ -59,7 +59,7 @@ class QuizEntityTestCase extends QuizTestCase {
     // Entity form, no warning
     // ---------------------
     $form = entity_form('quiz_entity', $quiz);
-    foreach (array('title', 'vtabs', 'taking', 'summaryoptions', 'resultoptions', 'quiz_availability') as $k) {
+    foreach (array('title', 'vtabs', 'taking', 'summary_options', 'result_options', 'quiz_availability') as $k) {
       $this->assertTrue(isset($form[$k]), "Found {$k} in form.");
     }
 

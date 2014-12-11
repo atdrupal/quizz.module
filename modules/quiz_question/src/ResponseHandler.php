@@ -110,9 +110,8 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    *  result_id
    */
   public function getReport() {
-    // Basically, we encode internal information in a
-    // legacy array format for Quiz.
-    $report = array(
+    // Basically, we encode internal information in a legacy array format for Quiz.
+    return array(
         'answer_id'    => 0, // <-- Stupid vestige of multichoice.
         'answer'       => $this->answer,
         'is_evaluated' => $this->isEvaluated(),
@@ -122,7 +121,6 @@ abstract class ResponseHandler extends ResponseHandlerBase {
         'question_qid' => $this->question->qid,
         'result_id'    => $this->result_id,
     );
-    return $report;
   }
 
   /**
