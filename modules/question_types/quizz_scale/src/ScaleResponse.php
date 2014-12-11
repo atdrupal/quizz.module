@@ -10,6 +10,11 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class ScaleResponse extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_scale_user_answers';
   protected $answer_id = 0;
 
   public function __construct($result_id, Question $question, $answer = NULL) {
@@ -39,19 +44,6 @@ class ScaleResponse extends ResponseHandler {
           'question_vid' => $this->question->vid,
           'question_qid' => $this->question->qid,
       ))
-      ->execute();
-  }
-
-  /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-    db_delete('quiz_scale_user_answers')
-      ->condition('result_id', $this->result_id)
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
       ->execute();
   }
 

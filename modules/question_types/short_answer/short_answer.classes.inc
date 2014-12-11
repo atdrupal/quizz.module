@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
@@ -30,13 +31,11 @@ class ShortAnswerQuestion extends QuestionHandler {
   const ANSWER_MANUAL = 3;
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
   public function saveEntityProperties($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
-      $id = db_insert('quiz_short_answer_properties')
+      db_insert('quiz_short_answer_properties')
         ->fields(array(
             'qid'                       => $this->question->qid,
             'vid'                       => $this->question->vid,
@@ -259,19 +258,21 @@ class ShortAnswerQuestion extends QuestionHandler {
  */
 class ShortAnswerResponse extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_short_answer_user_answers';
+  protected $answer_id = 0;
+
   /** @var bool */
   protected $allow_feedback = TRUE;
 
   /**
    * Get all quiz scores that haven't been evaluated yet.
-   *
-   * @param $count
-   *  Number of items to return (default: 50).
-   * @param $offset
-   *  Where in the results we should start (default: 0).
-   *
-   * @return
-   *  Array of objects describing unanswered questions. Each object will have result_id, question_qid, and question_vid.
+   * @param int $count
+   * @param int $offset
+   * @return array Array of objects describing unanswered questions. Each object will have result_id, question_qid, and question_vid.
    */
   public static function fetchAllUnscoredAnswers($count = 50, $offset = 0) {
     global $user;
@@ -362,9 +363,7 @@ class ShortAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
     // We need to set is_evaluated depending on whether the type requires evaluation.
@@ -378,19 +377,6 @@ class ShortAnswerResponse extends ResponseHandler {
           'score'        => $this->getScore(FALSE),
           'is_evaluated' => $this->is_evaluated,
       ))
-      ->execute();
-  }
-
-  /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-    db_delete('quiz_short_answer_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
       ->execute();
   }
 

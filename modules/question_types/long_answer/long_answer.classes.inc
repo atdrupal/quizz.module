@@ -196,6 +196,15 @@ class LongAnswerQuestion extends QuestionHandler {
  */
 class LongAnswerResponse extends ResponseHandler {
 
+  /**
+   * {@inheritdoc}
+   * @var string
+   */
+  protected $base_table = 'quiz_long_answer_user_answers';
+
+  /** @var int */
+  protected $answer_id = 0;
+
   /** @var bool */
   protected $allow_feedback = TRUE;
 
@@ -271,11 +280,6 @@ class LongAnswerResponse extends ResponseHandler {
   }
 
   /**
-   * ID of the answer.
-   */
-  protected $answer_id = 0;
-
-  /**
    * Constructor
    */
   public function __construct($result_id, Question $question, $answer = NULL) {
@@ -317,19 +321,6 @@ class LongAnswerResponse extends ResponseHandler {
           'question_vid' => $this->question->vid,
           'result_id'    => $this->result_id,
       ))
-      ->execute();
-  }
-
-  /**
-   * Implementation of delete
-   *
-   * @see QuizQuestionResponse#delete()
-   */
-  public function delete() {
-    db_delete('quiz_long_answer_user_answers')
-      ->condition('question_qid', $this->question->qid)
-      ->condition('question_vid', $this->question->vid)
-      ->condition('result_id', $this->result_id)
       ->execute();
   }
 
