@@ -31,15 +31,15 @@
         </div>
 
         <?php if (isset($sub_form['question'])): ?>
-        <?php print drupal_render($sub_form['question']); ?>
+          <?php print drupal_render($sub_form['question']); ?>
         <?php endif; ?>
       </div>
 
       <?php if (isset($sub_form['response'])): ?>
-      <div class="quiz-report-response dd">
-        <h3 class="quiz-report-response-header"><?php print t('Response') ?></h3>
-        <?php print drupal_render($sub_form['response']); ?>
-      </div>
+        <div class="quiz-report-response dd">
+          <h3 class="quiz-report-response-header"><?php print t('Response') ?></h3>
+          <?php print drupal_render($sub_form['response']); ?>
+        </div>
       <?php endif; ?>
 
       <div class="quiz-report-question-feedback dd">
@@ -52,6 +52,13 @@
       </div>
     </div>
   <?php endforeach; ?>
+
+  <div class="quiz-report-quiz-feedback dd">
+    <?php if (isset($form['quiz_feedback']) && $form['quiz_feedback']['#markup']): ?>
+      <h2><?php print t('Quiz feedback'); ?></h2>
+      <?php print drupal_render($form['quiz_feedback']); ?>
+    <?php endif; ?>
+  </div>
 </div>
 
 <div class="quiz-score-submit">

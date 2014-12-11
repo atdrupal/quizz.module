@@ -134,17 +134,38 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     $form['vid'] = array('#type' => 'value', '#value' => $this->question->vid);
     $form['result_id'] = array('#type' => 'value', '#value' => $this->result_id);
     $form['max_score'] = array('#type' => 'value', '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?');
-    $form['question'] = $this->getReportFormQuestion();
 
     if ($this->result->canAccessOwnScore($user)) {
       if ($submit = $this->getReportFormSubmit()) {
         $form['submit'] = array('#type' => 'value', '#value' => $submit);
       }
-    }
 
-    if ($this->result->canAccessOwnScore($user)) {
       if ($answer_feedback = $this->getReportFormAnswerFeedback()) {
         $form['answer_feedback'] = $answer_feedback;
+      }
+    }
+
+    if (quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
+      $form['score'] = $this->getReportFormScore();
+    }
+
+    foreach ($this->getFeedback() as $type => $render) {
+      $form[$type] = $render;
+    }
+
+    return $form;
+  }
+
+  protected function getFeedback() {
+    global $user;
+
+    $output = array();
+
+    $entity_info = entity_get_info('quiz_question');
+    foreach (array_keys($entity_info['view modes']) as $view_mode) {
+      if ($this->canReview("quiz_question_view_{$view_mode}")) {
+        $question_view = entity_view('quiz_question', array($this->question), $view_mode, NULL, TRUE);
+        $output['question'][$view_mode] = $question_view['quiz_question'][$this->question->qid];
       }
     }
 
@@ -161,15 +182,11 @@ abstract class ResponseHandler extends ResponseHandlerBase {
 
     $rows = array();
     foreach ($this->getFeedbackValues() as $idx => $row) {
-      foreach (array_keys($labels) as $reviewType) {
-        if (('choice' === $reviewType) || (isset($row[$reviewType]) && $this->canReview($reviewType))) {
-          $rows[$idx][$reviewType] = $row[$reviewType];
+      foreach (array_keys($labels) as $review_type) {
+        if (('choice' === $review_type) || (isset($row[$review_type]) && $this->canReview($review_type))) {
+          $rows[$idx][$review_type] = $row[$review_type];
         }
       }
-    }
-
-    if (quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
-      $form['score'] = $this->getReportFormScore();
     }
 
     $score = t('?');
@@ -180,37 +197,32 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     }
 
     if ($this->canReview('score') || quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
-      $form['score_display']['#markup'] = theme('quiz_question_score', array(
+      $output['score_display']['#markup'] = theme('quiz_question_score', array(
           'score'     => $score,
           'max_score' => $this->getQuestionMaxScore(),
           'class'     => $class
       ));
     }
 
-    $headers = array_intersect_key($labels, $rows[0]);
-    $form['response']['#markup'] = theme('quiz_question_feedback__' . $this->question->type, array(
-        'labels' => $headers,
-        'data'   => $rows
-    ));
+    if ($rows) {
+      $headers = array_intersect_key($labels, $rows[0]);
+      $output['response']['#markup'] = theme('quiz_question_feedback__' . $this->question->type, array(
+          'labels' => $headers,
+          'data'   => $rows
+      ));
+    }
 
     if ($this->canReview('question_feedback')) {
       if (!empty($this->question_handler->question)) {
-        $form['question_feedback']['#markup'] = check_markup($this->question_handler->question->feedback, $this->question_handler->question->feedback_format);
+        $output['question_feedback']['#markup'] = check_markup($this->question_handler->question->feedback, $this->question_handler->question->feedback_format);
       }
     }
 
-    return $form;
-  }
+    if ($this->canReview('score')) {
+      $output['max_score'] = array('#type' => 'value', '#value' => $this->getQuestionMaxScore());
+    }
 
-  /**
-   * Get the question part of the reportForm
-   * @return array
-   */
-  protected function getReportFormQuestion() {
-    $question = clone ($this->question);
-    $question->no_answer_form = TRUE;
-    $output = entity_view('quiz_question', array($question), 'feedback', NULL, TRUE);
-    return $output['quiz_question'][$this->question->qid];
+    return $output;
   }
 
   /**
@@ -259,14 +271,16 @@ abstract class ResponseHandler extends ResponseHandlerBase {
 
   /**
    * Can the quiz taker view the requested review?
+   * @param string $op
+   * @return bool
    */
-  public function canReview($option) {
-    $can_review = &drupal_static(__METHOD__, array());
-    if (!isset($can_review[$option])) {
-      $result = quiz_result_load($this->result_id);
-      $can_review[$option] = $result->canReview($option);
+  public function canReview($op) {
+    $perms = &drupal_static(__METHOD__, array());
+    if (!isset($perms[$op])) {
+      $perms[$op] = $this->result->canReview($op);
     }
-    return $can_review[$option];
+
+    return $perms[$op];
   }
 
   public function getReportFormScore() {

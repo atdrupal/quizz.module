@@ -136,4 +136,51 @@ class QuizFeedbackTestCase extends QuizTestCase {
     $this->assertText('Feedback for TF test.');
   }
 
+  /**
+   * Test Quiz question body feedback.
+   */
+  public function testQuestionBodyFeedback() {
+    // Asolutely no feedback.
+    $quiz = $this->drupalCreateQuiz(array('review_options' => array()));
+
+    // Set up a Quiz with one question that has a body and a summary.
+    $question = $this->drupalCreateQuestion(array(
+        'type'               => 'truefalse',
+        'correct_answer'     => 1,
+        'quiz_question_body' => array(LANGUAGE_NONE => array(
+                array(
+                    'value'   => 'TF 1 body text',
+                    'summary' => 'TF 1 summary text'
+                )
+            )),
+    ));
+    $this->linkQuestionToQuiz($question, $quiz);
+
+    // Test no feedback.
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/$quiz->qid/take");
+    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->assertNoText('TF 1 body text');
+    $this->assertNoText('TF 1 summary text');
+
+    // Test full feedback
+    $quiz->review_options = array('end' => drupal_map_assoc(array('quiz_question_view_full')));
+    $quiz->save();
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/$quiz->qid/take");
+    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->assertText('TF 1 body text');
+    $this->assertNoText('TF 1 summary text');
+
+    // Test teaser feedback
+    $quiz->review_options = array('end' => drupal_map_assoc(array('quiz_question_view_teaser')));
+    $quiz->save();
+    $this->drupalLogin($this->user);
+    $this->drupalGet("quiz/$quiz->qid/take");
+    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+
+    $this->assertNoText('TF 1 body text');
+    $this->assertText('TF 1 summary text');
+  }
+
 }
