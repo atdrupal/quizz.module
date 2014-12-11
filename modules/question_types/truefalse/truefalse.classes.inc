@@ -203,7 +203,7 @@ class TrueFalseResponse extends ResponseHandler {
     parent::__construct($result_id, $question, $input);
 
     if (!isset($input)) {
-      if ($response = $this->getUserAnswer()) {
+      if ($response = $this->getStoredUserinput()) {
         $this->answer = $response->answer;
         $this->score = $response->score;
       }
@@ -239,10 +239,7 @@ class TrueFalseResponse extends ResponseHandler {
     return $this->getResponse() == $this->question->getHandler()->getCorrectAnswer() ? 1 : 0;
   }
 
-  /**
-   * Implementation of getCorrectAnswer
-   */
-  public function getUserAnswer() {
+  protected function getStoredUserinput() {
     return db_query('SELECT answer, score'
         . ' FROM {quiz_truefalse_user_answers}'
         . ' WHERE question_vid = :qvid AND result_id = :rid', array(

@@ -29,7 +29,7 @@ class PoolResponseHandler extends ResponseHandler {
       }
     }
     else {
-      $this->answer = $input;
+      $this->setAnswerInput($input);
     }
 
     $quiz_id = $this->result->getQuiz()->qid;
@@ -39,6 +39,13 @@ class PoolResponseHandler extends ResponseHandler {
           'delta'  => 0,
       );
     }
+  }
+
+  public function setAnswerInput($input) {
+    if (NULL !== $input && is_array($input)) {
+      $input = reset($input);
+    }
+    parent::setAnswerInput($input);
   }
 
   /**
