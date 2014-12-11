@@ -17,12 +17,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
-    $conds = array(
-        'result_id'    => $this->result_id,
-        'question_qid' => $this->question->qid,
-        'question_vid' => $this->question->vid
-    );
-
+    $conds = array('result_id' => $result_id, 'question_vid' => $question->vid);
     if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
       /* @var $answer Answer */
       $answer = reset($find);

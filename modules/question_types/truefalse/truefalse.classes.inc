@@ -110,7 +110,7 @@ class TrueFalseQuestion extends QuestionHandler {
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $element = parent::getAnsweringForm($form_state, $result_id);
-    //$form['#theme'] = 'truefalse_answering_form';
+
     // 'tries' is unfortunately required by quiz.module
     $element += array(
         '#type'          => 'radios',
@@ -124,6 +124,7 @@ class TrueFalseQuestion extends QuestionHandler {
       $default = $response->getResponse();
       $element['#default_value'] = is_null($default) ? NULL : $default;
     }
+
     return $element;
   }
 
