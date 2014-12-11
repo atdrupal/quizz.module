@@ -27,7 +27,7 @@ class QuizResultTestCase extends QuizTestCase {
         'summary_pass_format'    => 'plain_text',
         'summary_default'        => 'This is the default summary text',
         'summary_default_format' => 'plain_text',
-        'resultoptions'          => array(
+        'result_options'         => array(
             array(
                 'option_name'           => '90 and higher',
                 'option_summary'        => 'You got 90 or more on the quiz',

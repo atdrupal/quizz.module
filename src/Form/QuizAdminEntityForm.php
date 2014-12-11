@@ -26,7 +26,7 @@ class QuizAdminEntityForm {
     unset($form['taking']['addons']);
     unset($form['quiz_availability']['quiz_open']);
     unset($form['quiz_availability']['quiz_close']);
-    unset($form['resultoptions']);
+    unset($form['result_options']);
     unset($form['number_of_random_questions']);
     unset($form['remember_global']);
     unset($form['actions']['submit']);

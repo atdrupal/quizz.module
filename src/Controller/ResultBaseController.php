@@ -167,7 +167,7 @@ abstract class ResultBaseController {
    *   Summary text for the user's score.
    */
   private function pickResultOption(QuizEntity $quiz, $score) {
-    foreach ($quiz->resultoptions as $option) {
+    foreach ($quiz->result_options as $option) {
       if ($score < $option['option_start'] || $score > $option['option_end']) {
         continue;
       }

@@ -59,8 +59,18 @@ class QuizController extends EntityAPIController {
    * Get the feedback options for Quizzes.
    */
   public function getFeedbackOptions() {
-    $feedback_options = array(
+    $feedback_options = array();
+
+    $entity_info = entity_get_info('quiz_question');
+    foreach ($entity_info['view modes'] as $view_mode => $info) {
+      if ($view_mode === 'default' || $info['custom settings']) {
+        $feedback_options["quiz_question_view_{$view_mode}"] = t('Question') . ': ' . $info['label'];
+      }
+    }
+
+    $feedback_options += array(
         'attempt'           => t('Attempt'),
+        'choice'            => t('Choices'),
         'correct'           => t('Whether correct'),
         'score'             => t('Score'),
         'answer_feedback'   => t('Answer feedback'),
@@ -130,7 +140,7 @@ class QuizController extends EntityAPIController {
         ->condition('ro.quiz_vid', $vids)
         ->execute();
       foreach ($result_options->fetchAll() as $result_option) {
-        $entities[$result_option->quiz_qid]->resultoptions[] = (array) $result_option;
+        $entities[$result_option->quiz_qid]->result_options[] = (array) $result_option;
       }
     }
 
@@ -200,7 +210,7 @@ class QuizController extends EntityAPIController {
     $query = db_insert('quiz_result_options')
       ->fields(array('quiz_qid', 'quiz_vid', 'option_name', 'option_summary', 'option_summary_format', 'option_start', 'option_end'));
 
-    foreach ($quiz->resultoptions as $option) {
+    foreach ($quiz->result_options as $option) {
       if (empty($option['option_name'])) {
         continue;
       }

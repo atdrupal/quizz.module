@@ -147,8 +147,8 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   public function onRepeatUntiCorrect(Result $result, array &$element, $msg = NULL) {
     form_set_error('', NULL !== $msg ? $msg : t('The answer was incorrect. Please try again.'));
     $obj = new QuestionFeedbackController($result);
-    $feedback = $obj->buildRenderArray($this->question);
-    $element['feedback'] = array('#weight' => 100, '#markup' => drupal_render($feedback));
+    $feedback_form = $obj->buildFormArray($this->question);
+    $element['feedback'] = array('#weight' => 100, '#markup' => drupal_render($feedback_form));
   }
 
   /**

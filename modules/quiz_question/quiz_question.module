@@ -140,9 +140,8 @@ function quiz_question_access_to_score($question_vid, $result_id) {
  */
 function quiz_question_report_form(Result $result, Question $question) {
   $question->findLegacyMaxScore($result);
-
   return quiz_answer_controller()
-      ->getHandler($result->result_id, $question, $question->answers[0])
+      ->getHandler($result->result_id, $question, isset($question->answers[0]) ? $question->answers[0] : NULL)
       ->getReportForm();
 }
 
