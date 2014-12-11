@@ -1,0 +1,8 @@
+name = Cloze
+package = Quiz Question
+description = Question with certain words removed the participant will have to fill-in the missing words.
+core = 7.x
+dependencies[] = quizz
+dependencies[] = quiz_question
+
+files[] = tests/QuestionClozeTestCase.test
