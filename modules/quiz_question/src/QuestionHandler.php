@@ -195,7 +195,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    * @return bool
    *  TRUE if relationship is made.
    */
-  function saveRelationships($quiz_qid = NULL, $quiz_vid = NULL) {
+  public function saveRelationships($quiz_qid = NULL, $quiz_vid = NULL) {
     if (!$quiz_qid || !$quiz_vid || !$quiz = quiz_load($quiz_qid, $quiz_vid)) {
       return FALSE;
     }
@@ -203,18 +203,18 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     // We need to revise the quiz if it has been answered.
     if (quiz_has_been_answered($quiz)) {
       $quiz->is_new_revision = 1;
+      $quiz->clone_relationships = 1;
       $quiz->save();
       drupal_set_message(t('New revision has been created for the @quiz %n', array('%n' => $quiz->title, '@quiz' => QUIZ_NAME)));
     }
 
     $values = array();
-    $values['quiz_qid'] = $quiz_qid;
-    $values['quiz_vid'] = $quiz_vid;
+    $values['quiz_qid'] = $quiz->qid;
+    $values['quiz_vid'] = $quiz->vid;
     $values['question_qid'] = $this->question->qid;
     $values['question_vid'] = $this->question->vid;
     $values['max_score'] = $this->getMaximumScore();
     $values['auto_update_max_score'] = $this->autoUpdateMaxScore() ? 1 : 0;
-    // @TODO: Do not need extra query here
     $values['weight'] = 1 + db_query('SELECT MAX(weight) FROM {quiz_relationship} WHERE quiz_vid = :vid', array(':vid' => $quiz->vid))->fetchField();
     $values['question_status'] = $quiz->randomization == 2 ? QUIZ_QUESTION_RANDOM : QUIZ_QUESTION_ALWAYS;
     entity_create('quiz_relationship', $values)->save();
