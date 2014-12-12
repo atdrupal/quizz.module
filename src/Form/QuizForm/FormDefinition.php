@@ -82,6 +82,16 @@ class FormDefinition extends FormHelper {
 
     // Provides details in vertical tabs.
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
+
+    if (module_exists('field_group')) {
+      $form['vtabs'] = array(
+          '#type'     => 'horizontal_tabs',
+          '#attached' => array(
+              'library' => array(array('field_group', 'horizontal-tabs'))
+          )
+      );
+    }
+
     $this->defineTakingOptions($form);
     $this->defineUserPointOptionsFields($form);
     $this->defineAvailabilityOptionsFields($form);
@@ -504,15 +514,11 @@ class FormDefinition extends FormHelper {
 
   private function defineRevisionOptionsFields(&$form) {
     $form['revision_information'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Revision information'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-        '#group'       => 'vtabs',
-        '#attributes'  => array('class' => array('node-form-revision-information')),
-        '#attached'    => array('js' => array(drupal_get_path('module', 'node') . '/node.js')),
-        '#weight'      => 20,
-        '#access'      => TRUE,
+        '#type'   => 'fieldset',
+        '#title'  => t('Revision information'),
+        '#group'  => 'vtabs',
+        '#weight' => 20,
+        '#access' => TRUE,
     );
 
     $form['revision_information']['revision'] = array(
