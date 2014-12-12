@@ -44,16 +44,35 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   }
 
   public function testUpgrade() {
+    $info = $this->getPreupgradeInfo();
+    $upgrade_1 = $this->doUpgradeOne();
+    $upgrade_2 = $this->performUpgrade();
+    $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
+    $this->checkSchemas();
+    $this->checkConfiguration($info);
+  }
+
+  /**
+   *
+   */
+  private function getPreupgradeInfo() {
+    $info = array();
+
+    $info['config'] = [
+        'quiz' => '',
+    ];
+
+    return $info;
+  }
+
+  private function doUpgradeOne() {
     $scale = db_query('SELECT * FROM {system} WHERE name = :name AND type = :module', array(':name' => 'scale', ':module' => 'module'))->fetchObject();
     db_delete('system')->condition('type', 'module')->condition('name', 'scale')->execute();
 
     $upgrade_1 = $this->performUpgrade();
 
     db_update('system')
-      ->fields(array(
-          'schema_version' => $scale->schema_version,
-          'status'         => 1
-      ))
+      ->fields(array('status' => 1, 'schema_version' => $scale->schema_version))
       ->condition('type', 'module')
       ->condition('name', 'quizz_scale')
       ->execute()
@@ -62,15 +81,17 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     registry_rebuild();
     drupal_flush_all_caches();
 
-    $upgrade_2 = $this->performUpgrade();
-    $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
-    if ($upgrade_1 && $upgrade_2) {
-      drupal_flush_all_caches();
-      foreach (static::$subModules as $module) {
-        $this->assertTrue(module_exists($module), "Module {$module} is enabled.");
-        if ($schema = module_invoke($module, 'schema')) {
-          $this->checkSchema($schema);
-        }
+    return $upgrade_1;
+  }
+
+  /**
+   * Make sure schemas are upgraded correctly.
+   */
+  private function checkSchemas() {
+    foreach (static::$subModules as $module) {
+      $this->assertTrue(module_exists($module), "Module {$module} is enabled.");
+      if ($schema = module_invoke($module, 'schema')) {
+        $this->checkSchema($schema);
       }
     }
   }
@@ -94,6 +115,20 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     }
   }
 
+  /**
+   * Make sure configuration are upgraded correctly.
+   */
+  private function checkConfiguration(array $stats) {
+    // @TODO: Check configuration for quiz.
+    // @TODO: Check body field is there for quiz content type.
+    // @TODO: There's at least one quiz has body field not empty.
+    // @TODO: Check configuration for question types.
+    // @TODO: Check body field is there for question types.
+    // @TODO: There's at least one quiz has body field not empty.
+    // @TODO: Count number of quiz (published, unpublished, …).
+    // @TODO: Count number of question for each question type, also check unpublished.
+  }
+
 }
 
 class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
@@ -111,6 +146,9 @@ class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
 
 }
 
+/**
+ * Step to create the image: ./tests/upgrade/quiz-5x-generator.bash
+ */
 class QuizUpgradeFrom7x5xTestCase extends QuizUpgradeBaseTestCase {
 
   protected static $testDumpFile = 'quiz-5x.php.gz';
