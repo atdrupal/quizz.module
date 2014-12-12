@@ -4,7 +4,6 @@ namespace Drupal\quizz;
 
 use Drupal\quizz\Helper\HookImplementation;
 use Drupal\quizz\Helper\MailHelper;
-use Drupal\quizz\Helper\NodeHelper;
 use Drupal\quizz\Helper\QuestionCategoryFieldInfo;
 use Drupal\quizz\Helper\QuizHelper;
 use Drupal\quizz\Quiz;
@@ -30,7 +29,6 @@ use Drupal\quizz\Quiz;
 class Quiz {
 
   private $hookImplementation;
-  private $nodeHelper;
   private $quizHelper;
   private $mailHelper;
   private $questionCategoryField;
@@ -47,27 +45,6 @@ class Quiz {
 
   public function setHookImplementation($hookImplementation) {
     $this->hookImplementation = $hookImplementation;
-    return $this;
-  }
-
-  /**
-   * @return NodeHelper
-   */
-  public function getNodeHelper() {
-    if (null === $this->nodeHelper) {
-      $this->nodeHelper = new NodeHelper();
-    }
-    return $this->nodeHelper;
-  }
-
-  /**
-   * Inject node helper.
-   *
-   * @param NodeHelper $nodeHelper
-   * @return Quiz
-   */
-  public function setNodeHelper($nodeHelper) {
-    $this->nodeHelper = $nodeHelper;
     return $this;
   }
 
