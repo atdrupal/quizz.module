@@ -130,9 +130,6 @@ class QuizPageTestCase extends QuizTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz_id}/take");
 
-    $quiz = quiz_load($quiz_id, NULL, TRUE);
-    $this->verbose(json_encode($quiz->getQuestionIO()->getQuestionList()));
-
     // Questions 1 and 2 are present. Question 3 is hidden.
     $this->assertFieldByName("question[{$q1}]");
     $this->assertFieldByName("question[{$q2}]");
