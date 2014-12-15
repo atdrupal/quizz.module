@@ -64,51 +64,51 @@ function quiz_question_update_7500() {
  * Create new tables for question and question type entities.
  */
 function quiz_question_update_7600() {
-  require_once dirname(__FILE__) . '/src/Schema/Schema7060.php';
-  $schema = new Schema7060();
-  $tables = $schema->get();
+  if (!db_table_exists('quiz_question_type')) {
+    require_once dirname(__FILE__) . '/src/Schema/Schema7060.php';
+    $schema = new Schema7060();
+    $tables = $schema->get();
 
-  db_create_table('quiz_question_type', $tables['quiz_question_type']);
-  db_create_table('quiz_question', $tables['quiz_question']);
-  db_create_table('quiz_question_revision', $tables['quiz_question_revision']);
+    db_create_table('quiz_question_type', $tables['quiz_question_type']);
+    db_create_table('quiz_question', $tables['quiz_question']);
+    db_create_table('quiz_question_revision', $tables['quiz_question_revision']);
 
-  // Flush cache to make sure the question entity types is defined
-  drupal_flush_all_caches();
+    // Flush cache to make sure the question entity types is defined
+    drupal_flush_all_caches();
+
+    // Create question bundles from question node types.
+    return quiz_question_upgrade_question_type_from_node_type_to_entity();
+  }
 }
 
-/**
- * Create question bundles from question node types.
- */
-function quiz_question_update_7601() {
+function quiz_question_upgrade_question_type_from_node_type_to_entity() {
   $handler_info = quiz_question_get_handler_info();
 
-  $node_types = db_select('node_type')
-    ->condition('module', 'quiz_question')
-    ->fields('node_type')
-    ->execute()
-    ->fetchAll();
+  $sql = 'SELECT * FROM {node_type} WHERE module = :module';
+  $node_types = db_query($sql, array(':module' => 'quiz_question'))->fetchAll();
 
   $labels = array();
   foreach ($node_types as $node_type) {
     // question node type is already converted to question-type entity
     $sql = "SELECT 1 FROM {quiz_question_type} WHERE type = :type";
-    if (!db_query($sql, array(':type' => $node_type->type))->fetchColumn()) {
+    if (db_query($sql, array(':type' => $node_type->type))->fetchColumn()) {
       continue;
     }
 
     // The module for the module is not available yet. The module will upgrade itself.
-    if ($handler_info[$node_type->type]) {
+    $handler_name = $node_type->type;
+    if (!isset($handler_info[$handler_name])) {
       continue;
     }
 
-    if ($label = _quiz_question_update_7601_convert_node_type_to_question_type_entity($node_type)) {
+    if ($label = _quiz_question_convert_node_type_to_question_type_entity($node_type)) {
       $labels[] = $label;
     }
   }
-  return 'Created new question bundle: ' . implode(', ', $labels);
+  return 'Created new question types: ' . implode(', ', $labels);
 }
 
-function _quiz_question_update_7601_convert_node_type_to_question_type_entity($node_type) {
+function _quiz_question_convert_node_type_to_question_type_entity($node_type) {
   $question_type = entity_create('quiz_question_type', array(
       'type'        => $node_type->type,
       'label'       => $node_type->name,
@@ -133,49 +133,80 @@ function _quiz_question_update_7601_convert_node_type_to_question_type_entity($n
 /**
  * Create temp columns for next update scripts.
  */
-function quiz_question_update_7603() {
+function quiz_question_update_7601() {
   db_add_field('quiz_question', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_add_field('quiz_question_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_add_index('quiz_question', 'question_node', array('node_nid'));
   db_add_index('quiz_question_revision', 'question_node', array('node_vid'));
+
+  foreach (module_implements('quiz_question_info') as $module) {
+    require_once drupal_get_path('module', $module) . "/{$module}.install";
+    module_invoke($module, 'quiz_question_upgrade_schema_node_to_entity');
+  }
 }
 
 /**
  * @TODO: Migrate question nodes to question entities.
  */
-function quiz_question_update_7604() {
-  foreach (module_implements('quiz_question_info') as $module) {
+function quiz_question_update_7602() {
+  foreach (array_keys(quiz_question_get_handler_info()) as $handler_name) {
     $select = db_select('node_revision', 'r');
     $select->innerJoin('node', 'n', 'r.nid = n.nid');
-    $node_revisions = $select
+    $rows = $select
       ->fields('r', array('nid', 'vid', 'uid', 'title', 'log', 'timestamp', 'status'))
       ->fields('n', array('type', 'language', 'created', 'changed'))
-      ->condition('n.type', $module)
+      ->condition('n.type', $handler_name)
       ->orderBy('r.vid')
       ->execute()
       ->fetchAll();
-    foreach ($node_revisions as $node_revision) {
-      // …
+    foreach ($rows as $row) {
+      _quiz_question_update_7605($row);
     }
   }
+}
+
+function _quiz_question_update_7605($row) {
+  // find quiz revision
+  $sql = 'SELECT qid FROM {quiz_entity} WHERE node_nid = :nid';
+  if ($question_id = db_query($sql, array(':nid' => $row->nid))->fetchColumn()) {
+    $question = quiz_question_entity_load($question_id);
+  }
+  else {
+    $question = entity_create('quiz_question', array(
+        'type'     => $row->type,
+        'language' => $row->language,
+        'status'   => $row->status,
+        'title'    => $row->title,
+        'created'  => $row->created,
+        'changed'  => $row->timestamp,
+        'uid'      => $row->uid,
+        'node_nid' => $row->nid,
+        'node_vid' => $row->vid,
+    ));
+  }
+
+  $question->is_new_revision = 1;
+  $question->log = $row->log;
+  $question->skip_invoke_handler = TRUE;
+  $question->save();
 }
 
 /**
  * @TODO: Other steps
  */
-function quiz_question_update_7609() {
-  return '…';
-}
+//function quiz_question_update_7609() {
+//  return '…';
+//}
 
 /**
  * Clean up migration's temp data.
  */
 function quiz_question_update_7610() {
-  db_drop_index('quiz_question', 'question_node');
-  db_drop_index('quiz_question_revision', 'question_node');
-  db_drop_field('quiz_question', 'node_nid');
-  db_drop_field('quiz_question_revision', 'node_vid');
-  return 'Cleaned up migration\'s temp columns.';
+  #db_drop_index('quiz_question', 'question_node');
+  #db_drop_index('quiz_question_revision', 'question_node');
+  #db_drop_field('quiz_question', 'node_nid');
+  #db_drop_field('quiz_question_revision', 'node_vid');
+  #return 'Cleaned up migration\'s temp columns.';
 }
 
 /**

@@ -111,17 +111,24 @@ function multichoice_update_7501() {
 }
 
 /**
+ * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  * Change schema per question structure changed.
  */
-function multichoice_update_7600() {
+function multichoice_quiz_question_upgrade_schema_node_to_entity() {
   $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_multichoice_user_answers', 'question_nid', 'question_qid', $spec);
-
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_multichoice_properties', 'nid', 'qid', $spec_2);
-
   $spec_3 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+  db_change_field('quiz_multichoice_user_answers', 'question_nid', 'question_qid', $spec);
+  db_change_field('quiz_multichoice_properties', 'nid', 'qid', $spec_2);
   db_change_field('quiz_multichoice_answers', 'question_nid', 'question_qid', $spec_3);
+}
+
+/**
+ * Make sure update script from main module is run before all.
+ */
+function multichoice_update_7600() {
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  return quiz_question_update_7600();
 }
 
 /**

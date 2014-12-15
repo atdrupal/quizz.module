@@ -5,7 +5,7 @@
  */
 class ScaleTestCase extends QuizTestCase {
 
-  protected $questionHandler = 'quizz_scale';
+  protected $questionHandler = 'scale';
 
   public static function getInfo() {
     return array(
@@ -28,7 +28,7 @@ class ScaleTestCase extends QuizTestCase {
    */
   private function createQuizQuestion() {
     return $this->drupalCreateQuestion(array(
-          'type'         => 'quizz_scale',
+          'type'         => $this->questionHandler,
           'title'        => 'Scale 1 title',
           'alternative0' => 'This is alternative 1',
           'alternative1' => 'This is alternative 2',

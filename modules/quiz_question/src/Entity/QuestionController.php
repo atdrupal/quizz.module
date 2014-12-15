@@ -72,6 +72,10 @@ class QuestionController extends EntityAPIController {
   public function invoke($hook, $question) {
     $this->legacyFixQuestionId($question);
 
+    if (isset($question->skip_invoke_handler)) {
+      return parent::invoke($hook, $question);
+    }
+
     switch ($hook) {
       case 'insert':
         $question->getHandler()->save($is_new = TRUE);

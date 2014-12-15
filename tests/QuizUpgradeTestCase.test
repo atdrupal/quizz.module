@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quiz_question\Entity\QuestionType;
+
 abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
   protected static $testDumpFile = '…';
@@ -76,10 +78,11 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $info = $this->getPreupgradeInfo();
     $upgrade_1 = $this->doUpgradeOne();
     $upgrade_2 = $this->performUpgrade();
-    $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
+    if ($upgrade_1 && $upgrade_2) {
     $this->checkSchemas();
     $this->checkConfiguration($info);
-    # $this->checkDataMigration($info);
+      $this->checkDataMigration($info);
+    }
   }
 
   private function doUpgradeOne() {
@@ -156,6 +159,18 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
     // @TODO: Check body field is there for quiz content type.
     $this->assertTrue(NULL !== field_info_instance('quiz_entity', 'quiz_body', 'quiz'), 'Quiz bundle has body field.');
+
+    // Make sure question types are converted from node types
+    $question_types = quiz_question_get_types();
+    $this->assertTrue($question_types['long_answer'] instanceof QuestionType);
+    $this->assertTrue($question_types['matching'] instanceof QuestionType);
+    $this->assertTrue($question_types['multichoice'] instanceof QuestionType);
+    $this->assertTrue($question_types['quiz_ddlines'] instanceof QuestionType);
+    $this->assertTrue($question_types['quiz_directions'] instanceof QuestionType);
+    $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
+    $this->assertTrue($question_types['short_answer'] instanceof QuestionType);
+    $this->assertTrue($question_types['truefalse'] instanceof QuestionType);
+    $this->assertTrue($question_types['scale'] instanceof QuestionType);
   }
 
   private function checkDataMigration($info) {
@@ -165,18 +180,17 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $c_la = db_query($sql, array(':type' => 'long_answer'))->fetchColumn();
     $c_match = db_query($sql, array(':type' => 'matching'))->fetchColumn();
     $c_page = db_query($sql, array(':type' => 'quiz_page'))->fetchColumn();
-    $c_scale = db_query($sql, array(':type' => 'quizz_scale'))->fetchColumn();
+    $c_scale = db_query($sql, array(':type' => 'scale'))->fetchColumn();
     $c_short = db_query($sql, array(':type' => 'short_answer'))->fetchColumn();
     $c_truefalse = db_query($sql, array(':type' => 'truefalse'))->fetchColumn();
 
     $this->assertEqual($info['count']['quiz'], $c_quiz, "Number of quizzes is not changed.");
-    $this->verbose($info['count']['long_answer'] . " == " . $c_la);
     $this->assertEqual($info['count']['long_answer'], $c_la, "Number of long answer questions is not changed.");
-    $this->assertEqual($info['count']['match'], $c_match, "Number of match questions is not changed.");
+    $this->assertEqual($info['count']['matching'], $c_match, "Number of match questions is not changed.");
     $this->assertEqual($info['count']['quiz_page'], $c_page, "Number of page questions is not changed.");
-    $this->assertEqual($info['count']['scale'], $c_scale, "Number of scale questions is not changed.");
     $this->assertEqual($info['count']['short_answer'], $c_short, "Number of short-answer questions is not changed.");
     $this->assertEqual($info['count']['truefalse'], $c_truefalse, "Number of truefalse questions is not changed.");
+    $this->assertEqual($info['count']['scale'], $c_scale, "Number of scale questions is not changed.");
 
     // @TODO: Check Quiz body field's data is migrated.
     // @TODO: Check configuration for question types.

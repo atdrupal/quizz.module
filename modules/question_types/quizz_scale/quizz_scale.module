@@ -14,16 +14,6 @@ function quizz_scale_help($path) {
 }
 
 /**
- * Implements hook_ENTITYTYPE_insert()
- * @param \Drupal\quiz_question\Entity\QuestionType $question_type
- */
-function quizz_scale_quiz_question_type_insert($question_type) {
-  if (('quizz_scale' === $question_type->handler)) {
-    quizz_scale_collection_controller()->generateDefaultCollections($question_type);
-  }
-}
-
-/**
  * Implements hook_theme().
  */
 function quizz_scale_theme($existing, $type, $theme, $path) {
@@ -59,7 +49,7 @@ function quizz_scale_theme($existing, $type, $theme, $path) {
  */
 function quizz_scale_quiz_question_info() {
   return array(
-      'quizz_scale' => array(
+      'scale' => array(
           'name'              => t('Scale question'),
           'description'       => t('Quiz questions that allow a user to choose from a scale.'),
           'question provider' => 'Drupal\quizz_scale\ScaleQuestion',
@@ -76,19 +66,21 @@ function quizz_scale_quiz_question_info() {
 function quizz_scale_entity_info() {
   $info = array();
 
-  $info['scale_collection'] = array(
-      'label'            => t('Collection'),
-      'plural label'     => t('Collections'),
-      'description'      => t('Scale collections'),
-      'entity class'     => 'Drupal\quizz_scale\Entity\Collection',
-      'controller class' => 'Drupal\quizz_scale\Entity\CollectionController',
-      'base table'       => 'quiz_scale_collections',
-      'fieldable'        => FALSE,
-      'exportable'       => TRUE,
-      'entity keys'      => array('id' => 'id', 'name' => 'name', 'label' => 'label'),
-      'access callback'  => 'quizz_scale_collection_access_callback',
-      'module'           => 'quizz_scale',
-  );
+  if (db_table_exists('quiz_scale_collections')) {
+    $info['scale_collection'] = array(
+        'label'            => t('Collection'),
+        'plural label'     => t('Collections'),
+        'description'      => t('Scale collections'),
+        'entity class'     => 'Drupal\quizz_scale\Entity\Collection',
+        'controller class' => 'Drupal\quizz_scale\Entity\CollectionController',
+        'base table'       => 'quiz_scale_collections',
+        'fieldable'        => FALSE,
+        'exportable'       => TRUE,
+        'entity keys'      => array('id' => 'id', 'name' => 'name', 'label' => 'label'),
+        'access callback'  => 'quizz_scale_collection_access_callback',
+        'module'           => 'quizz_scale',
+    );
+  }
 
   return $info;
 }

@@ -8,7 +8,7 @@ class HookFieldExtraFields {
     $extra = array();
 
     // User comes from old version, there's no quiz type yet
-    if (!db_table_exists('quiz_entity')) {
+    if (!db_table_exists('quiz_entity') || !db_table_exists('quiz_question_type')) {
       return $extra;
     }
 

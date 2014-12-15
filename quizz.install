@@ -67,6 +67,10 @@ function quizz_update_7600() {
   // Flush cache to make sure the question entity types is defined
   drupal_flush_all_caches();
 
+  // …
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  quiz_question_update_7600();
+
   return 'Create tables: quiz_type, quiz_entity, quiz_entity_revision.';
 }
 
@@ -99,8 +103,12 @@ function quizz_update_7601() {
 function quizz_update_7602() {
   // create temp columns quiz_revision.{node_nid, node_vid} to save old data
   db_add_field('quiz_entity', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
-  db_add_index('quiz_entity', 'quiz_node', array('node_nid'));
   db_add_field('quiz_entity_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_index('quiz_entity', 'quiz_node', array('node_nid'));
+  db_add_index('quiz_entity_revision', 'quiz_node', array('node_vid'));
+
+  drupal_static_reset();
+  drupal_flush_all_caches();
 
   // create default quiz type
   $quiz_type = entity_create('quiz_type', array(
@@ -116,11 +124,13 @@ function quizz_update_7602() {
   // migrate basic quiz
   $select = db_select('node', 'n');
   $select->innerJoin('node_revision', 'r', 'n.nid = r.nid');
-  $select->fields('r', array('nid', 'vid', 'uid', 'title', 'log', 'timestamp', 'status'));
-  $select->fields('n', array('created', 'type', 'language'));
-  $select->condition('n.type', 'quiz');
-  $select->orderBy('r.vid', 'ASC');
-  $results = $select->execute()->fetchAll();
+  $results = $select
+    ->fields('r', array('nid', 'vid', 'uid', 'title', 'log', 'timestamp', 'status'))
+    ->fields('n', array('created', 'type', 'language'))
+    ->condition('n.type', 'quiz')
+    ->orderBy('r.vid', 'ASC')
+    ->execute()
+    ->fetchAll();
 
   foreach ($results as $row) {
     _quiz_update_7602($row);
@@ -129,32 +139,31 @@ function quizz_update_7602() {
 
 /**
  * Create quiz revision with quiz-node basic data.
- *
- * @param stdClass $row
  */
 function _quiz_update_7602($row) {
+  $quiz = entity_create('quiz_entity', array(
+      'type'     => 'quiz',
+      'status'   => $row->status,
+      'language' => $row->language,
+      'created'  => $row->created,
+  ));
+
   // find quiz revision
   $sql = 'SELECT qid FROM {quiz_entity} WHERE node_nid = :nid';
   if ($quiz_id = db_query($sql, array(':nid' => $row->nid))->fetchColumn()) {
     $quiz = quiz_load($quiz_id);
   }
-  else {
-    $quiz = entity_create('quiz_entity', array(
-        'type'     => 'quiz',
-        'status'   => $row->status,
-        'uid'      => $row->uid,
-        'language' => $row->language,
-        'title'    => $row->title,
-        'created'  => $row->created,
-        'changed'  => $row->timestamp,
-        'node_nid' => $row->nid,
-        'node_vid' => $row->vid,
-    ));
-  }
 
-  $quiz->is_new_revision = 1;
+  $quiz->uid = $row->uid;
   $quiz->log = $row->log;
+  $quiz->title = $row->title;
+  $quiz->changed = $row->timestamp;
+  $quiz->is_new_revision = 1;
   $quiz->save();
+
+  // custom columns are not in schema, have to do extra things here.
+  db_query('UPDATE {quiz_entity}          SET node_nid = :node_nid WHERE qid = :qid', array(':qid' => $quiz->qid, ':node_nid' => $row->nid));
+  db_query('UPDATE {quiz_entity_revision} SET node_vid = :node_vid WHERE qid = :vid', array(':vid' => $quiz->vid, ':node_vid' => $row->vid));
 }
 
 /**
@@ -263,10 +272,10 @@ function quizz_update_7606() {
   # db_drop_table('quiz_node_properties');
   # delete all quiz nodes?
   # delete quiz node type?
-
-  db_drop_index('quiz_entity', 'quiz_node');
-  db_drop_field('quiz_entity', 'node_nid');
-  db_drop_field('quiz_entity_revision', 'node_vid');
+  #db_drop_index('quiz_entity', 'quiz_node');
+  #db_drop_index('quiz_entity_revision', 'quiz_node');
+  #db_drop_field('quiz_entity', 'node_nid');
+  #db_drop_field('quiz_entity_revision', 'node_vid');
 }
 
 /**

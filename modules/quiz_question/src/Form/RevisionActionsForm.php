@@ -2,6 +2,9 @@
 
 namespace Drupal\quiz_question\Form;
 
+use Drupal\quiz_question\Entity\Question;
+use EntityFieldQuery;
+
 /**
  * @TODO This is unreachable code. Read more at https://www.drupal.org/node/2374407
  */
@@ -15,12 +18,12 @@ class RevisionActionsForm {
    *
    * @return array
    */
-  public function get($form, $form_state, \Drupal\quiz_question\Entity\Question $question) {
+  public function get($form, $form_state, Question $question) {
     $form['quizzes'] = array();
 
     $form['#question'] = $question;
 
-    $query = new \EntityFieldQuery();
+    $query = new EntityFieldQuery();
     $find = $query->entityCondition('entity_type', 'quiz_relationship')
       ->propertyCondition('question_qid', $question->qid)
       ->execute();
@@ -81,7 +84,7 @@ class RevisionActionsForm {
     foreach ($form_state['values']['quizzes'] as $quiz_id => $actions) {
       // Get the current version of the questions.
       $quiz = quiz_load($quiz_id);
-      $query = new \EntityFieldQuery();
+      $query = new EntityFieldQuery();
       $find = $query->entityCondition('entity_type', 'quiz_relationship')
         ->propertyCondition('quiz_qid', $quiz->qid)
         ->propertyCondition('quiz_vid', $quiz->vid)

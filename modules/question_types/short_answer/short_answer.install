@@ -78,11 +78,22 @@ function short_answer_update_7402() {
   }
 }
 
-function short_answer_update_7600() {
-  db_rename_table('quiz_short_answer_node_properties', 'quiz_short_answer_properties');
+/**
+ * Implements hook_quiz_question_upgrade_schema_node_to_entity().
+ */
+function short_answer_quiz_question_upgrade_schema_node_to_entity() {
   $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+  db_rename_table('quiz_short_answer_node_properties', 'quiz_short_answer_properties');
   db_change_field('quiz_short_answer_properties', 'nid', 'qid', $spec);
   db_change_field('quiz_short_answer_user_answers', 'question_nid', 'question_qid', $spec);
+}
+
+/**
+ * Make sure update script from main module is run before all.
+ */
+function short_answer_update_7600() {
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  return quiz_question_update_7600();
 }
 
 /**

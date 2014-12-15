@@ -2,6 +2,7 @@
 
 namespace Drupal\quizz_scale;
 
+use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quizz_scale\Form\ScaleQuestionForm;
 
@@ -11,10 +12,16 @@ use Drupal\quizz_scale\Form\ScaleQuestionForm;
  */
 class ScaleQuestion extends QuestionHandler {
 
+  public function onNewQuestionTypeCreated(QuestionType $question_type) {
+    $return = parent::onNewQuestionTypeCreated($question_type);
+
+    quizz_scale_collection_controller()->generateDefaultCollections($question_type);
+
+    return $return;
+  }
+
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties()
+   * {@inheritdoc}
    */
   public function saveEntityProperties($is_new = FALSE) {
     if ($this->question->revision == 1) {
