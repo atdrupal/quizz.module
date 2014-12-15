@@ -1,6 +1,6 @@
 # Install site
 drush si -y testing
-drush dl -y quiz-7.x-5.x --package-handler=git_drupalorg
+drush dl -y quiz-7.x-5.x
 drush en -y locale ctools field field_sql_storage file filter image node system text user entity views views_bulk_operations
 drush en -y quiz_page quiz quiz_question quiz_ddlines long_answer matching quiz_directions multichoice scale short_answer truefalse
 
