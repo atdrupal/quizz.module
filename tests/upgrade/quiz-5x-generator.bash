@@ -1,8 +1,10 @@
 # Install site
-# drush si -vy testing
-# drush dl quiz-7.x-5.x --package-handler=git_drupalorg
-# drush en -vy local ctools field field_sql_storage file filter image node system simpletest text user entity quiz_page quiz quiz_question quiz_ddlines long_answer matching quiz_directions multichoice scale short_answer truefalse views views_bulk_operations
-# drush uli admin/quiz/settings/questions_settings
+drush si -y testing
+drush dl -y quiz-7.x-5.x --package-handler=git_drupalorg
+drush en -y locale ctools field field_sql_storage file filter image node system text user entity views views_bulk_operations
+drush en -y quiz_page quiz quiz_question quiz_ddlines long_answer matching quiz_directions multichoice scale short_answer truefalse
+
+DRUPAL_ROOT=`drush ev 'echo DRUPAL_ROOT;'`
 
 echo "Config admin/quiz/settings/questions_settings…"
 drush dpost admin/quiz/settings/questions_settings '{
@@ -29,7 +31,7 @@ drush dpost admin/quiz/settings/config '{
   "quiz_autotitle_length": "77",
   "quiz_pager_start": "77",
   "quiz_pager_siblings": "7",
-  "quiz_name": "Quizz",
+  "quiz_name": "Super quiz",
   "quiz_email_results": "TRUE",
   "quiz_email_results_subject_taker": "!title Results Notice from !sitename",
   "quiz_email_results_body_taker": "*****",
@@ -77,18 +79,83 @@ drush dpost admin/quiz/settings/quiz-form '{
   "summary_default[value]": "*****"
 }' > /dev/null
 
-echo "Creating a a demo quizzes…"
+echo "Creating some quizzes…"
 drush dpost node/add/quiz '{"title": "Quiz 1", "body[und][0][value]": "Quiz 1 body"}' > /dev/null
 drush dpost node/add/quiz '{"title": "Quiz 2", "body[und][0][value]": "Quiz 2 body"}' > /dev/null
 drush dpost node/add/quiz '{"title": "Quiz 3", "body[und][0][value]": "Quiz 3 body"}' > /dev/null
+quiz_ids=`drush sqlq 'SELECT nid FROM node WHERE type="quiz"'`
 
-drush dpost node/add/quiz-ddlines '{"title": ""}' > /dev/null
-drush dpost node/add/long-answer '{}' > /dev/null
-drush dpost node/add/matching '{}' > /dev/null
-drush dpost node/add/multichoice '{}' > /dev/null
-drush dpost node/add/quiz-page '{}' > /dev/null
-drush dpost node/add/scale '{}' > /dev/null
-drush dpost node/add/short-answer '{}' > /dev/null
-drush dpost node/add/truefalse '{}' > /dev/null
+echo "Create revision for each quiz"
+for quiz_id in $quiz_ids
+do
+  drush dpost node/$quiz_id/edit '{"revision": 1, "log": "Dummy text"}' > /dev/null
+done
+
+echo "Creating some questions…"
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  dummy_file=$DRUPAL_ROOT'/misc/druplicon.png'
+  drush dpost node/add/quiz-ddlines '{"title": "ddline question '$i'", "body[und][0][value]": "Dummy question quiz-ddlines", "feedback[value]": "Dummy feedback", "files[field_image_und_0]": "'dummy_file'"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/long-answer '{"title": "long-answer question '$i'", "body[und][0][value]": "Dummy question long-answer", "feedback[value]": "Dummy feedback", "rubric": "Dummy rubric"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/matching '{"title": "matching question '$i'", "body[und][0][value]": "Dummy question matching", "feedback[value]": "Dummy feedback", "choice_penalty": 1, "match[1][question]": "Say 1", "match[1][answer]": "1", "match[1][feedback]": "Should say 1", "match[2][question]": "Say 2", "match[2][answer]": "2", "match[2][feedback]": "Should say 2"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/multichoice '{"title": "multichoice question '$i'", "body[und][0][value]": "Dummy question multichoice", "feedback[value]": "Dummy feedback", "alternatives[0][answer][value]": "Say TRUE", "alternatives[0][correct]": "1", "alternatives[1][answer][value]": "Say FALSE", "alternatives[1][correct]": "1"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/quiz-page '{"title": "page question '$i'", "body[und][0][value]": "Dummy question quiz-page", "feedback[value]": "Dummy feedback"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/scale '{"title": "scale question '$i'", "body[und][0][value]": "Dummy question scale", "feedback[value]": "Dummy feedback", "presets": "1", "alternative0": "Execellent", "alternative1": "Very good", "alternative2": "Good", "alternative3": "OK"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/short-answer '{"title": "short-answer question '$i'", "body[und][0][value]": "Dummy question short-answer", "feedback[value]": "Dummy feedback", "correct_answer_evaluation": "1", "correct_answer": "A"}' > /dev/null
+done
+
+rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+for i in $(eval echo "{1..$rand}");
+do
+  drush dpost node/add/truefalse '{"title": "truefalse question '$i'", "body[und][0][value]": "Dummy question truefalse", "feedback[value]": "Dummy feedback", "correct_answer": "1"}' > /dev/null
+done
+
+echo "Adding questions to quiz…"
+for quiz_id in $quiz_ids
+do
+  rand=`drush sqlq 'SELECT ROUND(10 * RAND());'`
+  question_ids=`drush sqlq 'SELECT nid FROM node WHERE type <> "quiz" ORDER BY RAND()  LIMIT '$rand`
+  for question_id in $question_ids
+  do
+    drush ev '$_GET["q"] = "node/'$quiz_id'"; $question = node_load('$question_id'); quiz_add_question_to_quiz($question);'
+  done
+done
+
+echo "Dumping database & compress it…"
+rm -f /tmp/quiz-*
+drush scr ../../scripts/dump-database-d7.sh > /tmp/quiz-5x.php
+sed -i -e "s,#\!/usr/bin/env php,,g" /tmp/quiz-5x.php
+gzip -9 /tmp/quiz-5x.php
 
 echo "Done!"
