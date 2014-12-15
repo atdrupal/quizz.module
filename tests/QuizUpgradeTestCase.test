@@ -79,8 +79,8 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $upgrade_1 = $this->doUpgradeOne();
     $upgrade_2 = $this->performUpgrade();
     if ($upgrade_1 && $upgrade_2) {
-    $this->checkSchemas();
-    $this->checkConfiguration($info);
+      $this->checkSchemas();
+      $this->checkConfiguration($info);
       $this->checkDataMigration($info);
     }
   }
@@ -167,10 +167,12 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertTrue($question_types['multichoice'] instanceof QuestionType);
     $this->assertTrue($question_types['quiz_ddlines'] instanceof QuestionType);
     $this->assertTrue($question_types['quiz_directions'] instanceof QuestionType);
-    $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
     $this->assertTrue($question_types['short_answer'] instanceof QuestionType);
     $this->assertTrue($question_types['truefalse'] instanceof QuestionType);
     $this->assertTrue($question_types['scale'] instanceof QuestionType);
+    if (in_array('quiz_page', static::$subModules)) {
+      $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
+    }
   }
 
   private function checkDataMigration($info) {
