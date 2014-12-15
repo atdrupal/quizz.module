@@ -134,7 +134,8 @@ function quizz_update_7602() {
  */
 function _quiz_update_7602($row) {
   // find quiz revision
-  if ($quiz_id = db_query('SELECT qid FROM {quiz_entity} WHERE node_nid = :nid', array(':nid' => $row->nid))->fetchColumn()) {
+  $sql = 'SELECT qid FROM {quiz_entity} WHERE node_nid = :nid';
+  if ($quiz_id = db_query($sql, array(':nid' => $row->nid))->fetchColumn()) {
     $quiz = quiz_load($quiz_id);
   }
   else {
@@ -227,9 +228,38 @@ function quizz_update_7604() {
 }
 
 /**
- * Clean up data of when quiz was node.
+ * ID of quiz id/vid is now changed, we have to update relationships, results, …
  */
 function quizz_update_7605() {
+  // {quiz_result_options}
+  db_query(
+    "UPDATE {quiz_result_options} as qro"
+    . " INNER JOIN {quiz_entity_revision} qer ON qro.quiz_vid = qer.node_vid"
+    . " SET qro.quiz_qid = qer.qid, qro.quiz_vid = qer.vid"
+    . " WHERE 1"
+  );
+
+  // {quiz_relationship}
+  db_query(
+    "UPDATE {quiz_relationship} qr"
+    . " INNER JOIN {quiz_entity_revision} qer ON qr.quiz_vid = qer.node_vid"
+    . " SET qr.quiz_qid = qer.qid, qr.quiz_vid = qer.vid"
+    . " WHERE 1"
+  );
+
+  // {quiz_results}
+  db_query(
+    "UPDATE {quiz_results} qr"
+    . " INNER JOIN {quiz_entity_revision} qer ON qr.quiz_vid = qer.node_vid"
+    . " SET qr.quiz_qid = qer.qid, qr.quiz_vid = qer.vid"
+    . " WHERE 1"
+  );
+}
+
+/**
+ * Clean up data of when quiz was node.
+ */
+function quizz_update_7606() {
   # db_drop_table('quiz_node_properties');
   # delete all quiz nodes?
   # delete quiz node type?
@@ -242,7 +272,7 @@ function quizz_update_7605() {
 /**
  * Remove some quiz's global settings per they are now part of quiz type.
  */
-function quizz_update_7606() {
+function quizz_update_7607() {
   $vars = array();
   $vars['quiz_default_close'] = 30;
   $vars['quiz_use_passfail'] = 1;
@@ -268,7 +298,7 @@ function quizz_update_7606() {
 /**
  * Add {quiz_results}.quiz_type & new index
  */
-function quizz_update_7607() {
+function quizz_update_7608() {
   $spec = array(
       'type'        => 'varchar',
       'length'      => 32,
@@ -290,6 +320,6 @@ function quizz_update_7607() {
 /**
  * Add build_on_last to optionally rebuild each attempt on the last.
  */
-function quiz_update_7608() {
+function quiz_update_7609() {
   db_add_field('quiz_entity_revision', 'build_on_last', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
 }
