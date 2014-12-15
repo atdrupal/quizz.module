@@ -58,9 +58,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   private function getPreupgradeInfo() {
     $info = array();
 
-    $info['config'] = [
-        'quiz' => '',
-    ];
+    $info['config'] = array('quiz' => '');
 
     return $info;
   }
