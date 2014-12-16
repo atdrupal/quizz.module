@@ -257,6 +257,13 @@ function quizz_update_7605() {
     . " SET qr.quiz_qid = qer.qid, qr.quiz_vid = qer.vid"
     . " WHERE 1"
   );
+
+  db_query(
+    "UPDATE {quiz_terms} qt"
+    . " INNER JOIN {quiz_entity_revision} qer ON qt.vid = qer.node_vid"
+    . " SET qt.qid = qer.qid, qt.vid = qer.vid"
+    . " WHERE 1"
+  );
 }
 
 /**
@@ -266,10 +273,12 @@ function quizz_update_7606() {
   # db_drop_table('quiz_node_properties');
   # delete all quiz nodes?
   # delete quiz node type?
-  #db_drop_index('quiz_entity', 'quiz_node');
-  #db_drop_index('quiz_entity_revision', 'quiz_node');
-  #db_drop_field('quiz_entity', 'node_nid');
-  #db_drop_field('quiz_entity_revision', 'node_vid');
+
+  module_invoke_all('quizz_pre_drop_temp_columns', '7606');
+  db_drop_index('quiz_entity', 'quiz_node');
+  db_drop_index('quiz_entity_revision', 'quiz_node');
+  db_drop_field('quiz_entity', 'node_nid');
+  db_drop_field('quiz_entity_revision', 'node_vid');
 }
 
 /**
