@@ -49,12 +49,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $info = array();
 
     // Store variables
-    $variables = db_select('variable')
-      ->fields('variable')
-      ->where('name LIKE :pattern', array(':pattern' => 'quiz_%'))
-      ->execute()
-      ->fetchAllKeyed(0)
-    ;
+    $variables = db_query('SELECT * FROM {variable} WHERE 1')->fetchAllKeyed();
     foreach ($variables as $name => $value) {
       $info['config'][$name] = unserialize($value);
     }
@@ -139,7 +134,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
    * Make sure configuration are upgraded correctly.
    */
   private function checkConfiguration(array $info) {
-    // @TODO: Check configuration for quiz.
+    // Check configuration for quiz.
     $type = quiz_type_load('quiz');
 
     $vars = array();
@@ -157,7 +152,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
       }
     }
 
-    // @TODO: Check body field is there for quiz content type.
+    // Check body field is there for quiz content type.
     $this->assertTrue(NULL !== field_info_instance('quiz_entity', 'quiz_body', 'quiz'), 'Quiz bundle has body field.');
 
     // Make sure question types are converted from node types
@@ -172,6 +167,14 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertTrue($question_types['scale'] instanceof QuestionType);
     if (in_array('quiz_page', static::$subModules)) {
       $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
+    }
+
+    // Check configuration for question types.
+    foreach (quiz_question_get_types() as $question_type) {
+      $question_settings = $question_type->getAllConfig();
+      foreach ($question_settings as $name => $value) {
+        $this->assertEqual($info['config'][$name], $value, "Question settings: Variable {$name} is upgraded correctly.");
+      }
     }
   }
 
@@ -194,12 +197,8 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertEqual($info['count']['truefalse'], $c_truefalse, "Number of truefalse questions is not changed.");
     $this->assertEqual($info['count']['scale'], $c_scale, "Number of scale questions is not changed.");
 
-    // @TODO: Check Quiz body field's data is migrated.
-    // @TODO: Check configuration for question types.
-    // @TODO: Check body field is there for question types.
-    // @TODO: There's at least one quiz has body field not empty.
-    // @TODO: Count number of quiz (published, unpublished, …).
-    // @TODO: Count number of question for each question type, also check unpublished.
+    // Check Quiz body field's data is migrated.
+    $this->assertTrue(!empty(quiz_load(1)->quiz_body['und'][0]['value']));
   }
 
 }
