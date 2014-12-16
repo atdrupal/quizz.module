@@ -262,6 +262,25 @@ function quiz_question_update_7610() {
     module_invoke($module, 'quiz_question_upgrade_pre_drop_temp_columns');
   }
 
+  // scale module is renamed to quizz_scale, the module maybe not yet enabled
+  // quiz_scale_properties
+  if (module_exists('quizz_scale')) {
+    db_query(
+      "UPDATE {quiz_scale_properties} as sp"
+      . " INNER JOIN {quiz_question_revision} qr ON sp.vid = qr.node_vid"
+      . " SET sp.qid = qr.qid, sp.vid = qr.vid"
+      . " WHERE 1"
+    );
+
+    // quiz_scale_user_answers
+    db_query(
+      "UPDATE {quiz_scale_user_answers} as ua"
+      . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
+      . " SET ua.qid = qr.qid, ua.vid = qr.vid"
+      . " WHERE 1"
+    );
+  }
+
   db_drop_index('quiz_question', 'question_node');
   db_drop_index('quiz_question_revision', 'question_node');
   db_drop_field('quiz_question', 'node_nid');
