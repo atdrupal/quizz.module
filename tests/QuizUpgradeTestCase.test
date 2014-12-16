@@ -204,6 +204,11 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $question_sql = 'SELECT quiz_question_body_value FROM {field_data_quiz_question_body} WHERE entity_id = 1';
     $question_body = db_query($question_sql)->fetchColumn();
     $this->assertTrue(!empty($question_body), "Question body's data is migrated correctly.");
+
+    // Check question's properties
+    $tfq_id = db_query('SELECT qid FROM {quiz_question} WHERE type = :type', array(':type' => 'truefalse'))->fetchColumn();
+    $property_found = db_query('SELECT 1 FROM {quiz_truefalse} WHERE qid = :qid', array(':qid' => $tfq_id))->fetchColumn();
+    $this->assertTrue(!empty($property_found), "Question property is migrated correctly.");
   }
 
 }
