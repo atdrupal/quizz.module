@@ -256,11 +256,17 @@ function _quiz_question_update_7603($question_revision, $node_revision, $field_n
  * Clean up migration's temp data.
  */
 function quiz_question_update_7610() {
-  #db_drop_index('quiz_question', 'question_node');
-  #db_drop_index('quiz_question_revision', 'question_node');
-  #db_drop_field('quiz_question', 'node_nid');
-  #db_drop_field('quiz_question_revision', 'node_vid');
-  #return 'Cleaned up migration\'s temp columns.';
+  // ID of question id/vid is changed, we have to update reference columns.
+  foreach (module_implements('quiz_question_info') as $module) {
+    require_once drupal_get_path('module', $module) . "/{$module}.install";
+    module_invoke($module, 'quiz_question_upgrade_pre_drop_temp_columns');
+  }
+
+  db_drop_index('quiz_question', 'question_node');
+  db_drop_index('quiz_question_revision', 'question_node');
+  db_drop_field('quiz_question', 'node_nid');
+  db_drop_field('quiz_question_revision', 'node_vid');
+  return 'Cleaned up migration\'s temp columns.';
 }
 
 /**

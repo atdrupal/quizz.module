@@ -89,6 +89,27 @@ function short_answer_quiz_question_upgrade_schema_node_to_entity() {
 }
 
 /**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function short_answer_quiz_question_upgrade_pre_drop_temp_columns() {
+  // quiz_short_answer_properties
+  db_query(
+    "UPDATE {quiz_short_answer_properties} as ap"
+    . " INNER JOIN {quiz_question_revision} qr ON ap.vid = qr.node_vid"
+    . " SET ap.qid = qr.qid, ap.vid = qr.vid"
+    . " WHERE 1"
+  );
+
+  // quiz_short_answer_user_answers
+  db_query(
+    "UPDATE {quiz_short_answer_user_answers} as ua"
+    . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
+    . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
+    . " WHERE 1"
+  );
+}
+
+/**
  * Make sure update script from main module is run before all.
  */
 function short_answer_update_7600() {

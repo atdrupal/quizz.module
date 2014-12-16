@@ -102,6 +102,27 @@ function matching_quiz_question_upgrade_schema_node_to_entity() {
 }
 
 /**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function matching_quiz_question_upgrade_pre_drop_temp_columns() {
+  // quiz_matching_properties
+  db_query(
+    "UPDATE {quiz_matching_properties} as qp"
+    . " INNER JOIN {quiz_question_revision} qr ON qp.vid = qr.node_vid"
+    . " SET qp.qid = qr.qid, qp.vid = qr.vid"
+    . " WHERE 1"
+  );
+
+  // quiz_matching_question
+  db_query(
+    "UPDATE {quiz_matching_question} as mq"
+    . " INNER JOIN {quiz_question_revision} qr ON mq.vid = qr.node_vid"
+    . " SET mq.qid = qr.qid, mq.vid = qr.vid"
+    . " WHERE 1"
+  );
+}
+
+/**
  * Make sure update script from main module is run before all.
  */
 function matching_update_7600() {

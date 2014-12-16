@@ -109,6 +109,27 @@ function quiz_ddlines_quiz_question_upgrade_schema_node_to_entity() {
 }
 
 /**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function quiz_ddlines_quiz_question_upgrade_pre_drop_temp_columns() {
+  // quiz_ddlines_question
+  db_query(
+    "UPDATE {quiz_ddlines_question} as ddq"
+    . " INNER JOIN {quiz_question_revision} qr ON ddq.vid = qr.node_vid"
+    . " SET ddq.qid = qr.qid, ddq.vid = qr.vid"
+    . " WHERE 1"
+  );
+
+  // quiz_ddlines_user_answers
+  db_query(
+    "UPDATE {quiz_ddlines_user_answers} AS ua"
+    . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
+    . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
+    . " WHERE 1"
+  );
+}
+
+/**
  * Make sure update script from main module is run before all.
  */
 function quiz_ddlines_update_7600() {

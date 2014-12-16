@@ -237,7 +237,6 @@ function quizz_update_7604() {
  * ID of quiz id/vid is now changed, we have to update relationships, results, …
  */
 function quizz_update_7605() {
-  // {quiz_result_options}
   db_query(
     "UPDATE {quiz_result_options} as qro"
     . " INNER JOIN {quiz_entity_revision} qer ON qro.quiz_vid = qer.node_vid"
@@ -245,7 +244,6 @@ function quizz_update_7605() {
     . " WHERE 1"
   );
 
-  // {quiz_relationship}
   db_query(
     "UPDATE {quiz_relationship} qr"
     . " INNER JOIN {quiz_entity_revision} qer ON qr.quiz_vid = qer.node_vid"
@@ -253,7 +251,6 @@ function quizz_update_7605() {
     . " WHERE 1"
   );
 
-  // {quiz_results}
   db_query(
     "UPDATE {quiz_results} qr"
     . " INNER JOIN {quiz_entity_revision} qer ON qr.quiz_vid = qer.node_vid"
