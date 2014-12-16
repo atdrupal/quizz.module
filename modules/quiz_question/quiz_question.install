@@ -107,6 +107,17 @@ function quiz_question_upgrade_question_type_from_node_type_to_entity() {
     }
   }
 
+  // Create temp columns for next update scripts.
+  db_add_field('quiz_question', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_field('quiz_question_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_index('quiz_question', 'question_node', array('node_nid'));
+  db_add_index('quiz_question_revision', 'question_node', array('node_vid'));
+
+  foreach (module_implements('quiz_question_info') as $module) {
+    require_once drupal_get_path('module', $module) . "/{$module}.install";
+    module_invoke($module, 'quiz_question_upgrade_schema_node_to_entity');
+  }
+
   drupal_flush_all_caches();
   drupal_static_reset();
 
