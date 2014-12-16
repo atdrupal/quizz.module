@@ -90,7 +90,7 @@ class QuestionController extends EntityAPIController {
   public function invoke($hook, $question) {
     $this->legacyFixQuestionId($question);
 
-    if (static::$disable_invoking || isset($question->skip_invoke_handler)) {
+    if (static::$disable_invoking) {
       return parent::invoke($hook, $question);
     }
 
