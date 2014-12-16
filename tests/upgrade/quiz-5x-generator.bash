@@ -1,7 +1,8 @@
 # Install site
 drush si -y testing
 drush dl -y quiz-7.x-5.x
-drush en -y locale ctools field field_sql_storage file filter image node system text user entity views views_bulk_operations
+drush en -y locale taxonomy options field field_sql_storage file image node system text user filter 
+drush en -y ctools entity views views_bulk_operations
 drush en -y quiz_page quiz quiz_question quiz_ddlines long_answer matching quiz_directions multichoice scale short_answer truefalse
 
 DRUPAL_ROOT=`drush ev 'echo DRUPAL_ROOT;'`
@@ -151,6 +152,27 @@ do
     drush ev '$_GET["q"] = "node/'$quiz_id'"; $question = node_load('$question_id'); quiz_add_question_to_quiz($question);'
   done
 done
+
+echo "Creating a quiz with random categorized random questions"
+drush dpost node/add/quiz '{"title": "Quiz 4", "body[und][0][value]": "Quiz 4 body", "randomization": "3"}' > /dev/null
+quiz_id=`drush sqlq 'SELECT MAX(nid) FROM node LIMIT 1'`
+drush dpost admin/structure/taxonomy/add '{ "name": "Question category", "machine_name": "question_category" }'
+drush dpost admin/structure/taxonomy/question_category/add '{ "name": "T1" }'
+drush dpost admin/structure/taxonomy/question_category/add '{ "name": "T2" }'
+
+drush en -y field_ui
+drush dpost admin/structure/types/manage/truefalse/fields '{ "fields[_add_new_field][label]": "Category", "fields[_add_new_field][field_name]": "question_category", "fields[_add_new_field][type]": "taxonomy_term_reference", "fields[_add_new_field][widget_type]": "options_select" }'
+drush dpost admin/structure/types/manage/truefalse/fields/field_question_category/field-settings '{ "field[settings][allowed_values][0][vocabulary]": "question_category" }'
+drush dis -y field_ui
+drush pm-uninstall -y field_ui
+
+question_ids=`drush sqlq 'SELECT nid FROM node WHERE type = "truefalse"'`
+for question_id in $question_ids
+do
+  drush dpost node/$question_id/edit '{ "field_question_category[und]": "1" }'
+done
+
+drush dpost node/$quiz_id/quiz/questions '{ "term" : "T1", "number": "2", "max_score": "2" }'
 
 echo "Dumping database & compress it…"
 rm -f /tmp/quiz-*
