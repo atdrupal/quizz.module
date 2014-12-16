@@ -16,10 +16,12 @@ class QuestionTypeController extends EntityAPIControllerExportable {
   public function save($question_type, DatabaseTransaction $transaction = NULL) {
     $return = parent::save($question_type, $transaction);
 
-    $question_type
-      ->getHandler()
-      ->onNewQuestionTypeCreated($question_type)
-    ;
+    if (!QuestionController::$disable_invoking) {
+      $question_type
+        ->getHandler()
+        ->onNewQuestionTypeCreated($question_type)
+      ;
+    }
 
     return $return;
   }

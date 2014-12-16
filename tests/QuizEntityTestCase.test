@@ -29,8 +29,34 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->checkQuizEntity();
     $this->checkQuizMethods();
     $this->checkQuizDefaults();
+    $this->checkQuizQuestionBank();
     $this->checkQuizCreation();
     $this->checkQuizSaveRevionLostRelationships();
+  }
+
+  private function checkQuizQuestionBank() {
+    $quiz = $this->drupalCreateQuiz();
+    $question_1 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'title' => 'TF 1'));
+    $question_2 = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'title' => 'TF 2'));
+
+    $this->drupalLogin($this->admin);
+
+    // Add question #1 to quiz
+    $this->drupalGet("quiz/{$quiz->qid}/questions");
+    $this->assertNoFieldByName("max_scores[{$question_1->qid}-{$question_1->vid}]");
+    $this->assertNoFieldByName("max_scores[{$question_2->qid}-{$question_2->vid}]");
+    $this->drupalPost(NULL, array("views_bulk_operations[0]" => $question_1->qid), "Add questions to Quiz");
+    $this->assertFieldByName("max_scores[{$question_1->qid}-{$question_1->vid}]");
+
+    // Take the quiz
+    $this->drupalGet("quiz/{$quiz->qid}/take");
+    $this->drupalPost(NULL, array("question[{$question_1->qid}]" => 1), "Finish");
+
+    // Add question #2 to quiz
+    $this->drupalGet("quiz/{$quiz->qid}/questions");
+    $this->drupalPost(NULL, array("views_bulk_operations[1]" => $question_2->qid), "Add questions to Quiz");
+    $this->assertFieldByName("max_scores[{$question_1->qid}-{$question_1->vid}]");
+    $this->assertFieldByName("max_scores[{$question_2->qid}-{$question_2->vid}]");
   }
 
   private function checkInitQuizEntityType() {
@@ -205,7 +231,7 @@ class QuizEntityTestCase extends QuizTestCase {
   /**
    * Test quiz revisioning.
    */
-  function testQuizRevisioning() {
+  public function testQuizRevisioning() {
     $quiz = $this->linkQuestionToQuiz($question = $this->drupalCreateQuestion(array(
         'type'           => 'truefalse',
         'title'          => 'Revision TRUE',

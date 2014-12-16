@@ -160,6 +160,11 @@ function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
       ),
   );
 
+  if (module_exists('field_group')) {
+    $form['vtabs']['#type'] = 'horizontal_tabs';
+    $form['vtabs']['#attached']['library'][] = array('field_group', 'horizontal-tabs');
+  }
+
   return $form;
 }
 

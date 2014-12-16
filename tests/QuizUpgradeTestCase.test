@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quiz_question\Entity\QuestionType;
+
 abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
   protected static $testDumpFile = '…';
@@ -29,48 +31,60 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     parent::setUp();
 
     // Module renamed from quiz to quizz
-    db_update('system')
-      ->fields(array(
-          'name'     => 'quizz',
-          'filename' => drupal_get_path('module', 'quizz'),
-      ))
-      ->condition('name', 'quiz')
-      ->execute()
-    ;
+    db_query('UPDATE {system} SET name = :name WHERE name = :old_name', array('old_name' => 'quiz', 'name' => 'quizz'));
+    db_query('UPDATE {system} SET name = :name WHERE name = :old_name AND type = :module', array(
+        ':module'  => 'module',
+        'old_name' => 'scale',
+        'name'     => 'quizz_scale'
+    ));
 
     module_enable(static::$dependencies);
     registry_rebuild();
+    drupal_flush_all_caches();
     $this->loadedModules = module_list();
   }
 
+  private function getPreupgradeInfo() {
+    $info = array();
+
+    // Store variables
+    $variables = db_query('SELECT * FROM {variable} WHERE 1')->fetchAllKeyed();
+    foreach ($variables as $name => $value) {
+      $info['config'][$name] = unserialize($value);
+    }
+
+    // Count
+    $sql = 'SELECT COUNT(*) FROM {node} WHERE type = :type';
+    $info['count'] = array(
+        'quiz'         => db_query($sql, array(':type' => 'quiz'))->fetchColumn(),
+        'long_answer'  => db_query($sql, array(':type' => 'long_answer'))->fetchColumn(),
+        'matching'     => db_query($sql, array(':type' => 'matching'))->fetchColumn(),
+        'quiz_page'    => db_query($sql, array(':type' => 'quiz_page'))->fetchColumn(),
+        'scale'        => db_query($sql, array(':type' => 'scale'))->fetchColumn(),
+        'short_answer' => db_query($sql, array(':type' => 'short_answer'))->fetchColumn(),
+        'truefalse'    => db_query($sql, array(':type' => 'truefalse'))->fetchColumn(),
+    );
+
+    return $info;
+  }
+
   public function testUpgrade() {
-    $scale = db_query('SELECT * FROM {system} WHERE name = :name AND type = :module', array(':name' => 'scale', ':module' => 'module'))->fetchObject();
-    db_delete('system')->condition('type', 'module')->condition('name', 'scale')->execute();
+    $info = $this->getPreupgradeInfo();
+    if ($this->performUpgrade()) {
+      $this->checkSchemas();
+      $this->checkConfiguration($info);
+      $this->checkDataMigration($info);
+    }
+  }
 
-    $upgrade_1 = $this->performUpgrade();
-
-    db_update('system')
-      ->fields(array(
-          'schema_version' => $scale->schema_version,
-          'status'         => 1
-      ))
-      ->condition('type', 'module')
-      ->condition('name', 'quizz_scale')
-      ->execute()
-    ;
-
-    registry_rebuild();
-    drupal_flush_all_caches();
-
-    $upgrade_2 = $this->performUpgrade();
-    $this->assertTrue($upgrade_1 && $upgrade_2, 'The update was completed successfully.');
-    if ($upgrade_1 && $upgrade_2) {
-      drupal_flush_all_caches();
-      foreach (static::$subModules as $module) {
-        $this->assertTrue(module_exists($module), "Module {$module} is enabled.");
-        if ($schema = module_invoke($module, 'schema')) {
-          $this->checkSchema($schema);
-        }
+  /**
+   * Make sure schemas are upgraded correctly.
+   */
+  private function checkSchemas() {
+    foreach (static::$subModules as $module) {
+      $this->assertTrue(module_exists($module), "Module {$module} is enabled.");
+      if ($schema = module_invoke($module, 'schema')) {
+        $this->checkSchema($schema);
       }
     }
   }
@@ -94,6 +108,87 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     }
   }
 
+  /**
+   * Make sure configuration are upgraded correctly.
+   */
+  private function checkConfiguration(array $info) {
+    // Check configuration for quiz.
+    $type = quiz_type_load('quiz');
+
+    $vars = array();
+    $vars[] = 'quiz_auto_revisioning';
+    $vars[] = 'quiz_default_close';
+    $vars[] = 'quiz_use_passfail';
+    $vars[] = 'quiz_max_result_options';
+    $vars[] = 'build_on_last';
+    $vars[] = 'quiz_remove_partial_quiz_record';
+    $vars[] = 'quiz_pager_start';
+    $vars[] = 'quiz_pager_siblings';
+    foreach ($vars as $var) {
+      if (isset($info['config'][$var])) {
+        $this->assertEqual($info['config'][$var], $type->getConfig($var), "{$var} is upgraded correctly.");
+      }
+    }
+
+    // Check body field is there for quiz content type.
+    $this->assertTrue(NULL !== field_info_instance('quiz_entity', 'quiz_body', 'quiz'), 'Quiz bundle has body field.');
+
+    // Make sure question types are converted from node types
+    $question_types = quiz_question_get_types();
+    $this->assertTrue($question_types['long_answer'] instanceof QuestionType);
+    $this->assertTrue($question_types['matching'] instanceof QuestionType);
+    $this->assertTrue($question_types['multichoice'] instanceof QuestionType);
+    $this->assertTrue($question_types['quiz_ddlines'] instanceof QuestionType);
+    $this->assertTrue($question_types['quiz_directions'] instanceof QuestionType);
+    $this->assertTrue($question_types['short_answer'] instanceof QuestionType);
+    $this->assertTrue($question_types['truefalse'] instanceof QuestionType);
+    $this->assertTrue($question_types['scale'] instanceof QuestionType);
+    if (in_array('quiz_page', static::$subModules)) {
+      $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
+    }
+
+    // Check configuration for question types.
+    foreach (quiz_question_get_types() as $question_type) {
+      $question_settings = $question_type->getAllConfig();
+      foreach ($question_settings as $name => $value) {
+        $this->assertEqual($info['config'][$name], $value, "Question settings: Variable {$name} is upgraded correctly.");
+      }
+    }
+  }
+
+  private function checkDataMigration($info) {
+    // Count quiz and questions
+    $c_quiz = db_query('SELECT COUNT(*) FROM {quiz_entity}')->fetchColumn();
+    $sql = 'SELECT COUNT(*) FROM {quiz_question} WHERE type = :type';
+    $c_la = db_query($sql, array(':type' => 'long_answer'))->fetchColumn();
+    $c_match = db_query($sql, array(':type' => 'matching'))->fetchColumn();
+    $c_page = db_query($sql, array(':type' => 'quiz_page'))->fetchColumn();
+    $c_scale = db_query($sql, array(':type' => 'scale'))->fetchColumn();
+    $c_short = db_query($sql, array(':type' => 'short_answer'))->fetchColumn();
+    $c_truefalse = db_query($sql, array(':type' => 'truefalse'))->fetchColumn();
+
+    $this->assertEqual($info['count']['quiz'], $c_quiz, "Number of quizzes is not changed.");
+    $this->assertEqual($info['count']['long_answer'], $c_la, "Number of long answer questions is not changed.");
+    $this->assertEqual($info['count']['matching'], $c_match, "Number of match questions is not changed.");
+    $this->assertEqual($info['count']['quiz_page'], $c_page, "Number of page questions is not changed.");
+    $this->assertEqual($info['count']['short_answer'], $c_short, "Number of short-answer questions is not changed.");
+    $this->assertEqual($info['count']['truefalse'], $c_truefalse, "Number of truefalse questions is not changed.");
+    $this->assertEqual($info['count']['scale'], $c_scale, "Number of scale questions is not changed.");
+
+    // Check quiz body field's data is migrated.
+    $this->assertTrue(!empty(quiz_load(1)->quiz_body['und'][0]['value']), "Quiz body field's data is migrated correctly.");
+
+    // Check question's body field is migrated.
+    $question_sql = 'SELECT quiz_question_body_value FROM {field_data_quiz_question_body} WHERE 1 LIMIT 1';
+    $question_body = db_query($question_sql)->fetchColumn();
+    $this->assertTrue(!empty($question_body), "Question body's data is migrated correctly.");
+
+    // Check question's properties
+    $tfq_id = db_query('SELECT qid FROM {quiz_question} WHERE type = :type', array(':type' => 'truefalse'))->fetchColumn();
+    $property_found = db_query('SELECT 1 FROM {quiz_truefalse} WHERE qid = :qid', array(':qid' => $tfq_id))->fetchColumn();
+    $this->assertTrue(!empty($property_found), "Question property is migrated correctly.");
+  }
+
 }
 
 class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
@@ -111,6 +206,9 @@ class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
 
 }
 
+/**
+ * Step to create the image: ./tests/upgrade/quiz-5x-generator.bash
+ */
 class QuizUpgradeFrom7x5xTestCase extends QuizUpgradeBaseTestCase {
 
   protected static $testDumpFile = 'quiz-5x.php.gz';

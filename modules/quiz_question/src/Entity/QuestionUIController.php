@@ -46,6 +46,7 @@ class QuestionUIController extends EntityDefaultUIController {
         'page callback'    => 'drupal_get_form',
         'page arguments'   => array('quiz_question_revision_actions_form', 1),
         'access arguments' => array('manual quiz revisioning'),
+        'file path'        => drupal_get_path('module', 'quiz_question'),
         'file'             => 'quiz_question.pages.inc',
         'type'             => MENU_NORMAL_ITEM,
     );

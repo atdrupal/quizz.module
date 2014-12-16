@@ -82,6 +82,16 @@ class FormDefinition extends FormHelper {
 
     // Provides details in vertical tabs.
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
+
+    if (module_exists('field_group')) {
+      $form['vtabs'] = array(
+          '#type'     => 'horizontal_tabs',
+          '#attached' => array(
+              'library' => array(array('field_group', 'horizontal-tabs'))
+          )
+      );
+    }
+
     $this->defineTakingOptions($form);
     $this->defineUserPointOptionsFields($form);
     $this->defineAvailabilityOptionsFields($form);
@@ -115,7 +125,7 @@ class FormDefinition extends FormHelper {
   private function defineTakingOptions(&$form) {
     $form['taking'] = array(
         '#type'        => 'fieldset',
-        '#title'       => t('Taking options'),
+        '#title'       => t('Taking'),
         '#collapsible' => TRUE,
         '#attributes'  => array('id' => 'taking-fieldset'),
         '#group'       => 'vtabs',
@@ -224,7 +234,7 @@ class FormDefinition extends FormHelper {
     );
     $form['taking']['taking_tabs']['review_options'] = array(
         '#type'        => 'fieldset',
-        '#title'       => t('Review options'),
+        '#title'       => t('Review'),
         '#collapsible' => FALSE,
         '#collapsed'   => FALSE,
         '#tree'        => TRUE,
@@ -317,7 +327,7 @@ class FormDefinition extends FormHelper {
   private function defineAvailabilityOptionsFields(&$form) {
     $form['quiz_availability'] = array(
         '#type'        => 'fieldset',
-        '#title'       => t('Availability options'),
+        '#title'       => t('Availability'),
         '#collapsed'   => TRUE,
         '#collapsible' => TRUE,
         '#attributes'  => array('id' => 'availability-fieldset'),
@@ -361,7 +371,7 @@ class FormDefinition extends FormHelper {
     // Quiz summary options.
     $form['summary_options'] = array(
         '#type'        => 'fieldset',
-        '#title'       => t('Pass/fail options'),
+        '#title'       => t('Pass/fail'),
         '#collapsible' => TRUE,
         '#collapsed'   => TRUE,
         '#attributes'  => array('id' => 'summary_options-fieldset'),
@@ -430,17 +440,18 @@ class FormDefinition extends FormHelper {
           '#tree'        => TRUE,
           '#attributes'  => array('id' => 'result_options-fieldset'),
           '#group'       => 'vtabs',
+          'ro_tabs'      => array('#type' => 'vertical_tabs')
       );
 
       for ($i = 0; $i < $num_options; $i++) {
         $option = (count($options) > 0) ? array_shift($options) : NULL; // grab each option in the array
-        $form['result_options'][$i] = array(
+        $form['result_options']['ro_tabs'][$i] = array(
             '#type'        => 'fieldset',
             '#title'       => t('Result Option ') . ($i + 1),
             '#collapsible' => TRUE,
             '#collapsed'   => FALSE,
         );
-        $form['result_options'][$i]['option_name'] = array(
+        $form['result_options']['ro_tabs'][$i]['option_name'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Range title'),
             '#default_value' => isset($option['option_name']) ? $option['option_name'] : '',
@@ -448,21 +459,21 @@ class FormDefinition extends FormHelper {
             '#size'          => 40,
             '#description'   => t('e.g., "A" or "Passed"'),
         );
-        $form['result_options'][$i]['option_start'] = array(
+        $form['result_options']['ro_tabs'][$i]['option_start'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Percentage low'),
             '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZ_NAME)),
             '#default_value' => isset($option['option_start']) ? $option['option_start'] : '',
             '#size'          => 5,
         );
-        $form['result_options'][$i]['option_end'] = array(
+        $form['result_options']['ro_tabs'][$i]['option_end'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Percentage high'),
             '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZ_NAME)),
             '#default_value' => isset($option['option_end']) ? $option['option_end'] : '',
             '#size'          => 5,
         );
-        $form['result_options'][$i]['option_summary'] = array(
+        $form['result_options']['ro_tabs'][$i]['option_summary'] = array(
             '#type'          => 'text_format',
             '#base_type'     => 'textarea',
             '#title'         => t('Feedback'),
@@ -471,7 +482,7 @@ class FormDefinition extends FormHelper {
             '#format'        => isset($option['option_summary_format']) ? $option['option_summary_format'] : NULL,
         );
         if (isset($option['option_id'])) {
-          $form['result_options'][$i]['option_id'] = array(
+          $form['result_options']['ro_tabs'][$i]['option_id'] = array(
               '#type'  => 'hidden',
               '#value' => isset($option['option_id']) ? $option['option_id'] : '',
           );
@@ -504,15 +515,11 @@ class FormDefinition extends FormHelper {
 
   private function defineRevisionOptionsFields(&$form) {
     $form['revision_information'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Revision information'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-        '#group'       => 'vtabs',
-        '#attributes'  => array('class' => array('node-form-revision-information')),
-        '#attached'    => array('js' => array(drupal_get_path('module', 'node') . '/node.js')),
-        '#weight'      => 20,
-        '#access'      => TRUE,
+        '#type'   => 'fieldset',
+        '#title'  => t('Revision information'),
+        '#group'  => 'vtabs',
+        '#weight' => 20,
+        '#access' => TRUE,
     );
 
     $form['revision_information']['revision'] = array(

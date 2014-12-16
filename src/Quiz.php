@@ -4,7 +4,6 @@ namespace Drupal\quizz;
 
 use Drupal\quizz\Helper\HookImplementation;
 use Drupal\quizz\Helper\MailHelper;
-use Drupal\quizz\Helper\NodeHelper;
 use Drupal\quizz\Helper\QuestionCategoryFieldInfo;
 use Drupal\quizz\Helper\QuizHelper;
 use Drupal\quizz\Quiz;
@@ -14,13 +13,11 @@ use Drupal\quizz\Quiz;
  * them easier to access, able to override, there is no OOP in helper classes
  * yet.
  *
- * Quiz.nodeHelper — Helper for node-hook implementations.
  * Quiz.quizHelper — Helper for quiz entity/object.
  * Quiz.mailHelper — Build/format email messages.
  * Quiz.quizHelper.settingHelper - Get/Set/… quiz settings.
  * Quiz.quizHelper.resultHelper — Helper methods for quiz's results.
  * Quiz.quizHelper.accessHelper — Access helpers
- * Quiz.quizHelper.feedbackHelper — Helper methods for quiz's feedback.
  *
  * Extends this class and sub classes if you would like override things.
  *
@@ -30,7 +27,6 @@ use Drupal\quizz\Quiz;
 class Quiz {
 
   private $hookImplementation;
-  private $nodeHelper;
   private $quizHelper;
   private $mailHelper;
   private $questionCategoryField;
@@ -47,27 +43,6 @@ class Quiz {
 
   public function setHookImplementation($hookImplementation) {
     $this->hookImplementation = $hookImplementation;
-    return $this;
-  }
-
-  /**
-   * @return NodeHelper
-   */
-  public function getNodeHelper() {
-    if (null === $this->nodeHelper) {
-      $this->nodeHelper = new NodeHelper();
-    }
-    return $this->nodeHelper;
-  }
-
-  /**
-   * Inject node helper.
-   *
-   * @param NodeHelper $nodeHelper
-   * @return Quiz
-   */
-  public function setNodeHelper($nodeHelper) {
-    $this->nodeHelper = $nodeHelper;
     return $this;
   }
 
@@ -116,11 +91,8 @@ class Quiz {
   /**
    * Format a number of seconds to a hh:mm:ss format.
    *
-   * @param $time_in_sec
-   *   Integers time in seconds.
-   *
-   * @return
-   *   String time in min : sec format.
+   * @param int $time_in_sec
+   * @return string Time in "min : sec" format.
    */
   function formatDuration($time_in_sec) {
     $hours = intval($time_in_sec / 3600);

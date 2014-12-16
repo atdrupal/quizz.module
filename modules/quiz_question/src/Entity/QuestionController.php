@@ -10,6 +10,12 @@ use EntityAPIController;
 class QuestionController extends EntityAPIController {
 
   /**
+   * Allow disable invoking question handler.
+   * @var bool
+   */
+  public static $disable_invoking = FALSE;
+
+  /**
    * Implements EntityAPIControllerInterface.
    *
    * @param Question $question
@@ -21,9 +27,15 @@ class QuestionController extends EntityAPIController {
       $question->feedback = $question->feedback['value'];
     }
 
-    $question->max_score = $question->getHandler()->getMaximumScore();
     $question->feedback = !empty($question->feedback) ? $question->feedback : '';
     $question->feedback_format = !empty($question->feedback_format) ? $question->feedback_format : filter_default_format();
+
+    if (!static::$disable_invoking) {
+      $question->max_score = $question->getHandler()->getMaximumScore();
+    }
+    elseif (!isset($question->max_score)) {
+      $question->max_score = 0;
+    }
 
     // Auto title
     if (!drupal_strlen($question->title) || !user_access('edit question titles')) {
@@ -46,7 +58,11 @@ class QuestionController extends EntityAPIController {
    */
   protected function saveRevision($question) {
     global $user;
-    $question->revision_uid = $user->uid;
+
+    if (!static::$disable_invoking) { // script is running
+      $question->revision_uid = $user->uid;
+    }
+
     return parent::saveRevision($question);
   }
 
@@ -55,8 +71,10 @@ class QuestionController extends EntityAPIController {
 
     /* @var $question Question */
     foreach ($questions as $question) {
-      foreach ($question->getHandler()->load() as $k => $v) {
-        $question->$k = $v;
+      if (!static::$disable_invoking) {
+        foreach ($question->getHandler()->load() as $k => $v) {
+          $question->$k = $v;
+        }
       }
     }
 
@@ -71,6 +89,10 @@ class QuestionController extends EntityAPIController {
    */
   public function invoke($hook, $question) {
     $this->legacyFixQuestionId($question);
+
+    if (static::$disable_invoking) {
+      return parent::invoke($hook, $question);
+    }
 
     switch ($hook) {
       case 'insert':
@@ -111,7 +133,7 @@ class QuestionController extends EntityAPIController {
    * @param string $content
    */
   public function buildContent($question, $view_mode = 'full', $langcode = NULL, $content = array()) {
-    if ('teaser' !== $view_mode) {
+    if (!static::$disable_invoking && ('teaser' !== $view_mode)) {
       $content += $question->getHandler()->view();
     }
     return parent::buildContent($question, $view_mode, $langcode, $content);

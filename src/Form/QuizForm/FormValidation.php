@@ -24,6 +24,8 @@ class FormValidation {
     }
     else {
       $this->quiz = entity_ui_controller('quiz_entity')->entityFormSubmitBuildEntity($form, $form_state);
+      $this->quiz->result_options = $this->quiz->result_options['ro_tabs'];
+      unset($this->quiz->result_options['result_options__ro_tabs__active_tab']);
     }
   }
 

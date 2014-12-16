@@ -73,22 +73,47 @@ function long_answer_update_7402() {
 }
 
 /**
- * Change schema per change of question content.
+ * Implements hook_quiz_question_upgrade_schema_node_to_entity().
+ */
+function long_answer_quiz_question_upgrade_schema_node_to_entity() {
+  if (db_table_exists('quiz_long_answer_node_properties')) {
+    $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    db_rename_table('quiz_long_answer_node_properties', 'quiz_long_answer_properties');
+    db_change_field('quiz_long_answer_properties', 'nid', 'qid', $spec_1);
+    db_change_field('quiz_long_answer_user_answers', 'question_nid', 'question_qid', $spec_2);
+  }
+}
+
+/**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function long_answer_quiz_question_upgrade_pre_drop_temp_columns() {
+  // quiz_long_answer_properties
+  db_query("UPDATE {quiz_long_answer_properties} ap"
+    . " INNER JOIN {quiz_question_revision} revision ON ap.vid = revision.node_vid"
+    . " SET ap.qid = revision.qid, ap.vid = revision.vid"
+    . " WHERE 1");
+
+  // quiz_long_answer_user_answers
+  db_query("UPDATE {quiz_long_answer_user_answers} aua"
+    . " INNER JOIN {quiz_question_revision} qr ON aua.question_vid = qr.node_vid"
+    . " SET aua.question_qid = qr.qid, aua.question_vid = qr.vid"
+    . " WHERE 1");
+}
+
+/**
+ * Make sure update script from main module is run before all.
  */
 function long_answer_update_7600() {
-  db_rename_table('quiz_long_answer_node_properties', 'quiz_long_answer_properties');
-
-  $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_long_answer_properties', 'nid', 'qid', $spec_1);
-
-  $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_long_answer_user_answers', 'question_nid', 'question_qid', $spec_2);
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  return quiz_question_update_7600();
 }
 
 /**
  * Convert global configuration for questions to question type entity.
  */
-function long_answer_7601() {
+function long_answer_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
     if ('long_answer' === $question_type->handler) {
       $question_type

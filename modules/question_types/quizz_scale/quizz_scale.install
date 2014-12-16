@@ -88,22 +88,18 @@ function quizz_scale_uninstall() {
 }
 
 /**
- * Script to fix name of question type handler per scale is renamed to quizz_scale
+ * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
-function quizz_scale_update_7599() {
+function quizz_scale_quiz_question_upgrade_schema_node_to_entity() {
+  if (db_table_exists('quiz_scale_properties')) {
+    return;
+  }
 
-}
-
-/**
- * Change schema per structure of question is changed.
- */
-function quizz_scale_update_7600() {
   db_rename_table('quiz_scale_node_properties', 'quiz_scale_properties');
 
   $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_scale_properties', 'nid', 'qid', $spec_1);
-
   $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+  db_change_field('quiz_scale_properties', 'nid', 'qid', $spec_1);
   db_change_field('quiz_scale_user_answers', 'question_nid', 'question_qid', $spec_2);
 
   db_rename_table('quiz_scale_answer_collection', 'quiz_scale_collections');
@@ -117,20 +113,45 @@ function quizz_scale_update_7600() {
   db_add_index('quiz_scale_collections', 'question_type', array('question_type'));
   db_add_index('quiz_scale_collections', 'collection_name', array('name'));
   db_add_index('quiz_scale_collections', 'collection_status', array('status'));
+  drupal_static_reset();
   drupal_flush_all_caches();
+}
 
-  $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
-  db_query("UPDATE {quiz_question_type} SET {$handler} = :new_name WHERE {$handler} = :name", array(
-      ':new_name' => 'quizz_scale',
-      ':name'     => 'scale',
-  ));
-  drupal_flush_all_caches();
+/**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function quizz_scale_quiz_question_upgrade_pre_drop_temp_columns() {
+  if (db_field_exists('quiz_question_revision', 'node_vid')) {
+    // quiz_scale_properties
+    db_query(
+      "UPDATE {quiz_scale_properties} as sp"
+      . " INNER JOIN {quiz_question_revision} qr ON sp.vid = qr.node_vid"
+      . " SET sp.qid = qr.qid, sp.vid = qr.vid"
+      . " WHERE 1"
+    );
+
+    // quiz_scale_user_answers
+    db_query(
+      "UPDATE {quiz_scale_user_answers} as ua"
+      . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
+      . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
+      . " WHERE 1"
+    );
+  }
+}
+
+/**
+ * Make sure update script from main module is run before all.
+ */
+function quizz_scale_update_7600() {
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  return quiz_question_update_7600();
 }
 
 /**
  * Convert global configuration for questions to question type entity.
  */
-function quizz_scale_update_7602() {
+function quizz_scale_update_7601() {
   foreach (quiz_question_get_types() as $question_type) {
     if ('scale' === $question_type->handler) {
       $question_type
@@ -144,7 +165,7 @@ function quizz_scale_update_7602() {
 /**
  * Add more columns for {quiz_scale_collections}
  */
-function quizz_scale_update_7603() {
+function quizz_scale_update_7602() {
   // Create default name for current collections
   $collections = entity_load('scale_collection', FALSE, array());
   foreach ($collections as $collection) {
@@ -166,7 +187,7 @@ function quizz_scale_update_7603() {
 /**
  * Update data per structure changed for scale collection.
  */
-function quizz_scale_update_7604() {
+function quizz_scale_update_7603() {
   $rows = db_select('quiz_scale_user')
     ->fields('quiz_scale_user')
     ->orderBy('answer_collection_id')
@@ -184,7 +205,7 @@ function quizz_scale_update_7604() {
 /**
  * Drop {quiz_scale_user}
  */
-function quizz_scale_update_7605() {
+function quizz_scale_update_7604() {
   $rows = db_query('SELECT * FROM {quiz_scale_user} WHERE 1')->fetchAll();
   foreach ($rows as $row) {
     if ($collection = entity_load_single('scale_collection', $row->answer_collection_id)) {
@@ -198,9 +219,9 @@ function quizz_scale_update_7605() {
 /**
  * Add {quiz_scale_collections}.question_type and missing indexes
  */
-function quizz_scale_update_7606() {
+function quizz_scale_update_7605() {
   $handler = db_field_exists('quiz_question_type', 'plugin') ? 'plugin' : 'handler';
-  if ($question_types = entity_load('quiz_question_type', FALSE, array($handler => 'quizz_scale'))) {
+  if ($question_types = entity_load('quiz_question_type', FALSE, array($handler => 'scale'))) {
     $question_type = reset($question_types);
     db_update('quiz_scale_collections')
       ->fields(array('question_type' => $question_type->type))

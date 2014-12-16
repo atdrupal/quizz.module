@@ -90,15 +90,45 @@ function matching_update_7400() {
 }
 
 /**
- * Update schema per question structure changed.
+ * Implements hook_quiz_question_upgrade_schema_node_to_entity().
+ */
+function matching_quiz_question_upgrade_schema_node_to_entity() {
+  if (db_table_exists('quiz_matching_node')) {
+    $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    db_change_field('quiz_matching_properties', 'nid', 'qid', $spec_1);
+    db_rename_table('quiz_matching_node', 'quiz_matching_question');
+    db_change_field('quiz_matching_question', 'nid', 'qid', $spec_2);
+  }
+}
+
+/**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function matching_quiz_question_upgrade_pre_drop_temp_columns() {
+  // quiz_matching_properties
+  db_query(
+    "UPDATE {quiz_matching_properties} as qp"
+    . " INNER JOIN {quiz_question_revision} qr ON qp.vid = qr.node_vid"
+    . " SET qp.qid = qr.qid, qp.vid = qr.vid"
+    . " WHERE 1"
+  );
+
+  // quiz_matching_question
+  db_query(
+    "UPDATE {quiz_matching_question} as mq"
+    . " INNER JOIN {quiz_question_revision} qr ON mq.vid = qr.node_vid"
+    . " SET mq.qid = qr.qid, mq.vid = qr.vid"
+    . " WHERE 1"
+  );
+}
+
+/**
+ * Make sure update script from main module is run before all.
  */
 function matching_update_7600() {
-  $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_matching_properties', 'nid', 'qid', $spec_1);
-
-  db_rename_table('quiz_matching_node', 'quiz_matching_question');
-  $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_matching_question', 'nid', 'qid', $spec_2);
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  return quiz_question_update_7600();
 }
 
 /**

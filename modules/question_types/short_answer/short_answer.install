@@ -78,11 +78,45 @@ function short_answer_update_7402() {
   }
 }
 
+/**
+ * Implements hook_quiz_question_upgrade_schema_node_to_entity().
+ */
+function short_answer_quiz_question_upgrade_schema_node_to_entity() {
+  if (db_table_exists('quiz_short_answer_node_properties')) {
+    $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    db_rename_table('quiz_short_answer_node_properties', 'quiz_short_answer_properties');
+    db_change_field('quiz_short_answer_properties', 'nid', 'qid', $spec);
+    db_change_field('quiz_short_answer_user_answers', 'question_nid', 'question_qid', $spec);
+  }
+}
+
+/**
+ * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
+ */
+function short_answer_quiz_question_upgrade_pre_drop_temp_columns() {
+  // quiz_short_answer_properties
+  db_query(
+    "UPDATE {quiz_short_answer_properties} as ap"
+    . " INNER JOIN {quiz_question_revision} qr ON ap.vid = qr.node_vid"
+    . " SET ap.qid = qr.qid, ap.vid = qr.vid"
+    . " WHERE 1"
+  );
+
+  // quiz_short_answer_user_answers
+  db_query(
+    "UPDATE {quiz_short_answer_user_answers} as ua"
+    . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
+    . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
+    . " WHERE 1"
+  );
+}
+
+/**
+ * Make sure update script from main module is run before all.
+ */
 function short_answer_update_7600() {
-  db_rename_table('quiz_short_answer_node_properties', 'quiz_short_answer_properties');
-  $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_short_answer_properties', 'nid', 'qid', $spec);
-  db_change_field('quiz_short_answer_user_answers', 'question_nid', 'question_qid', $spec);
+  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
+  return quiz_question_update_7600();
 }
 
 /**

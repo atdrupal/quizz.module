@@ -41,6 +41,10 @@ class QuizForm {
     $quiz->summary_pass_format = $quiz->summary_pass['format'];
     $quiz->summary_pass = $quiz->summary_pass['value'];
 
+    // Move elements from sub-tabs up
+    $this->quiz->result_options = $this->quiz->result_options['ro_tabs'];
+    unset($this->quiz->result_options['result_options__ro_tabs__active_tab']);
+
     // convert value from date (popup) widgets to timestamp
     foreach (array('quiz_open', 'quiz_close') as $k) {
       if (($human = $quiz->$k) && (FALSE !== strtotime($human))) {
