@@ -51,9 +51,11 @@ function question_pool_schema() {
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
 function question_pool_quiz_question_upgrade_schema_node_to_entity() {
-  db_change_field('quiz_pool_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
-  db_change_field('quiz_pool_user_answers_questions', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
-  db_change_field('quiz_pool_user_answers_questions', 'pool_nid', 'pool_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+  if (db_field_exists('quiz_pool_user_answers', 'question_nid')) {
+    db_change_field('quiz_pool_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+    db_change_field('quiz_pool_user_answers_questions', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+    db_change_field('quiz_pool_user_answers_questions', 'pool_nid', 'pool_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+  }
 }
 
 /**

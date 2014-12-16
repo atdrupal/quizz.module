@@ -51,9 +51,11 @@ function quizz_cloze_update_7401() {
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
 function quizz_cloze_quiz_question_upgrade_schema_node_to_entity() {
-  db_change_field('quiz_cloze_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
-  db_rename_table('quiz_cloze_node_properties', 'quiz_cloze_question_properties');
-  db_change_field('quiz_cloze_question_properties', 'nid', 'qid');
+  if (db_table_exists('quiz_cloze_node_properties')) {
+    db_change_field('quiz_cloze_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+    db_rename_table('quiz_cloze_node_properties', 'quiz_cloze_question_properties');
+    db_change_field('quiz_cloze_question_properties', 'nid', 'qid');
+  }
 }
 
 /**

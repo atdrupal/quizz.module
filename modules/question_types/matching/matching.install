@@ -93,12 +93,13 @@ function matching_update_7400() {
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
 function matching_quiz_question_upgrade_schema_node_to_entity() {
-  $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-
-  db_change_field('quiz_matching_properties', 'nid', 'qid', $spec_1);
-  db_rename_table('quiz_matching_node', 'quiz_matching_question');
-  db_change_field('quiz_matching_question', 'nid', 'qid', $spec_2);
+  if (db_table_exists('quiz_matching_node')) {
+    $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    db_change_field('quiz_matching_properties', 'nid', 'qid', $spec_1);
+    db_rename_table('quiz_matching_node', 'quiz_matching_question');
+    db_change_field('quiz_matching_question', 'nid', 'qid', $spec_2);
+  }
 }
 
 /**

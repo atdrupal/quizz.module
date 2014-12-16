@@ -151,21 +151,6 @@ function _quiz_question_convert_node_type_to_question_type_entity($node_type) {
 }
 
 /**
- * Create temp columns for next update scripts.
- */
-function quiz_question_update_7601() {
-  db_add_field('quiz_question', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
-  db_add_field('quiz_question_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
-  db_add_index('quiz_question', 'question_node', array('node_nid'));
-  db_add_index('quiz_question_revision', 'question_node', array('node_vid'));
-
-  foreach (module_implements('quiz_question_info') as $module) {
-    require_once drupal_get_path('module', $module) . "/{$module}.install";
-    module_invoke($module, 'quiz_question_upgrade_schema_node_to_entity');
-  }
-}
-
-/**
  * Migrate question nodes to question entities.
  */
 function quiz_question_update_7602() {
@@ -180,7 +165,9 @@ function quiz_question_update_7602() {
       ->execute()
       ->fetchAll();
     foreach ($rows as $row) {
+      QuestionController::$disable_invoking = TRUE;
       $question = _quiz_question_update_7602($row);
+      QuestionController::$disable_invoking = FALSE;
       db_query('UPDATE {quiz_question}          SET node_nid = :node_nid WHERE qid = :qid', array(':qid' => $question->qid, ':node_nid' => $row->nid));
       db_query('UPDATE {quiz_question_revision} SET node_vid = :node_vid WHERE vid = :vid', array(':vid' => $question->vid, ':node_vid' => $row->vid));
     }
@@ -198,16 +185,15 @@ function _quiz_question_update_7602($row) {
         'type'     => $row->type,
         'language' => $row->language,
         'status'   => $row->status,
-        'title'    => $row->title,
         'created'  => $row->created,
-        'changed'  => $row->timestamp,
-        'uid'      => $row->uid,
     ));
   }
 
   $question->is_new_revision = 1;
   $question->log = $row->log;
-  $question->skip_invoke_handler = TRUE;
+  $question->title = $row->title;
+  $question->changed = $row->timestamp;
+  $question->uid = $row->uid;
   $question->save();
   return $question;
 }

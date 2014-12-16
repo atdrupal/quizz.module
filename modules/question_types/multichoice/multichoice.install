@@ -115,12 +115,14 @@ function multichoice_update_7501() {
  * Change schema per question structure changed.
  */
 function multichoice_quiz_question_upgrade_schema_node_to_entity() {
-  $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  $spec_3 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-  db_change_field('quiz_multichoice_user_answers', 'question_nid', 'question_qid', $spec);
-  db_change_field('quiz_multichoice_properties', 'nid', 'qid', $spec_2);
-  db_change_field('quiz_multichoice_answers', 'question_nid', 'question_qid', $spec_3);
+  if (db_field_exists('quiz_multichoice_properties', 'nid')) {
+    $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    $spec_3 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
+    db_change_field('quiz_multichoice_user_answers', 'question_nid', 'question_qid', $spec);
+    db_change_field('quiz_multichoice_properties', 'nid', 'qid', $spec_2);
+    db_change_field('quiz_multichoice_answers', 'question_nid', 'question_qid', $spec_3);
+  }
 }
 
 /**
