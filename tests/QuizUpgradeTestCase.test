@@ -31,17 +31,16 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     parent::setUp();
 
     // Module renamed from quiz to quizz
-    db_update('system')
-      ->fields(array(
-          'name'     => 'quizz',
-          'filename' => drupal_get_path('module', 'quizz'),
-      ))
-      ->condition('name', 'quiz')
-      ->execute()
-    ;
+    db_query('UPDATE {system} SET name = :name WHERE name = :old_name', array('old_name' => 'quiz', 'name' => 'quizz'));
+    db_query('UPDATE {system} SET name = :name WHERE name = :old_name AND type = :module', array(
+        ':module'  => 'module',
+        'old_name' => 'scale',
+        'name'     => 'quizz_scale'
+    ));
 
     module_enable(static::$dependencies);
     registry_rebuild();
+    drupal_flush_all_caches();
     $this->loadedModules = module_list();
   }
 
@@ -71,32 +70,11 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
   public function testUpgrade() {
     $info = $this->getPreupgradeInfo();
-    $upgrade_1 = $this->doUpgradeOne();
-    $upgrade_2 = $this->performUpgrade();
-    if ($upgrade_1 && $upgrade_2) {
+    if ($this->performUpgrade()) {
       $this->checkSchemas();
       $this->checkConfiguration($info);
       $this->checkDataMigration($info);
     }
-  }
-
-  private function doUpgradeOne() {
-    $scale = db_query('SELECT * FROM {system} WHERE name = :name AND type = :module', array(':name' => 'scale', ':module' => 'module'))->fetchObject();
-    db_delete('system')->condition('type', 'module')->condition('name', 'scale')->execute();
-
-    $upgrade_1 = $this->performUpgrade();
-
-    db_update('system')
-      ->fields(array('status' => 1, 'schema_version' => $scale->schema_version))
-      ->condition('type', 'module')
-      ->condition('name', 'quizz_scale')
-      ->execute()
-    ;
-
-    registry_rebuild();
-    drupal_flush_all_caches();
-
-    return $upgrade_1;
   }
 
   /**
@@ -201,7 +179,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertTrue(!empty(quiz_load(1)->quiz_body['und'][0]['value']), "Quiz body field's data is migrated correctly.");
 
     // Check question's body field is migrated.
-    $question_sql = 'SELECT quiz_question_body_value FROM {field_data_quiz_question_body} WHERE entity_id = 1';
+    $question_sql = 'SELECT quiz_question_body_value FROM {field_data_quiz_question_body} WHERE 1 LIMIT 1';
     $question_body = db_query($question_sql)->fetchColumn();
     $this->assertTrue(!empty($question_body), "Question body's data is migrated correctly.");
 

@@ -3,6 +3,7 @@
 namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\Entity\QuestionController;
 use Drupal\quiz_question\Entity\QuestionType;
 use Drupal\quiz_question\Form\QuestionForm;
 use Drupal\quizz\Controller\QuestionFeedbackController;
@@ -143,7 +144,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
 
     // Save what quizzes this question belongs to.
     $this->saveRelationships();
-    if ($this->question->revision) {
+    if ($this->question->revision && !QuestionController::$disable_invoking) {
       if (user_access('manual quiz revisioning') && !variable_get('quiz_auto_revisioning', 1)) {
         unset($_GET['destination']);
         unset($_REQUEST['edit']['destination']);

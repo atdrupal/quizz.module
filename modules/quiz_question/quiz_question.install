@@ -83,6 +83,16 @@ function quiz_question_update_7600() {
 }
 
 function quiz_question_upgrade_question_type_from_node_type_to_entity() {
+  if (db_field_exists('quiz_question', 'node_nid')) {
+    return;
+  }
+
+  // Create temp columns for next update scripts.
+  db_add_field('quiz_question', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_field('quiz_question_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_index('quiz_question', 'question_node', array('node_nid'));
+  db_add_index('quiz_question_revision', 'question_node', array('node_vid'));
+
   $handler_info = quiz_question_get_handler_info();
 
   $sql = 'SELECT * FROM {node_type} WHERE module = :module';
@@ -107,12 +117,6 @@ function quiz_question_upgrade_question_type_from_node_type_to_entity() {
     }
   }
 
-  // Create temp columns for next update scripts.
-  db_add_field('quiz_question', 'node_nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
-  db_add_field('quiz_question_revision', 'node_vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
-  db_add_index('quiz_question', 'question_node', array('node_nid'));
-  db_add_index('quiz_question_revision', 'question_node', array('node_vid'));
-
   foreach (module_implements('quiz_question_info') as $module) {
     require_once drupal_get_path('module', $module) . "/{$module}.install";
     module_invoke($module, 'quiz_question_upgrade_schema_node_to_entity');
@@ -135,7 +139,10 @@ function _quiz_question_convert_node_type_to_question_type_entity($node_type) {
           'multilingual' => (int) variable_get('language_content_type_' . $node_type->type, 0)
       )
   ));
+
+  QuestionController::$disable_invoking = TRUE;
   $question_type->save();
+  QuestionController::$disable_invoking = FALSE;
 
   db_update('node_type')
     ->fields(array('module' => 'node', 'base' => 'node_content', 'disabled' => 0))
@@ -176,9 +183,7 @@ function quiz_question_update_7602() {
       ->execute()
       ->fetchAll();
     foreach ($rows as $row) {
-      QuestionController::$disable_invoking = TRUE;
       $question = _quiz_question_update_7602($row);
-      QuestionController::$disable_invoking = FALSE;
       db_query('UPDATE {quiz_question}          SET node_nid = :node_nid WHERE qid = :qid', array(':qid' => $question->qid, ':node_nid' => $row->nid));
       db_query('UPDATE {quiz_question_revision} SET node_vid = :node_vid WHERE vid = :vid', array(':vid' => $question->vid, ':node_vid' => $row->vid));
     }
@@ -205,7 +210,11 @@ function _quiz_question_update_7602($row) {
   $question->title = $row->title;
   $question->changed = $row->timestamp;
   $question->uid = $row->uid;
+
+  QuestionController::$disable_invoking = TRUE;
   $question->save();
+  QuestionController::$disable_invoking = FALSE;
+
   return $question;
 }
 
@@ -257,25 +266,6 @@ function quiz_question_update_7610() {
   foreach (module_implements('quiz_question_info') as $module) {
     require_once drupal_get_path('module', $module) . "/{$module}.install";
     module_invoke($module, 'quiz_question_upgrade_pre_drop_temp_columns');
-  }
-
-  // scale module is renamed to quizz_scale, the module maybe not yet enabled
-  // quiz_scale_properties
-  if (module_exists('quizz_scale')) {
-    db_query(
-      "UPDATE {quiz_scale_properties} as sp"
-      . " INNER JOIN {quiz_question_revision} qr ON sp.vid = qr.node_vid"
-      . " SET sp.qid = qr.qid, sp.vid = qr.vid"
-      . " WHERE 1"
-    );
-
-    // quiz_scale_user_answers
-    db_query(
-      "UPDATE {quiz_scale_user_answers} as ua"
-      . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
-      . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
-      . " WHERE 1"
-    );
   }
 
   db_drop_index('quiz_question', 'question_node');

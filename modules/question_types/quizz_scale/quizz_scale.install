@@ -115,26 +115,6 @@ function quizz_scale_quiz_question_upgrade_schema_node_to_entity() {
   db_add_index('quiz_scale_collections', 'collection_status', array('status'));
   drupal_static_reset();
   drupal_flush_all_caches();
-
-  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
-
-  // Convert question node type to question type entity
-  quiz_question_upgrade_question_type_from_node_type_to_entity();
-  drupal_flush_all_caches();
-
-  // Convert question nodes to entities
-  $select = db_select('node_revision', 'r');
-  $select->innerJoin('node', 'n', 'r.nid = n.nid');
-  $rows = $select
-    ->fields('r', array('nid', 'vid', 'uid', 'title', 'log', 'timestamp', 'status'))
-    ->fields('n', array('type', 'language', 'created', 'changed'))
-    ->condition('n.type', 'scale')
-    ->orderBy('r.vid')
-    ->execute()
-    ->fetchAll();
-  foreach ($rows as $row) {
-    _quiz_question_update_7602($row);
-  }
 }
 
 /**
@@ -165,9 +145,7 @@ function quizz_scale_quiz_question_upgrade_pre_drop_temp_columns() {
  */
 function quizz_scale_update_7600() {
   require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
-  $return = quiz_question_update_7600();
-  quizz_scale_quiz_question_upgrade_schema_node_to_entity();
-  return $return;
+  return quiz_question_update_7600();
 }
 
 /**
