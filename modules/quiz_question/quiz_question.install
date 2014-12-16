@@ -189,7 +189,7 @@ function quiz_question_update_7602() {
 
 function _quiz_question_update_7602($row) {
   // find quiz revision
-  $sql = 'SELECT qid FROM {quiz_entity} WHERE node_nid = :nid';
+  $sql = 'SELECT qid FROM {quiz_question} WHERE node_nid = :nid';
   if ($question_id = db_query($sql, array(':nid' => $row->nid))->fetchColumn()) {
     $question = quiz_question_entity_load($question_id);
   }
