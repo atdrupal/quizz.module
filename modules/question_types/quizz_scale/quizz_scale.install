@@ -154,7 +154,7 @@ function quizz_scale_quiz_question_upgrade_pre_drop_temp_columns() {
     db_query(
       "UPDATE {quiz_scale_user_answers} as ua"
       . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
-      . " SET ua.qid = qr.qid, ua.vid = qr.vid"
+      . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
       . " WHERE 1"
     );
   }
