@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\quiz_question\Entity\QuestionController;
 use Drupal\quiz_question\Schema\Schema7060;
 
 /**
@@ -105,6 +106,10 @@ function quiz_question_upgrade_question_type_from_node_type_to_entity() {
       $labels[] = $label;
     }
   }
+
+  drupal_flush_all_caches();
+  drupal_static_reset();
+
   return 'Created new question types: ' . implode(', ', $labels);
 }
 
@@ -127,6 +132,21 @@ function _quiz_question_convert_node_type_to_question_type_entity($node_type) {
     ->condition('type', $node_type->type)
     ->execute();
 
+  // copy fields from question node to question entity
+  $field_instances = field_info_instances('node', $node_type->type);
+  foreach ($field_instances as $name => $instance) {
+    if ('body' === $name) { // body field is auto created via internal API
+      continue;
+    }
+
+    if (!field_info_instance('quiz_question', $instance['field_name'], $question_type->type)) {
+      unset($instance['id']);
+      $instance['entity_type'] = 'quiz_question';
+      $instance['bundle'] = $question_type->type;
+      field_create_instance($instance);
+    }
+  }
+
   return $node_type->type;
 }
 
@@ -146,7 +166,7 @@ function quiz_question_update_7601() {
 }
 
 /**
- * @TODO: Migrate question nodes to question entities.
+ * Migrate question nodes to question entities.
  */
 function quiz_question_update_7602() {
   foreach (array_keys(quiz_question_get_handler_info()) as $handler_name) {
@@ -160,12 +180,14 @@ function quiz_question_update_7602() {
       ->execute()
       ->fetchAll();
     foreach ($rows as $row) {
-      _quiz_question_update_7605($row);
+      $question = _quiz_question_update_7602($row);
+      db_query('UPDATE {quiz_question}          SET node_nid = :node_nid WHERE qid = :qid', array(':qid' => $question->qid, ':node_nid' => $row->nid));
+      db_query('UPDATE {quiz_question_revision} SET node_vid = :node_vid WHERE vid = :vid', array(':vid' => $question->vid, ':node_vid' => $row->vid));
     }
   }
 }
 
-function _quiz_question_update_7605($row) {
+function _quiz_question_update_7602($row) {
   // find quiz revision
   $sql = 'SELECT qid FROM {quiz_entity} WHERE node_nid = :nid';
   if ($question_id = db_query($sql, array(':nid' => $row->nid))->fetchColumn()) {
@@ -180,8 +202,6 @@ function _quiz_question_update_7605($row) {
         'created'  => $row->created,
         'changed'  => $row->timestamp,
         'uid'      => $row->uid,
-        'node_nid' => $row->nid,
-        'node_vid' => $row->vid,
     ));
   }
 
@@ -189,14 +209,48 @@ function _quiz_question_update_7605($row) {
   $question->log = $row->log;
   $question->skip_invoke_handler = TRUE;
   $question->save();
+  return $question;
 }
 
 /**
- * @TODO: Other steps
+ * Migrate question node's fields
  */
-//function quiz_question_update_7609() {
-//  return '…';
-//}
+function quiz_question_update_7603() {
+  foreach (array_keys(quiz_question_get_handler_info()) as $handler_name) {
+    $field_names = array_keys(field_info_instances('node', $handler_name));
+
+    $sql = 'SELECT r.vid, r.node_vid, q.type';
+    $sql .= ' FROM {quiz_question_revision} r';
+    $sql .= ' INNER JOIN {quiz_question} q ON r.qid = q.qid';
+    $sql .= ' WHERE q.type = :type ORDER BY node_vid ASC';
+    $rows = db_query($sql, array(':type' => $handler_name))->fetchAll();
+    foreach ($rows as $row) {
+      QuestionController::$disable_invoking = TRUE;
+      $question_revision = quiz_question_entity_load(NULL, $row->vid, TRUE);
+      $node_revision = node_load(NULL, $row->node_vid);
+      _quiz_question_update_7603($question_revision, $node_revision, $field_names);
+      QuestionController::$disable_invoking = FALSE;
+    }
+  }
+}
+
+function _quiz_question_update_7603($question_revision, $node_revision, $field_names) {
+  foreach ($field_names as $field_name) {
+    if (empty($node_revision->{$field_name})) {
+      continue;
+    }
+
+    if ('body' === $field_name) {
+      $question_revision->quiz_question_body = $node_revision->body;
+    }
+    else {
+      $question_revision->{$field_name} = $node_revision->{$field_name};
+    }
+  }
+
+  // This should be $question_revision->save(), but not sure why it's not working
+  field_attach_update('quiz_question', $question_revision);
+}
 
 /**
  * Clean up migration's temp data.

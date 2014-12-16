@@ -193,7 +193,6 @@ function quizz_update_7603() {
   drupal_static_reset();
   drupal_flush_all_caches();
 
-  // migrate basic quiz
   $sql = 'SELECT vid, node_vid FROM {quiz_entity_revision} WHERE 1 ORDER BY node_vid ASC';
   $rows = db_query($sql)->fetchAll();
   foreach ($rows as $row) {

@@ -197,8 +197,13 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertEqual($info['count']['truefalse'], $c_truefalse, "Number of truefalse questions is not changed.");
     $this->assertEqual($info['count']['scale'], $c_scale, "Number of scale questions is not changed.");
 
-    // Check Quiz body field's data is migrated.
-    $this->assertTrue(!empty(quiz_load(1)->quiz_body['und'][0]['value']));
+    // Check quiz body field's data is migrated.
+    $this->assertTrue(!empty(quiz_load(1)->quiz_body['und'][0]['value']), "Quiz body field's data is migrated correctly.");
+
+    // Check question's body field is migrated.
+    $question_sql = 'SELECT quiz_question_body_value FROM {field_data_quiz_question_body} WHERE entity_id = 1';
+    $question_body = db_query($question_sql)->fetchColumn();
+    $this->assertTrue(!empty($question_body), "Question body's data is migrated correctly.");
   }
 
 }

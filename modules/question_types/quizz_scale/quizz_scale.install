@@ -133,7 +133,7 @@ function quizz_scale_quiz_question_upgrade_schema_node_to_entity() {
     ->execute()
     ->fetchAll();
   foreach ($rows as $row) {
-    _quiz_question_update_7605($row);
+    _quiz_question_update_7602($row);
   }
 }
 
