@@ -46,6 +46,10 @@ function quizz_uninstall() {
  * Enable required modules for quiz-6.x
  */
 function quizz_update_7599() {
+  // quiz node type is defined by quiz.module, but this modules no longer powers
+  // it. Reown to core 'node' module.
+  db_update("UDPATE {node_type} set module = 'node' WHERE type='quiz'");
+
   module_enable(array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload'));
   registry_rebuild();
   drupal_flush_all_caches();
@@ -124,7 +128,7 @@ function quizz_update_7602() {
   // migrate basic quiz
   $select = db_select('node', 'n');
   $select->innerJoin('node_revision', 'r', 'n.nid = r.nid');
-  $results = $select
+  $rows = $select
     ->fields('r', array('nid', 'vid', 'uid', 'title', 'log', 'timestamp', 'status'))
     ->fields('n', array('created', 'type', 'language'))
     ->condition('n.type', 'quiz')
@@ -132,8 +136,12 @@ function quizz_update_7602() {
     ->execute()
     ->fetchAll();
 
-  foreach ($results as $row) {
-    _quiz_update_7602($row);
+  foreach ($rows as $row) {
+    $quiz = _quiz_update_7602($row);
+
+    // custom columns are not in schema, have to do extra things here.
+    db_query('UPDATE {quiz_entity}          SET node_nid = :node_nid WHERE qid = :qid', array(':qid' => $quiz->qid, ':node_nid' => $row->nid));
+    db_query('UPDATE {quiz_entity_revision} SET node_vid = :node_vid WHERE vid = :vid', array(':vid' => $quiz->vid, ':node_vid' => $row->vid));
   }
 }
 
@@ -160,20 +168,13 @@ function _quiz_update_7602($row) {
   $quiz->changed = $row->timestamp;
   $quiz->is_new_revision = 1;
   $quiz->save();
-
-  // custom columns are not in schema, have to do extra things here.
-  db_query('UPDATE {quiz_entity}          SET node_nid = :node_nid WHERE qid = :qid', array(':qid' => $quiz->qid, ':node_nid' => $row->nid));
-  db_query('UPDATE {quiz_entity_revision} SET node_vid = :node_vid WHERE qid = :vid', array(':vid' => $quiz->vid, ':node_vid' => $row->vid));
+  return $quiz;
 }
 
 /**
  * Convet quiz-node fields data to quiz entity
  */
 function quizz_update_7603() {
-  // quiz node type is defined by quiz.module, but this modules no longer powers
-  // it. Reown to core 'node' module.
-  db_update("UDPATE {node_type} set module = 'node' WHERE type='quiz'");
-
   $field_instances = field_info_instances('node', 'quiz');
   $field_names = array_keys($field_instances);
 
@@ -189,36 +190,33 @@ function quizz_update_7603() {
     field_create_instance($instance);
   }
 
+  drupal_static_reset();
+  drupal_flush_all_caches();
+
   // migrate basic quiz
-  $select = db_select('node', 'n');
-  $select->innerJoin('node_revision', 'r', 'n.nid = r.nid');
-  $select->fields('r', array('nid', 'vid'));
-  $select->condition('n.type', 'quiz');
-  $result = $select->execute()->fetchAll();
-  foreach ($result as $row) {
-    $quiz_node = node_load($row->nid, $row->vid);
-    _quiz_update_7603($quiz_node, $field_names);
+  $sql = 'SELECT vid, node_vid FROM {quiz_entity_revision} WHERE 1 ORDER BY node_vid ASC';
+  $rows = db_query($sql)->fetchAll();
+  foreach ($rows as $row) {
+    $quiz_revision = quiz_load(NULL, $row->vid);
+    $node_revision = node_load(NULL, $row->node_vid);
+    _quiz_update_7603($quiz_revision, $node_revision, $field_names);
   }
 }
 
-function _quiz_update_7603($quiz_node, $field_names) {
-  $sql = 'SELECT vid FROM {quiz_entity_revision} WHERE node_vid = :vid';
-  if ($quiz_vid = db_query($sql, array(':vid' => $quiz_node->vid))->fetchColumn()) {
-    $quiz = quiz_load(NULL, $quiz_vid);
-    foreach ($field_names as $field_name) {
-      if (empty($quiz_node->{$field_name})) {
-        continue;
-      }
-
-      if ('body' === $field_name) {
-        $quiz->quiz_body = $quiz_node->body;
-      }
-      else {
-        $quiz->{$field_name} = $quiz_node->{$field_name};
-      }
+function _quiz_update_7603($quiz_revision, $node_revision, $field_names) {
+  foreach ($field_names as $field_name) {
+    if (empty($node_revision->{$field_name})) {
+      continue;
     }
-    $quiz->save();
+
+    if ('body' === $field_name) {
+      $quiz_revision->quiz_body = $node_revision->body;
+    }
+    else {
+      $quiz_revision->{$field_name} = $node_revision->{$field_name};
+    }
   }
+  $quiz_revision->save();
 }
 
 /**
