@@ -2,6 +2,7 @@
 
 namespace Drupal\quizz\Entity;
 
+use DatabaseTransaction;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\ResponseHandler;
 use EntityAPIController;
@@ -15,6 +16,14 @@ class AnswerController extends EntityAPIController {
       $entity->bundle();
     }
     return parent::attachLoad($queried_entities, $revision_id);
+  }
+
+  public function save($entity, DatabaseTransaction $transaction = NULL) {
+    $entity->bundle();
+    if (!empty($entity->result_answer_id)) {
+      $entity->is_new = FALSE;
+    }
+    return parent::save($entity, $transaction);
   }
 
   /**

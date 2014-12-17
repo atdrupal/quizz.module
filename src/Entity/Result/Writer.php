@@ -10,8 +10,7 @@ class Writer {
   /**
    * Store a quiz question result.
    *
-   * @param $quiz
-   *  The quiz entity
+   * @param QuizEntity $quiz
    * @param $response
    *  Object with data about the result for a question.
    * @param $options
@@ -22,21 +21,19 @@ class Writer {
     $this->prepareResponse($response, $options);
 
     // Insert result data, or update existing data.
-    $answer = (object) array(
-          'result_answer_id' => $this->findAnswerId($response),
-          'question_qid'     => $response->question_qid,
-          'question_vid'     => $response->question_vid,
-          'result_id'        => $response->result_id,
-          'is_correct'       => (int) $response->is_correct,
-          'points_awarded'   => round($response->score * $this->findScale($quiz, $response, $options)),
-          'answer_timestamp' => REQUEST_TIME,
-          'is_skipped'       => (int) $response->is_skipped,
-          'is_doubtful'      => (int) $response->is_doubtful,
-          'number'           => $options['question_data']['number'],
-          'tid'              => ($quiz->randomization == 3 && $response->tid) ? $response->tid : 0,
-    );
-
-    entity_save('quiz_result_answer', $answer);
+    entity_create('quiz_result_answer', array(
+        'result_answer_id' => $this->findAnswerId($response),
+        'question_qid'     => $response->question_qid,
+        'question_vid'     => $response->question_vid,
+        'result_id'        => $response->result_id,
+        'is_correct'       => (int) $response->is_correct,
+        'points_awarded'   => round($response->score * $this->findScale($quiz, $response, $options)),
+        'answer_timestamp' => REQUEST_TIME,
+        'is_skipped'       => (int) $response->is_skipped,
+        'is_doubtful'      => (int) $response->is_doubtful,
+        'number'           => $options['question_data']['number'],
+        'tid'              => ($quiz->randomization == 3 && $response->tid) ? $response->tid : 0,
+    ))->save();
   }
 
   private function prepareResponse(\stdClass $response, $options) {
