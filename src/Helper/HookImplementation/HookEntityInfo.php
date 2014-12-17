@@ -172,7 +172,7 @@ class HookEntityInfo {
         'entity class'              => 'Drupal\quizz\Entity\Answer',
         'controller class'          => 'Drupal\quizz\Entity\AnswerController',
         'base table'                => 'quiz_results_answers',
-        'entity keys'               => array('id' => 'result_answer_id'),
+        'entity keys'               => array('id' => 'result_answer_id', 'bundle' => 'type', 'label' => 'result_answer_id'),
         'bundle keys'               => array('bundle' => 'type'),
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\AnswerMetadataController',

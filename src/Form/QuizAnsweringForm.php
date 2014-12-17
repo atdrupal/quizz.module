@@ -85,7 +85,7 @@ class QuizAnsweringForm {
     return $form;
   }
 
-  private function buildQuestionItem(Question $question, Answer $answer, &$form, $form_state) {
+  private function buildQuestionItem(Question $question, Answer $answer, &$form, &$form_state) {
     $handler = $question->getHandler();
 
     // Element for a single question
@@ -106,6 +106,9 @@ class QuizAnsweringForm {
       // This question was already answered, and not skipped.
       $form['questions'][$question->qid]['#disabled'] = TRUE;
     }
+
+    // Attach custom fields
+    field_attach_form('quiz_result_answer', $answer, $form['questions'][$question->qid], $form_state);
 
     if ($this->quiz->mark_doubtful) {
       $form['is_doubtful'] = array(

@@ -9,6 +9,14 @@ use RuntimeException;
 
 class AnswerController extends EntityAPIController {
 
+  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
+    // Make sure entity has bundle property.
+    foreach ($queried_entities as $entity) {
+      $entity->bundle();
+    }
+    return parent::attachLoad($queried_entities, $revision_id);
+  }
+
   /**
    * Load answer by Result & questions IDs.
    *
