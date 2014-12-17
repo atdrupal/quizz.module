@@ -63,27 +63,27 @@ class QuizResultTestCase extends QuizTestCase {
     // Test 100%
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Finish'));
     $this->assertText('You got 90 or more on the quiz');
     $this->assertText('This is the summary if passed');
     $this->assertNoText('This is the default summary text');
 
     // Test 66%
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 0), t('Finish'));
     $this->assertText('You got between 50 and 89');
     $this->assertNoText('This is the summary if passed');
     $this->assertText('This is the default summary text');
 
     // Test 33%
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 0), t('Finish'));
     $this->assertText('You failed bro');
     $this->assertNoText('This is the summary if passed');
     $this->assertText('This is the default summary text');
@@ -99,7 +99,7 @@ class QuizResultTestCase extends QuizTestCase {
     // Submit an answer.
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
 
     $resultsUrl = $this->getUrl();
 
@@ -136,10 +136,10 @@ class QuizResultTestCase extends QuizTestCase {
     // Create 2 100% results.
     for ($i = 1; $i <= 2; $i++) {
       $this->drupalGet("quiz/$quiz->qid/take");
-      $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-      $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Next'));
-      $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
-      $this->drupalPost(NULL, array("question[$question_4->qid]" => 1), t('Finish'));
+      $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+      $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Next'));
+      $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
+      $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 1), t('Finish'));
     }
 
     // Storing all results.
@@ -154,10 +154,10 @@ class QuizResultTestCase extends QuizTestCase {
 
     // Create a 50% result.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
 
     // We should only have one 50% result.
     $results_2nd = entity_load('quiz_result', FALSE, array(), TRUE);
@@ -172,10 +172,10 @@ class QuizResultTestCase extends QuizTestCase {
     entity_save('quiz_entity', $quiz);
 
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
 
     // We should still only have one 50% result, since we failed.
     $results_3rd = entity_load('quiz_result', FALSE, array(), TRUE);
@@ -184,10 +184,10 @@ class QuizResultTestCase extends QuizTestCase {
     $this->assertEqual($result_3rd->score, 50, 'Quiz score was 50%');
 
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
 
     // We should still only have one 75% result.
     $results_4th = entity_load('quiz_result', FALSE, array(), TRUE);
@@ -217,22 +217,22 @@ class QuizResultTestCase extends QuizTestCase {
     $this->drupalGet("quiz/$quiz->qid/take");
 
     // No build on last form here.
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
 
     // Take it again, ensure the correct answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
     $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
-    $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->assertNoFieldChecked("edit-question-{$question_2->qid}-1");
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_3->qid}-1");
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
-    $this->assertNoFieldChecked("edit-question-{$question_4->qid}-1");
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->assertFieldChecked("edit-question-{$question_1->qid}-answer-1");
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->assertNoFieldChecked("edit-question-{$question_2->qid}-answer-1");
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_3->qid}-answer-1");
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
+    $this->assertNoFieldChecked("edit-question-{$question_4->qid}-answer-1");
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
 
     // Switch the build option
     $quiz->build_on_last = 'all';
@@ -241,22 +241,22 @@ class QuizResultTestCase extends QuizTestCase {
     // Take the quiz with this revision.
     $this->drupalGet("quiz/$quiz->qid/take");
     $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
 
     // Take it again, ensure all the answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
     $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
-    $this->assertFieldChecked("edit-question-{$question_1->qid}-1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_2->qid}-0");
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 0), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_3->qid}-1");
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Next'));
-    $this->assertFieldChecked("edit-question-{$question_4->qid}-0");
-    $this->drupalPost(NULL, array("question[$question_4->qid]" => 0), t('Finish'));
+    $this->assertFieldChecked("edit-question-{$question_1->qid}-answer-1");
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_2->qid}-answer-0");
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_3->qid}-answer-1");
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
+    $this->assertFieldChecked("edit-question-{$question_4->qid}-answer-0");
+    $this->drupalPost(NULL, array("question[$question_4->qid][answer]" => 0), t('Finish'));
   }
 
   /**

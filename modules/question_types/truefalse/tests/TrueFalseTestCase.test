@@ -61,12 +61,12 @@ class TrueFalseTestCase extends QuizTestCase {
 
     // Test correct question.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
     $this->assertText('You got 1 of 1 possible points.');
 
     // Test incorrect question.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 0), t('Finish'));
     $this->assertText('You got 0 of 1 possible points.');
   }
 
@@ -82,13 +82,13 @@ class TrueFalseTestCase extends QuizTestCase {
 
     // Test incorrect question with all feedbacks on.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
     $this->assertRaw('quiz-score-icon correct');
     $this->assertRaw('quiz-score-icon should');
 
     // Take the quiz.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 0), t('Finish'));
     $this->assertRaw('quiz-score-icon incorrect');
     $this->assertRaw('quiz-score-icon should');
   }

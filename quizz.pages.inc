@@ -291,14 +291,10 @@ function quiz_jumper_form_submit($form, &$form_state) {
  */
 function quiz_answer_form($form, $form_state, QuizEntity $quiz, Question $question, $page_number, Result $result) {
   $obj = new QuizAnsweringForm($quiz, $question, $page_number, $result);
-
   if (is_array($question) || ('quiz_page' !== $question->getQuestionType()->handler)) {
-    $form += $obj->getForm($form, $form_state, is_array($question) ? $question : array($question));
+    return $obj->getForm($form, $form_state, is_array($question) ? $question : array($question));
   }
-  else {
-    $form += $obj->getForm($form, $form_state, QuizAnsweringForm::findPageQuestions($result, $question));
-  }
-  return $form;
+  return $obj->getForm($form, $form_state, QuizAnsweringForm::findPageQuestions($result, $question));
 }
 
 function quiz_answer_form_validate($form, &$form_state) {

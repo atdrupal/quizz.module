@@ -55,7 +55,6 @@ class FormDefinition extends FormHelper {
     }
 
     $form['#quiz'] = $this->quiz;
-    $form['#attached']['js'][] = drupal_get_path('module', 'quizz') . '/misc/js/quiz.entity-form.js';
 
     $form['title'] = array(
         '#type'          => 'textfield',

@@ -91,15 +91,15 @@ class QuizPageTestCase extends QuizTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz_id}/take");
     // Questions 1 and 2 are present. Question 3 is hidden.
-    $this->assertFieldByName("question[{$q1}]");
-    $this->assertFieldByName("question[{$q2}]");
-    $this->assertNoFieldByName("question[{$q3}]");
-    $this->drupalPost(NULL, array("question[{$q1}]" => 1, "question[{$q2}]" => 1), t('Next'));
+    $this->assertFieldByName("question[{$q1}][answer]");
+    $this->assertFieldByName("question[{$q2}][answer]");
+    $this->assertNoFieldByName("question[{$q3}][answer]");
+    $this->drupalPost(NULL, array("question[{$q1}][answer]" => 1, "question[{$q2}][answer]" => 1), t('Next'));
     // Questions 1 and 2 are gone. Question 3 is present.
-    $this->assertNoFieldByName("question[{$q1}]");
-    $this->assertNoFieldByName("question[{$q2}]");
-    $this->assertFieldByName("question[{$q3}]");
-    $this->drupalPost(NULL, array("question[{$q3}]" => 1), t('Finish'));
+    $this->assertNoFieldByName("question[{$q1}][answer]");
+    $this->assertNoFieldByName("question[{$q2}][answer]");
+    $this->assertFieldByName("question[{$q3}][answer]");
+    $this->drupalPost(NULL, array("question[{$q3}][answer]" => 1), t('Finish'));
 
     // Check that the results page contains all the questions.
     $this->assertText('You got 3 of 3 possible points.');
@@ -131,16 +131,16 @@ class QuizPageTestCase extends QuizTestCase {
     $this->drupalGet("quiz/{$quiz_id}/take");
 
     // Questions 1 and 2 are present. Question 3 is hidden.
-    $this->assertFieldByName("question[{$q1}]");
-    $this->assertFieldByName("question[{$q2}]");
-    $this->assertNoFieldByName("question[{$q3}]");
-    $this->drupalPost(NULL, array("question[{$q1}]" => 1, "question[{$q2}]" => 1), t('Next'));
+    $this->assertFieldByName("question[{$q1}][answer]");
+    $this->assertFieldByName("question[{$q2}][answer]");
+    $this->assertNoFieldByName("question[{$q3}][answer]");
+    $this->drupalPost(NULL, array("question[{$q1}][answer]" => 1, "question[{$q2}][answer]" => 1), t('Next'));
 
     // Questions 1 and 2 are gone. Question 3 is present.
-    $this->assertNoFieldByName("question[{$q1}]");
-    $this->assertNoFieldByName("question[{$q2}]");
-    $this->assertFieldByName("question[{$q3}]");
-    $this->drupalPost(NULL, array("question[{$q3}]" => 1), t('Finish'));
+    $this->assertNoFieldByName("question[{$q1}][answer]");
+    $this->assertNoFieldByName("question[{$q2}][answer]");
+    $this->assertFieldByName("question[{$q3}][answer]");
+    $this->drupalPost(NULL, array("question[{$q3}][answer]" => 1), t('Finish'));
   }
 
 }

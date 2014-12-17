@@ -68,7 +68,6 @@ class QuizAnsweringForm {
    */
   public function getForm($form, &$form_state, $questions) {
     $form['#attributes']['class'] = array('answering-form');
-
     $form['#quiz'] = $this->quiz;
     $form['#question'] = $this->question;
     $form['#page_number'] = $this->page_number;
@@ -94,31 +93,32 @@ class QuizAnsweringForm {
     $output = entity_view('quiz_question', array($question), 'default', NULL, TRUE);
     unset($output['quiz_question'][$question->qid]['answers']);
 
-    $form['questions'][$question->qid] = array(
+    $form['question'][$question->qid] = array(
         '#attributes' => array('class' => array(drupal_html_class('quiz-question-' . $question->type))),
         '#type'       => 'container',
+        '#tree'       => TRUE,
+        '#parents'    => array('question', $question->qid),
         'header'      => $output,
-        'question'    => array('#tree' => TRUE, $question->qid => $element),
+        'answer'      => $element,
     );
 
     // Should we disable this question?
     if (empty($this->quiz->allow_change) && quiz_result_is_question_answered($this->result, $question)) {
       // This question was already answered, and not skipped.
-      $form['questions'][$question->qid]['#disabled'] = TRUE;
+      $form['question'][$question->qid]['#disabled'] = TRUE;
     }
 
     // Attach custom fields
-    field_attach_form('quiz_result_answer', $answer, $form['questions'][$question->qid], $form_state);
+    field_attach_form('quiz_result_answer', $answer, $form['question'][$question->qid], $form_state);
 
     if ($this->quiz->mark_doubtful) {
-      $form['is_doubtful'] = array(
+      $form['question'][$question->qid]['is_doubtful'] = array(
           '#type'          => 'checkbox',
           '#title'         => t('doubtful'),
           '#weight'        => 1,
-          '#prefix'        => '<div class="mark-doubtful checkbox enabled"><div class="toggle"><div></div></div>',
-          '#suffix'        => '</div>',
+          '#prefix'        => '<div class="mark-doubtful checkbox enabled"><div class="toggle"><div>',
+          '#suffix'        => '</div></div></div>',
           '#default_value' => $answer->is_doubtful,
-          '#attached'      => array('js' => array(drupal_get_path('module', 'quizz') . '/misc/js/quiz_take.js')),
       );
     }
   }
@@ -167,15 +167,15 @@ class QuizAnsweringForm {
     );
 
     // Question handler may provide extra buttons, merge buttons to master form.
-    foreach ($form['questions'] as $id => &$elements) {
-      if (!empty($elements['question']['navigation'])) {
-        $form['navigation'] += $elements['question']['navigation'];
-        unset($elements['question']['navigation']);
+    foreach ($form['question'] as $id => &$elements) {
+      if (!empty($elements['answer']['navigation'])) {
+        $form['navigation'] += $elements['answer']['navigation'];
+        unset($elements['answer']['navigation']);
       }
 
-      if (!empty($elements['question'][$id]['navigation'])) {
-        $form['navigation'] += $elements['question'][$id]['navigation'];
-        unset($elements['question'][$id]['navigation']);
+      if (!empty($elements['answer'][$id]['navigation'])) {
+        $form['navigation'] += $elements['answer'][$id]['navigation'];
+        unset($elements['answer'][$id]['navigation']);
       }
     }
 

@@ -110,7 +110,7 @@ class FormSubmission extends QuizTakeBaseController {
           }
         }
 
-        $input = $form_state['values']['question'][$question_id];
+        $input = $form_state['values']['question'][$question_id]['answer'];
         $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $input);
         $handler->setAnswerInput($input);
         $handler->delete();

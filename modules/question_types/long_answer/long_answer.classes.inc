@@ -157,7 +157,7 @@ class LongAnswerQuestion extends QuestionHandler {
    * Question response validator.
    */
   public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
-    if ($form_state['values']['question'][$this->question->qid] == '') {
+    if ($form_state['values']['question'][$this->question->qid]['answer'] == '') {
       form_set_error('', t('You must provide an answer.'));
     }
   }

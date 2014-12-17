@@ -27,12 +27,12 @@ class QuizTakingTestCase extends QuizTestCase {
 
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz->qid}/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 0), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 0), t('Finish'));
     $this->assertText('The answer was incorrect. Please try again.');
 
     // Check that we are still on the question.
     $this->assertUrl("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
     $this->assertNoText('The answer was incorrect. Please try again.');
   }
 

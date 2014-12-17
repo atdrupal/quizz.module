@@ -45,7 +45,7 @@ class QuizTimerTestCase extends QuizTestCase {
     db_query('UPDATE {quiz_results} SET time_start = :time', array(':time' => REQUEST_TIME - 31));
 
     // Submit the last question past the expiration.
-    $this->drupalPost(NULL, array("question[$question_3->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Finish'));
     $this->assertText(t('The last answer was not submitted, as the time ran out.'));
     $this->assertText('You got 2 of 3 possible points.');
   }

@@ -55,8 +55,7 @@ class ScaleTestCase extends QuizTestCase {
 
     // Take the quiz.
     $this->drupalGet("quiz/$quiz->qid/take");
-    # @TODO: Checkme
-    # $this->assertNoText('Scale 1 title');
+    $this->assertNoText('Scale 1 title');
     $this->assertText('Scale 1 body text');
     $this->assertText('This is alternative 1');
     $this->assertText('This is alternative 2');
@@ -68,7 +67,7 @@ class ScaleTestCase extends QuizTestCase {
     // Test any question.
     $this->drupalGet("quiz/$quiz->qid/take");
     // Alternative #2 is actually 24 (because of the presets).
-    $this->drupalPost(NULL, array("question[$question->qid]" => 24), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 24), t('Finish'));
     $this->assertText('You got 1 of 1 possible points.');
   }
 
