@@ -7,6 +7,7 @@ use Entity;
 class Answer extends Entity {
 
   public $result_answer_id;
+  public $type;
   public $result_id;
   public $question_qid;
   public $question_vid;

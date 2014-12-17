@@ -2,10 +2,11 @@
 
 namespace Drupal\quizz\Form;
 
+use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz\Entity\Answer;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Form\QuizAnsweringForm\FormSubmission;
-use Drupal\quiz_question\Entity\Question;
 use stdClass;
 
 class QuizAnsweringForm {
@@ -60,7 +61,7 @@ class QuizAnsweringForm {
   /**
    * Get the form to show to the quiz taker.
    *
-   * @param \Drupal\quiz_question\Entity\Question[] $questions
+   * @param Question[] $questions
    *   A list of questions to get answers from.
    * @param $result_id
    *   The result ID for this attempt.
@@ -74,7 +75,7 @@ class QuizAnsweringForm {
     $form['#result'] = $this->result;
 
     foreach ($questions as $question) {
-      $this->buildQuestionItem($question->getHandler(), $form, $form_state);
+      $this->buildQuestionItem($question, $this->result->loadAnswerByQuestion($question), $form, $form_state);
     }
 
     // Build buttons
@@ -84,11 +85,11 @@ class QuizAnsweringForm {
     return $form;
   }
 
-  private function buildQuestionItem($question_provider, &$form, $form_state) {
-    $question = $question_provider->question;
+  private function buildQuestionItem(Question $question, Answer $answer, &$form, $form_state) {
+    $handler = $question->getHandler();
 
     // Element for a single question
-    $element = $question_provider->getAnsweringForm($form_state, $this->result->result_id);
+    $element = $handler->getAnsweringForm($form_state, $this->result->result_id);
 
     $output = entity_view('quiz_question', array($question), 'default', NULL, TRUE);
     unset($output['quiz_question'][$question->qid]['answers']);
@@ -113,20 +114,9 @@ class QuizAnsweringForm {
           '#weight'        => 1,
           '#prefix'        => '<div class="mark-doubtful checkbox enabled"><div class="toggle"><div></div></div>',
           '#suffix'        => '</div>',
-          '#default_value' => 0,
+          '#default_value' => $answer->is_doubtful,
           '#attached'      => array('js' => array(drupal_get_path('module', 'quizz') . '/misc/js/quiz_take.js')),
       );
-
-      // @TODO: Reduce queries
-      $sql = 'SELECT is_doubtful '
-        . ' FROM {quiz_results_answers} '
-        . ' WHERE result_id = :result_id '
-        . '   AND question_qid = :question_qid '
-        . '   AND question_vid = :question_vid';
-      $form['is_doubtful']['#default_value'] = db_query($sql, array(
-          ':result_id'    => $this->result->result_id,
-          ':question_qid' => $question->qid,
-          ':question_vid' => $question->vid))->fetchField();
     }
   }
 
