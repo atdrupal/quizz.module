@@ -36,9 +36,9 @@ class QuizTimerTestCase extends QuizTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->assertNoText(t('The last answer was not submitted, as the time ran out.'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Next'));
     $this->assertNoText(t('The last answer was not submitted, as the time ran out.'));
 
     // Set the quiz result to have started 31 seconds ago.

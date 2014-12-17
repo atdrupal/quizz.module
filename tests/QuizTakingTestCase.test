@@ -56,7 +56,7 @@ class QuizTakingTestCase extends QuizTestCase {
     $this->drupalGet("quiz/{$quiz->qid}/take/2");
     $this->assertResponse(403);
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
 
     // Login again.
     $this->drupalLogin($this->user);
@@ -88,7 +88,7 @@ class QuizTakingTestCase extends QuizTestCase {
     $this->drupalGet("quiz/{$quiz->qid}/take/2");
     $this->assertResponse(403);
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
 
     // Login again.
     $this->drupalLogin($this->user);
@@ -166,12 +166,12 @@ class QuizTakingTestCase extends QuizTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 0), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 0), t('Next'));
     $this->assertText('Score: 0 of 1');
 
     // Go back and correct the answer.
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->assertText('Score: 1 of 1');
 
     // Restrict change after answer.
@@ -181,7 +181,7 @@ class QuizTakingTestCase extends QuizTestCase {
     // Check that the answer cannot be changed.
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
     $xpath = '//input[@id=:id and @disabled="disabled"]';
-    $disabled_field = $this->xpath($xpath, array(':id' => 'edit-question-1-1'));
+    $disabled_field = $this->xpath($xpath, array(':id' => 'edit-question-1-answer-1'));
     $this->assertTrue($disabled_field, t('The answer cannot be changed.'));
     $this->drupalPost(NULL, array(), t('Next'));
     $this->assertText('Score: 1 of 1');
