@@ -65,6 +65,7 @@ function quiz_question_form($form, &$form_state, $question, $op = 'edit') {
 
   // question body is required.
   $form['quiz_question_body'][LANGUAGE_NONE][0]['#required'] = TRUE;
+  $form['quiz_question_body'][LANGUAGE_NONE][0]['#title'] = $question->getHandler()->getBodyFieldTitle();
 
   return $form;
 }
