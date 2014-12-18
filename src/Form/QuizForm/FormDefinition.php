@@ -49,7 +49,7 @@ class FormDefinition extends FormHelper {
     if (!empty($quiz_type->help)) {
       $form['quiz_help'] = array(
           '#prefix' => '<div class="quiz-help">',
-          '#markup' => $quiz_type->help,
+          '#markup' => check_plain($quiz_type->help),
           '#suffix' => '</div>',
       );
     }
@@ -235,7 +235,6 @@ class FormDefinition extends FormHelper {
         '#type'        => 'fieldset',
         '#title'       => t('Review'),
         '#collapsible' => FALSE,
-        '#collapsed'   => FALSE,
         '#tree'        => TRUE,
     );
 
@@ -253,7 +252,6 @@ class FormDefinition extends FormHelper {
         '#type'        => 'fieldset',
         '#title'       => t('Multiple takes'),
         '#collapsible' => FALSE,
-        '#collapsed'   => FALSE,
         '#attributes'  => array('id' => 'multiple-takes-fieldset'),
         '#description' => t('Allow users to take this quiz multiple times.'),
     );
@@ -297,7 +295,6 @@ class FormDefinition extends FormHelper {
         '#type'        => 'fieldset',
         '#title'       => t('Userpoints'),
         '#collapsible' => TRUE,
-        '#collapsed'   => FALSE,
         '#group'       => 'vtabs',
     );
 
@@ -327,7 +324,6 @@ class FormDefinition extends FormHelper {
     $form['quiz_availability'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Availability'),
-        '#collapsed'   => TRUE,
         '#collapsible' => TRUE,
         '#attributes'  => array('id' => 'availability-fieldset'),
         '#group'       => 'vtabs',
@@ -372,7 +368,6 @@ class FormDefinition extends FormHelper {
         '#type'        => 'fieldset',
         '#title'       => t('Pass/fail'),
         '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
         '#attributes'  => array('id' => 'summary_options-fieldset'),
         '#group'       => 'vtabs',
     );
@@ -435,7 +430,6 @@ class FormDefinition extends FormHelper {
           '#type'        => 'fieldset',
           '#title'       => t('Result feedback'),
           '#collapsible' => TRUE,
-          '#collapsed'   => TRUE,
           '#tree'        => TRUE,
           '#attributes'  => array('id' => 'result_options-fieldset'),
           '#group'       => 'vtabs',
@@ -448,7 +442,6 @@ class FormDefinition extends FormHelper {
             '#type'        => 'fieldset',
             '#title'       => t('Result Option ') . ($i + 1),
             '#collapsible' => TRUE,
-            '#collapsed'   => FALSE,
         );
         $form['result_options']['ro_tabs'][$i]['option_name'] = array(
             '#type'          => 'textfield',
@@ -536,9 +529,6 @@ class FormDefinition extends FormHelper {
         '#description'   => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
 
-    // @see QuizController::cloneRelationship()
-    $form['clone_relationships'] = array('#type' => 'hidden', '#value' => TRUE);
-
     if ($this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
       $form['revision_information']['revision']['#type'] = 'value';
       $form['revision_information']['revision']['#value'] = 1;
@@ -550,6 +540,9 @@ class FormDefinition extends FormHelper {
         $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
       }
     }
+
+    // @see QuizController::cloneRelationship()
+    $form['clone_relationships'] = array('#type' => 'hidden', '#value' => TRUE);
   }
 
 }

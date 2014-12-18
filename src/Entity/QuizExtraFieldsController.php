@@ -21,20 +21,9 @@ class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
 
         $extra['quiz_result'][$name] = array(
             'display' => array(
-                'score'         => array(
-                    'label'       => t('Score'),
-                    'description' => '',
-                    'weight'      => -10,
-                ),
-                'feedback'      => array(
-                    'label'  => t('Feedback'),
-                    'weight' => -5,
-                ),
-                'feedback_form' => array(
-                    'label'       => t('Feedback form'),
-                    'description' => '',
-                    'weight'      => 0,
-                ),
+                'score'         => array('label' => t('Score'), 'weight' => -10),
+                'feedback'      => array('label' => t('Feedback'), 'weight' => -5),
+                'feedback_form' => array('label' => t('Feedback form'), 'weight' => 0),
             ),
         );
       }
@@ -60,18 +49,12 @@ class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
 
   private function getQuizFormExtraFields() {
     $elements = array(
-        'title'     => array(
-            'label'  => t('Title'),
-            'weight' => 0,
-        ),
-        'quiz_help' => array(
-            'label'  => t('Explanation or submission guidelines'),
-            'weight' => -25,
-        ),
         'vtabs'     => array(
             'label'  => t('Quiz options'),
             'weight' => 50,
         ),
+        'quiz_help'       => array('label' => t('Explanation or submission guidelines'), 'weight' => -25),
+        'title'           => array('label' => t('Title'), 'weight' => 0),
     );
 
     if (module_exists('locale')) {
