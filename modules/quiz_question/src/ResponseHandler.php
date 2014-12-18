@@ -77,6 +77,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    */
   public function toBareObject() {
     return entity_create('quiz_result_answer', array(
+        'type'         => $this->question->type,
         'question_qid' => $this->question->qid,
         'question_vid' => $this->question->vid,
         'result_id'    => $this->result_id,

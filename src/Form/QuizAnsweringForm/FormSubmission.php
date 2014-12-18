@@ -117,6 +117,12 @@ class FormSubmission extends QuizTakeBaseController {
         $handler->save();
         $answer = $handler->toBareObject();
 
+        $fs = array('values' => $form_state['values']['question'][$question_id]);
+        foreach (array_keys(field_info_instances('quiz_result_answer', $answer->type)) as $field_name) {
+          $answer->{$field_name} = $fs['values'][$field_name];
+        }
+        field_attach_submit('quiz_result_answer', $answer, $form['question'][$question_id], $fs);
+
         quiz_result_controller()
           ->getWriter()
           ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
