@@ -4,18 +4,17 @@ use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
- * quiz_directions.classes
+ * This module uses the question interface to define something which is actually
+ * not a question.
  *
- * This module uses the question interface to define something which is actually not a question.
- *
- * A Quiz Directions node is a placeholder for adding directions to a quiz. It can be inserted any number
- * of times into a quiz. Example uses may include:
+ * A Quiz Directions node is a placeholder for adding directions to a quiz. It
+ * can be inserted any number of times into a quiz. Example uses may include:
  *
  * - Initial quiz-wide directions
- * - Section directions, e.g. "The next five questions are multiple choice, please…" (Won't work if the question order is randomized)
- * - Final confirmation, e.g. "You have answered all questions. Click submit to submit this quiz."
- *
- * @file
+ * - Section directions, e.g. "The next five questions are multiple choice,
+ *    please…" (Won't work if the question order is randomized)
+ * - Final confirmation, e.g. "You have answered all questions. Click submit to
+ *    submit this quiz."
  */
 
 /**
@@ -24,27 +23,21 @@ use Drupal\quiz_question\ResponseHandler;
 class QuizDirectionsQuestion extends QuestionHandler {
 
   /**
-   * Implementation of validateNode
-   *
-   * @see QuizQuestion#validateNode($form)
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
 
   }
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
   public function saveEntityProperties($is_new = FALSE) {
 
   }
 
   /**
-   * Implementation of getAnsweringForm
-   *
-   * @see QuizQuestion#getAnsweringForm($form_state, $result_id)
+   * {@inheritdoc}
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $form = parent::getAnsweringForm($form_state, $result_id);
@@ -54,27 +47,21 @@ class QuizDirectionsQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getBodyFieldTitle
-   *
-   * @see QuizQuestion#getBodyFieldTitle()
+   * {@inheritdoc}
    */
   public function getBodyFieldTitle() {
     return t('Direction');
   }
 
   /**
-   * Implementation of getCreationForm
-   *
-   * @see QuizQuestion#getCreationForm($form_state)
+   * {@inheritdoc}
    */
   public function getCreationForm(array &$form_state = NULL) {
     return array();
   }
 
   /**
-   * Implementation of getMaximumScore
-   *
-   * @see QuizQuestion#getMaximumScore()
+   * {@inheritdoc}
    */
   public function getMaximumScore() {
     return 0;
@@ -96,35 +83,33 @@ class QuizDirectionsQuestion extends QuestionHandler {
 class QuizDirectionsResponse extends ResponseHandler {
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     // First, due to popular demand, if the directions are at the beginning of
     // the quiz, we restart the timer after the user has read the question.
-    $quiz_qid = arg(1);
-    $quiz_key = 'quiz_' . $quiz_qid;
-    if (isset($_SESSION[$quiz_key]['previous_quiz_questions']) && count($_SESSION[$quiz_key]['previous_quiz_questions']) === 1) {
+    $quiz_key = 'quiz_' . $this->result;
+    if (isset($_SESSION[$quiz_key]['previous_quiz_questions'])) {
       // Reset the timer.
-      db_update('quiz_results')
-        ->fields(array('time_start' => REQUEST_TIME))
-        ->condition('result_id', $this->result_id)
-        ->execute();
+      if (1 === count($_SESSION[$quiz_key]['previous_quiz_questions'])) {
+        $this->result->time_start = REQUEST_TIME;
+        $this->result->save();
+      }
     }
 
     // Set the score
     return $this->score = 0;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isCorrect() {
     return TRUE;
   }
 
   /**
-   * Implementation of getReportForm
-   *
-   * @see QuizQuestionResponse#getReportForm()
+   * {@inheritdoc}
    */
   public function getReportForm() {
     return array('#no_report' => TRUE);
