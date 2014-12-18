@@ -156,15 +156,20 @@ class HookEntityInfo {
   }
 
   private function getQuizAnswerTypeInfo() {
-    $question_entity_info = quiz_question_entity_info();
-
-    return array(
+    $info = array(
         'label'        => t('Answer type'),
         'plural label' => t('Answer types'),
         'description'  => t('Types of answer.'),
         'bundle of'    => 'quiz_result_answer',
         'admin ui'     => array(),
-      ) + $question_entity_info['quiz_question_type'];
+    );
+
+    $question_entity_info = quiz_question_entity_info();
+    if (isset($question_entity_info['quiz_question_type'])) {
+      $info += $question_entity_info['quiz_question_type'];
+    }
+
+    return $info;
   }
 
   private function getQuizAnswerInfo() {
