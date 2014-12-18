@@ -49,9 +49,11 @@ before_script:
   # ---------------------
   # Download the codebase
   # ---------------------
-  - wget https://github.com/drupal/drupal/archive/7.x.zip -O drupal.zip
+  - wget https://github.com/drupal/drupal/archive/7.34.zip -O drupal.zip
   - unzip -qq drupal.zip
   - cd $DRUPAL
+  - wget https://www.drupal.org/files/issues/run_tests_sh_should-2189345-53.patch -O /tmp/core.patch
+  - patch -p1 < /tmp/core.patch
   - drush si testing --db-url=mysql://root:@localhost/drupal --yes
   - mv $VENDOR/* sites/all/modules/
 
