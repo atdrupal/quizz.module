@@ -134,7 +134,7 @@ class PoolResponseHandler extends ResponseHandler {
 
   private function evaluateQuestion(Question $question) {
     $handler = quiz_answer_controller()->getHandler($this->result_id, $question, $this->answer);
-    $result = $handler->toBareObject();
+    $answer = $handler->toBareObject();
 
     // If a result_id is set, we are taking a quiz.
     if (isset($this->answer)) {
@@ -145,13 +145,14 @@ class PoolResponseHandler extends ResponseHandler {
           'question_vid' => $question->vid,
           'result_id'    => $this->result->result_id,
       );
+
       db_merge('quiz_pool_user_answers_questions')
         ->key($keys)
         ->fields($keys + array(
             'answer'       => serialize($this->answer),
+            'is_correct'   => $answer->is_correct,
             'is_evaluated' => (int) $handler->isEvaluated(),
-            'is_correct'   => $result->is_correct,
-            'score'        => (int) $result->score,
+            'score'        => (int) $handler->score(),
         ))
         ->execute()
       ;
@@ -162,7 +163,7 @@ class PoolResponseHandler extends ResponseHandler {
       $this->result->score = 0;
     }
 
-    return $result;
+    return $answer;
   }
 
   /**

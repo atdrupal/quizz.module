@@ -76,17 +76,15 @@ abstract class ResponseHandler extends ResponseHandlerBase {
    * {@inheritdoc}
    */
   public function toBareObject() {
-    return (object) array(
-          'score'        => $this->getScore(),
-          'question_qid' => $this->question->qid,
-          'question_vid' => $this->question->vid,
-          'result_id'    => $this->result_id,
-          'is_correct'   => (int) $this->isCorrect(),
-          'is_evaluated' => $this->isEvaluated(),
-          'is_skipped'   => isset($this->is_skipped) ? (int) $this->is_skipped : 0,
-          'is_doubtful'  => isset($this->is_doubtful) ? (int) $this->is_doubtful : 0,
-          'is_valid'     => $this->isValid(),
-    );
+    return entity_create('quiz_result_answer', array(
+        'question_qid' => $this->question->qid,
+        'question_vid' => $this->question->vid,
+        'result_id'    => $this->result_id,
+        'is_correct'   => (int) $this->isCorrect(),
+        'is_skipped'   => isset($this->is_skipped) ? (int) $this->is_skipped : 0,
+        'is_doubtful'  => isset($this->is_doubtful) ? (int) $this->is_doubtful : 0,
+        'is_valid'     => $this->isValid(),
+    ));
   }
 
   /**

@@ -90,6 +90,8 @@ interface ResponseHandlerInterface {
    *
    * Convert data to an object that has the following properties:
    *  score, result_id, question_qid, question_vid, is_correct, …
+   *
+   * @return \Drupal\quizz\Entity\Answer
    */
   public function toBareObject();
 }

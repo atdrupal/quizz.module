@@ -115,10 +115,11 @@ class FormSubmission extends QuizTakeBaseController {
         $handler->setAnswerInput($input);
         $handler->delete();
         $handler->save();
-        $response = $handler->toBareObject();
+        $answer = $handler->toBareObject();
+
         quiz_result_controller()
           ->getWriter()
-          ->saveQuestionResult($this->quiz, $response, array('set_msg' => TRUE, 'question_data' => $question_array));
+          ->saveQuestionResult($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
 
         // Increment the counter.
         $this->redirect($this->quiz, $this->result->getNextPageNumber($this->page_number));
@@ -189,12 +190,12 @@ class FormSubmission extends QuizTakeBaseController {
 
       // Load the Quiz answer submission from the database.
       if (!$answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $qinfo['vid'])) {
-        $qi_instance = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, NULL);
-        $qi_instance->delete();
-        $response = $qi_instance->toBareObject();
+        $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, NULL);
+        $handler->delete();
+        $answer = $handler->toBareObject();
         quiz_result_controller()
           ->getWriter()
-          ->saveQuestionResult($this->quiz, $response, array('set_msg' => TRUE, 'question_data' => $question_array));
+          ->saveQuestionResult($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
       }
     }
 

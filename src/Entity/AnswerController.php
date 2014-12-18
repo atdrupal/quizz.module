@@ -23,6 +23,9 @@ class AnswerController extends EntityAPIController {
     if (!empty($entity->result_answer_id)) {
       $entity->is_new = FALSE;
     }
+
+    $entity->points_awarded = round($entity->points_awarded);
+
     return parent::save($entity, $transaction);
   }
 
