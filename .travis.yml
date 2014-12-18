@@ -44,14 +44,16 @@ before_script:
   - cd ..
   - export VENDOR=`pwd`
   - cd ..
-  - export DRUPAL=`pwd`'/drupal-7.x/'
+  - export DRUPAL=`pwd`'/drupal-7.34/'
 
   # ---------------------
   # Download the codebase
   # ---------------------
-  - wget https://github.com/drupal/drupal/archive/7.x.zip -O drupal.zip
+  - wget https://github.com/drupal/drupal/archive/7.34.zip -O drupal.zip
   - unzip -qq drupal.zip
   - cd $DRUPAL
+  - wget https://www.drupal.org/files/issues/2189345-39.patch -O /tmp/2189345-39.patch
+  - patch -p1 < /tmp/2189345-39.patch
   - drush si testing --db-url=mysql://root:@localhost/drupal --yes
   - mv $VENDOR/* sites/all/modules/
 
@@ -74,11 +76,11 @@ before_script:
   - drush cc all
 
 script:
+  - drush test-run --dirty --field-labels=0 'Quiz upgrade' --uri=http://localhost:80
+  - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --verbose --class 'QuizUpgradeFrom7x4xTestCase'
+  - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --verbose --class 'QuizUpgradeFrom7x5xTestCase'
   - drush test-run --dirty --field-labels=0 'Quiz' --uri=http://localhost:80
   - drush test-run --dirty --field-labels=0 'Quiz question' --uri=http://localhost:80
-  # Being failed on Traivs, but OK on local :/
-  # - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --verbose --class 'QuizUpgradeFrom7x4xBeta2TestCase'
-  - php $DRUPAL/scripts/run-tests.sh --php `which php` --url 'http://localhost' --color --class 'QuizUpgradeFrom7x5xTestCase'
 
 notifications:
   email: false
