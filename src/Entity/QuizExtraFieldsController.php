@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\quizz\Helper\HookImplementation;
+namespace Drupal\quizz\Entity;
 
-class HookFieldExtraFields {
+class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
 
-  public function execute() {
+  public function fieldExtraFields() {
     $extra = array();
 
     // User comes from old version, there's no quiz type yet
@@ -60,39 +60,17 @@ class HookFieldExtraFields {
 
   private function getQuizFormExtraFields() {
     $elements = array(
-        'quiz_help'         => array(
+        'title'     => array(
+            'label'  => t('Title'),
+            'weight' => 0,
+        ),
+        'quiz_help' => array(
             'label'  => t('Explanation or submission guidelines'),
             'weight' => -25,
         ),
-        'remember_global'   => array(
-            'label'       => t('Remember as global'),
-            'description' => t('Checkbox for remembering quiz settings'),
-            'weight'      => -10,
-        ),
-        'remember_settings' => array(
-            'label'       => t('Remember settings'),
-            'description' => t('Checkbox for remembering @quiz settings', array('@quiz' => QUIZ_NAME)),
-            'weight'      => -10,
-        ),
-        'taking'            => array(
-            'label'       => t('Taking options'),
-            'description' => t('Fieldset for customizing how a quiz is taken'),
-            'weight'      => 5,
-        ),
-        'quiz_availability' => array(
-            'label'       => t('Availability options'),
-            'description' => t('Fieldset for customizing when a @quiz is available', array('@quiz' => QUIZ_NAME)),
-            'weight'      => 6,
-        ),
-        'summary_options'   => array(
-            'label'       => t('Summary options'),
-            'description' => t('Fieldset for customizing summaries in the @quiz reports', array('@quiz' => QUIZ_NAME)),
-            'weight'      => 7,
-        ),
-        'result_options'    => array(
-            'label'       => t('Result options'),
-            'description' => t('Fieldset for customizing result comments in @quiz reports', array('@quiz' => QUIZ_NAME)),
-            'weight'      => 8,
+        'vtabs'     => array(
+            'label'  => t('Quiz options'),
+            'weight' => 50,
         ),
     );
 

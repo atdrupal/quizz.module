@@ -80,7 +80,7 @@ class FormDefinition extends FormHelper {
     }
 
     // Provides details in vertical tabs.
-    $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
+    $form['vtabs'] = array('#type' => 'vertical_tabs');
 
     if (module_exists('field_group')) {
       $form['vtabs'] = array(

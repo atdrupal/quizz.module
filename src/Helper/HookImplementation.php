@@ -3,7 +3,6 @@
 namespace Drupal\quizz\Helper;
 
 use Drupal\quizz\Helper\HookImplementation\HookEntityInfo;
-use Drupal\quizz\Helper\HookImplementation\HookFieldExtraFields;
 use Drupal\quizz\Helper\HookImplementation\HookMenu;
 use Drupal\quizz\Helper\HookImplementation\HookPermission;
 use Drupal\quizz\Helper\HookImplementation\HookQuizScored;
@@ -13,7 +12,6 @@ class HookImplementation {
 
   private $hookMenu;
   private $hookEntityInfo;
-  private $hookFieldExtraFields;
   private $hookQuizScored;
   private $hookUserCancel;
   private $hookPermission;
@@ -45,21 +43,6 @@ class HookImplementation {
 
   public function setHookEntityInfo($hookEntityInfo) {
     $this->hookEntityInfo = $hookEntityInfo;
-    return $this;
-  }
-
-  /**
-   * @return HookFieldExtraFields
-   */
-  public function getHookFieldExtraFields() {
-    if (null === $this->hookFieldExtraFields) {
-      $this->hookFieldExtraFields = new HookFieldExtraFields();
-    }
-    return $this->hookFieldExtraFields;
-  }
-
-  public function setHookFieldExtraFields($hookFieldExtraFields) {
-    $this->hookFieldExtraFields = $hookFieldExtraFields;
     return $this;
   }
 

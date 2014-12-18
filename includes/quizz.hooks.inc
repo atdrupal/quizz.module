@@ -61,13 +61,6 @@ function quizz_entity_info() {
 }
 
 /**
- * Implements hook_field_extra_fields().
- */
-function quizz_field_extra_fields() {
-  return quiz()->getHookImplementation()->getHookFieldExtraFields()->execute();
-}
-
-/**
  * Implements hook_permission().
  */
 function quizz_permission() {

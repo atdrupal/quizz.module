@@ -361,3 +361,7 @@ input#edit-submit-hidden {
 fieldset fieldset.vertical-tabs-pane > legend {
   display: none;
 }
+
+#quiz-entity-form .horizontal-tabs {
+  margin-top: 1em;
+}
