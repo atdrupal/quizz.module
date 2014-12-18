@@ -56,10 +56,10 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
 
   /**
    * Inject user's answer.
-   * @param mixed $answer
+   * @param mixed $input
    */
-  public function setAnswerInput($answer) {
-    $this->answer = $answer;
+  public function setAnswerInput($input) {
+    $this->answer = $input;
   }
 
   /**

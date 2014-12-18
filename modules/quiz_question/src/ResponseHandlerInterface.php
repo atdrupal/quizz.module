@@ -2,6 +2,8 @@
 
 namespace Drupal\quiz_question;
 
+use Drupal\quizz\Entity\Answer;
+
 interface ResponseHandlerInterface {
 
   /**
@@ -91,7 +93,7 @@ interface ResponseHandlerInterface {
    * Convert data to an object that has the following properties:
    *  score, result_id, question_qid, question_vid, is_correct, …
    *
-   * @return \Drupal\quizz\Entity\Answer
+   * @return Answer
    */
   public function toBareObject();
 }

@@ -10,11 +10,16 @@ use RuntimeException;
 
 class AnswerController extends EntityAPIController {
 
+  /**
+   * {@inheritdoc}
+   * @param \Drupal\quizz\Entity\Answer[] $queried_entities
+   */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     // Make sure entity has bundle property.
     foreach ($queried_entities as $entity) {
       $entity->bundle();
     }
+
     return parent::attachLoad($queried_entities, $revision_id);
   }
 

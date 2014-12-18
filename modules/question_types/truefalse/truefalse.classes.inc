@@ -247,24 +247,24 @@ class TrueFalseResponse extends ResponseHandler {
    * {@inheritdoc}
    */
   public function getFeedbackValues() {
-    $answer = $this->answer;
+    $input = $this->answer;
     $correct_answer = !empty($this->question->correct_answer);
 
     return array(
         array(
             'choice'          => t('True'),
-            'attempt'         => $answer ? quiz_icon('selected') : '',
-            'correct'         => $answer == 1 ? quiz_icon($correct_answer ? 'correct' : 'incorrect') : '',
-            'score'           => intval($correct_answer == 1 && $answer == 1),
+            'attempt'         => $input ? quiz_icon('selected') : '',
+            'correct'         => $input == 1 ? quiz_icon($correct_answer ? 'correct' : 'incorrect') : '',
+            'score'           => intval($correct_answer == 1 && $input == 1),
             'answer_feedback' => '',
             'solution'        => $correct_answer == 1 ? quiz_icon('should') : '',
             'quiz_feedback'   => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
         ),
         array(
             'choice'          => t('False'),
-            'attempt'         => !$answer ? quiz_icon('selected') : '',
-            'correct'         => $answer == 0 ? (quiz_icon(!$correct_answer ? 'correct' : 'incorrect')) : '',
-            'score'           => intval($correct_answer == 0 && $answer == 0),
+            'attempt'         => !$input ? quiz_icon('selected') : '',
+            'correct'         => $input == 0 ? (quiz_icon(!$correct_answer ? 'correct' : 'incorrect')) : '',
+            'score'           => intval($correct_answer == 0 && $input == 0),
             'answer_feedback' => '',
             'solution'        => $correct_answer == 0 ? quiz_icon('should') : '',
         )
