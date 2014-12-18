@@ -179,6 +179,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
         }
       }
 
+      // Display answer entity's fields.
       if (!empty($rows[$i]['attempt']) && $answer = $this->loadAnswerEntity()) {
         if (field_info_instances('quiz_result_answer', $answer->type)) {
           $answer_fields = entity_view('quiz_result_answer', array($answer), 'default', NULL, TRUE);
