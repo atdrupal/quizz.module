@@ -26,6 +26,11 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   public $properties = NULL;
 
   /**
+   * @var string
+   */
+  protected $body_field_title = 'Question';
+
+  /**
    * QuizQuestion constructor stores the node object.
    *
    * @param Question $question
@@ -76,7 +81,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    *  The title for the body field
    */
   public function getBodyFieldTitle() {
-    return t('Question');
+    return t($this->body_field_title);
   }
 
   /**

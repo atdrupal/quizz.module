@@ -13,6 +13,8 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class QuizPagesQuestion extends QuestionHandler {
 
+  protected $body_field_title = 'Page';
+
   /**
    * {@inheritdoc}
    */
@@ -25,13 +27,6 @@ class QuizPagesQuestion extends QuestionHandler {
    */
   public function saveEntityProperties($is_new = FALSE) {
 
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBodyFieldTitle() {
-    return t('Page');
   }
 
   /**

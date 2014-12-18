@@ -22,6 +22,8 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class QuizDirectionsQuestion extends QuestionHandler {
 
+  protected $body_field_title = 'Direction';
+
   /**
    * {@inheritdoc}
    */
@@ -44,13 +46,6 @@ class QuizDirectionsQuestion extends QuestionHandler {
     $form['tries'] = array('#type' => 'hidden', '#value' => 0);
     $form['empty_space'] = array('#type' => 'markup', '#value' => '<br/>');
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBodyFieldTitle() {
-    return t('Direction');
   }
 
   /**

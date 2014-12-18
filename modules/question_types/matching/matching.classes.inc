@@ -1,17 +1,14 @@
 <?php
 
+use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
 
 /**
- * matching.classes
- *
  * This module uses the question interface to define the Matching question type.
  *
  * A Matching node defines a series of questions and answers and requires the user
  * to associate each answer with a question.
- *
- * @file
  */
 
 /**
@@ -19,13 +16,9 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class MatchingQuestion extends QuestionHandler {
 
-  /**
-   * Constructor
-   *
-   * @param $question
-   *  matching node
-   */
-  public function __construct(\Drupal\quiz_question\Entity\Question $question) {
+  protected $body_field_title = 'Instruction';
+
+  public function __construct(Question $question) {
     parent::__construct($question);
     if (empty($this->question->match)) {
       $this->question->match = array();
@@ -304,15 +297,6 @@ class MatchingQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getBodyFieldTitle
-   *
-   * @see QuizQuestion#getBodyFieldTitle()
-   */
-  public function getBodyFieldTitle() {
-    return t('Instruction');
-  }
-
-  /**
    * Implementation of getCreationForm
    *
    * @see QuizQuestion#getCreationForm($form_state)
@@ -439,7 +423,7 @@ class MatchingResponse extends ResponseHandler {
   /**
    * Constructor
    */
-  public function __construct($result_id, \Drupal\quiz_question\Entity\Question $question, $answer = NULL) {
+  public function __construct($result_id, Question $question, $answer = NULL) {
     parent::__construct($result_id, $question, $answer);
     if (!isset($answer)) {
       $res = db_query('SELECT ua.answer, score, ua.match_id FROM {quiz_matching_user_answers} ua

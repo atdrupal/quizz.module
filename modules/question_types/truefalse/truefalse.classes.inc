@@ -13,6 +13,8 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class TrueFalseQuestion extends QuestionHandler {
 
+  protected $body_field_title = 'True/false statement';
+
   /**
    * {@inheritdoc}
    */
@@ -135,13 +137,6 @@ class TrueFalseQuestion extends QuestionHandler {
     if (is_null($form_state['values']['question'][$this->question->qid]['answer'])) {
       form_set_error('', t('You must provide an answer.'));
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBodyFieldTitle() {
-    return t('True/false statement');
   }
 
   /**
