@@ -44,14 +44,16 @@ before_script:
   - cd ..
   - export VENDOR=`pwd`
   - cd ..
-  - export DRUPAL=`pwd`'/drupal-7.x/'
+  - export DRUPAL=`pwd`'/drupal-7.34/'
 
   # ---------------------
   # Download the codebase
   # ---------------------
-  - wget https://github.com/drupal/drupal/archive/7.x.zip -O drupal.zip
+  - wget https://github.com/drupal/drupal/archive/7.34.zip -O drupal.zip
   - unzip -qq drupal.zip
   - cd $DRUPAL
+  - wget https://www.drupal.org/files/issues/2189345-39.patch -O /tmp/2189345-39.patch
+  - patch -p1 < /tmp/2189345-39.patch
   - drush si testing --db-url=mysql://root:@localhost/drupal --yes
   - mv $VENDOR/* sites/all/modules/
 
