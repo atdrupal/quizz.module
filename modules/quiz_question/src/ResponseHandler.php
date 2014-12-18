@@ -178,6 +178,13 @@ abstract class ResponseHandler extends ResponseHandlerBase {
           $rows[$i][$review_type] = $row[$review_type];
         }
       }
+
+      if (!empty($rows[$i]['attempt']) && $answer = $this->loadAnswerEntity()) {
+        if (field_info_instances('quiz_result_answer', $answer->type)) {
+          $answer_fields = entity_view('quiz_result_answer', array($answer), 'default', NULL, TRUE);
+          $rows[$i]['attempt'] .= drupal_render($answer_fields);
+        }
+      }
     }
 
     $score = t('?');
