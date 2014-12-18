@@ -16,7 +16,7 @@ class Writer {
    *  Array with options that affect the behavior of this function.
    *    ['set_msg'] - Sets a message if the last question was skipped.
    */
-  public function saveQuestionResult(QuizEntity $quiz, Answer $answer, $options) {
+  public function saveAnswer(QuizEntity $quiz, Answer $answer, $options) {
     if ($id = $this->findAnswerId($answer)) {
       $answer->result_answer_id = $id;
       $answer->is_new = FALSE;

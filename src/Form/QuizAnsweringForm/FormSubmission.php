@@ -119,7 +119,7 @@ class FormSubmission extends QuizTakeBaseController {
 
         quiz_result_controller()
           ->getWriter()
-          ->saveQuestionResult($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
+          ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
 
         // Increment the counter.
         $this->redirect($this->quiz, $this->result->getNextPageNumber($this->page_number));
@@ -195,7 +195,7 @@ class FormSubmission extends QuizTakeBaseController {
         $answer = $handler->toBareObject();
         quiz_result_controller()
           ->getWriter()
-          ->saveQuestionResult($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
+          ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
       }
     }
 
