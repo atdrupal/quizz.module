@@ -73,10 +73,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   }
 
   /**
-   * Represent the response as a stdClass object.
-   *
-   * Convert data to an object that has the following properties:
-   *  score, result_id, question_qid, question_vid, is_correct, …
+   * {@inheritdoc}
    */
   public function toBareObject() {
     return (object) array(

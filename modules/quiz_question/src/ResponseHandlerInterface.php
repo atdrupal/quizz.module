@@ -84,4 +84,12 @@ interface ResponseHandlerInterface {
    *  Submit function as a string, empty string if no submit function
    */
   public function getReportFormSubmit();
+
+  /**
+   * Represent the response as a stdClass object.
+   *
+   * Convert data to an object that has the following properties:
+   *  score, result_id, question_qid, question_vid, is_correct, …
+   */
+  public function toBareObject();
 }
