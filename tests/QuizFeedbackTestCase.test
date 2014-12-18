@@ -58,7 +58,7 @@ class QuizFeedbackTestCase extends QuizTestCase {
   private function checkAfterQuestion(QuizEntity $quiz, $question, $review_options) {
     // Answer the first question.
     $this->drupalGet("quiz/{$quiz->qid}/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Next'));
 
     // Check feedback after the Question
     foreach ($review_options as $option => $text) {
@@ -79,7 +79,7 @@ class QuizFeedbackTestCase extends QuizTestCase {
     // Feedback only after the quiz.
     $this->drupalGet("quiz/{$quiz->qid}/take/1/feedback");
     $this->drupalPost(NULL, array(), t('Next question'));
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
 
     // Check feedback after the Quiz
     foreach ($review_options as $option => $text) {
@@ -130,9 +130,9 @@ class QuizFeedbackTestCase extends QuizTestCase {
     // Test
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->assertNoText('Feedback for TF test.');
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 1), t('Finish'));
     $this->assertText('Feedback for TF test.');
   }
 
@@ -159,7 +159,7 @@ class QuizFeedbackTestCase extends QuizTestCase {
     // Test no feedback.
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
     $this->assertNoText('TF 1 body text');
     $this->assertNoText('TF 1 summary text');
 
@@ -168,7 +168,7 @@ class QuizFeedbackTestCase extends QuizTestCase {
     $quiz->save();
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
     $this->assertText('TF 1 body text');
     $this->assertNoText('TF 1 summary text');
 
@@ -177,7 +177,7 @@ class QuizFeedbackTestCase extends QuizTestCase {
     $quiz->save();
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 1), t('Finish'));
 
     $this->assertNoText('TF 1 body text');
     $this->assertText('TF 1 summary text');

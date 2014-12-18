@@ -110,15 +110,22 @@ class FormSubmission extends QuizTakeBaseController {
           }
         }
 
-        $input = $form_state['values']['question'][$question_id];
+        $input = $form_state['values']['question'][$question_id]['answer'];
         $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $input);
         $handler->setAnswerInput($input);
         $handler->delete();
         $handler->save();
-        $response = $handler->toBareObject();
+        $answer = $handler->toBareObject();
+
+        $fs = array('values' => $form_state['values']['question'][$question_id]);
+        foreach (array_keys(field_info_instances('quiz_result_answer', $answer->type)) as $field_name) {
+          $answer->{$field_name} = $fs['values'][$field_name];
+        }
+        field_attach_submit('quiz_result_answer', $answer, $form['question'][$question_id], $fs);
+
         quiz_result_controller()
           ->getWriter()
-          ->saveQuestionResult($this->quiz, $response, array('set_msg' => TRUE, 'question_data' => $question_array));
+          ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
 
         // Increment the counter.
         $this->redirect($this->quiz, $this->result->getNextPageNumber($this->page_number));
@@ -189,12 +196,12 @@ class FormSubmission extends QuizTakeBaseController {
 
       // Load the Quiz answer submission from the database.
       if (!$answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $qinfo['vid'])) {
-        $qi_instance = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, NULL);
-        $qi_instance->delete();
-        $response = $qi_instance->toBareObject();
+        $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, NULL);
+        $handler->delete();
+        $answer = $handler->toBareObject();
         quiz_result_controller()
           ->getWriter()
-          ->saveQuestionResult($this->quiz, $response, array('set_msg' => TRUE, 'question_data' => $question_array));
+          ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
       }
     }
 

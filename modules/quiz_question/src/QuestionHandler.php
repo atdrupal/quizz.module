@@ -26,6 +26,11 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   public $properties = NULL;
 
   /**
+   * @var string
+   */
+  protected $body_field_title = 'Question';
+
+  /**
    * QuizQuestion constructor stores the node object.
    *
    * @param Question $question
@@ -76,7 +81,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    *  The title for the body field
    */
   public function getBodyFieldTitle() {
-    return t('Question');
+    return t($this->body_field_title);
   }
 
   /**
@@ -172,7 +177,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
       return;
     }
 
-    $answer = $form_state['values']['question'][$this->question->qid];
+    $answer = $form_state['values']['question'][$this->question->qid]['answer'];
     if (!quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer)->isCorrect()) {
       $this->onRepeatUntiCorrect($result, $element);
     }

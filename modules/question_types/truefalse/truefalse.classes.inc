@@ -13,6 +13,8 @@ use Drupal\quiz_question\ResponseHandler;
  */
 class TrueFalseQuestion extends QuestionHandler {
 
+  protected $body_field_title = 'True/false statement';
+
   /**
    * {@inheritdoc}
    */
@@ -132,16 +134,9 @@ class TrueFalseQuestion extends QuestionHandler {
    * Question response validator.
    */
   public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
-    if (is_null($form_state['values']['question'][$this->question->qid])) {
+    if (is_null($form_state['values']['question'][$this->question->qid]['answer'])) {
       form_set_error('', t('You must provide an answer.'));
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBodyFieldTitle() {
-    return t('True/false statement');
   }
 
   /**
@@ -252,24 +247,24 @@ class TrueFalseResponse extends ResponseHandler {
    * {@inheritdoc}
    */
   public function getFeedbackValues() {
-    $answer = $this->answer;
+    $input = $this->answer;
     $correct_answer = !empty($this->question->correct_answer);
 
     return array(
         array(
             'choice'          => t('True'),
-            'attempt'         => $answer ? quiz_icon('selected') : '',
-            'correct'         => $answer == 1 ? quiz_icon($correct_answer ? 'correct' : 'incorrect') : '',
-            'score'           => intval($correct_answer == 1 && $answer == 1),
+            'attempt'         => $input ? quiz_icon('selected') : '',
+            'correct'         => $input == 1 ? quiz_icon($correct_answer ? 'correct' : 'incorrect') : '',
+            'score'           => intval($correct_answer == 1 && $input == 1),
             'answer_feedback' => '',
             'solution'        => $correct_answer == 1 ? quiz_icon('should') : '',
             'quiz_feedback'   => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
         ),
         array(
             'choice'          => t('False'),
-            'attempt'         => !$answer ? quiz_icon('selected') : '',
-            'correct'         => $answer == 0 ? (quiz_icon(!$correct_answer ? 'correct' : 'incorrect')) : '',
-            'score'           => intval($correct_answer == 0 && $answer == 0),
+            'attempt'         => !$input ? quiz_icon('selected') : '',
+            'correct'         => $input == 0 ? (quiz_icon(!$correct_answer ? 'correct' : 'incorrect')) : '',
+            'score'           => intval($correct_answer == 0 && $input == 0),
             'answer_feedback' => '',
             'solution'        => $correct_answer == 0 ? quiz_icon('should') : '',
         )

@@ -80,13 +80,13 @@ class QuestionPoolTestCase extends QuizTestCase {
     $this->assertNoText('other question');
 
     // Try correct answer
-    $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish'));
+    $this->drupalPost(NULL, array('question[1][answer][2]' => "1"), t('Finish'));
     $this->assertText('Your score: 100%');
   }
 
   private function checkIncorrectAnswer(QuizEntity $quiz) {
     $this->drupalGet("quiz/{$quiz->qid}/take");
-    $this->drupalPost(NULL, array('question[1][2]' => "0"), t('Finish'));
+    $this->drupalPost(NULL, array('question[1][answer][2]' => "0"), t('Finish'));
     $this->assertText('Your score: 0%');
   }
 
@@ -97,10 +97,10 @@ class QuestionPoolTestCase extends QuizTestCase {
 
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->assertText('other question');
-    $this->drupalPost(NULL, array('question[1][2]' => "0"), t('Finish'));
+    $this->drupalPost(NULL, array('question[1][answer][2]' => "0"), t('Finish'));
     $this->assertText('The answer was incorrect. Please try again.');
-    $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish'));
-    $this->drupalPost(NULL, array('question[1][2]' => "1"), t('Finish')); // Not sure why, in manual test case, we just need click once.
+    $this->drupalPost(NULL, array('question[1][answer][2]' => "1"), t('Finish'));
+    $this->drupalPost(NULL, array('question[1][answer][2]' => "1"), t('Finish')); // Not sure why, in manual test case, we just need click once.
     $this->assertText('Your score: 100%');
   }
 

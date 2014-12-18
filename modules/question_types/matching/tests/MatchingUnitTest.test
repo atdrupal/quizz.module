@@ -50,10 +50,10 @@ class MatchingTestCase extends QuizTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
     $this->drupalPost(NULL, array(
-        "question[{$question->qid}][1]" => '1',
-        "question[{$question->qid}][2]" => '2',
-        "question[{$question->qid}][3]" => '3',
-        "question[{$question->qid}][4]" => '1', // wrongs
+        "question[{$question->qid}][answer][1]" => '1',
+        "question[{$question->qid}][answer][2]" => '2',
+        "question[{$question->qid}][answer][3]" => '3',
+        "question[{$question->qid}][answer][4]" => '1', // wrongs
       ), t('Finish'));
 
     $this->assertText('You got 3 of 4 possible points.');

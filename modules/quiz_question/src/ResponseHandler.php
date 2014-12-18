@@ -73,23 +73,19 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   }
 
   /**
-   * Represent the response as a stdClass object.
-   *
-   * Convert data to an object that has the following properties:
-   *  score, result_id, question_qid, question_vid, is_correct, …
+   * {@inheritdoc}
    */
   public function toBareObject() {
-    return (object) array(
-          'score'        => $this->getScore(),
-          'question_qid' => $this->question->qid,
-          'question_vid' => $this->question->vid,
-          'result_id'    => $this->result_id,
-          'is_correct'   => (int) $this->isCorrect(),
-          'is_evaluated' => $this->isEvaluated(),
-          'is_skipped'   => isset($this->is_skipped) ? (int) $this->is_skipped : 0,
-          'is_doubtful'  => isset($this->is_doubtful) ? (int) $this->is_doubtful : 0,
-          'is_valid'     => $this->isValid(),
-    );
+    return entity_create('quiz_result_answer', array(
+        'type'         => $this->question->type,
+        'question_qid' => $this->question->qid,
+        'question_vid' => $this->question->vid,
+        'result_id'    => $this->result_id,
+        'is_correct'   => (int) $this->isCorrect(),
+        'is_skipped'   => isset($this->is_skipped) ? (int) $this->is_skipped : 0,
+        'is_doubtful'  => isset($this->is_doubtful) ? (int) $this->is_doubtful : 0,
+        'is_valid'     => $this->isValid(),
+    ));
   }
 
   /**
@@ -180,6 +176,14 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       foreach (array_keys($labels) as $review_type) {
         if (('choice' === $review_type) || (isset($row[$review_type]) && $this->canReview($review_type))) {
           $rows[$i][$review_type] = $row[$review_type];
+        }
+      }
+
+      // Display answer entity's fields.
+      if (!empty($rows[$i]['attempt']) && $answer = $this->loadAnswerEntity()) {
+        if (field_info_instances('quiz_result_answer', $answer->type)) {
+          $answer_fields = entity_view('quiz_result_answer', array($answer), 'default', NULL, TRUE);
+          $rows[$i]['attempt'] .= drupal_render($answer_fields);
         }
       }
     }

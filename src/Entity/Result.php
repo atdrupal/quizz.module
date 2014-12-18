@@ -2,6 +2,7 @@
 
 namespace Drupal\quizz\Entity;
 
+use Drupal\quiz_question\Entity\Question;
 use Entity;
 
 class Result extends Entity {
@@ -12,7 +13,7 @@ class Result extends Entity {
   /** @var string */
   public $type = 'quiz';
 
-  /** @var \Drupal\quizz\Entity\QuizEntity */
+  /** @var QuizEntity */
   private $quiz;
 
   /** @var int */
@@ -51,7 +52,7 @@ class Result extends Entity {
   /**
    * Get quiz entity.
    *
-   * @return \Drupal\quizz\Entity\QuizEntity
+   * @return QuizEntity
    */
   public function getQuiz() {
     if (NULL == $this->quiz) {
@@ -158,6 +159,25 @@ class Result extends Entity {
     return entity_get_controller('quiz_result')
         ->getMaintainer()
         ->maintenance($uid, $this);
+  }
+
+  /**
+   * Load answer entity by question object.
+   *
+   * @param Question $question
+   * @return Answer
+   */
+  public function loadAnswerByQuestion(Question $question) {
+    foreach ($this->layout as $item) {
+      if ($question->vid == $item['vid']) {
+        $conds = array('result_id' => $this->result_id, 'question_vid' => $question->vid);
+        if ($find = entity_load('quiz_result_answer', NULL, $conds)) {
+          $answer = reset($find);
+          $answer->type = $question->type;
+          return $answer;
+        }
+      }
+    }
   }
 
 }

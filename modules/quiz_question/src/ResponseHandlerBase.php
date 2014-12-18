@@ -4,6 +4,7 @@ namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
+use Drupal\quizz\Entity\Answer;
 use Drupal\quizz\Entity\Result;
 
 abstract class ResponseHandlerBase implements ResponseHandlerInterface {
@@ -41,6 +42,9 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   /** @var string */
   protected $base_table = NULL;
 
+  /** @var Answer */
+  private $answer_entity;
+
   /**
    * @param int $result_id
    * @param Question $question
@@ -55,11 +59,21 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   }
 
   /**
-   * Inject user's answer.
-   * @param mixed $answer
+   * @return Answer
    */
-  public function setAnswerInput($answer) {
-    $this->answer = $answer;
+  public function loadAnswerEntity($refresh = TRUE) {
+    if ($refresh || (NULL === $this->answer_entity)) {
+      $this->answer_entity = quiz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid);
+    }
+    return $this->answer_entity;
+  }
+
+  /**
+   * Inject user's answer.
+   * @param mixed $input
+   */
+  public function setAnswerInput($input) {
+    $this->answer = $input;
   }
 
   /**

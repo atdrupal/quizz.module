@@ -43,7 +43,7 @@ class QuizNavigationTestCase extends QuizTestCase {
 
     // Answer a question, ensure next question is available.
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->drupalGet("quiz/{$quiz->qid}/take/2");
     $this->assertResponse(200);
     $this->drupalGet("quiz/{$quiz->qid}/take/3");
@@ -165,7 +165,7 @@ class QuizNavigationTestCase extends QuizTestCase {
     // Answer a question, ensure next question is available. Ensure previous
     // question is not.
     $this->drupalGet("quiz/{$quiz->qid}/take/1");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 1), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->drupalGet("quiz/{$quiz->qid}/take/2");
     $this->assertResponse(200);
     $this->drupalGet("quiz/{$quiz->qid}/take/1");

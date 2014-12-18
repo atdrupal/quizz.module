@@ -143,6 +143,11 @@ function quizz_menu_alter(&$items) {
   $items['admin/structure/quiz/manage/%quiz_type/result/fields']['weight'] = 3;
   $items['admin/structure/quiz/manage/%quiz_type/result/display']['title'] = 'Result display';
   $items['admin/structure/quiz/manage/%quiz_type/result/display']['weight'] = 4;
+
+  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/fields']['title'] = 'Answer fields';
+  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/fields']['weight'] = 5;
+  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/display']['title'] = 'Answer display';
+  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/display']['weight'] = 7;
 }
 
 /**

@@ -17,7 +17,8 @@ class HookEntityInfo {
         'quiz_relationship'  => $this->getQuizQuestionRelationshipInfo(),
         'quiz_result_type'   => $this->getQuizResultTypeInfo(),
         'quiz_result'        => $this->getQuizResultInfo(),
-        'quiz_result_answer' => $this->getQuizResultAnswerInfo(),
+        'quiz_answer_type'   => $this->getQuizAnswerTypeInfo(),
+        'quiz_result_answer' => $this->getQuizAnswerInfo(),
     );
   }
 
@@ -153,16 +154,50 @@ class HookEntityInfo {
     return $info;
   }
 
-  private function getQuizResultAnswerInfo() {
+  private function getQuizAnswerTypeInfo() {
+    $question_entity_info = quiz_question_entity_info();
+
     return array(
+        'label'        => t('Answer type'),
+        'plural label' => t('Answer types'),
+        'description'  => t('Types of answer.'),
+        'bundle of'    => 'quiz_result_answer',
+        'admin ui'     => array(),
+      ) + $question_entity_info['quiz_question_type'];
+  }
+
+  private function getQuizAnswerInfo() {
+    $info = array(
         'label'                     => t('Quiz result answer'),
         'entity class'              => 'Drupal\quizz\Entity\Answer',
         'controller class'          => 'Drupal\quizz\Entity\AnswerController',
         'base table'                => 'quiz_results_answers',
-        'entity keys'               => array('id' => 'result_answer_id'),
+        'entity keys'               => array('id' => 'result_answer_id', 'bundle' => 'type', 'label' => 'result_answer_id'),
+        'bundle keys'               => array('bundle' => 'type'),
         'views controller class'    => 'EntityDefaultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\AnswerMetadataController',
+        'fieldable'                 => TRUE,
+        'bundles'                   => array(),
     );
+
+    // User may come from old version, where the table is not available yet
+    if (db_table_exists('quiz_question_type')) {
+      // Add bundle info but bypass entity_load() as we cannot use it here.
+      $rows = db_select('quiz_question_type', 'qt')->fields('qt')->execute()->fetchAllAssoc('type');
+      foreach ($rows as $name => $row) {
+        $info['bundles'][$name] = array(
+            'label' => $row->label,
+            'admin' => array(
+                'path'             => 'admin/structure/quiz-questions/manage/%quiz_question_type/answer',
+                'real path'        => 'admin/structure/quiz-questions/manage/' . $name . '/answer',
+                'bundle argument'  => 4,
+                'access arguments' => array('administer quiz questions'),
+            ),
+        );
+      }
+    }
+
+    return $info;
   }
 
 }

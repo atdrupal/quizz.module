@@ -54,8 +54,8 @@ class QuizzClozeTestCase extends QuizTestCase {
     $this->assertNoText('[hidden 1]');
     $this->assertNoText('[hidden 2]');
     $this->drupalPost(NULL, array(
-        'question[1][parts][1]' => 'incorrect 1',
-        'question[1][parts][3]' => 'incorrect 2'
+        'question[1][answer][parts][1]' => 'incorrect 1',
+        'question[1][answer][parts][3]' => 'incorrect 2'
       ), "Finish");
     $this->assertText('You got 0 of 10 possible points.');
   }
@@ -64,8 +64,8 @@ class QuizzClozeTestCase extends QuizTestCase {
     $this->drupalGet("quiz/{$quiz->qid}/take");
     $this->assertText('Cloze question body');
     $this->drupalPost(NULL, array(
-        'question[1][parts][1]' => 'hidden 1',
-        'question[1][parts][3]' => 'hidden 2'
+        'question[1][answer][parts][1]' => 'hidden 1',
+        'question[1][answer][parts][3]' => 'hidden 2'
       ), "Finish");
     $this->assertText('You got 10 of 10 possible points.');
   }

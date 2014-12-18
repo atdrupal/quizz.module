@@ -36,17 +36,17 @@ class ShortAnswerTestCase extends QuizTestCase {
 
     // Test incorrect.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'This is an incorrect answer.'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'This is an incorrect answer.'), t('Finish'));
     $this->assertText('Your score: 0%');
 
     // Test correct.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'the Zero One Infinity rule'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'the Zero One Infinity rule'), t('Finish'));
     $this->assertText('Your score: 100%');
 
     // Test correct.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'the zero one Infinity rule'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'the zero one Infinity rule'), t('Finish'));
     $this->assertText('Your score: 100%');
   }
 
@@ -69,12 +69,12 @@ class ShortAnswerTestCase extends QuizTestCase {
 
     // Test incorrect.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'the zero one Infinity rule'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'the zero one Infinity rule'), t('Finish'));
     $this->assertText('Your score: 0%');
 
     // Test correct.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'the Zero One Infinity rule'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'the Zero One Infinity rule'), t('Finish'));
     $this->assertText('Your score: 100%');
   }
 
@@ -93,12 +93,12 @@ class ShortAnswerTestCase extends QuizTestCase {
     // Test incorrect.
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'um some rule, I forget'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'um some rule, I forget'), t('Finish'));
     $this->assertText('Your score: 0%');
 
     // Test correct.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question->qid]" => 'the answer is the zero one infinity rule'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer]" => 'the answer is the zero one infinity rule'), t('Finish'));
     $this->assertText('Your score: 100%');
   }
 
@@ -126,8 +126,8 @@ class ShortAnswerTestCase extends QuizTestCase {
     // Test correct.
     $this->drupalLogin($this->user);
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array("question[$question_1->qid]" => 'the answer is the zero one infinity rule'), t('Next'));
-    $this->drupalPost(NULL, array("question[$question_2->qid]" => 'the number two really is ridiculous'), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 'the answer is the zero one infinity rule'), t('Next'));
+    $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 'the number two really is ridiculous'), t('Finish'));
     $this->assertText('Your score: 0%');
     // Strange behavior - extra spaces in HTML.
     //$this->assertText('Score ? of 10');
@@ -137,11 +137,11 @@ class ShortAnswerTestCase extends QuizTestCase {
     $this->assertNoFieldByName('0[answer_feedback][value]');
     $this->assertNoFieldByName('1[answer_feedback][value]');
     $this->assertNoRaw(t('Save score'));
-    $url_of_result = $this->getUrl();
+    $result_url = $this->getUrl();
 
     // Test grading the question, provide feedback.
     $this->drupalLogin($this->admin);
-    $this->drupalGet($url_of_result);
+    $this->drupalGet($result_url);
     $this->assertFieldByName('0[score]');
     $this->assertFieldByName('1[score]');
     $this->drupalPost(NULL, array(
@@ -156,7 +156,7 @@ class ShortAnswerTestCase extends QuizTestCase {
 
     // Test the score is visible to the user.
     $this->drupalLogin($this->user);
-    $this->drupalGet($url_of_result);
+    $this->drupalGet($result_url);
     $this->assertText('You got 5 of 10 possible points.');
     $this->assertText('Your score: 50%');
     // Strange behavior - extra spaces in HTML.
