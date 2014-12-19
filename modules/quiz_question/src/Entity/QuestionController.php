@@ -82,9 +82,7 @@ class QuestionController extends EntityAPIController {
   }
 
   /**
-   * Implements EntityAPIControllerInterface.
-   *
-   * @param string $hook
+   * {@inheritdoc}
    * @param Question $question
    */
   public function invoke($hook, $question) {
