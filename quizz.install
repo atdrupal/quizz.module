@@ -275,10 +275,13 @@ function quizz_update_7606() {
   # delete quiz node type?
 
   module_invoke_all('quizz_pre_drop_temp_columns', '7606');
-  db_drop_index('quiz_entity', 'quiz_node');
-  db_drop_index('quiz_entity_revision', 'quiz_node');
-  db_drop_field('quiz_entity', 'node_nid');
-  db_drop_field('quiz_entity_revision', 'node_vid');
+
+  # We may have bug somewhere, to be safe, keep temp column there. We will drop
+  # them when upgrade script is really stable.
+  # db_drop_index('quiz_entity', 'quiz_node');
+  # db_drop_index('quiz_entity_revision', 'quiz_node');
+  # db_drop_field('quiz_entity', 'node_nid');
+  # db_drop_field('quiz_entity_revision', 'node_vid');
 }
 
 /**

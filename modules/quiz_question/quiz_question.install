@@ -268,10 +268,13 @@ function quiz_question_update_7610() {
     module_invoke($module, 'quiz_question_upgrade_pre_drop_temp_columns');
   }
 
-  db_drop_index('quiz_question', 'question_node');
-  db_drop_index('quiz_question_revision', 'question_node');
-  db_drop_field('quiz_question', 'node_nid');
-  db_drop_field('quiz_question_revision', 'node_vid');
+  # We may have bug somewhere, to be safe, keep temp column there. We will drop
+  # them when upgrade script is really stable.
+  # db_drop_index('quiz_question', 'question_node');
+  # db_drop_index('quiz_question_revision', 'question_node');
+  # db_drop_field('quiz_question', 'node_nid');
+  # db_drop_field('quiz_question_revision', 'node_vid');
+
   return 'Cleaned up migration\'s temp columns.';
 }
 
