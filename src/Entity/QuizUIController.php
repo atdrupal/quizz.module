@@ -162,7 +162,8 @@ class QuizUIController extends EntityDefaultUIController {
         'title arguments'  => array(1),
         'page callback'    => 'quiz_take_page',
         'page arguments'   => array(1),
-        'access arguments' => array('access quiz'),
+        'access callback'  => 'entity_access',
+        'access arguments' => array('view', 'quiz_entity', 1),
     );
 
     $items['quiz/%quiz/take/%question_number'] = $base + array(
