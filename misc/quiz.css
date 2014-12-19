@@ -362,6 +362,7 @@ fieldset fieldset.vertical-tabs-pane > legend {
   display: none;
 }
 
+#quiz-entity-edit-quiz-form .horizontal-tabs,
 #quiz-entity-form .horizontal-tabs {
   margin-top: 1em;
 }
