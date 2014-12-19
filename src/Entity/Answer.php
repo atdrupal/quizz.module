@@ -2,6 +2,8 @@
 
 namespace Drupal\quizz\Entity;
 
+use Drupal\quiz_question\Entity\Question;
+use Drupal\quiz_question\ResponseHandlerInterface;
 use Entity;
 
 class Answer extends Entity {
@@ -19,12 +21,41 @@ class Answer extends Entity {
   public $number;
   public $is_doubtful;
 
+  /** @var Question */
+  private $question;
+
+  /** @var mixed Custom input, structure is upto question handler. */
+  private $input;
+
   public function bundle() {
     if (NULL == $this->type) {
       $sql = 'SELECT type FROM {quiz_question} WHERE vid = :vid';
       $this->type = db_query($sql, array(':vid' => $this->question_vid))->fetchColumn();
     }
     return parent::bundle();
+  }
+
+  public function getInput() {
+    return $this->input;
+  }
+
+  public function setInput($input) {
+    $this->input = $input;
+    return $this;
+  }
+
+  public function getQuestion() {
+    if (NULL === $this->question) {
+      $this->question = quiz_question_entity_load(NULL, $this->question_vid);
+    }
+    return $this->question;
+  }
+
+  /**
+   * @return ResponseHandlerInterface
+   */
+  public function getHandler() {
+    return $this->getQuestion()->getResponseHandler($this->result_id, $this->getInput());
   }
 
 }

@@ -214,7 +214,8 @@ function quiz_question_field_extra_fields() {
  * Implements hook_get_report().
  */
 function quiz_question_get_report($question_id, $question_vid, $result_id) {
-  if (!$handler = quiz_answer_controller()->getHandler($result_id, NULL, NULL, $question_id, $question_vid)) {
+  $question = quiz_question_entity_load(NULL, $question_vid);
+  if (!$handler = $question->getResponseHandler($result_id)) {
     drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array(
         '%qid' => $question_id,
         '%vid' => $question_vid
@@ -231,26 +232,20 @@ function quiz_question_get_report($question_id, $question_vid, $result_id) {
 /**
  * Implements hook_quiz_question_score().
  */
-function quiz_question_quiz_question_score($quiz, Question $question, $result_id = NULL) {
-  if (!isset($quiz) && !isset($result_id)) {
+function quiz_question_quiz_question_score(Question $question, $result_id = NULL) {
+  if (NULL === $result_id) {
     return $question->max_score;
   }
 
-  if (!$handler = $question->getHandler()) {
-    return FALSE;
-  }
-
+  $handler = $question->getResponseHandler($result_id);
   $score = new stdClass();
-  $score->possible = $handler->getMaximumScore();
+  $score->possible = $question->getHandler()->getMaximumScore();
   $score->question_qid = $question->qid;
   $score->question_vid = $question->vid;
+  $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
+  $score->possible = $handler->getQuestionMaxScore();
+  $score->is_evaluated = $handler->isEvaluated();
 
-  if (isset($result_id)) {
-    $handler = quiz_answer_controller()->getHandler($result_id, $handler->question);
-    $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
-    $score->possible = $handler->getQuestionMaxScore();
-    $score->is_evaluated = $handler->isEvaluated();
-  }
   return $score;
 }
 

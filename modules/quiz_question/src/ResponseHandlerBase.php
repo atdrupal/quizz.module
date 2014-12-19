@@ -56,6 +56,7 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
     $this->question = $question;
     $this->question_handler = $question->getHandler();
     $this->answer = $input;
+    $this->question->setResponseHandler($this);
   }
 
   /**
@@ -63,7 +64,9 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    */
   public function loadAnswerEntity($refresh = TRUE) {
     if ($refresh || (NULL === $this->answer_entity)) {
-      $this->answer_entity = quiz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid);
+      if ($this->answer_entity = quiz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid)) {
+        $this->onLoad($this->answer_entity);
+      }
     }
     return $this->answer_entity;
   }
@@ -117,9 +120,11 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   /**
    * Used to refresh this instances question in case drupal has changed it.
    * @param Question $newQuestion
+   * @return self
    */
   public function refreshQuestionEntity($newQuestion) {
     $this->question = $newQuestion;
+    return $this;
   }
 
   public function getReportFormSubmit() {
@@ -144,6 +149,10 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
         ->condition('result_id', $this->result_id)
         ->execute();
     }
+  }
+
+  public function onLoad(Answer $answer) {
+
   }
 
 }

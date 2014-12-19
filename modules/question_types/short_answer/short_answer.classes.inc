@@ -33,7 +33,7 @@ class ShortAnswerQuestion extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
       db_insert('quiz_short_answer_properties')
         ->fields(array(
@@ -268,33 +268,34 @@ class ShortAnswerResponse extends ResponseHandler {
   /** @var bool */
   protected $allow_feedback = TRUE;
 
-  public function __construct($result_id, Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
-      $response = db_query(
-        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
-          FROM {quiz_short_answer_user_answers}
-          WHERE question_qid = :qqid AND question_vid = :qvid AND result_id = :rid', array(
-          ':qqid' => $question->qid,
-          ':qvid' => $question->vid,
-          ':rid'  => $result_id))->fetch();
-      if (!empty($response)) {
-        $this->answer = $response->answer;
-        $this->score = $response->score;
-        $this->evaluated = $response->is_evaluated;
-        $this->answer_id = $response->answer_id;
-        $this->answer_feedback = $response->answer_feedback;
-        $this->answer_feedback_format = $response->answer_feedback_format;
+  public function __construct($result_id, Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
+    if (NULL === $input) {
+      if (($answer = $this->loadAnswerEntity()) && ($input = $answer->getInput())) {
+        $this->answer = $input->answer;
+        $this->score = $input->score;
+        $this->evaluated = $input->is_evaluated;
+        $this->answer_id = $input->answer_id;
+        $this->answer_feedback = $input->answer_feedback;
+        $this->answer_feedback_format = $input->answer_feedback_format;
       }
     }
     else {
-      if (is_array($answer)) {
-        $this->answer = $answer['answer'];
+      if (is_array($input)) {
+        $this->answer = $input['answer'];
       }
       else {
-        $this->answer = $answer;
+        $this->answer = $input;
         $this->evaluated = $this->question->correct_answer_evaluation != ShortAnswerQuestion::ANSWER_MANUAL;
       }
+    }
+  }
+
+  public function onLoad(\Drupal\quizz\Entity\Answer $answer) {
+    $sql = 'SELECT input.* FROM {quiz_short_answer_user_answers} input WHERE question_vid = :qvid AND result_id = :rid';
+    $conds = array(':qvid' => $answer->question_vid, ':rid' => $answer->result_id);
+    if ($input = db_query($sql, $conds)->fetchObject()) {
+      $answer->setInput($input);
     }
   }
 

@@ -3,6 +3,7 @@
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz\Entity\Answer;
 
 /**
  * Defines the classes necessary for a True/False quiz.
@@ -18,7 +19,7 @@ class TrueFalseQuestion extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
       db_insert('quiz_truefalse')
         ->fields(array(
@@ -191,16 +192,13 @@ class TrueFalseResponse extends ResponseHandler {
    */
   protected $base_table = 'quiz_truefalse_user_answers';
 
-  /**
-   * Constructor
-   */
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
-    if (!isset($input)) {
-      if ($response = $this->getStoredUserinput()) {
-        $this->answer = $response->answer;
-        $this->score = $response->score;
+    if (NULL === $input) {
+      if (($answer = $this->loadAnswerEntity()) && ($input = $answer->getInput())) {
+        $this->answer = $input->answer;
+        $this->score = $input->score;
       }
     }
     else {
@@ -209,9 +207,7 @@ class TrueFalseResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of save
-   *
-   * @see QuizQuestionResponse#save()
+   * {@inheritdoc}
    */
   public function save() {
     db_insert('quiz_truefalse_user_answers')
@@ -234,13 +230,17 @@ class TrueFalseResponse extends ResponseHandler {
     return $this->getResponse() == $this->question->getHandler()->getCorrectAnswer() ? 1 : 0;
   }
 
-  protected function getStoredUserinput() {
-    return db_query('SELECT answer, score'
-        . ' FROM {quiz_truefalse_user_answers}'
-        . ' WHERE question_vid = :qvid AND result_id = :rid', array(
-          ':qvid' => $this->question->vid,
-          ':rid'  => $this->result_id
-      ))->fetch();
+  public function onLoad(Answer $answer) {
+    $input = db_select('quiz_truefalse_user_answers', 'input')
+      ->fields('input', array('answer', 'score'))
+      ->condition('question_vid', $answer->question_qid)
+      ->condition('result_id', $answer->result_id)
+      ->execute()
+      ->fetchObject();
+
+    if ($input) {
+      $answer->setInput($input);
+    }
   }
 
   /**

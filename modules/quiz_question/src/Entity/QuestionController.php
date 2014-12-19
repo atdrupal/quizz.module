@@ -82,14 +82,10 @@ class QuestionController extends EntityAPIController {
   }
 
   /**
-   * Implements EntityAPIControllerInterface.
-   *
-   * @param string $hook
+   * {@inheritdoc}
    * @param Question $question
    */
   public function invoke($hook, $question) {
-    $this->legacyFixQuestionId($question);
-
     if (static::$disable_invoking) {
       return parent::invoke($hook, $question);
     }
@@ -115,14 +111,6 @@ class QuestionController extends EntityAPIController {
     }
 
     return parent::invoke($hook, $question);
-  }
-
-  /**
-   * @TODO Remove legacy code
-   * @param Question $question
-   */
-  private function legacyFixQuestionId(Question $question) {
-    $question->qid = $question->qid;
   }
 
   /**

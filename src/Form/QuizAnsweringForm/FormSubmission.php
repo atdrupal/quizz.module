@@ -61,9 +61,7 @@ class FormSubmission extends QuizTakeBaseController {
       $question = quiz_question_entity_load($question_id);
 
       // Delete the user's answer.
-      quiz_answer_controller()
-        ->getHandler($this->result->result_id, $question)
-        ->delete();
+      $question->getResponseHandler($this->result->result_id)->delete();
 
       // Mark our question attempt as skipped, reset the correct and points flag.
       $answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $question->vid);
@@ -111,10 +109,13 @@ class FormSubmission extends QuizTakeBaseController {
         }
 
         $input = $form_state['values']['question'][$question_id]['answer'];
-        $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, $input);
+
+        // @TODO: This is wrong way. Use entity API instead
+        $handler = $current_question->getResponseHandler($this->result->result_id, $input);
         $handler->setAnswerInput($input);
         $handler->delete();
         $handler->save();
+
         $answer = $handler->toBareObject();
 
         $fs = array('values' => $form_state['values']['question'][$question_id]);
@@ -196,7 +197,7 @@ class FormSubmission extends QuizTakeBaseController {
 
       // Load the Quiz answer submission from the database.
       if (!$answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $qinfo['vid'])) {
-        $handler = quiz_answer_controller()->getHandler($this->result->result_id, $current_question, NULL);
+        $handler = $current_question->getResponseHandler($this->result->result_id);
         $handler->delete();
         $answer = $handler->toBareObject();
         quiz_result_controller()

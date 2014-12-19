@@ -37,7 +37,7 @@ class ClozeQuestionHandler extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     db_merge('quiz_cloze_question_properties')
       ->key(array(
           'qid' => $this->question->qid,
@@ -197,8 +197,7 @@ class ClozeQuestionHandler extends QuestionHandler {
     $element['close_wrapper']['#markup'] = '</div>';
 
     if (isset($result_id)) {
-      $handler = quiz_answer_controller()->getHandler($result_id, $this->question);
-      if ($response = $handler->getResponse()) {
+      if ($response = $this->question->getResponseHandler($result_id)->getResponse()) {
         foreach ($response['parts'] as $key => $value) {
           $element["parts"][$key]['#default_value'] = $value;
         }

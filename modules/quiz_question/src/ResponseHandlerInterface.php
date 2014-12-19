@@ -41,6 +41,13 @@ interface ResponseHandlerInterface {
   public function delete();
 
   /**
+   * On answer entity being loaded.
+   *
+   * @TODO: Update response handler to use this method.
+   */
+  public function onLoad(Answer $answer);
+
+  /**
    * Calculate the score for the response.
    * @return int
    */

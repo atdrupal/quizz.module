@@ -4,6 +4,7 @@ use Drupal\multichoice\FormDefinition;
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz\Entity\Answer;
 
 /**
  * The main classes for the multichoice question type.
@@ -118,7 +119,7 @@ class MultichoiceQuestion extends QuestionHandler {
    * (non-PHPdoc)
    * @see sites/all/modules/quiz-HEAD/question_types/quiz_question/QuizQuestion#save()
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     $is_new = $is_new || $this->question->revision == 1;
 
     // Before we save we forgive some possible user errors
@@ -560,43 +561,41 @@ class MultichoiceResponse extends ResponseHandler {
   protected $user_answer_ids;
   protected $choice_order;
 
-  /**
-   * Constructor.
-   *
-   * @param type $result_id
-   * @param Question $question
-   * @param type $values
-   *   Form state values.
-   */
-  public function __construct($result_id, Question $question, $values = NULL) {
-    parent::__construct($result_id, $question, $values['user_answer']);
+  public function __construct($result_id, Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input['user_answer']);
+
     $this->user_answer_ids = array();
+
     // tries is the tries part of the post data
-    if (isset($values['user_answer'])) {
-      if (!is_array($values['user_answer'])) {
+    if (isset($input['user_answer'])) {
+      if (!is_array($input['user_answer'])) {
         // Account for single-select
-        $values['user_answer'] = array($values['user_answer']);
+        $input['user_answer'] = array($input['user_answer']);
       }
-      if (isset($values['choice_order'])) {
-        $this->choice_order = $values['choice_order'];
+      if (isset($input['choice_order'])) {
+        $this->choice_order = $input['choice_order'];
       }
-      unset($values['choice_order']);
-      if (isset($values['user_answer']) && is_array($values['user_answer'])) {
-        foreach ($values['user_answer'] as $answer_id) {
+      unset($input['choice_order']);
+      if (isset($input['user_answer']) && is_array($input['user_answer'])) {
+        foreach ($input['user_answer'] as $answer_id) {
           $this->user_answer_ids[] = $answer_id;
           $this->answer = $this->user_answer_ids; // @todo: Stop using user_answer_ids and only use answer instead…
         }
       }
-      elseif (isset($values['user_answer'])) {
-        $this->user_answer_ids[] = $values['user_answer'];
+      elseif (isset($input['user_answer'])) {
+        $this->user_answer_ids[] = $input['user_answer'];
       }
     }
     else { // We load the answer from the database
-      $res = db_query('SELECT answer_id FROM {quiz_multichoice_user_answers} ua
-              LEFT OUTER JOIN {quiz_multichoice_user_answer_multi} uam ON(uam.user_answer_id = ua.id)
-              WHERE ua.result_id = :result_id AND ua.question_qid = :question_qid AND ua.question_vid = :question_vid', array(':result_id' => $result_id, ':question_qid' => $this->question->qid, ':question_vid' => $this->question->vid));
-      while ($res_o = $res->fetch()) {
-        $this->user_answer_ids[] = $res_o->answer_id;
+      $input_ids = db_query(
+        'SELECT answer_id FROM {quiz_multichoice_user_answers} ua
+         LEFT OUTER JOIN {quiz_multichoice_user_answer_multi} uam ON(uam.user_answer_id = ua.id)
+         WHERE ua.result_id = :result_id AND ua.question_vid = :question_vid', array(
+          ':result_id'    => $result_id,
+          ':question_vid' => $this->question->vid))
+        ->fetchCol();
+      if ($input_ids) {
+        $this->user_answer_ids = $input_ids;
       }
     }
   }

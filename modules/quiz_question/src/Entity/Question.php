@@ -3,9 +3,10 @@
 namespace Drupal\quiz_question\Entity;
 
 use Drupal\quiz_question\QuestionHandler;
+use Drupal\quiz_question\ResponseHandlerInterface;
+use Drupal\quizz\Entity\Result;
 use Entity;
 use RuntimeException;
-use Drupal\quizz\Entity\Result;
 use stdClass;
 
 class Question extends Entity {
@@ -58,6 +59,9 @@ class Question extends Entity {
   /** @var bool Magic flag to create new revision on save */
   public $is_new_revision;
 
+  /** @var ResponseHandlerInterface */
+  private $response_handler;
+
   /**
    * @return QuestionController
    */
@@ -102,6 +106,30 @@ class Question extends Entity {
   private function doGetHandler() {
     $handler_info = $this->getHandlerInfo();
     return new $handler_info['question provider']($this);
+  }
+
+  /**
+   * @param int $result_id
+   * @param mixed $input
+   * @param bool $refresh
+   * @return ResponseHandlerInterface
+   */
+  public function getResponseHandler($result_id, $input = NULL, $refresh = FALSE) {
+    if ($refresh || (NULL === $this->response_handler)) {
+      $handler_info = $this->getHandlerInfo();
+      return $this->response_handler = new $handler_info['response provider']($result_id, $this, $input);
+    }
+
+    if (FALSE !== $this->response_handler->is_skipped) {
+      return $this->response_handler->refreshQuestionEntity($this);
+    }
+
+    return $this->getResponseHandler($result_id, $input, TRUE);
+  }
+
+  public function setResponseHandler(ResponseHandlerInterface $handler) {
+    $this->response_handler = $handler;
+    return $this;
   }
 
   /**

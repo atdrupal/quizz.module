@@ -3,35 +3,32 @@
 namespace Drupal\quizz\Entity;
 
 use DatabaseTransaction;
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\ResponseHandler;
 use EntityAPIController;
-use RuntimeException;
 
 class AnswerController extends EntityAPIController {
 
   /**
    * {@inheritdoc}
-   * @param \Drupal\quizz\Entity\Answer[] $queried_entities
+   * @param Answer[] $answers
    */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    // Make sure entity has bundle property.
-    foreach ($queried_entities as $entity) {
-      $entity->bundle();
+  protected function attachLoad(&$answers, $revision_id = FALSE) {
+    foreach ($answers as $answer) {
+      $answer->bundle(); // Make sure entity has bundle property.
     }
-
-    return parent::attachLoad($queried_entities, $revision_id);
+    return parent::attachLoad($answers, $revision_id);
   }
 
-  public function save($entity, DatabaseTransaction $transaction = NULL) {
-    $entity->bundle();
-    if (!empty($entity->result_answer_id)) {
-      $entity->is_new = FALSE;
+  /**
+   * {@inheritdoc}
+   * @param Answer $answer
+   */
+  public function save($answer, DatabaseTransaction $transaction = NULL) {
+    $answer->bundle();
+    if (!empty($answer->result_answer_id)) {
+      $answer->is_new = FALSE;
     }
-
-    $entity->points_awarded = round($entity->points_awarded);
-
-    return parent::save($entity, $transaction);
+    $answer->points_awarded = round($answer->points_awarded);
+    return parent::save($answer, $transaction);
   }
 
   /**
@@ -46,60 +43,6 @@ class AnswerController extends EntityAPIController {
     if ($return = entity_load('quiz_result_answer', FALSE, $conditions)) {
       return reset($return);
     }
-  }
-
-  /**
-   * Get an instance of a quiz question responce.
-   *
-   * Get information about the class and use it to construct a new
-   * object of the appropriate type.
-   *
-   * @param int $result_id
-   * @param Question $question
-   * @param string $answer
-   * @param int $question_qid
-   * @param int $question_vid
-   * @return \Drupal\quiz_question\ResponseHandlerInterface
-   *  The appropriate QuizQuestionResponce extension instance
-   */
-  public function getHandler($result_id, Question $question = NULL, $answer = NULL, $question_qid = NULL, $question_vid = NULL) {
-    $responses = &drupal_static(__METHOD__, array());
-
-    if (is_object($question) && isset($responses[$result_id][$question->vid])) {
-      // We refresh the question in case it has been changed since we cached the response
-      $responses[$result_id][$question->vid]->refreshQuestionEntity($question);
-      if (FALSE !== $responses[$result_id][$question->vid]->is_skipped) {
-        return $responses[$result_id][$question->vid];
-      }
-    }
-
-    if (isset($responses[$result_id][$question_vid]) && $responses[$result_id][$question_vid]->is_skipped !== FALSE) {
-      return $responses[$result_id][$question_vid];
-    }
-
-    // If the question isn't set we fetch it from the QuizQuestion instance
-    // this responce belongs to
-    if (!$question && ($_question = quiz_question_entity_load($question_qid, $question_vid))) {
-      $question = $_question->getHandler()->question;
-    }
-
-    // Cache the responce instance
-    if ($question) {
-      $responses[$result_id][$question->vid] = $this->doGetInstance($question, $result_id, $answer);
-      return $responses[$result_id][$question->vid];
-    }
-
-    return FALSE;
-  }
-
-  private function doGetInstance(Question $question, $result_id, $answer) {
-    $handler_info = $question->getHandlerInfo();
-    $response_provider = new $handler_info['response provider']($result_id, $question, $answer);
-    if (!$response_provider instanceof ResponseHandler) {
-      throw new RuntimeException('The question-response isn\'t a QuizQuestionResponse. It needs to extend the QuizQuestionResponse interface, or extend the abstractQuizQuestionResponse class.');
-    }
-
-    return $response_provider;
   }
 
 }

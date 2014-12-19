@@ -3,6 +3,7 @@
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz\Entity\Answer;
 
 /**
  * This module uses the question interface to define the Matching question type.
@@ -26,11 +27,9 @@ class MatchingQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     // Update or insert the question properties
     db_merge('quiz_matching_properties')
       ->key(array('qid' => $this->question->qid, 'vid' => $this->question->vid))
@@ -423,18 +422,32 @@ class MatchingResponse extends ResponseHandler {
   /**
    * Constructor
    */
-  public function __construct($result_id, Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
-    if (!isset($answer)) {
-      $res = db_query('SELECT ua.answer, score, ua.match_id FROM {quiz_matching_user_answers} ua
-              JOIN {quiz_matching_question} n ON n.match_id = ua.match_id
-              WHERE n.qid = :qid AND n.vid = :vid AND ua.result_id = :result_id', array(':qid' => $question->qid, ':vid' => $question->vid, ':result_id' => $result_id));
-      $this->answer = array();
-      while ($obj = $res->fetch()) {
-        $this->answer[$obj->match_id] = $obj->answer;
+  public function __construct($result_id, Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
+
+    if (NULL === $input) {
+      if (($answer = $this->loadAnswerEntity()) && ($input = $answer->getInput())) {
+        $this->answer = $input;
       }
     }
+
     $this->is_correct = $this->isCorrect();
+  }
+
+  public function onLoad(Answer $answer) {
+    $select = db_select('quiz_matching_user_answers', 'input');
+    $select->innerJoin('quiz_matching_question', 'question_property', 'input.match_id = question_property.match_id');
+    $input = $select
+      ->fields('input', array('match_id', 'answer', 'score'))
+      ->condition('question_property.vid', $answer->question_vid)
+      ->condition('input.result_id', $answer->result_id)
+      ->execute()
+      ->fetchAllKeyed()
+    ;
+
+    if ($input) {
+      $answer->setInput($input);
+    }
   }
 
   /**
@@ -446,6 +459,7 @@ class MatchingResponse extends ResponseHandler {
     if (!isset($this->answer) || !is_array($this->answer)) {
       return;
     }
+
     $insert = db_insert('quiz_matching_user_answers')->fields(array('match_id', 'result_id', 'answer', 'score'));
     foreach ($this->answer as $key => $value) {
       $insert->values(array(

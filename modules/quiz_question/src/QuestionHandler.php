@@ -144,8 +144,8 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    *  TRUE when the node is initially created.
    */
   public function save($is_new = FALSE) {
-    // We call the abstract function saveEntityProperties to save type specific data
-    $this->saveEntityProperties($is_new);
+    // We call the abstract function 'onSave' to save type specific data
+    $this->onSave($is_new);
 
     // Save what quizzes this question belongs to.
     $this->saveRelationships();
@@ -177,8 +177,8 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
       return;
     }
 
-    $answer = $form_state['values']['question'][$this->question->qid]['answer'];
-    if (!quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer)->isCorrect()) {
+    $input = $form_state['values']['question'][$this->question->qid]['answer'];
+    if (!$this->question->getResponseHandler($result->result_id, $input)->isCorrect()) {
       $this->onRepeatUntiCorrect($result, $element);
     }
   }
@@ -318,7 +318,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
 
   }
 
