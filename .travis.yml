@@ -24,6 +24,8 @@ mysql:
   username: root
   encoding: utf8
 
+cache: apt
+
 install:
   # ---------------------
   # Install Drush
