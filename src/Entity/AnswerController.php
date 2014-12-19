@@ -56,49 +56,25 @@ class AnswerController extends EntityAPIController {
    *
    * @param int $result_id
    * @param Question $question
-   * @param string $answer
-   * @param int $question_qid
-   * @param int $question_vid
+   * @param mixed $input
    * @return \Drupal\quiz_question\ResponseHandlerInterface
-   *  The appropriate QuizQuestionResponce extension instance
    */
-  public function getHandler($result_id, Question $question = NULL, $answer = NULL, $question_qid = NULL, $question_vid = NULL) {
+  public function getHandler($result_id, Question $question = NULL, $input = NULL) {
     $handlers = &drupal_static(__METHOD__, array());
 
-    if (is_object($question) && isset($handlers[$result_id][$question->vid])) {
-      // We refresh the question in case it has been changed since we cached the response
+    // We refresh the question in case it has been changed since we cached the response
+    if ((NULL !== $question) && isset($handlers[$result_id][$question->vid])) {
       $handlers[$result_id][$question->vid]->refreshQuestionEntity($question);
       if (FALSE !== $handlers[$result_id][$question->vid]->is_skipped) {
         return $handlers[$result_id][$question->vid];
       }
     }
 
-    if (isset($handlers[$result_id][$question_vid]) && $handlers[$result_id][$question_vid]->is_skipped !== FALSE) {
-      return $handlers[$result_id][$question_vid];
-    }
-
-    // If the question isn't set we fetch it from the QuizQuestion instance
-    // this responce belongs to
-    if (!$question && ($_question = quiz_question_entity_load(NULL, $question_vid))) {
-      $question = $_question->getHandler()->question;
-    }
-
-    // Cache the responce instance
-    if ($question) {
-      $handlers[$result_id][$question->vid] = $this->doGetFindHandler($question, $result_id, $answer);
+    if (isset($handlers[$result_id][$question->vid]) && $handlers[$result_id][$question->vid]->is_skipped !== FALSE) {
       return $handlers[$result_id][$question->vid];
     }
 
-    return FALSE;
-  }
-
-  private function doGetFindHandler(Question $question, $result_id, $answer) {
-    $handler_info = $question->getHandlerInfo();
-    $handler = new $handler_info['response provider']($result_id, $question, $answer);
-    if (!$handler instanceof ResponseHandler) {
-      throw new RuntimeException('The question-response isn\'t a QuizQuestionResponse. It needs to extend the QuizQuestionResponse interface, or extend the abstractQuizQuestionResponse class.');
-    }
-    return $handler;
+    return $handlers[$result_id][$question->vid] = $question->getResponseHandler($result_id, $input);
   }
 
 }

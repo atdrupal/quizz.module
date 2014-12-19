@@ -214,7 +214,9 @@ function quiz_question_field_extra_fields() {
  * Implements hook_get_report().
  */
 function quiz_question_get_report($question_id, $question_vid, $result_id) {
-  if (!$handler = quiz_answer_controller()->getHandler($result_id, NULL, NULL, $question_id, $question_vid)) {
+  $question_revision = quiz_question_entity_load(NULL, $question_vid);
+
+  if (!$handler = quiz_answer_controller()->getHandler($result_id, $question_revision)) {
     drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array(
         '%qid' => $question_id,
         '%vid' => $question_vid

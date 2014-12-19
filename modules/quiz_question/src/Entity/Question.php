@@ -105,6 +105,16 @@ class Question extends Entity {
   }
 
   /**
+   * @param int $result_id
+   * @param mixed $input
+   * @return \Drupal\quiz_question\ResponseHandlerInterface
+   */
+  public function getResponseHandler($result_id, $input) {
+    $handler_info = $this->getHandlerInfo();
+    return new $handler_info['response provider']($result_id, $this, $input);
+  }
+
+  /**
    * Override parent defaultUri method.
    * @return array
    */
