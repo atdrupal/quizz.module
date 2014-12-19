@@ -17,10 +17,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
-    $conds = array('result_id' => $result_id, 'question_vid' => $question->vid);
-    if ($find = entity_load('quiz_result_answer', FALSE, $conds)) {
-      /* @var $answer Answer */
-      $answer = reset($find);
+    if ($answer = $this->loadAnswerEntity()) {
       $this->is_doubtful = $answer->is_doubtful;
       $this->is_skipped = $answer->is_skipped;
     }
@@ -180,7 +177,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       }
 
       // Display answer entity's fields.
-      if (!empty($rows[$i]['attempt']) && $answer = $this->loadAnswerEntity()) {
+      if (!empty($rows[$i]['attempt']) && ($answer = $this->loadAnswerEntity())) {
         if (field_info_instances('quiz_result_answer', $answer->type)) {
           $answer_fields = entity_view('quiz_result_answer', array($answer), 'default', NULL, TRUE);
           $rows[$i]['attempt'] .= drupal_render($answer_fields);

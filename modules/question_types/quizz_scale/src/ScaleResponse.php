@@ -4,6 +4,7 @@ namespace Drupal\quizz_scale;
 
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz\Entity\Answer;
 
 /**
  * Extension of QuizQuestionResponse
@@ -17,20 +18,29 @@ class ScaleResponse extends ResponseHandler {
   protected $base_table = 'quiz_scale_user_answers';
   protected $answer_id = 0;
 
-  public function __construct($result_id, Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
+  public function __construct($result_id, Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
 
-    if (isset($answer)) {
-      $this->answer_id = intval($answer);
+    if (NULL === $input) {
+      if (($answer = $this->loadAnswerEntity()) && ($input = $answer->getInput())) {
+        $this->answer_id = $answer->getInput();
+      }
     }
     else {
-      $this->answer_id = db_query('SELECT answer_id FROM {quiz_scale_user_answers} WHERE result_id = :rid AND question_qid = :qqid AND question_vid = :qvid', array(':rid' => $result_id, ':qqid' => $this->question->qid, ':qvid' => $this->question->vid))->fetchField();
+      $this->answer_id = (int) $input;
     }
-    $answer = db_query(
-      'SELECT answer FROM {quiz_scale_answer} WHERE id = :id', array(
-        ':id' => $this->answer_id
-      ))->fetchField();
-    $this->answer = check_plain($answer);
+
+    $sql = 'SELECT answer FROM {quiz_scale_answer} WHERE id = :id';
+    if ($input = db_query($sql, array(':id' => $this->answer_id))->fetchField()) {
+      $this->answer = check_plain($input);
+    }
+  }
+
+  public function onLoad(Answer $answer) {
+    $sql = 'SELECT answer_id FROM {quiz_scale_user_answers} WHERE result_id = :rid AND question_vid = :vid';
+    if ($input = db_query($sql, array(':rid' => $answer->result_id, ':vid' => $answer->question_vid))->fetchField()) {
+      $answer->setInput($input);
+    }
   }
 
   /**

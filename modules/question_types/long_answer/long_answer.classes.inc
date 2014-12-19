@@ -3,6 +3,7 @@
 use Drupal\quiz_question\Entity\Question;
 use Drupal\quiz_question\QuestionHandler;
 use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz\Entity\Answer;
 
 /**
  * Long answer classes.
@@ -281,31 +282,36 @@ class LongAnswerResponse extends ResponseHandler {
   /**
    * Constructor
    */
-  public function __construct($result_id, Question $question, $answer = NULL) {
-    parent::__construct($result_id, $question, $answer);
+  public function __construct($result_id, Question $question, $input = NULL) {
+    parent::__construct($result_id, $question, $input);
 
-    if (!isset($answer)) {
-      // Question has been answered allready. We fetch the answer data from
-      // the database.
-      $row = db_query(
-        'SELECT answer_id, answer, is_evaluated, score, question_vid, question_qid, result_id, answer_feedback, answer_feedback_format
-        FROM {quiz_long_answer_user_answers}
-        WHERE question_qid = :question_id AND question_vid = :question_vid AND result_id = :rid', array(
-          ':question_id'  => $question->qid,
-          ':question_vid' => $question->vid,
-          ':rid'          => $result_id))->fetch();
-      if (!empty($row)) {
-        $this->answer = $row->answer;
-        $this->score = $row->score;
-        $this->evaluated = $row->is_evaluated;
-        $this->answer_id = $row->answer_id;
-        $this->answer_feedback = $row->answer_feedback;
-        $this->answer_feedback_format = $row->answer_feedback_format;
+    if (!isset($input)) {
+      if (($answer = $this->loadAnswerEntity()) && ($input = $this->loadAnswerEntity()->getInput())) {
+        $this->answer = $input->answer;
+        $this->score = $input->score;
+        $this->evaluated = $input->is_evaluated;
+        $this->answer_id = $input->answer_id;
+        $this->answer_feedback = $input->answer_feedback;
+        $this->answer_feedback_format = $input->answer_feedback_format;
       }
     }
     else {
-      $this->answer = $answer;
+      $this->answer = $input;
       $this->evaluated = FALSE;
+    }
+  }
+
+  public function onLoad(Answer $answer) {
+    // Question has been answered allready. We fetch the answer data from
+    // the database.
+    $input = db_select('quiz_long_answer_user_answers', 'input')
+      ->fields('input')
+      ->condition('question_vid', $answer->question_vid)
+      ->condition('result_id', $answer->result_id)
+      ->execute()
+      ->fetchObject();
+    if ($input) {
+      $answer->setInput($input);
     }
   }
 

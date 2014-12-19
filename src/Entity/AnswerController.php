@@ -3,35 +3,32 @@
 namespace Drupal\quizz\Entity;
 
 use DatabaseTransaction;
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\ResponseHandler;
 use EntityAPIController;
-use RuntimeException;
 
 class AnswerController extends EntityAPIController {
 
   /**
    * {@inheritdoc}
-   * @param Answer[] $queried_entities
+   * @param Answer[] $answers
    */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    // Make sure entity has bundle property.
-    foreach ($queried_entities as $entity) {
-      $entity->bundle();
+  protected function attachLoad(&$answers, $revision_id = FALSE) {
+    foreach ($answers as $answer) {
+      $answer->bundle(); // Make sure entity has bundle property.
     }
-
-    return parent::attachLoad($queried_entities, $revision_id);
+    return parent::attachLoad($answers, $revision_id);
   }
 
-  public function save($entity, DatabaseTransaction $transaction = NULL) {
-    $entity->bundle();
-    if (!empty($entity->result_answer_id)) {
-      $entity->is_new = FALSE;
+  /**
+   * {@inheritdoc}
+   * @param Answer $answer
+   */
+  public function save($answer, DatabaseTransaction $transaction = NULL) {
+    $answer->bundle();
+    if (!empty($answer->result_answer_id)) {
+      $answer->is_new = FALSE;
     }
-
-    $entity->points_awarded = round($entity->points_awarded);
-
-    return parent::save($entity, $transaction);
+    $answer->points_awarded = round($answer->points_awarded);
+    return parent::save($answer, $transaction);
   }
 
   /**

@@ -109,10 +109,13 @@ class FormSubmission extends QuizTakeBaseController {
         }
 
         $input = $form_state['values']['question'][$question_id]['answer'];
+
+        // @TODO: This is wrong way. Use entity API instead
         $handler = $current_question->getResponseHandler($this->result->result_id, $input);
         $handler->setAnswerInput($input);
         $handler->delete();
         $handler->save();
+
         $answer = $handler->toBareObject();
 
         $fs = array('values' => $form_state['values']['question'][$question_id]);
