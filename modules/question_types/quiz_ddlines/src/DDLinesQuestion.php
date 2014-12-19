@@ -11,24 +11,20 @@ use Drupal\quiz_question\QuestionHandler;
 class DDLinesQuestion extends QuestionHandler {
 
   public function onNewQuestionTypeCreated(QuestionType $question_type) {
-    // Create body textarea field
     parent::onNewQuestionTypeCreated($question_type);
 
     if (!field_info_instance('quiz_question', 'field_image', $question_type->type)) {
       $bundle = $question_type->type;
 
       if (!field_info_field('field_image')) {
-        field_create_field(array(
-            'field_name' => 'field_image',
-            'type'       => 'image'
-        ));
+        field_create_field(array('type' => 'image', 'field_name' => 'field_image'));
       }
 
       if (!field_info_instance('quiz_question', 'field_image', $bundle)) {
         field_create_instance(array(
             'field_name'  => 'field_image',
             'entity_type' => 'quiz_question',
-            'bundle'      => 'quiz_ddlines',
+            'bundle'      => $bundle,
             'label'       => t('Background image'),
             'required'    => TRUE,
             'settings'    => array('no_ui' => TRUE),
@@ -55,14 +51,12 @@ class DDLinesQuestion extends QuestionHandler {
   /**
    * Get the form used to create a new question.
    *
-   * @param
-   *  FAPI form state
-   * @return
-   *  Must return a FAPI array.
+   * @param array
+   * @return array
    */
   public function getCreationForm(array &$form_state = NULL) {
-
     $elements = '';
+
     if (isset($this->question->translation_source)) {
       $elements = $this->question->translation_source->ddlines_elements;
     }

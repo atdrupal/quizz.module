@@ -34,9 +34,14 @@ class DDLinesResponse extends ResponseHandler {
     }
     // Load from database
     else {
-      $query = db_query('SELECT label_id, hotspot_id FROM {quiz_ddlines_user_answers} ua
-              LEFT OUTER JOIN {quiz_ddlines_user_answer_multi} uam ON(uam.user_answer_id = ua.id)
-              WHERE ua.result_id = :result_id AND ua.question_qid = :question_qid AND ua.question_vid = :question_vid', array(':result_id' => $result_id, ':question_qid' => $this->question->qid, ':question_vid' => $this->question->vid));
+      $query = db_query(
+        'SELECT label_id, hotspot_id FROM {quiz_ddlines_user_answers} ua
+         LEFT OUTER JOIN {quiz_ddlines_user_answer_multi} uam ON(uam.user_answer_id = ua.id)
+         WHERE ua.result_id = :result_id AND ua.question_qid = :question_qid AND ua.question_vid = :question_vid', array(
+          ':result_id'    => $result_id,
+          ':question_qid' => $this->question->qid,
+          ':question_vid' => $this->question->vid
+      ));
       while ($row = $query->fetch()) {
         $this->user_answers[$row->label_id] = $row->hotspot_id;
       }

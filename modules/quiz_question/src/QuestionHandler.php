@@ -47,6 +47,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   public function onNewQuestionTypeCreated(QuestionType $question_type) {
     if (!field_info_instance('quiz_question', 'quiz_question_body', $question_type->type)) {
       $bundle = $question_type->type;
+
       if (!field_info_field('quiz_question_body')) {
         field_create_field(array(
             'field_name'   => 'quiz_question_body',
