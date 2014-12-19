@@ -11,9 +11,9 @@ class QuizFeedbackTestCase extends QuizTestCase {
 
   public static function getInfo() {
     return array(
-        'name'        => t('Quiz feedback'),
-        'description' => t('Test cases for Quiz feedback.'),
-        'group'       => t('Quiz'),
+        'name'        => 'Quiz feedback',
+        'description' => 'Test cases for Quiz feedback.',
+        'group'       => 'Quiz taking',
     );
   }
 
