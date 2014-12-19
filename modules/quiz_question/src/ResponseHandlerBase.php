@@ -64,8 +64,9 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    */
   public function loadAnswerEntity($refresh = TRUE) {
     if ($refresh || (NULL === $this->answer_entity)) {
-      $this->answer_entity = quiz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid);
-      $this->onLoad($this->answer_entity);
+      if ($this->answer_entity = quiz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid)) {
+        $this->onLoad($this->answer_entity);
+      }
     }
     return $this->answer_entity;
   }

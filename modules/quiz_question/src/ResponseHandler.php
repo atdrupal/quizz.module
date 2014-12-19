@@ -3,7 +3,6 @@
 namespace Drupal\quiz_question;
 
 use Drupal\quiz_question\Entity\Question;
-use Drupal\quizz\Entity\Answer;
 
 /**
  * Each question type must store its own response data and be able to calculate a score for

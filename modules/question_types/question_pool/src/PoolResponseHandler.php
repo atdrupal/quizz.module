@@ -22,7 +22,7 @@ class PoolResponseHandler extends ResponseHandler {
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
-    if (!isset($input)) {
+    if (NULL === $input) {
       if ($response = $this->getCorrectAnswer()) {
         $this->answer = $response->answer;
         $this->score = $response->score;
@@ -195,9 +195,9 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   public function isCorrect() {
-    return $this->getQuestion()
-        ->getResponseHandler($this->result_id, $this->answer)
-        ->isCorrect();
+    $handler = $this->getQuestion()->getResponseHandler($this->result_id, $this->answer);
+    $handler->setAnswerInput($this->answer);
+    return $handler->isCorrect();
   }
 
   /**

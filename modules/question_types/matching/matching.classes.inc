@@ -425,7 +425,7 @@ class MatchingResponse extends ResponseHandler {
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 
-    if (NULL !== $input) {
+    if (NULL === $input) {
       if (($answer = $this->loadAnswerEntity()) && ($input = $answer->getInput())) {
         $this->answer = $input;
       }
