@@ -45,6 +45,23 @@ install:
 
 before_script:
   # ---------------------
+  # Variables
+  # ---------------------
+  - cd ..
+  - export VENDOR=`pwd`
+  - cd ..
+  - export DRUPAL=`pwd`'/drupal-7.34/'
+  - export CACHE="$HOME/cache"
+
+  # ---------------------
+  # Download
+  # ---------------------
+  - sh -c "if [ ! -d "$CACHE" ];                 then mkdir $CACHE  fi"
+  - sh -c "if [ ! -f "$CACHE/vhost.conf" ]       then wget https://cdn.rawgit.com/backdrop/backdrop/fe6e16b6114995eed008596aa7c733bc907a8fca/core/misc/travis-ci/vhost.conf -O $CACHE/vhost.conf; fi"
+  - sh -c "if [ ! -f "$CACHE/drupal.zip"];       then wget https://github.com/drupal/drupal/archive/7.34.zip -O $CACHE/drupal.zip; fi"
+  - sh -c "if [ ! -f "$CACHE/2189345-39.patch"]; then wget https://www.drupal.org/files/issues/2189345-39.patch -O $CACHE/2189345-39.patch; fi"
+  
+  # ---------------------
   # Install apache server
   # ---------------------
   - sudo apt-get install apache2 libapache2-mod-fastcgi
@@ -52,25 +69,14 @@ before_script:
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  - wget https://cdn.rawgit.com/backdrop/backdrop/fe6e16b6114995eed008596aa7c733bc907a8fca/core/misc/travis-ci/vhost.conf -O /tmp/vhost.conf
-  - sudo cp -f /tmp/vhost.conf /etc/apache2/sites-available/default
+  - sudo cp -f $CACHE/vhost.conf /etc/apache2/sites-available/default
 
   # ---------------------
-  # Variables
+  # Get the codebase
   # ---------------------
-  - cd ..
-  - export VENDOR=`pwd`
-  - cd ..
-  - export DRUPAL=`pwd`'/drupal-7.34/'
-
-  # ---------------------
-  # Download the codebase
-  # ---------------------
-  - wget https://github.com/drupal/drupal/archive/7.34.zip -O drupal.zip
-  - unzip -qq drupal.zip
+  - unzip -qq $CACHE/drupal.zip -d $DRUPAL
   - cd $DRUPAL
-  - wget https://www.drupal.org/files/issues/2189345-39.patch -O /tmp/2189345-39.patch
-  - patch -p1 < /tmp/2189345-39.patch
+  - patch -p1 < $CACHE/2189345-39.patch
   - drush si testing --db-url=mysql://root:@localhost/drupal --yes
   - mv $VENDOR/* sites/all/modules/
 
