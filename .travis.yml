@@ -24,7 +24,11 @@ mysql:
   username: root
   encoding: utf8
 
-cache: apt
+cache:
+  - apt
+  - $HOME/.composer/cache
+  - $HOME/cache
+  - $HOME/.drush/cache
 
 install:
   # ---------------------
