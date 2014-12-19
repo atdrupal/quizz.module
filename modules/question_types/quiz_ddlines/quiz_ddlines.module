@@ -1,41 +1,12 @@
 <?php
 
+/**
+ * Drag and drop with lines question type for the Quiz module.
+ */
 use Drupal\quiz_question\Entity\QuestionType;
 
-/**
- * The main file for Quiz drag and drop with lines.
- *
- * Sponsored by: Senter for IKT i utdanningen
- * Code: paalj
- *
- * @file
- * Drag and drop with lines question type for the Quiz module.
- *
- */
-
-/**
- * Default values
- */
-class QuizDdlinesDefaults {
-
-  const CANVAS_WIDTH = 700;
-  const CANVAS_HEIGHT = 500;
-  const HOTSPOT_RADIUS = 10;
-  const POINTER_RADIUS = 5;
-  const NO_ANSWER = 0;
-  const WRONG = 1;
-  const CORRECT = 2;
-
-}
-
-/**
- * Implements hook_help().
- */
-function quiz_ddlines_help($path, $args) {
-  if ($path == 'admin/help#quiz_ddlines') {
-    return t("Help text TBD");
-  }
-}
+define('QUIZ_DDLINES_WRONG', 1);
+define('QUIZ_DDLINES_CORRECT', 2);
 
 /**
  * Implements hook_quiz_question_info().
@@ -44,9 +15,9 @@ function quiz_ddlines_quiz_question_info() {
   return array(
       'quiz_ddlines' => array(
           'name'              => t('Drag and drop question with lines'),
-          'description'       => t('This provides drag and drop question types with lines for the Quiz module.'),
-          'question provider' => 'DDLinesQuestion',
-          'response provider' => 'DDLinesResponse',
+          'description'       => t('This provides drag and drop question type with lines.'),
+          'question provider' => 'Drupal\quiz_ddlines\DDLinesQuestion',
+          'response provider' => 'Drupal\quiz_ddlines\DDLinesResponse',
           'module'            => 'quiz_question', // All wrapper functions are in that module.
       ),
   );
@@ -56,19 +27,17 @@ function quiz_ddlines_quiz_question_info() {
  * Implements hook_image_default_styles
  */
 function quiz_ddlines_image_default_styles() {
-  $styles = array();
-
-  $styles['quiz_ddlines'] = array(
-      'effects' => array(
-          array(
-              'name'   => 'image_scale',
-              'data'   => array('width' => 700, 'height' => null, 'upscale' => 0),
-              'weight' => 0,
+  return array(
+      'quiz_ddlines' => array(
+          'effects' => array(
+              array(
+                  'name'   => 'image_scale',
+                  'data'   => array('width' => 700, 'height' => null, 'upscale' => 0),
+                  'weight' => 0,
+              ),
           ),
-      ),
+      )
   );
-
-  return $styles;
 }
 
 /**
@@ -91,32 +60,32 @@ function quiz_ddlines_quiz_question_config(QuestionType $question_type) {
   $form['quiz_ddlines_canvas_width'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The default width of the canvas'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_width', QuizDdlinesDefaults::CANVAS_WIDTH),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_width', 700),
   );
   $form['quiz_ddlines_canvas_height'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The default height of the canvas'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_height', QuizDdlinesDefaults::CANVAS_HEIGHT),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_canvas_height', 500),
   );
   $form['quiz_ddlines_hotspot_radius'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The radius of the hotspot'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_hotspot_radius', QuizDdlinesDefaults::HOTSPOT_RADIUS),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_hotspot_radius', 10),
   );
   $form['quiz_ddlines_pointer_radius'] = array(
       '#type'          => 'textfield',
       '#title'         => t('The radius of the pointer'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_pointer_radius', QuizDdlinesDefaults::POINTER_RADIUS),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_pointer_radius', 5),
   );
   $form['quiz_ddlines_feedback_correct'] = array(
       '#type'          => 'textfield',
       '#title'         => t('Default feedback for correct answers'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_feedback_correct', ""),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_feedback_correct', ''),
   );
   $form['quiz_ddlines_feedback_wrong'] = array(
       '#type'          => 'textfield',
       '#title'         => t('Default feedback for wrong answers'),
-      '#default_value' => $question_type->getConfig('quiz_ddlines_feedback_wrong', ""),
+      '#default_value' => $question_type->getConfig('quiz_ddlines_feedback_wrong', ''),
   );
 
   $form['#validate'][] = 'quiz_ddlines_config_validate';
@@ -139,8 +108,7 @@ function quiz_ddlines_config_validate($form, $form_state) {
 
 function _quiz_ddlines_add_js_and_css() {
   $module_path = drupal_get_path('module', 'quiz_ddlines');
-
-  drupal_add_js($module_path . '/js/raphael.js');
+  drupal_add_js($module_path . '/js/raphael-min.js');
   drupal_add_js($module_path . '/js/colorwheel.js');
   drupal_add_js($module_path . '/js/quiz_ddlines.js');
   drupal_add_css($module_path . '/theme/quiz_ddlines.css');
