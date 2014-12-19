@@ -158,11 +158,13 @@ class ClozeQuestionHandler extends QuestionHandler {
     }
 
     $element['open_wrapper']['#markup'] = '<div class="cloze-question">';
-    foreach ($this->clozeHelper->getQuestionChunks($this->question->quiz_question_body[LANGUAGE_NONE]['0']['value']) as $position => $chunk) {
+    $question_string = $this->question->quiz_question_body[LANGUAGE_NONE]['0']['value'];
+
+    foreach ($this->clozeHelper->getQuestionChunks($question_string) as $position => $chunk) {
       // this "parts[foobar]" hack is needed becaues question handler engine
       // checks for input field with name parts
-      if (strpos($chunk, '[') === FALSE) {
-        $element['parts[' . $position . ']'] = array(
+      if (FALSE === strpos($chunk, '[')) {
+        $element['parts'][$position] = array(
             '#prefix' => '<div class="form-item">',
             '#markup' => str_replace("\n", "<br/>", $chunk),
             '#suffix' => '</div>',
@@ -172,9 +174,8 @@ class ClozeQuestionHandler extends QuestionHandler {
         $chunk = str_replace(array('[', ']'), '', $chunk);
         $choices = explode(',', $chunk);
         if (count($choices) > 1) {
-          $element['parts[' . $position . ']'] = array(
+          $element['parts'][$position] = array(
               '#type'     => 'select',
-              '#title'    => '',
               '#options'  => $this->clozeHelper->shuffleChoices(drupal_map_assoc($choices)),
               '#required' => FALSE,
           );

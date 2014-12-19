@@ -21,7 +21,7 @@ class QuizzClozeTestCase extends QuizTestCase {
     $question = $this->drupalCreateQuestion(array(
         'type'  => $this->questionHandler,
         'title' => 'Cloze question title',
-        'body'  => 'Cloze question body [hidden 1] and [hidden 2]',
+        'body'  => 'Cloze question body [hidden 1] and [hidden 2] and [yes,no]',
     ));
 
     $this->assertTrue($question instanceof Question);
@@ -41,11 +41,12 @@ class QuizzClozeTestCase extends QuizTestCase {
 
   private function checkHelperClass() {
     $helper = new Helper();
-    $question_string = 'This is [a] demo [cloze] question?';
+    $question_string = 'This is [a] demo [cloze] question? [yes,no]';
     $chunks = $helper->getQuestionChunks($question_string);
     $correct_chunks = $helper->getCorrectAnswerChunks($question_string);
-    $this->assertEqual(array('This is ', '[a]', ' demo ', '[cloze]', ' question?'), array_values($chunks));
-    $this->assertEqual(array('a', 'cloze'), array_values($correct_chunks));
+    $expect = array('This is ', '[a]', ' demo ', '[cloze]', ' question? ', '[yes,no]');
+    $this->assertEqual($expect, array_values($chunks));
+    $this->assertEqual(array('a', 'cloze', 'yes'), array_values($correct_chunks));
   }
 
   private function checkTakingWithIncorrectAnswer(QuizEntity $quiz) {
@@ -65,7 +66,8 @@ class QuizzClozeTestCase extends QuizTestCase {
     $this->assertText('Cloze question body');
     $this->drupalPost(NULL, array(
         'question[1][answer][parts][1]' => 'hidden 1',
-        'question[1][answer][parts][3]' => 'hidden 2'
+        'question[1][answer][parts][3]' => 'hidden 2',
+        'question[1][answer][parts][5]' => 'yes',
       ), "Finish");
     $this->assertText('You got 10 of 10 possible points.');
   }
