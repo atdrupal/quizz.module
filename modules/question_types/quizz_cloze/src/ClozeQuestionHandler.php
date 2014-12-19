@@ -197,8 +197,7 @@ class ClozeQuestionHandler extends QuestionHandler {
     $element['close_wrapper']['#markup'] = '</div>';
 
     if (isset($result_id)) {
-      $handler = quiz_answer_controller()->getHandler($result_id, $this->question);
-      if ($response = $handler->getResponse()) {
+      if ($response = $this->question->getResponseHandler($result_id)->getResponse()) {
         foreach ($response['parts'] as $key => $value) {
           $element["parts"][$key]['#default_value'] = $value;
         }

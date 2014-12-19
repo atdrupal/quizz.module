@@ -100,12 +100,12 @@ class ResultGenerator {
   private function cloneResult(QuizEntity $quiz, $prev_result, $result) {
     foreach ($prev_result->layout as $question_info) {
       $question = quiz_question_entity_load($question_info['qid'], $question_info['vid']);
-      $answer = quiz_answer_controller()->getHandler($prev_result->result_id, $question);
+      $handler = $question->getResponseHandler($prev_result->result_id);
 
       // Override the existing response.
-      if (('all' === $quiz->build_on_last) || $answer->isCorrect()) {
-        $answer->setResultId($result->result_id);
-        $answer->save();
+      if (('all' === $quiz->build_on_last) || $handler->isCorrect()) {
+        $handler->setResultId($result->result_id);
+        $handler->save();
       }
     }
 

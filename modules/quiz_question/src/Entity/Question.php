@@ -58,6 +58,9 @@ class Question extends Entity {
   /** @var bool Magic flag to create new revision on save */
   public $is_new_revision;
 
+  /** @var \Drupal\quiz_question\ResponseHandlerInterface */
+  private $response_handler;
+
   /**
    * @return QuestionController
    */
@@ -107,11 +110,20 @@ class Question extends Entity {
   /**
    * @param int $result_id
    * @param mixed $input
+   * @param bool $refresh
    * @return \Drupal\quiz_question\ResponseHandlerInterface
    */
-  public function getResponseHandler($result_id, $input) {
-    $handler_info = $this->getHandlerInfo();
-    return new $handler_info['response provider']($result_id, $this, $input);
+  public function getResponseHandler($result_id, $input = NULL, $refresh = FALSE) {
+    if ($refresh || (NULL === $this->response_handler)) {
+      $handler_info = $this->getHandlerInfo();
+      return $this->response_handler = new $handler_info['response provider']($result_id, $this, $input);
+    }
+
+    if (FALSE !== $this->response_handler->is_skipped) {
+      return $this->response_handler->refreshQuestionEntity($this);
+    }
+
+    return $this->getResponseHandler($result_id, $input, TRUE);
   }
 
   /**

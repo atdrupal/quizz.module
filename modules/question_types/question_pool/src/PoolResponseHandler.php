@@ -133,7 +133,7 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   private function evaluateQuestion(Question $question) {
-    $handler = quiz_answer_controller()->getHandler($this->result_id, $question, $this->answer);
+    $handler = $question->getResponseHandler($this->result_id, $this->answer);
     $answer = $handler->toBareObject();
 
     // If a result_id is set, we are taking a quiz.
@@ -195,8 +195,8 @@ class PoolResponseHandler extends ResponseHandler {
   }
 
   public function isCorrect() {
-    return quiz_answer_controller()
-        ->getHandler($this->result_id, $this->getQuestion(), $this->answer)
+    return $this->getQuestion()
+        ->getResponseHandler($this->result_id, $this->answer)
         ->isCorrect();
   }
 
@@ -207,11 +207,7 @@ class PoolResponseHandler extends ResponseHandler {
     if (!$question = $this->getQuestion()) {
       return array('#markup' => t('No question passed.'));
     }
-
-    return quiz_answer_controller()
-        ->getHandler($this->result_id, $question)
-        ->getFeedbackValues()
-    ;
+    return $question->getResponseHandler($this->result_id)->getFeedbackValues();
   }
 
 }

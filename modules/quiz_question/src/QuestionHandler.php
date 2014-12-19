@@ -177,8 +177,8 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
       return;
     }
 
-    $answer = $form_state['values']['question'][$this->question->qid]['answer'];
-    if (!quiz_answer_controller()->getHandler($result->result_id, $this->question, $answer)->isCorrect()) {
+    $input = $form_state['values']['question'][$this->question->qid]['answer'];
+    if (!$this->question->getResponseHandler($result->result_id, $input)->isCorrect()) {
       $this->onRepeatUntiCorrect($result, $element);
     }
   }

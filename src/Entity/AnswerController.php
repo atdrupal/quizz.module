@@ -48,33 +48,4 @@ class AnswerController extends EntityAPIController {
     }
   }
 
-  /**
-   * Get an instance of a quiz question responce.
-   *
-   * Get information about the class and use it to construct a new
-   * object of the appropriate type.
-   *
-   * @param int $result_id
-   * @param Question $question
-   * @param mixed $input
-   * @return \Drupal\quiz_question\ResponseHandlerInterface
-   */
-  public function getHandler($result_id, Question $question = NULL, $input = NULL) {
-    $handlers = &drupal_static(__METHOD__, array());
-
-    // We refresh the question in case it has been changed since we cached the response
-    if ((NULL !== $question) && isset($handlers[$result_id][$question->vid])) {
-      $handlers[$result_id][$question->vid]->refreshQuestionEntity($question);
-      if (FALSE !== $handlers[$result_id][$question->vid]->is_skipped) {
-        return $handlers[$result_id][$question->vid];
-      }
-    }
-
-    if (isset($handlers[$result_id][$question->vid]) && $handlers[$result_id][$question->vid]->is_skipped !== FALSE) {
-      return $handlers[$result_id][$question->vid];
-    }
-
-    return $handlers[$result_id][$question->vid] = $question->getResponseHandler($result_id, $input);
-  }
-
 }

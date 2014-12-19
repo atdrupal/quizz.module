@@ -117,9 +117,11 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   /**
    * Used to refresh this instances question in case drupal has changed it.
    * @param Question $newQuestion
+   * @return self
    */
   public function refreshQuestionEntity($newQuestion) {
     $this->question = $newQuestion;
+    return $this;
   }
 
   public function getReportFormSubmit() {

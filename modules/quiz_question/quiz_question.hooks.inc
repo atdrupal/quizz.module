@@ -214,9 +214,8 @@ function quiz_question_field_extra_fields() {
  * Implements hook_get_report().
  */
 function quiz_question_get_report($question_id, $question_vid, $result_id) {
-  $question_revision = quiz_question_entity_load(NULL, $question_vid);
-
-  if (!$handler = quiz_answer_controller()->getHandler($result_id, $question_revision)) {
+  $question = quiz_question_entity_load(NULL, $question_vid);
+  if (!$handler = $question->getResponseHandler($result_id)) {
     drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array(
         '%qid' => $question_id,
         '%vid' => $question_vid
@@ -248,10 +247,10 @@ function quiz_question_quiz_question_score($quiz, Question $question, $result_id
   $score->question_vid = $question->vid;
 
   if (isset($result_id)) {
-    $handler = quiz_answer_controller()->getHandler($result_id, $handler->question);
+    $response_handler = $question->getResponseHandler($result_id);
     $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
-    $score->possible = $handler->getQuestionMaxScore();
-    $score->is_evaluated = $handler->isEvaluated();
+    $score->possible = $response_handler->getQuestionMaxScore();
+    $score->is_evaluated = $response_handler->isEvaluated();
   }
   return $score;
 }
