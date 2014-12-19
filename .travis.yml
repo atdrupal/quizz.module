@@ -26,9 +26,10 @@ mysql:
 
 cache:
   - apt
-  - $HOME/.composer/cache
-  - $HOME/cache
-  - $HOME/.drush/cache
+  - directories:
+    - $HOME/.composer/cache
+    - $HOME/cache
+    - $HOME/.drush/cache
 
 install:
   # ---------------------
