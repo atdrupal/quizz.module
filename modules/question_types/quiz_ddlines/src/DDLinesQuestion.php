@@ -180,10 +180,7 @@ class DDLinesQuestion extends QuestionHandler {
 
     // Form element containing the user answers
     // The quiz module requires this element to be named "tries":
-    $form['tries'] = array(
-        '#type'          => 'hidden',
-        '#default_value' => '',
-    );
+    $form['tries'] = array('#type' => 'hidden', '#default_value' => '');
 
     $image_uri = $this->question->field_image['und'][0]['uri'];
     $image_url = image_style_url('large', $image_uri);
@@ -194,13 +191,7 @@ class DDLinesQuestion extends QuestionHandler {
         '#suffix' => '</div>',
     );
 
-    $default_settings = $this->getDefaultAltSettings();
-    $default_settings['mode'] = 'take';
-    $form['#attached']['js'][] = array(
-        'data' => array('quiz_ddlines' => $default_settings),
-        'type' => 'setting'
-    );
-
+    drupal_add_js(array('quiz_ddlines' => array('mode' => 'take') + $this->getDefaultAltSettings()), 'setting');
     _quiz_ddlines_add_js_and_css();
 
     return $form;

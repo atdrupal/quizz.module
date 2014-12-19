@@ -64,7 +64,9 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
   }
 };
 
-(function ($) {
+var QuizElementList;
+
+(function ($, Drupal) {
   var QuizUtil = {
     // The minimum width of the label
     LABEL_MIN_WIDTH: 40,
@@ -96,7 +98,7 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
    * - Creating/Parsing the jsondata
    * - Making the form input field being in-sync
    */
-  var QuizElementList = {
+  QuizElementList = {
     elements: [],
     engine: null,
     add: function (element) {
@@ -110,14 +112,11 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
           this.elements.splice(i, 1);
         }
       }
-      // Update form cache:
-      this.updateForm();
+      this.updateForm(); // Update form cache
     },
     clear: function () {
       this.elements = [];
-
-      // Update form cache:
-      this.updateForm();
+      this.updateForm(); // Update form cache
     },
     updateForm: function () {
       if (this.engine.isEditMode()) {
@@ -207,13 +206,12 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
       moveLeft = -bbox.x + horizontalPadding;
       moveUp = -bbox.y + QuizUtil.CANVAS_PADDING;
 
-      /* Update all elements */
+      // Update all elements
       for (var i = 0; i < this.elements.length; i++) {
         this.elements[i].move(moveLeft, moveUp);
       }
 
-      // Update image:
-      this.engine.image.move(moveLeft, moveUp);
+      this.engine.image.move(moveLeft, moveUp); // Update image
 
       // Update canvas-size
       this.engine.setSize(bbox.x2 - bbox.x + (horizontalPadding * 2), bbox.y2 - bbox.y + (QuizUtil.CANVAS_PADDING * 2));
@@ -255,74 +253,6 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
     }
   };
 
-  Drupal.behaviors.quiz_ddlines = {
-    initialized: false,
-    attach: function (context) {
-      // Auto adjust canvas size
-      $('.node-quiz_ddlines-form #edit-submit:not(.canvas-adjusted)').click(function () {
-        QuizElementList.adjustCanvasSize();
-        $(this).addClass('canvas-adjusted');
-      });
-
-      // Make hotspot radius only accept numbers:
-      $('input#edit-hotspot-radius').keypress(function (e) {
-        var key_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
-        if (!($.inArray(e.which, key_codes) >= 0)) {
-          e.preventDefault();
-        }
-      });
-
-      // Initializing the result page; the correct answer part
-      $('.quiz-ddlines-correct-answers', context).each(function () {
-        // Id is the node id of the question. Will be overwritten in engine.init
-        var id = $(this).attr('id');
-        var engine = new Engine();
-        engine.init(this, id);
-
-        // Load elements if they exists:
-        QuizElementList.load(engine, false, id);
-      });
-
-      // Initializing the result page; the user answer part
-      $('.quiz-ddlines-user-answers', context).each(function () {
-        // Id is the node id of the question.
-        // Will be overwritten in engine.init
-        var id = $(this).attr('id');
-
-        var engine = new Engine();
-        engine.init(this, id);
-
-        // Load elements if they exists:
-        QuizElementList.load(engine, true, id);
-      });
-
-      $('.image-preview', context).each(function () {
-        if (this.initialized) {
-          return;
-        }
-        var self = this;
-        this.initialized = true;
-
-        // Initialize
-        var engine = new Engine();
-
-        // Need to wait for IE to make image beeing displayed
-        // This is not a great solution, but it does work.
-        setTimeout(function () {
-          engine.init(self);
-
-          // Load elements if they exists:
-          QuizElementList.load(engine);
-
-          // Show helptext if no alternatives have been added:
-          if (engine.isNew()) {
-            engine.addHelpText();
-          }
-        }, ($.browser.msie ? 1000 : 0));
-      });
-    }
-  };
-
   // generic functions for dragging of sets:
   function set_drag_start(x, y, event, set) {
     set = QuizUtil.defined(set) ? set : this.set;
@@ -332,6 +262,7 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
     set.ox = x;
     set.oy = y;
   }
+
   function set_drag_move(dx, dy, x, y, event, set) {
     QuizUtil.drag_mode = true;
 
@@ -641,23 +572,14 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
       }
     };
   }
-  ;
 
-  /**
-   * The image class
-   */
   function QuizImage(engine, uri, width, height) {
-
-    /*var self = this;*/
-
     this.engine = engine;
     this.image = this.engine.r.image(uri, 0, 0, width, height);
     this.image.toFront();
 
     if (this.engine.isEditMode()) {
-
-      // Center image when added:
-      if (this.engine.isNew()) {
+      if (this.engine.isNew()) { // Center image when added
         this.image.attr({"x": (engine.getCanvasWidth() / 2) - (width / 2), "y": (engine.getCanvasHeight() / 2) - (height / 2)});
       }
 
@@ -1342,12 +1264,11 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
     };
   }
 
-
   /**
    * The quiz ddlines element.
    *
-   * It contains the metadata needed to draw the label, hotspot, pointer
-   * and connecting lines
+   * It contains the metadata needed to draw the label, hotspot, pointer and
+   * connecting lines
    */
   function QuizElement(engine, color, text, label_id, label_x, label_y, hotspot_id, hotspot_x, hotspot_y, feedback_correct, feedback_wrong, correct_answer) {
     var self = this;
@@ -1501,4 +1422,4 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
             QuizUtil.defined(json.correct) ? json.correct : null);
   };
 
-}(jQuery));
+}(jQuery, Drupal));
