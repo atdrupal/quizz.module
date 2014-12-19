@@ -15,7 +15,7 @@ function quiz_ddlines_quiz_question_info() {
   return array(
       'quiz_ddlines' => array(
           'name'              => t('Drag and drop question with lines'),
-          'description'       => t('This provides drag and drop question types with lines for the Quiz module.'),
+          'description'       => t('This provides drag and drop question type with lines.'),
           'question provider' => 'Drupal\quiz_ddlines\DDLinesQuestion',
           'response provider' => 'Drupal\quiz_ddlines\DDLinesResponse',
           'module'            => 'quiz_question', // All wrapper functions are in that module.
