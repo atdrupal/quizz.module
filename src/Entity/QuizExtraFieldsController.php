@@ -49,20 +49,15 @@ class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
 
   private function getQuizFormExtraFields() {
     $elements = array(
-        'vtabs'     => array(
-            'label'  => t('Quiz options'),
-            'weight' => 50,
-        ),
-        'quiz_help'       => array('label' => t('Explanation or submission guidelines'), 'weight' => -25),
-        'title'           => array('label' => t('Title'), 'weight' => 0),
+        'quiz_help' => array('weight' => -25, 'label' => t('Explanation or submission guidelines')),
+        'title'     => array('weight' => -5, 'label' => t('Title')),
+        'title'     => array('weight' => 0, 'label' => t('Title')),
+        'vtabs'     => array('weight' => 50, 'label' => t('Quiz options')),
+        'language'  => array('weight' => -20, 'label' => t('Language')),
     );
 
-    if (module_exists('locale')) {
-      $elements['language'] = array(
-          'label'       => t('Language'),
-          'description' => t('Language selector'),
-          'weight'      => -20,
-      );
+    if (!module_exists('locale')) {
+      unset($elements['language']);
     }
 
     return $elements;

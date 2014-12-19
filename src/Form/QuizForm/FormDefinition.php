@@ -30,7 +30,9 @@ class FormDefinition extends FormHelper {
       }
     }
 
-    $this->quiz->status = 'admin' === arg(0) ? -1 : 1;
+    if ('admin' === arg(0)) {
+      $this->quiz->status = -1;
+    }
   }
 
   /**
@@ -96,7 +98,6 @@ class FormDefinition extends FormHelper {
     $this->defineAvailabilityOptionsFields($form);
     $this->definePassFailOptionsFields($form);
     $this->defineResultFeedbackFields($form);
-    $this->defineRememberConfigOptionsFields($form);
     $this->defineRevisionOptionsFields($form);
 
     // Attach custom fields by admin
@@ -483,33 +484,53 @@ class FormDefinition extends FormHelper {
     }
   }
 
-  private function defineRememberConfigOptionsFields(&$form) {
-    $form['remember_settings'] = array(
-        '#type'        => 'checkbox',
-        '#title'       => t('Remember my settings'),
-        '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be your default settings next time you create a @quiz.', array('@quiz' => QUIZ_NAME)),
-        '#weight'      => -15,
+  private function defineRevisionOptionsFields(&$form) {
+    $form['publishing'] = array(
+        '#type'           => 'fieldset',
+        '#title'          => t('Publishing'),
+        '#collapsible'    => TRUE,
+        '#group'          => 'vtabs',
+        '#weight'         => -10,
+        'publishing_tabs' => array('#type' => 'vertical_tabs'),
+        'publishing'      => array(
+            '#type'  => 'fieldset',
+            '#title' => t('Publishing options'),
+            '#group' => 'publishing_tabs',
+            'status' => array(
+                '#type'          => 'checkbox',
+                '#title'         => t('Published'),
+                '#default_value' => isset($this->quiz->status) ? $this->quiz->status : TRUE,
+            ),
+        ),
     );
 
-    $form['remember_global'] = array(
-        '#type'        => 'checkbox',
-        '#title'       => t('Remember as global'),
-        '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be everyone\'s default settings next time they create a @quiz.', array('@quiz' => QUIZ_NAME)),
-        '#weight'      => -15,
-        '#access'      => user_access('administer quiz configuration'),
+    $form['remember'] = array(
+        '#type'             => 'fieldset',
+        '#title'            => t('Remember'),
+        '#collapsible'      => TRUE,
+        '#group'            => 'publishing_tabs',
+        'remember_settings' => array(
+            '#type'        => 'checkbox',
+            '#title'       => t('Remember my settings'),
+            '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be your default settings next time you create a @quiz.', array('@quiz' => QUIZ_NAME)),
+        ),
+        'remember_global'   => array(
+            '#type'        => 'checkbox',
+            '#title'       => t('Remember as global'),
+            '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be everyone\'s default settings next time they create a @quiz.', array('@quiz' => QUIZ_NAME)),
+            '#access'      => user_access('administer quiz configuration'),
+        ),
     );
 
     if (quiz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
       $this->quiz->revision = 1;
       $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
     }
-  }
 
-  private function defineRevisionOptionsFields(&$form) {
     $form['revision_information'] = array(
         '#type'   => 'fieldset',
         '#title'  => t('Revision information'),
-        '#group'  => 'vtabs',
+        '#group'  => 'publishing_tabs',
         '#weight' => 20,
         '#access' => TRUE,
     );

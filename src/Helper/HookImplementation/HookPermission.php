@@ -71,13 +71,8 @@ class HookPermission {
 
   private function getScorePermissions() {
     return array(
-        // scoring:
-        'score any quiz'          => array(
-            'title' => t('Score any quiz'),
-        ),
-        'score own quiz'          => array(
-            'title' => t('Score own quiz'),
-        ),
+        'score any quiz'          => array('title' => t('Score any quiz')),
+        'score own quiz'          => array('title' => t('Score own quiz')),
         'score taken quiz answer' => array(
             'title'       => t('score taken quiz answer'),
             'description' => t('Allows attendee to score questions needing manual evaluation.'),
