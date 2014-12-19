@@ -41,4 +41,5 @@ files[] = tests/QuizRandomTestCase.test
 files[] = tests/QuizResultTestCase.test
 files[] = tests/QuizAnswerTestCase.test
 files[] = tests/QuizTakingTestCase.test
+files[] = tests/QuizTimerTestCase.test
 files[] = tests/QuizUpgradeTestCase.test
