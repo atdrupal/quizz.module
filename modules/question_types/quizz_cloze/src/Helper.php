@@ -26,7 +26,7 @@ class Helper {
 
       if ($pos = strpos($question, '[')) {
         $substring = substr($question, 0, $pos);
-        $question = preg_replace('/' . preg_quote($substring) . '/', '', $question, 1);
+        $question = substr($question, $pos);
         $chunks[] = $substring;
         $match = TRUE;
       }
@@ -37,6 +37,7 @@ class Helper {
         $chunks[] = $substring;
         $match = TRUE;
       }
+
       if (!$match) {
         $chunks[] = $question;
         $question = '';
