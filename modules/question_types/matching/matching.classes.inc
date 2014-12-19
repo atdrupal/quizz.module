@@ -26,11 +26,9 @@ class MatchingQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of saveEntityProperties
-   *
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     // Update or insert the question properties
     db_merge('quiz_matching_properties')
       ->key(array('qid' => $this->question->qid, 'vid' => $this->question->vid))
@@ -446,6 +444,7 @@ class MatchingResponse extends ResponseHandler {
     if (!isset($this->answer) || !is_array($this->answer)) {
       return;
     }
+
     $insert = db_insert('quiz_matching_user_answers')->fields(array('match_id', 'result_id', 'answer', 'score'));
     foreach ($this->answer as $key => $value) {
       $insert->values(array(

@@ -23,7 +23,7 @@ class ScaleQuestion extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     if ($this->question->revision == 1) {
       $is_new = TRUE;
     }

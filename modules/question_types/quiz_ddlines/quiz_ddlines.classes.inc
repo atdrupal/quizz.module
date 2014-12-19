@@ -232,7 +232,7 @@ class DDLinesQuestion extends QuestionHandler {
   /**
    * Save question type specific node properties
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
       db_insert('quiz_ddlines_question')
         ->fields(array(

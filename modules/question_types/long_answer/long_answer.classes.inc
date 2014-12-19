@@ -17,10 +17,9 @@ use Drupal\quiz_question\ResponseHandler;
 class LongAnswerQuestion extends QuestionHandler {
 
   /**
-   * Implementation of saveEntityProperties
-   * @see QuizQuestion#saveEntityProperties($is_new)
+   * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     if (!isset($this->question->feedback)) {
       $this->question->feedback = '';
     }
@@ -314,14 +313,15 @@ class LongAnswerResponse extends ResponseHandler {
    * {@inheritdoc}
    */
   public function save() {
-    $this->answer_id = db_insert('quiz_long_answer_user_answers')
-      ->fields(array(
-          'answer'       => $this->answer,
+    db_merge('quiz_long_answer_user_answers')
+      ->key(array(
           'question_qid' => $this->question->qid,
           'question_vid' => $this->question->vid,
           'result_id'    => $this->result_id,
       ))
-      ->execute();
+      ->fields(array('answer' => $this->answer))
+      ->execute()
+    ;
   }
 
   /**

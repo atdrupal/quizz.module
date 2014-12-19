@@ -37,7 +37,7 @@ class ClozeQuestionHandler extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     db_merge('quiz_cloze_question_properties')
       ->key(array(
           'qid' => $this->question->qid,

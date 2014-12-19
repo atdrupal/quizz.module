@@ -32,9 +32,9 @@ interface QuestionHandlerInterface {
 
   /**
    * Save question type specific node properties
-   * @return bool
+   * @param bool $is_new
    */
-  public function saveEntityProperties($is_new = FALSE);
+  public function onSave($is_new = FALSE);
 
   /**
    * To be called when new question type created.

@@ -18,7 +18,7 @@ class TrueFalseQuestion extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
       db_insert('quiz_truefalse')
         ->fields(array(

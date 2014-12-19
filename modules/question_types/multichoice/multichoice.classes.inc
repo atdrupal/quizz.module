@@ -118,7 +118,7 @@ class MultichoiceQuestion extends QuestionHandler {
    * (non-PHPdoc)
    * @see sites/all/modules/quiz-HEAD/question_types/quiz_question/QuizQuestion#save()
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
     $is_new = $is_new || $this->question->revision == 1;
 
     // Before we save we forgive some possible user errors

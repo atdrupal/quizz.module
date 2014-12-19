@@ -25,7 +25,7 @@ class QuizPagesQuestion extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function saveEntityProperties($is_new = FALSE) {
+  public function onSave($is_new = FALSE) {
 
   }
 
