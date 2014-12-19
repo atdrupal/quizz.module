@@ -44,7 +44,7 @@ class ScoreIO {
 
       // Allow for max score to be considered.
       if (($fn = $module . '_quiz_question_score') && function_exists($fn)) {
-        $scores[] = $fn($quiz, $question, $result->result_id);
+        $scores[] = $fn($question, $result->result_id);
       }
       else {
         drupal_set_message(t('A @quiz question could not be scored: No scoring info is available', array('@quiz' => QUIZ_NAME)), 'error');

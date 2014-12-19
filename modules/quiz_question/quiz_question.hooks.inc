@@ -232,26 +232,20 @@ function quiz_question_get_report($question_id, $question_vid, $result_id) {
 /**
  * Implements hook_quiz_question_score().
  */
-function quiz_question_quiz_question_score($quiz, Question $question, $result_id = NULL) {
-  if (!isset($quiz) && !isset($result_id)) {
+function quiz_question_quiz_question_score(Question $question, $result_id = NULL) {
+  if (NULL === $result_id) {
     return $question->max_score;
   }
 
-  if (!$handler = $question->getHandler()) {
-    return FALSE;
-  }
-
+  $handler = $question->getResponseHandler($result_id);
   $score = new stdClass();
-  $score->possible = $handler->getMaximumScore();
+  $score->possible = $question->getHandler()->getMaximumScore();
   $score->question_qid = $question->qid;
   $score->question_vid = $question->vid;
+  $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
+  $score->possible = $handler->getQuestionMaxScore();
+  $score->is_evaluated = $handler->isEvaluated();
 
-  if (isset($result_id)) {
-    $response_handler = $question->getResponseHandler($result_id);
-    $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
-    $score->possible = $response_handler->getQuestionMaxScore();
-    $score->is_evaluated = $response_handler->isEvaluated();
-  }
   return $score;
 }
 
