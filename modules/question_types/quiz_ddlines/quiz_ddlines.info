@@ -6,5 +6,3 @@ core = 7.x
 dependencies[] = quizz
 dependencies[] = quiz_question
 dependencies[] = image
-
-files[] = quiz_ddlines.classes.inc
