@@ -57,10 +57,10 @@ before_script:
   # ---------------------
   # Download
   # ---------------------
-  - sh -c "if [ ! -d "$CACHE" ];                 then mkdir $CACHE;  fi"
-  - sh -c "if [ ! -f "$CACHE/vhost.conf" ];      then wget https://cdn.rawgit.com/backdrop/backdrop/fe6e16b6114995eed008596aa7c733bc907a8fca/core/misc/travis-ci/vhost.conf -O $CACHE/vhost.conf; fi"
-  - sh -c "if [ ! -f "$CACHE/drupal.zip"];       then wget https://github.com/drupal/drupal/archive/7.34.zip -O $CACHE/drupal.zip; fi"
-  - sh -c "if [ ! -f "$CACHE/2189345-39.patch"]; then wget https://www.drupal.org/files/issues/2189345-39.patch -O $CACHE/2189345-39.patch; fi"
+  - sh -c "if [ ! -d "$CACHE" ];                  then mkdir $CACHE;  fi"
+  - sh -c "if [ ! -f "$CACHE/vhost.conf" ];       then wget https://cdn.rawgit.com/backdrop/backdrop/fe6e16b6114995eed008596aa7c733bc907a8fca/core/misc/travis-ci/vhost.conf -O $CACHE/vhost.conf; fi"
+  - sh -c "if [ ! -f "$CACHE/drupal.zip" ];       then wget https://github.com/drupal/drupal/archive/7.34.zip -O $CACHE/drupal.zip; fi"
+  - sh -c "if [ ! -f "$CACHE/2189345-39.patch" ]; then wget https://www.drupal.org/files/issues/2189345-39.patch -O $CACHE/2189345-39.patch; fi"
   
   # ---------------------
   # Install apache server
