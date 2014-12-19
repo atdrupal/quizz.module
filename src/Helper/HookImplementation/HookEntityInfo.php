@@ -46,26 +46,27 @@ class HookEntityInfo {
 
   private function getQuizInfo() {
     $entity_info = array(
-        'label'                     => QUIZ_NAME,
-        'description'               => t('!quiz entity', array('!quiz' => QUIZ_NAME)),
-        'entity class'              => 'Drupal\quizz\Entity\QuizEntity',
-        'controller class'          => 'Drupal\quizz\Entity\QuizController',
-        'metadata controller class' => 'Drupal\quizz\Entity\QuizMetadataController',
-        'views controller class'    => 'Drupal\quizz\Entity\QuizViewsController',
-        'base table'                => 'quiz_entity',
-        'revision table'            => 'quiz_entity_revision',
-        'fieldable'                 => TRUE,
-        'entity keys'               => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
-        'bundle keys'               => array('bundle' => 'type'),
-        'access callback'           => 'quiz_entity_access_callback',
-        'label callback'            => 'entity_class_label',
-        'uri callback'              => 'entity_class_uri',
-        'module'                    => 'quizz',
-        'bundles'                   => array(),
-        'view modes'                => array(
+        'label'                         => QUIZ_NAME,
+        'description'                   => t('!quiz entity', array('!quiz' => QUIZ_NAME)),
+        'entity class'                  => 'Drupal\quizz\Entity\QuizEntity',
+        'controller class'              => 'Drupal\quizz\Entity\QuizController',
+        'metadata controller class'     => 'Drupal\quizz\Entity\QuizMetadataController',
+        'extra fields controller class' => 'Drupal\quizz\Entity\QuizExtraFieldsController',
+        'views controller class'        => 'Drupal\quizz\Entity\QuizViewsController',
+        'base table'                    => 'quiz_entity',
+        'revision table'                => 'quiz_entity_revision',
+        'fieldable'                     => TRUE,
+        'entity keys'                   => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
+        'bundle keys'                   => array('bundle' => 'type'),
+        'access callback'               => 'quiz_entity_access_callback',
+        'label callback'                => 'entity_class_label',
+        'uri callback'                  => 'entity_class_uri',
+        'module'                        => 'quizz',
+        'bundles'                       => array(),
+        'view modes'                    => array(
             'question' => array('label' => t('Question'), 'custom settings' => TRUE),
         ),
-        'admin ui'                  => array(
+        'admin ui'                      => array(
             'path'             => 'admin/content/quiz',
             'file'             => 'quizz.pages.inc',
             'controller class' => 'Drupal\quizz\Entity\QuizUIController',
@@ -155,15 +156,20 @@ class HookEntityInfo {
   }
 
   private function getQuizAnswerTypeInfo() {
-    $question_entity_info = quiz_question_entity_info();
-
-    return array(
+    $info = array(
         'label'        => t('Answer type'),
         'plural label' => t('Answer types'),
         'description'  => t('Types of answer.'),
         'bundle of'    => 'quiz_result_answer',
         'admin ui'     => array(),
-      ) + $question_entity_info['quiz_question_type'];
+    );
+
+    $question_entity_info = quiz_question_entity_info();
+    if (isset($question_entity_info['quiz_question_type'])) {
+      $info += $question_entity_info['quiz_question_type'];
+    }
+
+    return $info;
   }
 
   private function getQuizAnswerInfo() {

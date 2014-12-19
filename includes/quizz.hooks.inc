@@ -61,13 +61,6 @@ function quizz_entity_info() {
 }
 
 /**
- * Implements hook_field_extra_fields().
- */
-function quizz_field_extra_fields() {
-  return quiz()->getHookImplementation()->getHookFieldExtraFields()->execute();
-}
-
-/**
  * Implements hook_permission().
  */
 function quizz_permission() {
@@ -370,16 +363,19 @@ function quiz_type_access($op, $type = NULL, $account = NULL) {
 /**
  * Access callback for quiz-entity.
  * @param string $op
- * @param string $type
+ * @param QuizEntity $quiz
  * @param stdClass $account
  */
-function quiz_entity_access_callback($op, $type = NULL, $account = NULL) {
+function quiz_entity_access_callback($op, $quiz = NULL, $account = NULL) {
   switch ($op) {
     case 'create':
       return user_access('create quiz content', $account);
     case 'update':
       return user_access('edit any quiz content', $account);
     case 'view':
+      if ((NULL !== $quiz) && !$quiz->status) {
+        return user_access('edit any quiz content', $account);
+      }
       return user_access('access quiz', $account);
   }
   return TRUE;
