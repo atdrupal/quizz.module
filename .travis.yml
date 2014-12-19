@@ -1,7 +1,7 @@
 language: php
 php:
-  - 5.3
-  - 5.4
+  #- 5.3
+  #- 5.4
   - 5.5
 
 branches:
@@ -10,9 +10,9 @@ branches:
 
 env:
   - SUITE=quiz
-  - SUITE=question
-  - SUITE=upgrade4x
-  - SUITE=upgrade5x
+  #- SUITE=question
+  #- SUITE=upgrade4x
+  #- SUITE=upgrade5x
 
 matrix:
   fast_finish: true
