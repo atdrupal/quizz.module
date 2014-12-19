@@ -1,10 +1,10 @@
-name = Drag and drop with lines for Quiz
-package = Quiz Question
-description = Drag and drop with lines question type for quiz.
+name = "Drag & drop with lines"
+package = "Quiz Question"
+description = "Drag and drop with lines question type for quiz"
 core = 7.x
 
 dependencies[] = quizz
 dependencies[] = quiz_question
 dependencies[] = image
 
-files[] = quiz_ddlines.classes.inc
+files[] = tests/DDLinesTestCase.test
