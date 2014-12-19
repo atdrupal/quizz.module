@@ -9,15 +9,15 @@ branches:
     - 7.x-6.x
 
 env:
-  - SUITE='quiz'
-  - SUITE='question'
-  - SUITE='upgrade4x'
-  - SUITE='upgrade5x'
+  - SUITE=quiz
+  - SUITE=question
+  - SUITE=upgrade4x
+  - SUITE=upgrade5x
 
 matrix:
   fast_finish: true
   allow_failures:
-    - SUITE: upgrade4x
+    - env: SUITE=upgrade4x
 
 mysql:
   database: drupal
