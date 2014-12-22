@@ -1,12 +1,6 @@
 <?php
+
 /**
- * @file
- * Handles the layout of the truefalse answering form. 
- *
- *
- * Variables available:
- * - $form
+ * Handles the layout of the truefalse answering form.
  */
 print drupal_render($form);
-
-?>
