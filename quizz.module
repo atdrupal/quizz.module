@@ -189,16 +189,6 @@ function quizz_add_qestion_to_quiz_action($question) {
 }
 
 /**
- * Updates the max_score property on the specified quizzes
- *
- * @param $quiz_vids
- *  Array with the vid's of the quizzes to update
- */
-function quizz_update_max_score_properties($quiz_vids) {
-  return quizz_entity_controller()->getMaxScoreWriter()->update($quiz_vids);
-}
-
-/**
  * Check if the question has already been answered in the requested attempt.
  *
  * @return bool

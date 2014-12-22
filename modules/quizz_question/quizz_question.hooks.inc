@@ -295,7 +295,8 @@ function _quiz_delete_question(&$question, $only_this_version) {
 
   $quizzes_to_update = array();
   while ($quizzes_to_update[] = $res->fetchField()) {
-
+  
   }
-  quizz_update_max_score_properties($quizzes_to_update);
+
+  return quizz_entity_controller()->getMaxScoreWriter()->update($quizzes_to_update);
 }
