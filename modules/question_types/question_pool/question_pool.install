@@ -83,6 +83,6 @@ function question_pool_quiz_question_upgrade_pre_drop_temp_columns() {
  * Make sure update script from main module is run before all.
  */
 function question_pool_update_7600() {
-  require_once drupal_get_path('module', 'quizz_question') . '/quiz_question.install';
+  require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }

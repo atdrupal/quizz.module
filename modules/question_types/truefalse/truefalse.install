@@ -75,6 +75,6 @@ function truefalse_quiz_question_upgrade_pre_drop_temp_columns() {
 }
 
 function truefalse_update_7600() {
-  require_once drupal_get_path('module', 'quizz_question') . '/quiz_question.install';
+  require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }

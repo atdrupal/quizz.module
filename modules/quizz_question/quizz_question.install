@@ -4,13 +4,6 @@ use Drupal\quizz_question\Entity\QuestionController;
 use Drupal\quizz_question\Schema\Schema7060;
 
 /**
- * @file
- * quiz_question.install
- *
- * The installer file for quiz_question.
- */
-
-/**
  * Implements hook_schema().
  */
 function quizz_question_schema() {

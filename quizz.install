@@ -72,7 +72,7 @@ function quizz_update_7600() {
   drupal_flush_all_caches();
 
   // …
-  require_once drupal_get_path('module', 'quizz_question') . '/quiz_question.install';
+  require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   quizz_question_update_7600();
 
   return 'Create tables: quiz_type, quiz_entity, quiz_entity_revision.';
