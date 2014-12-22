@@ -2,17 +2,19 @@
 
 namespace Drupal\quizz\Form;
 
+use Drupal\quizz\Entity\QuizEntity;
+
 abstract class QuizQuestionsBaseForm {
 
   /**
    * Adds checkbox for creating new revision. Checks it by default if answers exists.
    *
    * @param array $form FAPI form(array)
-   * @param stdClass $quiz Quiz entity(object)
+   * @param QuizEntity $quiz
    */
   protected function addRevisionCheckbox(&$form, &$quiz) {
     // Recommend and preselect to create the quiz as a new revision if it already has been answered
-    if (quizz()->getQuizHelper()->isAnswered($quiz)) {
+    if ($quiz->isAnswered()) {
       $rev_default = TRUE;
       $rev_description = t('This quiz has been answered. To maintain correctness of existing answers and reports, changes should be saved as a new revision.');
     }
