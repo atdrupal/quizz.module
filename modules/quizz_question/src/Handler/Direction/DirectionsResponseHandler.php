@@ -1,6 +1,7 @@
 <?php
 
-use Drupal\quizz_question\QuestionHandler;
+namespace Drupal\quizz_question\Handler\Direction;
+
 use Drupal\quizz_question\ResponseHandler;
 
 /**
@@ -18,64 +19,9 @@ use Drupal\quizz_question\ResponseHandler;
  */
 
 /**
- * Extension of QuizQuestion.
- */
-class QuizDirectionsQuestion extends QuestionHandler {
-
-  protected $body_field_title = 'Direction';
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validate(array &$form) {
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onSave($is_new = FALSE) {
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAnsweringForm(array $form_state = NULL, $result_id) {
-    $form = parent::getAnsweringForm($form_state, $result_id);
-    $form['tries'] = array('#type' => 'hidden', '#value' => 0);
-    $form['empty_space'] = array('#type' => 'markup', '#value' => '<br/>');
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCreationForm(array &$form_state = NULL) {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getMaximumScore() {
-    return 0;
-  }
-
-  public function isGraded() {
-    return FALSE;
-  }
-
-  public function hasFeedback() {
-    return FALSE;
-  }
-
-}
-
-/**
  * Extension of QuizQuestionResponse
  */
-class QuizDirectionsResponse extends ResponseHandler {
+class DirectionsResponseHandler extends ResponseHandler {
 
   /**
    * {@inheritdoc}
