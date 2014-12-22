@@ -11,7 +11,7 @@
 /**
  * Implements hook_uninstall().
  */
-function quiz_ddlines_uninstall() {
+function quizz_ddlines_uninstall() {
   // Delete instance:
 
   $instance = field_info_instance('node', 'field_image', 'quiz_ddlines');
@@ -34,7 +34,7 @@ function quiz_ddlines_uninstall() {
 /**
  * Implements hook_schema().
  */
-function quiz_ddlines_schema() {
+function quizz_ddlines_schema() {
   $schema['quiz_ddlines_question'] = array(
       'fields'      => array(
           'qid'              => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
@@ -82,10 +82,9 @@ function quiz_ddlines_schema() {
 }
 
 /**
- * Adding Execution mode column. Makes it possible to
- * run the test in two different modes.
+ * Adding Execution mode column. Makes it possible to run the test in two different modes.
  */
-function quiz_ddlines_update_7401() {
+function quizz_ddlines_update_7401() {
   // Add field for execution mode
   $spec = array(
       'type'        => 'int',
@@ -100,7 +99,7 @@ function quiz_ddlines_update_7401() {
 /**
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
-function quiz_ddlines_quiz_question_upgrade_schema_node_to_entity() {
+function quizz_ddlines_quiz_question_upgrade_schema_node_to_entity() {
   if (db_table_exists('quiz_ddlines_node')) {
     $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
     $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
@@ -113,7 +112,7 @@ function quiz_ddlines_quiz_question_upgrade_schema_node_to_entity() {
 /**
  * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
  */
-function quiz_ddlines_quiz_question_upgrade_pre_drop_temp_columns() {
+function quizz_ddlines_quiz_question_upgrade_pre_drop_temp_columns() {
   // quiz_ddlines_question
   db_query(
     "UPDATE {quiz_ddlines_question} as ddq"
@@ -134,7 +133,7 @@ function quiz_ddlines_quiz_question_upgrade_pre_drop_temp_columns() {
 /**
  * Make sure update script from main module is run before all.
  */
-function quiz_ddlines_update_7600() {
+function quizz_ddlines_update_7600() {
   require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }
@@ -142,7 +141,7 @@ function quiz_ddlines_update_7600() {
 /**
  * Convert global configuration for questions to question type entity.
  */
-function quiz_ddlines_update_7601() {
+function quizz_ddlines_update_7601() {
   foreach (quizz_question_get_types() as $question_type) {
     if ('quiz_ddlines' === $question_type->handler) {
       $question_type

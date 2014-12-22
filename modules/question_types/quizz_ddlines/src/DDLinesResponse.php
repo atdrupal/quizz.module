@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz_ddlines;
+namespace Drupal\quizz_ddlines;
 
 use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz_question\ResponseHandler;
@@ -98,7 +98,7 @@ class DDLinesResponse extends ResponseHandler {
     $correct_count = 0;
 
     foreach ($results as $result) {
-      $correct_count += ($result == QUIZ_DDLINES_CORRECT) ? 1 : 0;
+      $correct_count += ($result == QUIZZ_DDLINES_CORRECT) ? 1 : 0;
     }
 
     return $correct_count;
@@ -255,7 +255,7 @@ class DDLinesResponse extends ResponseHandler {
       $source_id = $element->label->id;
 
       if (isset($this->user_answers[$source_id])) {
-        $results[$element->label->id] = ($this->user_answers[$source_id] == $element->hotspot->id) ? QUIZ_DDLINES_CORRECT : QUIZ_DDLINES_WRONG;
+        $results[$element->label->id] = ($this->user_answers[$source_id] == $element->hotspot->id) ? QUIZZ_DDLINES_CORRECT : QUIZZ_DDLINES_WRONG;
       }
       else {
         $results[$element->label->id] = 0;

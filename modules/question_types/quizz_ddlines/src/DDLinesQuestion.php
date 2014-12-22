@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz_ddlines;
+namespace Drupal\quizz_ddlines;
 
 use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_question\QuestionHandler;

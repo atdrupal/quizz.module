@@ -5,19 +5,19 @@
  */
 use Drupal\quizz_question\Entity\QuestionType;
 
-define('QUIZ_DDLINES_WRONG', 1);
-define('QUIZ_DDLINES_CORRECT', 2);
+define('QUIZZ_DDLINES_WRONG', 1);
+define('QUIZZ_DDLINES_CORRECT', 2);
 
 /**
  * Implements hook_quiz_question_info().
  */
-function quiz_ddlines_quiz_question_info() {
+function quizz_ddlines_quiz_question_info() {
   return array(
       'quiz_ddlines' => array(
           'name'              => t('Drag and drop question with lines'),
           'description'       => t('This provides drag and drop question type with lines.'),
-          'question provider' => 'Drupal\quiz_ddlines\DDLinesQuestion',
-          'response provider' => 'Drupal\quiz_ddlines\DDLinesResponse',
+          'question provider' => 'Drupal\quizz_ddlines\DDLinesQuestion',
+          'response provider' => 'Drupal\quizz_ddlines\DDLinesResponse',
           'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
@@ -26,7 +26,7 @@ function quiz_ddlines_quiz_question_info() {
 /**
  * Implements hook_image_default_styles
  */
-function quiz_ddlines_image_default_styles() {
+function quizz_ddlines_image_default_styles() {
   return array(
       'quiz_ddlines' => array(
           'effects' => array(
@@ -43,7 +43,7 @@ function quiz_ddlines_image_default_styles() {
 /**
  * Implements hook_theme().
  */
-function quiz_ddlines_theme() {
+function quizz_ddlines_theme() {
   return array(
       'quiz_ddlines_response' => array(
           'variables' => array('result' => array()),
@@ -88,14 +88,14 @@ function quiz_ddlines_quiz_question_config(QuestionType $question_type) {
       '#default_value' => $question_type->getConfig('quiz_ddlines_feedback_wrong', ''),
   );
 
-  $form['#validate'][] = 'quiz_ddlines_config_validate';
+  $form['#validate'][] = 'quizz_ddlines_config_validate';
   return $form;
 }
 
 /**
  * Validate the config form values
  */
-function quiz_ddlines_config_validate($form, $form_state) {
+function quizz_ddlines_config_validate($form, $form_state) {
   $int_fields = array('quiz_ddlines_canvas_width', 'quiz_ddlines_canvas_height', 'quiz_ddlines_hotspot_radius', 'quiz_ddlines_pointer_radius');
   foreach ($int_fields as $field) {
     if (!quizz_valid_integer($form_state['values'][$field])) {
