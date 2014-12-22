@@ -5,17 +5,15 @@
  */
 class QuizNavigationTestCase extends QuizTestCase {
 
+  protected $extraModules = array('quizz_truefalse');
+  protected $questionHandlers = array('truefalse');
+
   public static function getInfo() {
     return array(
         'name'        => 'Quiz navigation',
         'description' => 'Test cases for Quiz navigation.',
         'group'       => 'Quiz taking',
     );
-  }
-
-  public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionHandler = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**

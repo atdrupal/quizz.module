@@ -4,6 +4,7 @@ use Drupal\quizz\Entity\QuizEntity;
 
 class QuestionPoolTestCase extends QuizTestCase {
 
+  protected $extraModules = array('quizz_truefalse', 'question_pool', 'entityreference');
   protected $questionHandler = 'pool';
   protected $questionHandlers = array('truefalse');
 
@@ -13,13 +14,6 @@ class QuestionPoolTestCase extends QuizTestCase {
         'description' => 'Test cases for pool question type.',
         'group'       => 'Quiz question',
     );
-  }
-
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'question_pool';
-    $modules[] = 'entityreference';
-    $modules[] = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   public function testCreateQuestion() {

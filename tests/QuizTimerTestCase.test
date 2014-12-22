@@ -2,17 +2,15 @@
 
 class QuizTimerTestCase extends QuizTestCase {
 
+  protected $extraModules = array('quizz_truefalse');
+  protected $questionHandlers = array('truefalse');
+
   public static function getInfo() {
     return array(
         'name'        => t('Quiz timer'),
         'description' => t('Test cases for Quiz and question timer behaviors.'),
         'group'       => t('Quiz'),
     );
-  }
-
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionHandler = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**

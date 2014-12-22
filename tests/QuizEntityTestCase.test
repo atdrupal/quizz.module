@@ -8,17 +8,15 @@ use Drupal\quizz\Entity\QuizType;
  */
 class QuizEntityTestCase extends QuizTestCase {
 
+  protected $extraModules = array('quizz_truefalse');
+  protected $questionHandlers = array('truefalse');
+
   public static function getInfo() {
     return array(
         'name'        => t('Quiz entity'),
         'description' => t('Test cases for Quiz entity.'),
         'group'       => t('Quiz'),
     );
-  }
-
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionHandler = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**
@@ -252,7 +250,8 @@ class QuizEntityTestCase extends QuizTestCase {
         'quiz_question_body[und][0][value]' => 'Revision FALSE',
         'correct_answer'                    => 0,
         'revision'                          => 1,
-        'log'                               => 'Revision FALSE'), t('Save question'));
+        'log'                               => 'Revision FALSE'
+      ), t('Save question'));
 
     // Finish on same revision.
     $this->drupalLogin($this->user);

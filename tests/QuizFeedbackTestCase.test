@@ -7,6 +7,8 @@ use Drupal\quizz\Entity\QuizEntity;
  */
 class QuizFeedbackTestCase extends QuizTestCase {
 
+  protected $extraModules = array('quizz_truefalse');
+  protected $questionHandlers = array('truefalse');
   protected $extraUserPermissions = array('view any quiz question correct response');
 
   public static function getInfo() {
@@ -15,11 +17,6 @@ class QuizFeedbackTestCase extends QuizTestCase {
         'description' => t('Test cases for Quiz feedback.'),
         'group'       => t('Quiz'),
     );
-  }
-
-  public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionHandler = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**

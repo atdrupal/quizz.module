@@ -2,7 +2,8 @@
 
 class QuizPageTestCase extends QuizTestCase {
 
-  protected $questionHandler = 'quiz_page';
+  protected $extraModules = array('quizz_truefalse', 'quiz_page');
+  protected $questionHandlers = array('truefalse', 'quiz_page');
 
   public static function getInfo() {
     return array(
@@ -10,23 +11,6 @@ class QuizPageTestCase extends QuizTestCase {
         'description' => t('Test cases for quiz pages'),
         'group'       => 'Quiz question',
     );
-  }
-
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'quiz_page';
-    $modules[] = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
-  }
-
-  /**
-   * Test adding and taking a quiz page question.
-   */
-  public function testCreateQuizQuestion($settings = array()) {
-    return $this->drupalCreateQuestion(array(
-          'type'  => $this->questionHandler,
-          'title' => 'PG 1 title',
-          'body'  => 'PG 1 body text.',
-        ) + $settings);
   }
 
   private function setupQuizPageParentage() {

@@ -6,6 +6,7 @@
 class TrueFalseTestCase extends QuizTestCase {
 
   protected $questionHandler = 'truefalse';
+  protected $extraModules = array('quizz_truefalse');
 
   public static function getInfo() {
     return array(
@@ -13,11 +14,6 @@ class TrueFalseTestCase extends QuizTestCase {
         'description' => t('Test cases for true or false question type.'),
         'group'       => 'Quiz question',
     );
-  }
-
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'truefalse';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**

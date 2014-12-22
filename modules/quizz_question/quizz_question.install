@@ -41,7 +41,7 @@ function quizz_question_update_7500() {
   db_add_field('quiz_question_properties', 'feedback_format', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE));
 
   // Migrate the truefalse feedback, since we have generic feedback now
-  if (module_exists('truefalse') && db_table_exists('quiz_truefalse_node')) {
+  if (module_exists('quizz_truefalse') && db_table_exists('quiz_truefalse_node')) {
     db_query(
       "UPDATE {quiz_question_properties} qqp
         INNER JOIN {quiz_truefalse_node} qtn ON (qtn.vid = qqp.vid)

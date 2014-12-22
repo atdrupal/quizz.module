@@ -8,8 +8,8 @@
  */
 class QuizRandomTestCase extends QuizTestCase {
 
-  protected $questionHandler = 'truefalse';
-  protected $extraModules = array('quiz_page', 'taxonomy', 'truefalse');
+  protected $questionHandlers = array('truefalse');
+  protected $extraModules = array('quiz_page', 'taxonomy', 'quizz_truefalse');
 
   public static function getInfo() {
     return array(
@@ -176,11 +176,11 @@ class QuizRandomTestCase extends QuizTestCase {
         "qr_pids[{$q2->qid}-{$q2->vid}]" => 4,
         "qr_pids[{$q3->qid}-{$q3->vid}]" => 5,
         // Mirror what JS would have done by adjusting the weights.
-        "weights[{$p1->qid}-{$p1->vid}]"  => 2,
-        "weights[{$q1->qid}-{$q1->vid}]"  => 3,
-        "weights[{$q2->qid}-{$q2->vid}]"  => 4,
-        "weights[{$p2->qid}-{$p2->vid}]"  => 3,
-        "weights[{$q3->qid}-{$q3->vid}]"  => 4,
+        "weights[{$p1->qid}-{$p1->vid}]" => 2,
+        "weights[{$q1->qid}-{$q1->vid}]" => 3,
+        "weights[{$q2->qid}-{$q2->vid}]" => 4,
+        "weights[{$p2->qid}-{$p2->vid}]" => 3,
+        "weights[{$q3->qid}-{$q3->vid}]" => 4,
       ), t('Submit'));
 
     for ($i = 1; $i <= 5; $i++) {

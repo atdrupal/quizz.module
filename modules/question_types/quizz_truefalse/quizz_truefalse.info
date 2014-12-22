@@ -5,5 +5,4 @@ core = 7.x
 dependencies[] = quizz
 dependencies[] = quizz_question
 
-files[] = truefalse.classes.inc
-files[] = tests/TrueFalseTestCase.test
+files[] = tests/QuizzTrueFalseTestCase.test
