@@ -40,14 +40,14 @@ function quizz_question_update_7500() {
   db_add_field('quiz_question_properties', 'feedback', array('type' => 'text'));
   db_add_field('quiz_question_properties', 'feedback_format', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE));
 
-  if (module_exists('truefalse')) {
-    // Migrate the truefalse feedback, since we have generic feedback now.
-    $filter = filter_default_format();
-    db_query("UPDATE {quiz_question_properties} qqp
-    INNER JOIN {quiz_truefalse_node} qtn ON (qtn.vid = qqp.vid)
-    SET qqp.feedback = qtn.feedback, qqp.feedback_format = :format", array(':format' => $filter));
-
-    // Drop old field.
+  // Migrate the truefalse feedback, since we have generic feedback now
+  if (module_exists('truefalse') && db_table_exists('quiz_truefalse_node')) {
+    db_query(
+      "UPDATE {quiz_question_properties} qqp
+        INNER JOIN {quiz_truefalse_node} qtn ON (qtn.vid = qqp.vid)
+        SET qqp.feedback = qtn.feedback, qqp.feedback_format = :format", array(
+        ':format' => filter_default_format()
+    ));
     db_drop_field('quiz_truefalse_node', 'feedback');
   }
 
