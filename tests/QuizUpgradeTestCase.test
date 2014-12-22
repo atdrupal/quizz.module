@@ -7,7 +7,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   protected static $testDumpFile = '…';
   protected static $dependencies = array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload');
   protected static $testDescription = 'Test an upgrade from various Quiz versions.';
-  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quizz_question', 'quizz_scale', 'short_answer', 'quizz_truefalse');
+  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quizz_question', 'short_answer', 'quizz_truefalse');
 
   /**
    * Some warnings are produced by other modules, we cann't do anything, just
@@ -34,7 +34,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $sql_1 = 'UPDATE {system} SET name = :name WHERE name = :old_name AND type = :module';
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz', 'name' => 'quizz'));
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz_question', 'name' => 'quizz_question'));
-    db_query($sql_1, array(':module' => 'module', 'old_name' => 'scale', 'name' => 'quizz_scale'));
+    # db_query($sql_1, array(':module' => 'module', 'old_name' => 'scale', 'name' => 'quizz_scale'));
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'truefalse', 'name' => 'quizz_truefalse'));
 
     module_enable(static::$dependencies);
@@ -59,7 +59,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
         'long_answer'  => db_query($sql, array(':type' => 'long_answer'))->fetchColumn(),
         'matching'     => db_query($sql, array(':type' => 'matching'))->fetchColumn(),
         'quiz_page'    => db_query($sql, array(':type' => 'quiz_page'))->fetchColumn(),
-        'scale'        => db_query($sql, array(':type' => 'scale'))->fetchColumn(),
+        # 'scale'        => db_query($sql, array(':type' => 'scale'))->fetchColumn(),
         'short_answer' => db_query($sql, array(':type' => 'short_answer'))->fetchColumn(),
         'truefalse'    => db_query($sql, array(':type' => 'truefalse'))->fetchColumn(),
     );
