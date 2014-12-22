@@ -9,7 +9,7 @@ class QuizNavigationTestCase extends QuizTestCase {
     return array(
         'name'        => 'Quiz navigation',
         'description' => 'Test cases for Quiz navigation.',
-        'group'       => 'Quiz',
+        'group'       => 'Quiz taking',
     );
   }
 
