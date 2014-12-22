@@ -169,16 +169,6 @@ function quiz_action_options($entity_type = 'all') {
 }
 
 /**
- * Finds out if a quiz has been answered or not.
- *
- * @return
- *   TRUE if there exists answers to the current question.
- */
-function quizz_has_been_answered($quiz) {
-  return quizz()->getQuizHelper()->isAnswered($quiz);
-}
-
-/**
  * Action to add questions to the current quiz.
  *
  * @param \Drupal\quizz_question\Entity\Question $question

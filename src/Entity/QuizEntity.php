@@ -203,4 +203,14 @@ class QuizEntity extends Entity {
     return TRUE;
   }
 
+  /**
+   * Finds out if a quiz has been answered or not.
+   *
+   * @return bool
+   */
+  public function isAnswered() {
+    $sql = 'SELECT 1 FROM {quiz_results} r WHERE r.quiz_vid = :vid';
+    return db_query($sql, array(':vid' => $this->vid))->fetchColumn() ? TRUE : FALSE;
+  }
+
 }

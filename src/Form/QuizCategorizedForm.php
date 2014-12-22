@@ -171,7 +171,7 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
 
     // Update the refresh latest quizzes table so that we know what the users latest quizzes are
     if ($quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1)) {
-      $is_new_revision = quizz_has_been_answered($quiz);
+      $is_new_revision = $quiz->isAnswered();
     }
     else {
       $is_new_revision = (bool) $form_state['values']['new_revision'];

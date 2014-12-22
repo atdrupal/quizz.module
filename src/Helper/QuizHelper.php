@@ -70,22 +70,4 @@ class QuizHelper {
     return ($passed !== FALSE && $passed > 0);
   }
 
-  /**
-   * Finds out if a quiz has been answered or not.
-   *
-   * @return
-   *   TRUE if there exists answers to the current question.
-   */
-  public function isAnswered($quiz) {
-    if (!isset($quiz->qid)) {
-      return FALSE;
-    }
-    $query = db_select('quiz_results', 'result');
-    $query->addField('result', 'result_id');
-    $query->condition('quiz_qid', $quiz->qid);
-    $query->condition('quiz_vid', $quiz->vid);
-    $query->range(0, 1);
-    return $query->execute()->rowCount() > 0;
-  }
-
 }

@@ -36,7 +36,7 @@ class RevisionActionsForm {
     // Create a form element for each quiz
     foreach ($relationships as $relationship) {
       $quiz = quizz_load($relationship->quiz_qid);
-      $answered = quizz_has_been_answered($quiz);
+      $answered = $quiz->isAnswered();
 
       $form['quizzes']['#tree'] = TRUE;
       $form['quizzes'][$quiz->nid]['revise'] = array(

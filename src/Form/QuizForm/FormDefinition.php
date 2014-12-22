@@ -522,7 +522,7 @@ class FormDefinition extends FormHelper {
         ),
     );
 
-    if (quizz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
+    if ($this->quiz->isAnswered() && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
       $this->quiz->revision = 1;
       $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
     }
@@ -556,7 +556,7 @@ class FormDefinition extends FormHelper {
       $form['revision_information']['log']['#type'] = 'value';
       $form['revision_information']['log']['#value'] = $form['revision_information']['log']['#default_value'];
       $form['revision_information']['#access'] = FALSE;
-      if (quizz_has_been_answered($this->quiz)) {
+      if ($this->quiz->isAnswered()) {
         $this->quiz->revision = 1;
         $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
       }

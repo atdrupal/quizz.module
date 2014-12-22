@@ -208,7 +208,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     }
 
     // We need to revise the quiz if it has been answered.
-    if (quizz_has_been_answered($quiz)) {
+    if ($quiz->isAnswered()) {
       $quiz->is_new_revision = 1;
       $quiz->clone_relationships = 1;
       $quiz->save();
