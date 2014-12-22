@@ -31,24 +31,24 @@ require_once dirname(__FILE__) . '/includes/quizz.hooks.inc';
 /**
  * Quiz name.
  */
-if (!defined('QUIZ_NAME')) {
-  define('QUIZ_NAME', t(variable_get('quiz_name', 'Quiz')));
+if (!defined('QUIZZ_NAME')) {
+  define('QUIZZ_NAME', t(variable_get('quiz_name', 'Quiz')));
 }
 
 /*
  * Define question statuses…
  */
-define('QUIZ_QUESTION_RANDOM', 0);
-define('QUIZ_QUESTION_ALWAYS', 1);
-define('QUIZ_QUESTION_NEVER', 2);
-define('QUIZ_QUESTION_CATEGORIZED_RANDOM', 3);
+define('QUIZZ_QUESTION_RANDOM', 0);
+define('QUIZZ_QUESTION_ALWAYS', 1);
+define('QUIZZ_QUESTION_NEVER', 2);
+define('QUIZZ_QUESTION_CATEGORIZED_RANDOM', 3);
 
 /**
  * Define options for keeping results.
  */
-define('QUIZ_KEEP_BEST', 0);
-define('QUIZ_KEEP_LATEST', 1);
-define('QUIZ_KEEP_ALL', 2);
+define('QUIZZ_KEEP_BEST', 0);
+define('QUIZZ_KEEP_LATEST', 1);
+define('QUIZZ_KEEP_ALL', 2);
 
 /**
  * Factory to create quiz helpers wrapper.
@@ -181,7 +181,7 @@ function quiz_has_been_answered($quiz) {
 /**
  * Action to add questions to the current quiz.
  *
- * @param \Drupal\quiz_question\Entity\Question $question
+ * @param \Drupal\quizz_question\Entity\Question $question
  * @return bool
  */
 function quiz_add_question_to_quiz($question) {

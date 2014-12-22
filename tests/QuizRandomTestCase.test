@@ -133,7 +133,7 @@ class QuizRandomTestCase extends QuizTestCase {
     list($term1, $term2) = $this->setupCategorizedRandomQuestions();
 
     // Create quiz with two terms
-    $quiz = $this->drupalCreateQuiz(array('randomization' => QUIZ_QUESTION_CATEGORIZED_RANDOM));
+    $quiz = $this->drupalCreateQuiz(array('randomization' => QUIZZ_QUESTION_CATEGORIZED_RANDOM));
     $quiz_term1 = array('qid' => $quiz->qid, 'vid' => $quiz->vid, 'tid' => $term1->tid, 'max_score' => 1, 'number' => 2, 'weight' => 0);
     $quiz_term2 = array('qid' => $quiz->qid, 'vid' => $quiz->vid, 'tid' => $term2->tid, 'max_score' => 1, 'number' => 2, 'weight' => 0);
     drupal_write_record('quiz_terms', $quiz_term1);

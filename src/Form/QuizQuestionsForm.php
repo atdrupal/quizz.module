@@ -22,7 +22,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     // Display questions in this quiz.
     $form['question_list'] = array(
         '#type'           => 'fieldset',
-        '#title'          => t('Questions in this @quiz', array('@quiz' => QUIZ_NAME)),
+        '#title'          => t('Questions in this @quiz', array('@quiz' => QUIZZ_NAME)),
         '#theme'          => 'question_selection_table',
         '#collapsible'    => TRUE,
         '#attributes'     => array('id' => 'mq-fieldset'),
@@ -35,12 +35,12 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     // @todo deal with $include_random
     if (!$relationships = $quiz->getQuestionIO()->getQuestionList()) {
       $form['question_list']['no_questions'] = array(
-          '#markup' => '<div id = "no-questions">' . t('There are currently no questions in this @quiz. Assign existing questions by using the question browser below. You can also use the links above to create new questions.', array('@quiz' => QUIZ_NAME)) . '</div>',
+          '#markup' => '<div id = "no-questions">' . t('There are currently no questions in this @quiz. Assign existing questions by using the question browser below. You can also use the links above to create new questions.', array('@quiz' => QUIZZ_NAME)) . '</div>',
       );
     }
 
     // We add the questions to the form array
-    $types = quiz_question_get_handler_info();
+    $types = quizz_question_get_handler_info();
     $this->addQuestionsToForm($form, $relationships, $quiz, $types);
 
     // Show the number of questions in the table header.
@@ -210,7 +210,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       if ($quiz->randomization == 2) {
         $form[$fieldset]['compulsories'][$id] = array(
             '#type'          => 'checkbox',
-            '#default_value' => ($relationship->question_status == QUIZ_QUESTION_ALWAYS) ? 1 : 0,
+            '#default_value' => ($relationship->question_status == QUIZZ_QUESTION_ALWAYS) ? 1 : 0,
             '#attributes'    => array('class' => array('q-compulsory')),
         );
       }
@@ -369,7 +369,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     if (empty($term_id)) {
       $assigned_random = 0;
       foreach ($relationships as $relationship) {
-        if (QUIZ_QUESTION_RANDOM == $relationship->question_status) {
+        if (QUIZZ_QUESTION_RANDOM == $relationship->question_status) {
           ++$assigned_random;
         }
       }
@@ -377,7 +377,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       // Adjust number of random questions downward to match number of selected questions..
       if ($num_random > $assigned_random) {
         $num_random = $assigned_random;
-        drupal_set_message(t('The number of random questions for this @quiz have been lowered to %anum to match the number of questions you assigned.', array('@quiz' => QUIZ_NAME, '%anum' => $assigned_random), array('langcode' => 'warning')));
+        drupal_set_message(t('The number of random questions for this @quiz have been lowered to %anum to match the number of questions you assigned.', array('@quiz' => QUIZZ_NAME, '%anum' => $assigned_random), array('langcode' => 'warning')));
       }
     }
     else {
@@ -385,7 +385,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       $available_random = $quiz->getQuestionIO()->getRandomTaxonomyQuestionIds($term_id, $num_random);
       if ($num_random > $available_random) {
         $num_random = $available_random;
-        drupal_set_message(t('There are currently not enough questions assigned to this term (@random). Please lower the number of random quetions or assign more questions to this taxonomy term before taking this @quiz.', array('@random' => $available_random, '@quiz' => QUIZ_NAME)), 'error');
+        drupal_set_message(t('There are currently not enough questions assigned to this term (@random). Please lower the number of random quetions or assign more questions to this taxonomy term before taking this @quiz.', array('@random' => $available_random, '@quiz' => QUIZZ_NAME)), 'error');
       }
     }
 
@@ -393,7 +393,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     $query = db_select('quiz_relationship', 'qnr');
     $query->addExpression('SUM(max_score)', 'sum');
     $query->condition('quiz_vid', $quiz->vid);
-    $query->condition('question_status', QUIZ_QUESTION_ALWAYS);
+    $query->condition('question_status', QUIZZ_QUESTION_ALWAYS);
     $score = $query->execute()->fetchAssoc();
 
     // Update the quiz's properties.
@@ -406,7 +406,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       drupal_set_message(t('Questions updated successfully.'));
     }
     else {
-      drupal_set_message(t('There was an error updating the @quiz.', array('@quiz' => QUIZ_NAME)), 'error');
+      drupal_set_message(t('There was an error updating the @quiz.', array('@quiz' => QUIZZ_NAME)), 'error');
     }
   }
 
@@ -469,11 +469,11 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
           'qr_pid'                => $qr_pids[$id] > 0 ? $qr_pids[$id] : NULL,
           'qr_id'                 => $qr_ids[$id] > 0 ? $qr_ids[$id] : NULL,
           'refresh'               => isset($refreshes[$id]) && $refreshes[$id] == 1,
-          'question_status'       => QUIZ_QUESTION_ALWAYS,
+          'question_status'       => QUIZZ_QUESTION_ALWAYS,
       ));
 
       if (isset($compulsories) && $compulsories[$id] != 1) {
-        $relationship->question_status = QUIZ_QUESTION_RANDOM;
+        $relationship->question_status = QUIZZ_QUESTION_RANDOM;
         $max_scores[$id] = $quiz->max_score_for_random;
       }
 

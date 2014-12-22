@@ -130,7 +130,7 @@ class QuizResultTestCase extends QuizTestCase {
     // ------------------------------------------
     // Test QUIZ_KEEP_ALL option
     // ------------------------------------------
-    $quiz->keep_results = QUIZ_KEEP_ALL;
+    $quiz->keep_results = QUIZZ_KEEP_ALL;
     entity_save('quiz_entity', $quiz);
 
     // Create 2 100% results.
@@ -149,7 +149,7 @@ class QuizResultTestCase extends QuizTestCase {
     // ------------------------------------------
     // Test QUIZ_KEEP_LATEST option
     // ------------------------------------------
-    $quiz->keep_results = QUIZ_KEEP_LATEST;
+    $quiz->keep_results = QUIZZ_KEEP_LATEST;
     entity_save('quiz_entity', $quiz);
 
     // Create a 50% result.
@@ -168,7 +168,7 @@ class QuizResultTestCase extends QuizTestCase {
     // ------------------------------------------
     // Test QUIZ_KEEP_BEST option
     // ------------------------------------------
-    $quiz->keep_results = QUIZ_KEEP_BEST;
+    $quiz->keep_results = QUIZZ_KEEP_BEST;
     entity_save('quiz_entity', $quiz);
 
     $this->drupalGet("quiz/$quiz->qid/take");
@@ -224,7 +224,7 @@ class QuizResultTestCase extends QuizTestCase {
 
     // Take it again, ensure the correct answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->drupalPost(NULL, array('build_on_last' => 'correct'), t('Start @quiz', array('@quiz' => QUIZZ_NAME)));
     $this->assertFieldChecked("edit-question-{$question_1->qid}-answer-1");
     $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->assertNoFieldChecked("edit-question-{$question_2->qid}-answer-1");
@@ -240,7 +240,7 @@ class QuizResultTestCase extends QuizTestCase {
 
     // Take the quiz with this revision.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZZ_NAME)));
     $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->drupalPost(NULL, array("question[$question_2->qid][answer]" => 0), t('Next'));
     $this->drupalPost(NULL, array("question[$question_3->qid][answer]" => 1), t('Next'));
@@ -248,7 +248,7 @@ class QuizResultTestCase extends QuizTestCase {
 
     // Take it again, ensure all the answers are prefilled.
     $this->drupalGet("quiz/$quiz->qid/take");
-    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZ_NAME)));
+    $this->drupalPost(NULL, array('build_on_last' => 'all'), t('Start @quiz', array('@quiz' => QUIZZ_NAME)));
     $this->assertFieldChecked("edit-question-{$question_1->qid}-answer-1");
     $this->drupalPost(NULL, array("question[$question_1->qid][answer]" => 1), t('Next'));
     $this->assertFieldChecked("edit-question-{$question_2->qid}-answer-0");

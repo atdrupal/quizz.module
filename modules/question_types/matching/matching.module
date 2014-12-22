@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 
 /**
  * @file
@@ -34,7 +34,7 @@ function matching_quiz_question_info() {
           'description'       => t('Matching question type for quiz module. A question type for the quiz module: allows you to create matching type questions, which connect terms with one another.'),
           'question provider' => 'MatchingQuestion',
           'response provider' => 'MatchingResponse',
-          'module'            => 'quiz_question', // All wrapper functions are in that module.
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
 }

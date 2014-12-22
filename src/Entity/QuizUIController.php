@@ -8,7 +8,7 @@ class QuizUIController extends EntityDefaultUIController {
 
   public function hook_menu() {
     $items = parent::hook_menu();
-    $items['admin/content/quiz']['type'] = MENU_LOCAL_TASK;
+    $items['admin/content/quizz']['type'] = MENU_LOCAL_TASK;
 
     $base = array(
         'file path' => drupal_get_path('module', 'quizz'),
@@ -40,7 +40,7 @@ class QuizUIController extends EntityDefaultUIController {
     );
 
     // Define menu item structure for /quiz/%/edit
-    $items['quiz/%entity_object/edit'] = $items['admin/content/quiz/manage/%entity_object'];
+    $items['quiz/%entity_object/edit'] = $items['admin/content/quizz/manage/%entity_object'];
     $items['quiz/%entity_object/edit']['title'] = 'Edit';
     unset($items['quiz/%entity_object/edit']['title callback'], $items['quiz/%entity_object/edit']['title arguments']);
     $items['quiz/%entity_object/edit']['type'] = MENU_LOCAL_TASK;
@@ -125,15 +125,15 @@ class QuizUIController extends EntityDefaultUIController {
   }
 
   private function addQuizAddLinks(&$items) {
-    // Change path from /admin/content/quiz/add -> /quizz/add
-    $items['quiz/add'] = $items['admin/content/quiz/add'];
-    unset($items['admin/content/quiz/add']);
+    // Change path from /admin/content/quizz/add -> /quizz/add
+    $items['quiz/add'] = $items['admin/content/quizz/add'];
+    unset($items['admin/content/quizz/add']);
 
     // Menu items for /quiz/add/*
     if (($types = quiz_get_types()) && (1 < count($types))) {
       $items['quiz/add'] = array(
           'title'            => 'Add @quiz',
-          'title arguments'  => array('@quiz' => QUIZ_NAME),
+          'title arguments'  => array('@quiz' => QUIZZ_NAME),
           'access callback'  => 'entity_access',
           'access arguments' => array('create', 'quiz_entity'),
           'file path'        => drupal_get_path('module', 'quizz'),

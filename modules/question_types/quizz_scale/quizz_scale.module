@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quizz_scale\Entity\Collection;
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_scale\Form\ConfigForm\FormDefinition;
 
 /**
@@ -54,7 +54,7 @@ function quizz_scale_quiz_question_info() {
           'description'       => t('Quiz questions that allow a user to choose from a scale.'),
           'question provider' => 'Drupal\quizz_scale\ScaleQuestion',
           'response provider' => 'Drupal\quizz_scale\ScaleResponse',
-          'module'            => 'quiz_question', // All wrapper functions are in that module.
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
 }

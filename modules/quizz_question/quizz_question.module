@@ -1,0 +1,136 @@
+<?php
+
+use Drupal\quizz\Entity\Result;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\Entity\QuestionType;
+
+/**
+ * Quiz Question module.
+ * This module provides the basic facilities for adding quiz question types to a quiz.
+ */
+require_once dirname(__FILE__) . '/quizz_question.hooks.inc';
+require_once dirname(__FILE__) . '/quizz_question.todo.php';
+
+/**
+ * Get controller for question entity.
+ *
+ * @return \Drupal\quizz_question\Entity\QuestionController
+ */
+function quizz_question_controller() {
+  return entity_get_controller('quiz_question');
+}
+
+/**
+ * Get all question types.
+ *
+ * @return \Drupal\quizz_question\Entity\QuestionType[]
+ */
+function quizz_question_get_types() {
+  return entity_load_multiple_by_name('quiz_question_type', FALSE, array('disabled' => 0));
+}
+
+/**
+ * Load question type.
+ *
+ * @param string $name
+ * @return \Drupal\quizz_question\Entity\QuestionType
+ */
+function quizz_question_type_load($name) {
+  $types = entity_load_multiple_by_name('quiz_question_type', array($name));
+  return isset($types[$name]) ? $types[$name] : NULL;
+}
+
+/**
+ * Get the information about various implementations of quiz questions.
+ *
+ * @param string $name
+ *  Name of question type.
+ * @param boolean $reset
+ *  If this is true, the cache will be reset.
+ * @return
+ *  An array of information about quiz question implementations.
+ * @see quiz_question_quiz_question_info() for an example of a quiz question info hook.
+ */
+function quizz_question_get_handler_info($name = NULL, $reset = FALSE) {
+  $info = &drupal_static(__FUNCTION__, array());
+
+  if (empty($info) || $reset) {
+    foreach (module_invoke_all('quiz_question_info') as $type => $definition) {
+      if (!empty($definition['question provider'])) { # We only want the ones with classes.
+        $info[$type] = $definition;
+      }
+    }
+    drupal_alter('quiz_question_info', $info);
+  }
+
+  // Question provider must be instance of QuizQuestion class.
+  foreach ($info as $handler_name => $handler_info) {
+    if (!is_subclass_of($handler_info['question provider'], 'Drupal\quizz_question\QuestionHandler')) {
+      $msg = t("The question-type %name isn't a Drupal\quizz_question\QuestionHandler.", array('%name' => $handler_name));
+      drupal_set_message($msg, 'error', FALSE);
+    }
+  }
+
+  return NULL !== $name ? $info[$name] : $info;
+}
+
+/**
+ * Figure out if a user has access to score a certain result
+ *
+ * @param int $question_vid
+ * @param int $result_id
+ * @return bool
+ *  True if the user has access to score the result
+ */
+function quizz_question_access_to_score($question_vid, $result_id) {
+  global $user;
+
+  if (!$answers = entity_load('quiz_result_answer', FALSE, array('result_id' => $result_id, 'question_vid' => $question_vid))) {
+    return FALSE;
+  }
+
+  if (user_access('score any quiz')) {
+    return TRUE;
+  }
+
+  if (user_access('score taken quiz answer')) {
+    if ($result = quiz_result_load($result_id)) {
+      if ($user->uid == $result->uid) {
+        return TRUE;
+      }
+    }
+  }
+
+  if (user_access('score own quiz')) {
+    if ($result = quiz_result_load($result_id)) {
+      if ($quiz = quiz_load(NULL, $result->quiz_vid)) {
+        return $user->uid == $quiz->uid;
+      }
+    }
+  }
+}
+
+/**
+ * Returns a result report for a question response.
+ *
+ * The retaurned value is a form array because in some contexts the scores in the form
+ * is editable
+ *
+ * @param Question $question
+ * @return array
+ */
+function quizz_question_report_form(Result $result, Question $question) {
+  $question->findLegacyMaxScore($result);
+  return $question
+      ->getResponseHandler($result->result_id, isset($question->answers[0]) ? $question->answers[0] : NULL)
+      ->getReportForm();
+}
+
+/**
+ * Theme the feedback for any question type.
+ */
+function theme_quizz_question_feedback($variables) {
+  $rows = $variables['data'];
+  $headers = array_intersect_key($variables['labels'], $rows[0]);
+  return theme('table', array('header' => $headers, 'rows' => $rows));
+}

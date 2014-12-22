@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz\Entity\QuizEntity;
 
 /**
@@ -32,7 +32,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
    */
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
     $modules[] = 'quizz';
-    $modules[] = 'quiz_question';
+    $modules[] = 'quizz_question';
     foreach ($this->extraModules as $module) {
       if (!in_array($module, $modules)) {
         $modules[] = $module;
@@ -69,8 +69,8 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     $this->user = $this->drupalCreateUser(array_unique($user_permissions));
 
     if (!empty($this->questionHandlers)) {
-      $info = quiz_question_get_handler_info();
-      $question_types = quiz_question_get_types();
+      $info = quizz_question_get_handler_info();
+      $question_types = quizz_question_get_types();
       foreach ($this->questionHandlers as $handler_name) {
         $this->assertTrue(isset($info[$this->questionHandler]), "Found {$handler_name} question handler info.");
         $this->assertTrue(isset($question_types['default_' . $handler_name]), "Default question type for {$handler_name} is created.");

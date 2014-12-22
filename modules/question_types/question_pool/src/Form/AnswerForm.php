@@ -2,7 +2,7 @@
 
 namespace Drupal\question_pool\Form;
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz\Entity\QuizEntity;
 
 class AnswerForm {

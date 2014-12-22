@@ -3,7 +3,7 @@
 namespace Drupal\quizz\Entity;
 
 use Drupal\quizz\Entity\QuizEntity\QuestionIO;
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 use Entity;
 
 class QuizEntity extends Entity {
@@ -69,7 +69,7 @@ class QuizEntity extends Entity {
    *
    * @var int
    */
-  public $keep_results = QUIZ_KEEP_ALL;
+  public $keep_results = QUIZZ_KEEP_ALL;
 
   /** @var int */
   public $randomization;
@@ -186,7 +186,7 @@ class QuizEntity extends Entity {
     if (!$account->uid && $this->takes > 0) {
       return t('This @quiz only allows %num_attempts attempts. Anonymous users can only access quizzes that allows an unlimited number of attempts.', array(
           '%num_attempts' => $this->takes,
-          '@quiz'         => QUIZ_NAME
+          '@quiz'         => QUIZZ_NAME
       ));
     }
 
@@ -197,7 +197,7 @@ class QuizEntity extends Entity {
     // Compare current GMT time to the open and close dates (which should still be
     // in GMT time).
     if ((REQUEST_TIME >= $this->quiz_close) || (REQUEST_TIME < $this->quiz_open)) {
-      return t('This @quiz is closed.', array('@quiz' => QUIZ_NAME));
+      return t('This @quiz is closed.', array('@quiz' => QUIZZ_NAME));
     }
 
     return TRUE;

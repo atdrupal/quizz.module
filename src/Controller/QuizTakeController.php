@@ -93,13 +93,13 @@ class QuizTakeController {
     // Start new quiz progress
     if (!$this->result) {
       if (!$this->checkAvailability()) {
-        throw new RuntimeException(t('This @quiz is closed.', array('@quiz' => QUIZ_NAME)));
+        throw new RuntimeException(t('This @quiz is closed.', array('@quiz' => QUIZZ_NAME)));
       }
       $this->result = quiz_controller()->getResultGenerator()->generate($this->quiz, $this->account);
     }
 
     if (TRUE !== $this->quiz->isAvailable($this->account)) {
-      throw new RuntimeException(t('This @quiz is not available.', array('@quiz' => QUIZ_NAME)));
+      throw new RuntimeException(t('This @quiz is not available.', array('@quiz' => QUIZZ_NAME)));
     }
 
     return TRUE;
@@ -119,7 +119,7 @@ class QuizTakeController {
     $this->quiz = quiz_load($this->result->quiz_qid, $this->result->quiz_vid);
 
     // Resume a quiz from the database.
-    drupal_set_message(t('Resuming a previous @quiz in-progress.', array('@quiz' => QUIZ_NAME)), 'status');
+    drupal_set_message(t('Resuming a previous @quiz in-progress.', array('@quiz' => QUIZZ_NAME)), 'status');
   }
 
   /**
@@ -175,11 +175,11 @@ class QuizTakeController {
 
       if ($now >= $this->quiz->quiz_close || $now < $this->quiz->quiz_open) {
         if ($user_is_admin) {
-          $msg = t('You are marked as an administrator or owner for this @quiz. While you can take this @quiz, the open/close times prohibit other users from taking this @quiz.', array('@quiz' => QUIZ_NAME));
+          $msg = t('You are marked as an administrator or owner for this @quiz. While you can take this @quiz, the open/close times prohibit other users from taking this @quiz.', array('@quiz' => QUIZZ_NAME));
           drupal_set_message($msg, 'status');
         }
         else {
-          $msg = t('This @quiz is not currently available.', array('@quiz' => QUIZ_NAME));
+          $msg = t('This @quiz is not currently available.', array('@quiz' => QUIZZ_NAME));
           drupal_set_message($msg, 'status');
           return FALSE; // Can't take quiz.
         }
@@ -198,19 +198,19 @@ class QuizTakeController {
       // The user has already taken this quiz.
       if ($taken) {
         if ($user_is_admin) {
-          $msg = t('You have taken this @quiz already. You are marked as an owner or administrator for this quiz, so you can take this quiz as many times as you would like.', array('@quiz' => QUIZ_NAME));
+          $msg = t('You have taken this @quiz already. You are marked as an owner or administrator for this quiz, so you can take this quiz as many times as you would like.', array('@quiz' => QUIZZ_NAME));
           drupal_set_message($msg, 'status');
         }
         // If the user has already taken this quiz too many times, stop the user.
         elseif ($taken >= $this->quiz->takes) {
-          $msg = t('You have already taken this @quiz @really. You may not take it again.', array('@quiz', QUIZ_NAME, '@really' => $taken_times));
+          $msg = t('You have already taken this @quiz @really. You may not take it again.', array('@quiz', QUIZZ_NAME, '@really' => $taken_times));
           drupal_set_message($msg, 'error');
           return FALSE;
         }
         // If the user has taken the quiz more than once, see if we should report
         // this.
         elseif ($this->quiz->show_attempt_stats) {
-          $msg = t("You can only take this @quiz @allowed. You have taken it @really.", array('@quiz' => QUIZ_NAME, '@allowed' => $allowed_times, '@really' => $taken_times));
+          $msg = t("You can only take this @quiz @allowed. You have taken it @really.", array('@quiz' => QUIZZ_NAME, '@allowed' => $allowed_times, '@really' => $taken_times));
           drupal_set_message($msg, 'status');
         }
       }
@@ -218,7 +218,7 @@ class QuizTakeController {
 
     // Check to see if the user is registered, and user alredy passed this quiz.
     if ($this->quiz->show_passed && $this->account->uid && quiz()->getQuizHelper()->isPassed($this->account->uid, $this->quiz->qid, $this->quiz->vid)) {
-      $msg = t('You have already passed this @quiz.', array('@quiz' => QUIZ_NAME));
+      $msg = t('You have already passed this @quiz.', array('@quiz' => QUIZZ_NAME));
       drupal_set_message($msg, 'status');
     }
 

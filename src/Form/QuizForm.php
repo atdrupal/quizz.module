@@ -22,7 +22,7 @@ class QuizForm {
 
   public function validate($form, &$form_state) {
     if (t('Delete') === $form_state['clicked_button']['#value']) {
-      $path = 'admin' === arg(0) ? 'admin/content/quiz/manage/' . $this->quiz->qid . '/delete' : 'quiz/' . $this->quiz->qid . '/delete';
+      $path = 'admin' === arg(0) ? 'admin/content/quizz/manage/' . $this->quiz->qid . '/delete' : 'quiz/' . $this->quiz->qid . '/delete';
       drupal_goto($path);
     }
     else {
@@ -66,11 +66,11 @@ class QuizForm {
     }
 
     if ('admin' === arg(0)) {
-      $form_state['redirect'] = 'admin/content/quiz';
+      $form_state['redirect'] = 'admin/content/quizz';
     }
 
     if (!$form['#quiz']->qid) {
-      drupal_set_message(t('You just created a new @quiz. Now you have to add questions to it. This page is for adding and managing questions. Here you can create new questions or add some of your already created questions. If you want to change the quiz settings, you can use the "edit" tab.'), array('@quiz' => QUIZ_NAME));
+      drupal_set_message(t('You just created a new @quiz. Now you have to add questions to it. This page is for adding and managing questions. Here you can create new questions or add some of your already created questions. If you want to change the quiz settings, you can use the "edit" tab.'), array('@quiz' => QUIZZ_NAME));
       $form_state['redirect'] = "quiz/" . $quiz->qid . "/questions";
     }
 

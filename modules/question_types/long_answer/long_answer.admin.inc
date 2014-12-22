@@ -49,7 +49,7 @@ function long_answer_edit_score($question_vid, $result_id) {
 /**
  * Build a form for scoring long-answer questions.
  *
- * @param \Drupal\quiz_question\Entity\Question $question
+ * @param \Drupal\quizz_question\Entity\Question $question
  * @param $answer
  *  An object containing an answer to the question. This form is for scoring that answer.
  * @return

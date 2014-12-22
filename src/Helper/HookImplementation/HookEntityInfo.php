@@ -24,9 +24,9 @@ class HookEntityInfo {
 
   private function getQuizTypeInfo() {
     return array(
-        'label'            => t('!quiz type', array('!quiz' => QUIZ_NAME)),
-        'plural label'     => t('!quiz types', array('!quiz' => QUIZ_NAME)),
-        'description'      => t('Types of !quiz.', array('!quiz' => QUIZ_NAME)),
+        'label'            => t('!quiz type', array('!quiz' => QUIZZ_NAME)),
+        'plural label'     => t('!quiz types', array('!quiz' => QUIZZ_NAME)),
+        'description'      => t('Types of !quiz.', array('!quiz' => QUIZZ_NAME)),
         'entity class'     => 'Drupal\quizz\Entity\QuizType',
         'controller class' => 'Drupal\quizz\Entity\QuizTypeController',
         'base table'       => 'quiz_type',
@@ -46,8 +46,8 @@ class HookEntityInfo {
 
   private function getQuizInfo() {
     $entity_info = array(
-        'label'                         => QUIZ_NAME,
-        'description'                   => t('!quiz entity', array('!quiz' => QUIZ_NAME)),
+        'label'                         => QUIZZ_NAME,
+        'description'                   => t('!quiz entity', array('!quiz' => QUIZZ_NAME)),
         'entity class'                  => 'Drupal\quizz\Entity\QuizEntity',
         'controller class'              => 'Drupal\quizz\Entity\QuizController',
         'metadata controller class'     => 'Drupal\quizz\Entity\QuizMetadataController',
@@ -67,7 +67,7 @@ class HookEntityInfo {
             'question' => array('label' => t('Question'), 'custom settings' => TRUE),
         ),
         'admin ui'                      => array(
-            'path'             => 'admin/content/quiz',
+            'path'             => 'admin/content/quizz',
             'file'             => 'quizz.pages.inc',
             'controller class' => 'Drupal\quizz\Entity\QuizUIController',
         ),
@@ -164,7 +164,7 @@ class HookEntityInfo {
         'admin ui'     => array(),
     );
 
-    $question_entity_info = quiz_question_entity_info();
+    $question_entity_info = quizz_question_entity_info();
     if (isset($question_entity_info['quiz_question_type'])) {
       $info += $question_entity_info['quiz_question_type'];
     }
@@ -194,8 +194,8 @@ class HookEntityInfo {
         $info['bundles'][$name] = array(
             'label' => $row->label,
             'admin' => array(
-                'path'             => 'admin/structure/quiz-questions/manage/%quiz_question_type/answer',
-                'real path'        => 'admin/structure/quiz-questions/manage/' . $name . '/answer',
+                'path'             => 'admin/structure/quizz-questions/manage/%quizz_question_type/answer',
+                'real path'        => 'admin/structure/quizz-questions/manage/' . $name . '/answer',
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz questions'),
             ),

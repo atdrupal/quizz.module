@@ -2,8 +2,8 @@
 
 namespace Drupal\quizz\Entity;
 
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\ResponseHandlerInterface;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\ResponseHandlerInterface;
 use Entity;
 
 class Answer extends Entity {

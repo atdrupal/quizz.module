@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\quiz_question\QuestionHandler;
-use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz_question\QuestionHandler;
+use Drupal\quizz_question\ResponseHandler;
 
 /**
  * This module uses the question interface to define something which is actually

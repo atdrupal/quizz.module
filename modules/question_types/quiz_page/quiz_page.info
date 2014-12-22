@@ -3,7 +3,7 @@ package = Quiz
 description = Provides support for pages of questions.
 core = 7.x
 dependencies[] = quizz
-dependencies[] = quiz_question
+dependencies[] = quizz_question
 
 files[] = quiz_page.classes.inc
 files[] = tests/QuizPageTestCase.test

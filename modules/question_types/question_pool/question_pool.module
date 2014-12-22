@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\question_pool\QuestionTypeInstaller;
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 
 /**
  * Implements hook_quiz_question_info().
@@ -13,7 +13,7 @@ function question_pool_quiz_question_info() {
           'description'       => t('This provides question pool for use by the Quiz module.'),
           'question provider' => 'Drupal\question_pool\PoolQuestionHandler',
           'response provider' => 'Drupal\question_pool\PoolResponseHandler',
-          'module'            => 'quiz_question',
+          'module'            => 'quizz_question',
       ),
   );
 }
@@ -40,7 +40,7 @@ function question_pool_field_update_field($field, $prior_field, $has_data) {
   if ('field_question_reference' === $field['field_name']) {
     $types = $field['settings']['handler_settings']['target_bundles'];
     foreach ($types as $type) {
-      $handler = quiz_question_type_load($type)->handler;
+      $handler = quizz_question_type_load($type)->handler;
       if (!in_array($handler, array('multichoice', 'truefalse', 'matching'))) {
         throw new RuntimeException('Pool question is only currently supporting '
         . 'multichoice, truefalse, matching question handlers. '
@@ -68,7 +68,7 @@ function question_pool_field_ui_field_edit_form_after_build(&$form) {
   $form['field']['settings']['target_type']['#disabled'] = TRUE;
   $form['field']['settings']['target_type']['#value'] = 'quiz_question';
   foreach (element_children($form['field']['settings']['handler']['handler_settings']['target_bundles']) as $type) {
-    if ($question_type = quiz_question_type_load($type)) {
+    if ($question_type = quizz_question_type_load($type)) {
       if (!in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
         unset($form['field']['settings']['handler']['handler_settings']['target_bundles'][$type]);
       }

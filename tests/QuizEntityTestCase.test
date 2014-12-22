@@ -209,7 +209,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->drupalPost(NULL, array('title' => 'Test quiz creation'), t('Save'));
     $this->drupalGet('quiz/' . quiz_controller()->getLatestQuizId());
     $this->assertText('Test quiz creation');
-    $this->assertText(t('Start !quiz', array('!quiz' => QUIZ_NAME)));
+    $this->assertText(t('Start !quiz', array('!quiz' => QUIZZ_NAME)));
   }
 
   private function checkQuizSaveRevionLostRelationships() {

@@ -18,7 +18,7 @@ class FormDefinition extends FormHelper {
 
       // If this is a new quiz we apply the user defaults for the quiz settings.
       if (!entity_load('quiz_entity', FALSE, array('uid' => $user->uid))) {
-        $msg = t('You are making your first @quiz. On this page you set the attributes, most of which you may tell the system to remember as defaults for the future. On the next screen you can add questions.', array('@quiz' => QUIZ_NAME));
+        $msg = t('You are making your first @quiz. On this page you set the attributes, most of which you may tell the system to remember as defaults for the future. On the next screen you can add questions.', array('@quiz' => QUIZZ_NAME));
         drupal_set_message($msg);
       }
 
@@ -62,7 +62,7 @@ class FormDefinition extends FormHelper {
         '#type'          => 'textfield',
         '#title'         => t('Title'),
         '#default_value' => isset($this->quiz->title) ? $this->quiz->title : '',
-        '#description'   => t('The name of this @quiz.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('The name of this @quiz.', array('@quiz' => QUIZZ_NAME)),
         '#required'      => TRUE,
         '#weight'        => -20,
     );
@@ -115,7 +115,7 @@ class FormDefinition extends FormHelper {
       $form['actions']['delete'] = array(
           '#type'   => 'submit',
           '#value'  => t('Delete'),
-          '#suffix' => l(t('Cancel'), 'admin' === arg(0) ? 'admin/content/quiz' : 'quiz/' . $this->quiz->qid),
+          '#suffix' => l(t('Cancel'), 'admin' === arg(0) ? 'admin/content/quizz' : 'quiz/' . $this->quiz->qid),
       );
     }
 
@@ -141,19 +141,19 @@ class FormDefinition extends FormHelper {
             '#type'          => 'checkbox',
             '#title'         => t('Allow resume'),
             '#default_value' => $this->quiz->allow_resume,
-            '#description'   => t('Allow users to leave this @quiz incomplete and then resume it from where they left off.', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Allow users to leave this @quiz incomplete and then resume it from where they left off.', array('@quiz' => QUIZZ_NAME)),
         ),
         'allow_skipping'       => array(
             '#type'          => 'checkbox',
             '#title'         => t('Allow skipping'),
             '#default_value' => $this->quiz->allow_skipping,
-            '#description'   => t('Allow users to skip questions in this @quiz.', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Allow users to skip questions in this @quiz.', array('@quiz' => QUIZZ_NAME)),
         ),
         'allow_jumping'        => array(
             '#type'          => 'checkbox',
             '#title'         => t('Allow jumping'),
             '#default_value' => $this->quiz->allow_jumping,
-            '#description'   => t('Allow users to jump to any question using a menu or pager in this @quiz.', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Allow users to jump to any question using a menu or pager in this @quiz.', array('@quiz' => QUIZZ_NAME)),
         ),
         'allow_change'         => array(
             '#type'          => 'checkbox',
@@ -184,13 +184,13 @@ class FormDefinition extends FormHelper {
             '#type'          => 'checkbox',
             '#title'         => t('Show passed status'),
             '#default_value' => $this->quiz->show_passed,
-            '#description'   => t('Show a message if the user has previously passed the @quiz.', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Show a message if the user has previously passed the @quiz.', array('@quiz' => QUIZZ_NAME)),
         ),
         'time_limit'           => array(
             '#type'          => 'textfield',
             '#title'         => t('Time limit'),
             '#default_value' => isset($this->quiz->time_limit) ? $this->quiz->time_limit : 0,
-            '#description'   => t('Set the maximum allowed time in seconds for this @quiz. Use 0 for no limit.', array('@quiz' => QUIZ_NAME))
+            '#description'   => t('Set the maximum allowed time in seconds for this @quiz. Use 0 for no limit.', array('@quiz' => QUIZZ_NAME))
             . '<br/>' . t('It is recommended to install the !countdown module, and enable the option in !link to show the time left to the user.', array(
                 '!link'      => l('Quiz configuration', 'admin/quiz/settings/config'),
                 '!countdown' => l('jquery_countdown', 'http://drupal.org/project/jquery_countdown'),
@@ -210,7 +210,7 @@ class FormDefinition extends FormHelper {
             ),
             '#title'         => t('Each attempt builds on the last'),
             '#default_value' => $this->quiz->build_on_last,
-            '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZZ_NAME)),
         ),
     );
 
@@ -227,7 +227,7 @@ class FormDefinition extends FormHelper {
                 t('Categorized random questions'),
             ),
             '#description'   => t('<strong>Random order</strong> - all questions display in random order')
-            . '<br/>' . t("<strong>Random questions</strong> - specific number of questions are drawn randomly from this @quiz's pool of questions", array('@quiz' => QUIZ_NAME))
+            . '<br/>' . t("<strong>Random questions</strong> - specific number of questions are drawn randomly from this @quiz's pool of questions", array('@quiz' => QUIZZ_NAME))
             . '<br/>' . t('<strong>Categorized random questions</strong> - specific number of questions are drawn from each specified taxonomy term'),
             '#default_value' => $this->quiz->randomization,
         ),
@@ -240,7 +240,7 @@ class FormDefinition extends FormHelper {
     );
 
     $review_options = quiz_controller()->getFeedbackOptions();
-    foreach (array('question' => t('After the question'), 'end' => t('After the @quiz', array('@quiz' => QUIZ_NAME))) as $key => $when) {
+    foreach (array('question' => t('After the question'), 'end' => t('After the @quiz', array('@quiz' => QUIZZ_NAME))) as $key => $when) {
       $form['taking']['taking_tabs']['review_options'][$key] = array(
           '#title'         => $when,
           '#type'          => 'checkboxes',
@@ -261,13 +261,13 @@ class FormDefinition extends FormHelper {
         '#title'         => t('Allowed number of attempts'),
         '#default_value' => $this->quiz->takes,
         '#options'       => array(t('Unlimited')) + range(0, 10),
-        '#description'   => t('The number of times a user is allowed to take this @quiz. <strong>Anonymous users are only allowed to take @quiz that allow an unlimited number of attempts.</strong>', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('The number of times a user is allowed to take this @quiz. <strong>Anonymous users are only allowed to take @quiz that allow an unlimited number of attempts.</strong>', array('@quiz' => QUIZZ_NAME)),
     );
     $form['taking']['taking_tabs']['multiple_takes']['show_attempt_stats'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Display allowed number of attempts'),
         '#default_value' => $this->quiz->show_attempt_stats,
-        '#description'   => t('Display the allowed number of attempts on the starting page for this @quiz.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('Display the allowed number of attempts on the starting page for this @quiz.', array('@quiz' => QUIZZ_NAME)),
     );
 
     if (user_access('delete any quiz results') || user_access('delete results for own quiz')) {
@@ -303,7 +303,7 @@ class FormDefinition extends FormHelper {
         '#type'          => 'checkbox',
         '#default_value' => (isset($this->quiz->has_userpoints) ? $this->quiz->has_userpoints : 1),
         '#title'         => t('Enable UserPoints Module Integration'),
-        '#description'   => t('If checked, marks scored in this @quiz will be credited to userpoints. For each correct answer 1 point will be added to user\'s point.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('If checked, marks scored in this @quiz will be credited to userpoints. For each correct answer 1 point will be added to user\'s point.', array('@quiz' => QUIZZ_NAME)),
     );
 
     $form['userpoints']['userpoints_tid'] = array(
@@ -343,7 +343,7 @@ class FormDefinition extends FormHelper {
           '#type'          => 'date_popup',
           '#title'         => t('Open date'),
           '#default_value' => date($format, isset($this->quiz->quiz_open) ? $this->quiz->quiz_open : REQUEST_TIME),
-          '#description'   => t('The date this @quiz will become available.', array('@quiz' => QUIZ_NAME)),
+          '#description'   => t('The date this @quiz will become available.', array('@quiz' => QUIZZ_NAME)),
       );
 
       $close = REQUEST_TIME + 86400 * $this->quiz->getQuizType()->getConfig('quiz_default_close', 30);
@@ -355,7 +355,7 @@ class FormDefinition extends FormHelper {
           '#type'          => 'date_popup',
           '#title'         => t('Close date'),
           '#default_value' => date($format, $close),
-          '#description'   => t('The date this @quiz will become unavailable.', array('@quiz' => QUIZ_NAME)),
+          '#description'   => t('The date this @quiz will become unavailable.', array('@quiz' => QUIZZ_NAME)),
       );
     }
     else {
@@ -377,9 +377,9 @@ class FormDefinition extends FormHelper {
     if ($this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1)) {
       $form['summary_options']['pass_rate'] = array(
           '#type'          => 'textfield',
-          '#title'         => t('Passing rate for @quiz (%)', array('@quiz' => QUIZ_NAME)),
+          '#title'         => t('Passing rate for @quiz (%)', array('@quiz' => QUIZZ_NAME)),
           '#default_value' => $this->quiz->pass_rate,
-          '#description'   => t('Passing rate for this @quiz as a percentage score.', array('@quiz' => QUIZ_NAME)),
+          '#description'   => t('Passing rate for this @quiz as a percentage score.', array('@quiz' => QUIZZ_NAME)),
           '#required'      => FALSE,
       );
       $form['summary_options']['summary_pass'] = array(
@@ -388,7 +388,7 @@ class FormDefinition extends FormHelper {
           '#title'         => t('Summary text if passed'),
           '#default_value' => $this->quiz->summary_pass,
           '#cols'          => 60,
-          '#description'   => t("Summary text for when the user passes the @quiz. Leave blank to not give different summary text if passed, or if not using the \"percent to pass\" option above. If not using the \"percentage needed to pass\" field above, this text will not be used.", array('@quiz' => QUIZ_NAME)),
+          '#description'   => t("Summary text for when the user passes the @quiz. Leave blank to not give different summary text if passed, or if not using the \"percent to pass\" option above. If not using the \"percentage needed to pass\" field above, this text will not be used.", array('@quiz' => QUIZZ_NAME)),
           '#format'        => isset($this->quiz->summary_pass_format) && !empty($this->quiz->summary_pass_format) ? $this->quiz->summary_pass_format : NULL,
       );
     }
@@ -455,14 +455,14 @@ class FormDefinition extends FormHelper {
         $form['result_options']['ro_tabs'][$i]['option_start'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Percentage low'),
-            '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZZ_NAME)),
             '#default_value' => isset($option['option_start']) ? $option['option_start'] : '',
             '#size'          => 5,
         );
         $form['result_options']['ro_tabs'][$i]['option_end'] = array(
             '#type'          => 'textfield',
             '#title'         => t('Percentage high'),
-            '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZ_NAME)),
+            '#description'   => t('Show this result for scored @quiz in this range (0-100).', array('@quiz' => QUIZZ_NAME)),
             '#default_value' => isset($option['option_end']) ? $option['option_end'] : '',
             '#size'          => 5,
         );
@@ -512,12 +512,12 @@ class FormDefinition extends FormHelper {
         'remember_settings' => array(
             '#type'        => 'checkbox',
             '#title'       => t('Remember my settings'),
-            '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be your default settings next time you create a @quiz.', array('@quiz' => QUIZ_NAME)),
+            '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be your default settings next time you create a @quiz.', array('@quiz' => QUIZZ_NAME)),
         ),
         'remember_global'   => array(
             '#type'        => 'checkbox',
             '#title'       => t('Remember as global'),
-            '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be everyone\'s default settings next time they create a @quiz.', array('@quiz' => QUIZ_NAME)),
+            '#description' => t('If this box is checked most of the @quiz specific settings you have made will be remembered and will be everyone\'s default settings next time they create a @quiz.', array('@quiz' => QUIZZ_NAME)),
             '#access'      => user_access('administer quiz configuration'),
         ),
     );

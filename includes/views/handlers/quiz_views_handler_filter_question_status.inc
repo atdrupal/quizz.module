@@ -11,10 +11,10 @@ class quiz_views_handler_filter_question_status extends views_handler_filter_in_
     if (!isset($this->value_options)) {
       $this->value_title = t('Question Status in Quiz');
       $this->value_options = array(
-          QUIZ_QUESTION_RANDOM             => t('Random'), // 'Random-ly' better?
-          QUIZ_QUESTION_ALWAYS             => t('Always'),
-          QUIZ_QUESTION_NEVER              => t('Never'),
-          QUIZ_QUESTION_CATEGORIZED_RANDOM => t('Categorized random questions'),
+          QUIZZ_QUESTION_RANDOM             => t('Random'), // 'Random-ly' better?
+          QUIZZ_QUESTION_ALWAYS             => t('Always'),
+          QUIZZ_QUESTION_NEVER              => t('Never'),
+          QUIZZ_QUESTION_CATEGORIZED_RANDOM => t('Categorized random questions'),
       );
     }
   }

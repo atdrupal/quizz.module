@@ -3,7 +3,7 @@
 namespace Drupal\quizz_scale\Entity;
 
 use DatabaseTransaction;
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_scale\ScaleQuestion\Writing;
 use EntityAPIControllerExportable;
 

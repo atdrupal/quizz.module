@@ -20,7 +20,7 @@ class QuizAnswerTestCase extends QuizTestCase {
 
   public function testFieldableAnswer() {
     $this->drupalLogin($this->admin);
-    $this->drupalPost('admin/structure/quiz-questions/manage/default_truefalse/answer/fields', array(
+    $this->drupalPost('admin/structure/quizz-questions/manage/default_truefalse/answer/fields', array(
         'fields[_add_new_field][label]'       => 'Notes',
         'fields[_add_new_field][field_name]'  => 'notes',
         'fields[_add_new_field][type]'        => 'text',

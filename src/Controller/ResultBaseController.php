@@ -65,15 +65,15 @@ abstract class ResultBaseController {
   private function getAnswer($row) {
     // Questions picked from term id's won't be found in the quiz_relationship table
     if ($row->max_score === NULL) {
-      if ($this->quiz_revision->randomization == QUIZ_QUESTION_NEVER && isset($this->quiz_revision->tid) && $this->quiz_revision->tid > 0) {
+      if ($this->quiz_revision->randomization == QUIZZ_QUESTION_NEVER && isset($this->quiz_revision->tid) && $this->quiz_revision->tid > 0) {
         $row->max_score = $this->quiz_revision->max_score_for_random;
       }
-      elseif (QUIZ_QUESTION_CATEGORIZED_RANDOM == $this->quiz_revision->randomization) {
+      elseif (QUIZZ_QUESTION_CATEGORIZED_RANDOM == $this->quiz_revision->randomization) {
         $row->max_score = $row->term_max_score;
       }
     }
 
-    if (!$module = quiz_question_type_load($row->type)->getHandlerModule()) {
+    if (!$module = quizz_question_type_load($row->type)->getHandlerModule()) {
       return;
     }
 
@@ -124,7 +124,7 @@ abstract class ResultBaseController {
     if ($this->quiz_revision->pass_rate > 0 && $this->score['percentage_score'] >= $this->quiz_revision->pass_rate) {
       // If we are coming from the admin view page.
       if ($admin) {
-        $summary['passfail'] = t('The user passed this @quiz.', array('@quiz' => QUIZ_NAME));
+        $summary['passfail'] = t('The user passed this @quiz.', array('@quiz' => QUIZZ_NAME));
       }
       elseif (!$this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1)) {
         // If there is only a single summary text, use this.
@@ -143,10 +143,10 @@ abstract class ResultBaseController {
       // using pass/fail.
       if ($admin) {
         if ($this->quiz_revision->pass_rate > 0) {
-          $summary['passfail'] = t('The user failed this @quiz.', array('@quiz' => QUIZ_NAME));
+          $summary['passfail'] = t('The user failed this @quiz.', array('@quiz' => QUIZZ_NAME));
         }
         else {
-          $summary['passfail'] = t('the user completed this @quiz.', array('@quiz' => QUIZ_NAME));
+          $summary['passfail'] = t('the user completed this @quiz.', array('@quiz' => QUIZZ_NAME));
         }
       }
       elseif (trim($this->quiz_revision->summary_default) != '') {

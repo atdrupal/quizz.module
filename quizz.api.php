@@ -73,7 +73,7 @@ function hook_quiz_scored(QuizEntity $quiz, $score, $result_id) {
 }
 
 /**
- * @see \Drupal\quiz_question\ResponseHandler::getReportForm()
+ * @see \Drupal\quizz_question\ResponseHandler::getReportForm()
  * @param array $labels Associated string[]
  */
 function hook_quiz_feedback_labels_alter(&$labels) {

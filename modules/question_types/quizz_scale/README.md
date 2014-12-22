@@ -18,5 +18,5 @@ module at Admin > Build > Modules.
 
 ### 3. Configuration
 
-Go to /admin/structure/quiz-questions, find question type that uses 'quizz_scale'
+Go to /admin/structure/quizz-questions, find question type that uses 'quizz_scale'
 as handler, click edit. Here you can change and delete presets (answer collections).

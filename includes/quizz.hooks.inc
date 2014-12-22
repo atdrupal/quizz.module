@@ -96,7 +96,7 @@ function quizz_action_info() {
 
   $actions['quiz_add_question_to_quiz'] = array(
       'type'             => 'quiz_question',
-      'label'            => t('Add questions to @quiz', array('@quiz' => QUIZ_NAME)),
+      'label'            => t('Add questions to @quiz', array('@quiz' => QUIZZ_NAME)),
       'configurable'     => FALSE,
       'vbo_configurable' => FALSE,
   );
@@ -137,20 +137,20 @@ function quizz_menu_alter(&$items) {
   $items['admin/structure/quiz/manage/%quiz_type/result/display']['title'] = 'Result display';
   $items['admin/structure/quiz/manage/%quiz_type/result/display']['weight'] = 4;
 
-  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/fields']['title'] = 'Answer fields';
-  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/fields']['weight'] = 5;
-  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/display']['title'] = 'Answer display';
-  $items['admin/structure/quiz-questions/manage/%quiz_question_type/answer/display']['weight'] = 7;
+  $items['admin/structure/quizz-questions/manage/%quizz_question_type/answer/fields']['title'] = 'Answer fields';
+  $items['admin/structure/quizz-questions/manage/%quizz_question_type/answer/fields']['weight'] = 5;
+  $items['admin/structure/quizz-questions/manage/%quizz_question_type/answer/display']['title'] = 'Answer display';
+  $items['admin/structure/quizz-questions/manage/%quizz_question_type/answer/display']['weight'] = 7;
 }
 
 /**
  * Implements hook_menu_local_tasks_alter().
  *
- * Add action link to 'quiz/add' on 'admin/content/quiz' page.
+ * Add action link to 'quiz/add' on 'admin/content/quizz' page.
  */
 function quizz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   switch ($root_path) {
-    case 'admin/content/quiz':
+    case 'admin/content/quizz':
       if (($item = menu_get_item('quiz/add')) && $item['access']) {
         $data['actions']['output'][] = array('#theme' => 'menu_local_action', '#link' => $item);
       }

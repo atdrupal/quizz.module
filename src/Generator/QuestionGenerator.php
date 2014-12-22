@@ -2,7 +2,7 @@
 
 namespace Drupal\quizz\Generator;
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 use RuntimeException;
 
 class QuestionGenerator {
@@ -29,7 +29,7 @@ class QuestionGenerator {
         'body'      => array(LANGUAGE_NONE => array(array('value' => devel_create_para(rand(20, 50), 1)))),
     );
 
-    switch (quiz_question_type_load($question_type)->handler) {
+    switch (quizz_question_type_load($question_type)->handler) {
       case 'truefalse':
         $question_array += $this->dummyTrueFalseQuestion();
         break;
@@ -46,7 +46,7 @@ class QuestionGenerator {
       case 'quiz_page':
         break;
       default:
-        throw new RuntimeException('Unsupported question: ' . quiz_question_type_load($question_type)->handler);
+        throw new RuntimeException('Unsupported question: ' . quizz_question_type_load($question_type)->handler);
     }
 
     /* @var $question Question */

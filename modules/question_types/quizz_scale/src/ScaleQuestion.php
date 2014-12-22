@@ -2,8 +2,8 @@
 
 namespace Drupal\quizz_scale;
 
-use Drupal\quiz_question\Entity\QuestionType;
-use Drupal\quiz_question\QuestionHandler;
+use Drupal\quizz_question\Entity\QuestionType;
+use Drupal\quizz_question\QuestionHandler;
 use Drupal\quizz_scale\Form\ScaleQuestionForm;
 
 /**

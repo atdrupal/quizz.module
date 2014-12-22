@@ -5,7 +5,7 @@ class quiz_views_handler_filter_quiz_question_type extends views_handler_filter_
   public function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Quiz question types');
-      $types = quiz_question_get_handler_info();
+      $types = quizz_question_get_handler_info();
 
       $options = array();
       foreach ($types as $type => $info) {

@@ -21,7 +21,7 @@ class FormDefinition {
         '#type'          => 'textfield',
         '#title'         => t('Label'),
         '#default_value' => $this->quiz_type->label,
-        '#description'   => t('The human-readable name of this !quiz type.', array('!quiz' => QUIZ_NAME)),
+        '#description'   => t('The human-readable name of this !quiz type.', array('!quiz' => QUIZZ_NAME)),
         '#required'      => TRUE,
         '#size'          => 30,
     );
@@ -44,7 +44,7 @@ class FormDefinition {
         '#maxlength'     => 32,
         '#disabled'      => $this->quiz_type->isLocked() && $op !== 'clone',
         '#machine_name'  => array('exists' => 'quiz_type_load', 'source' => array('label')),
-        '#description'   => t('A unique machine-readable name for this !quiz type. It must only contain lowercase letters, numbers, and underscores.', array('!quiz' => QUIZ_NAME)),
+        '#description'   => t('A unique machine-readable name for this !quiz type. It must only contain lowercase letters, numbers, and underscores.', array('!quiz' => QUIZZ_NAME)),
     );
 
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
@@ -57,7 +57,7 @@ class FormDefinition {
     if (!$this->quiz_type->isLocked() && $op != 'add' && $op != 'clone') {
       $form['actions']['delete'] = array(
           '#type'                    => 'submit',
-          '#value'                   => t('Delete !quiz type', array('!quiz' => QUIZ_NAME)),
+          '#value'                   => t('Delete !quiz type', array('!quiz' => QUIZZ_NAME)),
           '#weight'                  => 45,
           '#limit_validation_errors' => array(),
           '#submit'                  => array('quiz_type_form_submit_delete')
@@ -74,13 +74,13 @@ class FormDefinition {
         'description' => array(
             '#type'          => 'textarea',
             '#title'         => t('Description'),
-            '#description'   => t('Describe this !quiz type. The text will be displayed on the Add new !quiz page.', array('!quiz' => QUIZ_NAME)),
+            '#description'   => t('Describe this !quiz type. The text will be displayed on the Add new !quiz page.', array('!quiz' => QUIZZ_NAME)),
             '#default_value' => $this->quiz_type->description,
         ),
         'help'        => array(
             '#type'          => 'textarea',
             '#title'         => t('Explanation or submission guidelines'),
-            '#description'   => t('This text will be displayed at the top of the page when creating or editing !quiz of this type.', array('!quiz' => QUIZ_NAME)),
+            '#description'   => t('This text will be displayed at the top of the page when creating or editing !quiz of this type.', array('!quiz' => QUIZZ_NAME)),
             '#default_value' => $this->quiz_type->help,
         )
     );
@@ -105,7 +105,7 @@ class FormDefinition {
 
     $form['vtabs']['configuration']['quiz_default_close'] = array(
         '#type'          => 'textfield',
-        '#title'         => t('Default number of days before a @quiz is closed', array('@quiz' => QUIZ_NAME)),
+        '#title'         => t('Default number of days before a @quiz is closed', array('@quiz' => QUIZZ_NAME)),
         '#default_value' => isset($config['quiz_default_close']) ? $config['quiz_default_close'] : 30,
         '#size'          => 4,
         '#maxlength'     => 4,
@@ -114,9 +114,9 @@ class FormDefinition {
 
     $form['vtabs']['configuration']['quiz_use_passfail'] = array(
         '#type'          => 'checkbox',
-        '#title'         => t('Allow quiz creators to set a pass/fail option when creating a @quiz.', array('@quiz' => strtolower(QUIZ_NAME))),
+        '#title'         => t('Allow quiz creators to set a pass/fail option when creating a @quiz.', array('@quiz' => strtolower(QUIZZ_NAME))),
         '#default_value' => isset($config['quiz_use_passfail']) ? $config['quiz_use_passfail'] : 1,
-        '#description'   => t('Check this to display the pass/fail options in the @quiz form. If you want to prohibit other quiz creators from changing the default pass/fail percentage, uncheck this option.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('Check this to display the pass/fail options in the @quiz form. If you want to prohibit other quiz creators from changing the default pass/fail percentage, uncheck this option.', array('@quiz' => QUIZZ_NAME)),
     );
 
     $form['vtabs']['configuration']['quiz_max_result_options'] = array(
@@ -138,7 +138,7 @@ class FormDefinition {
         ),
         '#title'         => t('Each attempt builds on the last'),
         '#default_value' => isset($config['build_on_last']) ? $config['build_on_last'] : '',
-        '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('Instead of starting a fresh @quiz, new attempts will be created based on the last attempt, with correct answers prefilled.', array('@quiz' => QUIZZ_NAME)),
     );
 
     $form['vtabs']['configuration']['quiz_remove_partial_quiz_record'] = array(

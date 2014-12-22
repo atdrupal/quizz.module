@@ -88,7 +88,7 @@ class QuizAdminSettingsController {
     $form['quiz_look_feel']['quiz_name'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Display name'),
-        '#default_value' => QUIZ_NAME,
+        '#default_value' => QUIZZ_NAME,
         '#description'   => t('Change the name of the quiz type. Do you call it <em>test</em> or <em>assessment</em> instead? Change the display name of the module to something else. By default, it is called <em>Quiz</em>.'),
         '#required'      => TRUE,
     );
@@ -185,9 +185,9 @@ class QuizAdminSettingsController {
    * Submit the admin settings form
    */
   public function submit($form, &$form_state) {
-    if (QUIZ_NAME !== $form_state['values']['quiz_name']) {
+    if (QUIZZ_NAME !== $form_state['values']['quiz_name']) {
       variable_set('quiz_name', $form_state['values']['quiz_name']);
-      define(QUIZ_NAME, $form_state['values']['quiz_name']);
+      define(QUIZZ_NAME, $form_state['values']['quiz_name']);
       menu_rebuild();
     }
   }

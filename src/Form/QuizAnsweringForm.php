@@ -2,7 +2,7 @@
 
 namespace Drupal\quizz\Form;
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz\Entity\Answer;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;

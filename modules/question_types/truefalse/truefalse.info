@@ -3,7 +3,7 @@ package = Quiz Question
 description = Module to create True or False Kind of Questions
 core = 7.x
 dependencies[] = quizz
-dependencies[] = quiz_question
+dependencies[] = quizz_question
 
 files[] = truefalse.classes.inc
 files[] = tests/TrueFalseTestCase.test

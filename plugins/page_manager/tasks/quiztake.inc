@@ -10,8 +10,8 @@ function quiz_quiztake_page_manager_tasks() {
   return array(
       // This is a 'page' task and will fall under the page admin UI
       'task type'                => 'page',
-      'title'                    => t('Take @quiz', array('@quiz' => QUIZ_NAME)),
-      'admin title'              => t('The take page for @quiz.', array('@quiz' => QUIZ_NAME)),
+      'title'                    => t('Take @quiz', array('@quiz' => QUIZZ_NAME)),
+      'admin title'              => t('The take page for @quiz.', array('@quiz' => QUIZZ_NAME)),
       'admin description'        => t('When enabled, this overrides the default view at quiz/%quiz/take'),
       'admin path'               => 'quiz/%quiz/take',
       // Menu hooks so that we can alter the quiz/%quiz menu entry to point to us.
@@ -108,7 +108,7 @@ function quiz_quiztake_get_arguments($task, $subtask_id) {
   return array(
       array(
           'keyword'    => 'quiz_entity',
-          'identifier' => t('@quiz being taken', array('@quiz' => QUIZ_NAME)),
+          'identifier' => t('@quiz being taken', array('@quiz' => QUIZZ_NAME)),
           'id'         => 1,
           'name'       => 'entity_id:quiz_entity',
           'settings'   => array(),

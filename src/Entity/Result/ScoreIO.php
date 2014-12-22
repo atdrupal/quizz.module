@@ -47,7 +47,7 @@ class ScoreIO {
         $scores[] = $fn($question, $result->result_id);
       }
       else {
-        drupal_set_message(t('A @quiz question could not be scored: No scoring info is available', array('@quiz' => QUIZ_NAME)), 'error');
+        drupal_set_message(t('A @quiz question could not be scored: No scoring info is available', array('@quiz' => QUIZZ_NAME)), 'error');
         $dummy_score = new stdClass();
         $dummy_score->possible = 0;
         $dummy_score->attained = 0;

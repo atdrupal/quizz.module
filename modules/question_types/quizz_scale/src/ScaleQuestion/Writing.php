@@ -3,7 +3,7 @@
 namespace Drupal\quizz_scale\ScaleQuestion;
 
 use Drupal\quizz_scale\Entity\CollectionController;
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 /**
  * Helper class to write question's alternatives

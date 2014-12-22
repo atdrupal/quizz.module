@@ -2,8 +2,8 @@
 
 namespace Drupal\quizz_scale;
 
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\ResponseHandler;
 use Drupal\quizz\Entity\Answer;
 
 /**

@@ -158,15 +158,15 @@ function multichoice_quiz_question_upgrade_pre_drop_temp_columns() {
  * Make sure update script from main module is run before all.
  */
 function multichoice_update_7600() {
-  require_once drupal_get_path('module', 'quiz_question') . '/quiz_question.install';
-  return quiz_question_update_7600();
+  require_once drupal_get_path('module', 'quizz_question') . '/quiz_question.install';
+  return quizz_question_update_7600();
 }
 
 /**
  * Convert global configuration for questions to question type entity.
  */
 function multichoice_update_7601() {
-  foreach (quiz_question_get_types() as $question_type) {
+  foreach (quizz_question_get_types() as $question_type) {
     if ('multichoice' === $question_type->handler) {
       $question_type
         ->setConfig('multichoice_def_num_of_alts', variable_get('multichoice_def_num_of_alts', 2))

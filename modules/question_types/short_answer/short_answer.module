@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 
@@ -49,7 +49,7 @@ function short_answer_menu() {
       'title'            => 'Score short answer response',
       'description'      => 'Score a response to a short answer question.',
       'access arguments' => array(4, 5),
-      'access callback'  => 'quiz_question_access_to_score',
+      'access callback'  => 'quizz_question_access_to_score',
       'page callback'    => 'short_answer_edit_score',
       'page arguments'   => array(4, 5),
       'type'             => MENU_NORMAL_ITEM,
@@ -69,7 +69,7 @@ function short_answer_quiz_question_info() {
           'description'       => t('Quiz questions that allow a user to enter a line of text.'),
           'question provider' => 'ShortAnswerQuestion',
           'response provider' => 'ShortAnswerResponse',
-          'module'            => 'quiz_question', // All wrapper functions are in that module.
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
 }

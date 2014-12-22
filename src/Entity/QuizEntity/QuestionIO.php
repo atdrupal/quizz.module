@@ -29,7 +29,7 @@ class QuestionIO {
    * @return array[] Array of question info.
    */
   public function getQuestionList() {
-    if (QUIZ_QUESTION_CATEGORIZED_RANDOM == $this->quiz->randomization) {
+    if (QUIZZ_QUESTION_CATEGORIZED_RANDOM == $this->quiz->randomization) {
       return $this->buildCategoziedQuestionList();
     }
     return $this->getRequiredQuestions();
@@ -39,7 +39,7 @@ class QuestionIO {
    * Builds the questionlist for quizzes with categorized random questions
    */
   public function buildCategoziedQuestionList() {
-    if (!$question_types = array_keys(quiz_question_get_types())) {
+    if (!$question_types = array_keys(quizz_question_get_types())) {
       return array();
     }
 
@@ -101,7 +101,7 @@ class QuestionIO {
     $select->fields('relationship', array('qr_id', 'qr_pid', 'question_status', 'weight', 'max_score'));
     $query = $select
       ->condition('relationship.quiz_vid', $this->quiz->vid)
-      ->condition('relationship.question_status', QUIZ_QUESTION_ALWAYS)
+      ->condition('relationship.question_status', QUIZZ_QUESTION_ALWAYS)
       ->condition('question.status', 1)
       ->orderBy('sub_relationship.weight')
       ->orderBy('relationship.weight')
@@ -191,7 +191,7 @@ class QuestionIO {
         ->fields('question', array('type'))
         ->condition('relationship.quiz_vid', $this->quiz->vid)
         ->condition('relationship.quiz_qid', $this->quiz->vid)
-        ->condition('relationship.question_status', QUIZ_QUESTION_RANDOM)
+        ->condition('relationship.question_status', QUIZZ_QUESTION_RANDOM)
         ->condition('question.status', 1)
         ->orderRandom()
         ->range(0, $amount)
@@ -230,7 +230,7 @@ class QuestionIO {
         ->fields('question', array('qid', 'vid'))
         ->condition('question.status', 1)
         ->condition('tn.tid', $term_ids)
-        ->condition('question.type', array_keys(quiz_question_get_types()))
+        ->condition('question.type', array_keys(quizz_question_get_types()))
         ->orderRandom()
         ->range(0, $amount)
         ->execute()->fetchAll(PDO::FETCH_ASSOC);
@@ -262,7 +262,7 @@ class QuestionIO {
   private function doSetRelationships($relationships) {
     foreach ($relationships as $relationship) {
       if (isset($relationship->question_status)) {
-        if (QUIZ_QUESTION_NEVER == $relationship->question_status) {
+        if (QUIZZ_QUESTION_NEVER == $relationship->question_status) {
           continue;
         }
       }

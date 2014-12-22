@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\quiz_ddlines\DDLinesQuestion;
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 /**
  * Test class for true false questions.

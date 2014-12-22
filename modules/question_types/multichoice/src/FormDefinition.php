@@ -2,7 +2,7 @@
 
 namespace Drupal\multichoice;
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 class FormDefinition {
 
@@ -133,7 +133,7 @@ class FormDefinition {
     $form['alternatives']['settings']['choice_random'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Random order'),
-        '#description'   => t('Present alternatives in random order when @quiz is being taken.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('Present alternatives in random order when @quiz is being taken.', array('@quiz' => QUIZZ_NAME)),
         '#default_value' => $default_settings['choice_random'],
         '#parents'       => array('choice_random'),
     );

@@ -39,7 +39,7 @@ class HookMenu {
     // Admin pages.
     $items['admin/quiz'] = array(
         'title'            => '@quiz',
-        'title arguments'  => array('@quiz' => QUIZ_NAME),
+        'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'View results, score answers, run reports and edit configurations.',
         'page callback'    => 'system_admin_menu_block_page',
         'access arguments' => array('administer quiz configuration', 'score any quiz', 'score own quiz', 'view any quiz results', 'view results for own quiz'),
@@ -51,7 +51,7 @@ class HookMenu {
 
     $items['admin/quiz/settings'] = array(
         'title'            => '@quiz settings',
-        'title arguments'  => array('@quiz' => QUIZ_NAME),
+        'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Change settings for the all Quiz project modules.',
         'page callback'    => 'system_admin_menu_block_page',
         'access arguments' => array('administer quiz configuration'),
@@ -62,7 +62,7 @@ class HookMenu {
 
     $items['admin/quiz/settings/config'] = array(
         'title'            => '@quiz configuration',
-        'title arguments'  => array('@quiz' => QUIZ_NAME),
+        'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Configure the Quiz module.',
         'page callback'    => 'drupal_get_form',
         'page arguments'   => array('quiz_admin_settings_form'),
@@ -73,7 +73,7 @@ class HookMenu {
 
     $items['admin/quiz/settings/quiz-form'] = array(
         'title'            => '@quiz form configuration',
-        'title arguments'  => array('@quiz' => QUIZ_NAME),
+        'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Configure default values for the quiz creation form.',
         'page callback'    => 'drupal_get_form',
         'page arguments'   => array('quiz_admin_entity_form'),
@@ -84,7 +84,7 @@ class HookMenu {
 
     $items['admin/quiz/reports'] = array(
         'title'            => '@quiz reports and scoring',
-        'title arguments'  => array('@quiz' => QUIZ_NAME),
+        'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'View reports and score answers.',
         'page callback'    => 'system_admin_menu_block_page',
         'access arguments' => array('view any quiz results', 'view results for own quiz'),

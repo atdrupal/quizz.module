@@ -76,7 +76,7 @@ class QuizController extends EntityAPIController {
         'answer_feedback'   => t('Answer feedback'),
         'question_feedback' => t('Question feedback'),
         'solution'          => t('Correct answer'),
-        'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
+        'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZZ_NAME)),
     );
 
     drupal_alter('quiz_feedback_options', $feedback_options);
@@ -106,7 +106,7 @@ class QuizController extends EntityAPIController {
 
     // Render take button
     if ($extra_fields['take']['visible']) {
-      $markup = l(t('Start @quiz', array('@quiz' => QUIZ_NAME)), 'quiz/' . $quiz->qid . '/take');
+      $markup = l(t('Start @quiz', array('@quiz' => QUIZZ_NAME)), 'quiz/' . $quiz->qid . '/take');
       if (TRUE !== $checking = $quiz->isAvailable($user)) {
         $markup = $checking;
       }

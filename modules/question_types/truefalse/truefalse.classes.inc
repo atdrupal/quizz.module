@@ -1,8 +1,8 @@
 <?php
 
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionHandler;
-use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\QuestionHandler;
+use Drupal\quizz_question\ResponseHandler;
 use Drupal\quizz\Entity\Answer;
 
 /**
@@ -258,7 +258,7 @@ class TrueFalseResponse extends ResponseHandler {
             'score'           => intval($correct_answer == 1 && $input == 1),
             'answer_feedback' => '',
             'solution'        => $correct_answer == 1 ? quiz_icon('should') : '',
-            'quiz_feedback'   => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
+            'quiz_feedback'   => t('@quiz feedback', array('@quiz' => QUIZZ_NAME)),
         ),
         array(
             'choice'          => t('False'),

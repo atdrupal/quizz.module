@@ -2,7 +2,7 @@
 
 namespace Drupal\quizz_scale\Form\ConfigForm;
 
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_scale\Entity\Collection;
 
 class FormDefinition {

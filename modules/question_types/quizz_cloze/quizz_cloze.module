@@ -10,7 +10,7 @@ function quizz_cloze_quiz_question_info() {
           'description'       => t('Quiz questions that allow a user to fill-in the missing words.'),
           'question provider' => 'Drupal\quizz_cloze\ClozeQuestionHandler',
           'response provider' => 'Drupal\quizz_cloze\ClozeResponseHandler',
-          'module'            => 'quiz_question', // All wrapper functions are in that module.
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
 }
@@ -20,7 +20,7 @@ function quizz_cloze_quiz_question_info() {
  */
 function quizz_cloze_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['#entity']) && !empty($form['#entity_type']) && 'quiz_question' === $form['#entity_type']) {
-    $question_type = quiz_question_type_load($form['#entity']->type);
+    $question_type = quizz_question_type_load($form['#entity']->type);
     if ('cloze' === $question_type->handler) {
       $form['#after_build'][] = 'quizz_cloze_form_alter_after_build';
     }

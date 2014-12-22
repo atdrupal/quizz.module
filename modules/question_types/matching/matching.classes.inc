@@ -1,8 +1,8 @@
 <?php
 
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionHandler;
-use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\QuestionHandler;
+use Drupal\quizz_question\ResponseHandler;
 use Drupal\quizz\Entity\Answer;
 
 /**
@@ -537,7 +537,7 @@ class MatchingResponse extends ResponseHandler {
           'answer_feedback'   => $match['feedback'],
           'question_feedback' => 'Question feedback',
           'solution'          => $solution[1][$match['match_id']],
-          'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
+          'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZZ_NAME)),
       );
     }
     return $data;

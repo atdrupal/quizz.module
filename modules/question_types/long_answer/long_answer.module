@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 
@@ -40,7 +40,7 @@ function long_answer_menu() {
       'title'            => 'Score long answer response',
       'description'      => 'Score a response to a long answer question.',
       'access arguments' => array(4, 5),
-      'access callback'  => 'quiz_question_access_to_score',
+      'access callback'  => 'quizz_question_access_to_score',
       'page callback'    => 'long_answer_edit_score',
       'page arguments'   => array(4, 5),
       'type'             => MENU_NORMAL_ITEM,
@@ -60,7 +60,7 @@ function long_answer_quiz_question_info() {
           'description'       => t('Quiz questions that allow a user to enter multiple paragraphs of text.'),
           'question provider' => 'LongAnswerQuestion',
           'response provider' => 'LongAnswerResponse',
-          'module'            => 'quiz_question', // All wrapper functions are in that module.
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
 }

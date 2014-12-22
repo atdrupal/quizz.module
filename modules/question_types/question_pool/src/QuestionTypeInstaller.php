@@ -2,7 +2,7 @@
 
 namespace Drupal\question_pool;
 
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 
 class QuestionTypeInstaller {
 
@@ -64,7 +64,7 @@ class QuestionTypeInstaller {
 
   protected function getTargetBundles() {
     $targets = array();
-    foreach (quiz_question_get_types() as $name => $question_type) {
+    foreach (quizz_question_get_types() as $name => $question_type) {
       if (in_array($question_type->handler, array('multichoice', 'truefalse', 'matching'))) {
         $targets[] = $name;
       }

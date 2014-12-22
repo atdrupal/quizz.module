@@ -3,7 +3,7 @@
 /**
  * Drag and drop with lines question type for the Quiz module.
  */
-use Drupal\quiz_question\Entity\QuestionType;
+use Drupal\quizz_question\Entity\QuestionType;
 
 define('QUIZ_DDLINES_WRONG', 1);
 define('QUIZ_DDLINES_CORRECT', 2);
@@ -18,7 +18,7 @@ function quiz_ddlines_quiz_question_info() {
           'description'       => t('This provides drag and drop question type with lines.'),
           'question provider' => 'Drupal\quiz_ddlines\DDLinesQuestion',
           'response provider' => 'Drupal\quiz_ddlines\DDLinesResponse',
-          'module'            => 'quiz_question', // All wrapper functions are in that module.
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
   );
 }

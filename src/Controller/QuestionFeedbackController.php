@@ -3,7 +3,7 @@
 namespace Drupal\quizz\Controller;
 
 use Drupal\quizz\Entity\Result;
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 class QuestionFeedbackController {
 

@@ -2,7 +2,7 @@
 
 namespace Drupal\quizz_scale\Form;
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 class ScaleQuestionForm {
 
@@ -81,7 +81,7 @@ class ScaleQuestionForm {
     );
 
     $form['answer']['manage'] = array(
-        '#markup' => l(t('Manage presets'), 'admin/structure/quiz-questions/manage/' . $this->question->getQuestionType()->type),
+        '#markup' => l(t('Manage presets'), 'admin/structure/quizz-questions/manage/' . $this->question->getQuestionType()->type),
         '#access' => entity_access('update', 'quiz_question_type', $this->question->getQuestionType(), $user),
     );
 

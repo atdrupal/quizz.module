@@ -48,7 +48,7 @@ class HookQuizScored {
 
     $variables = array(
         '@title' => $this->quiz->title,
-        '@quiz'  => QUIZ_NAME,
+        '@quiz'  => QUIZZ_NAME,
         '@time'  => date('l jS \of F Y h:i:s A'),
     );
 

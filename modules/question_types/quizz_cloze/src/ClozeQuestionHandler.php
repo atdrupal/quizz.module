@@ -2,9 +2,9 @@
 
 namespace Drupal\quizz_cloze;
 
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\Entity\QuestionType;
-use Drupal\quiz_question\QuestionHandler;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\Entity\QuestionType;
+use Drupal\quizz_question\QuestionHandler;
 
 /**
  * Extension of QuizQuestion.

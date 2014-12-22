@@ -2,8 +2,8 @@
 
 namespace Drupal\quiz_ddlines;
 
-use Drupal\quiz_question\Entity\QuestionType;
-use Drupal\quiz_question\QuestionHandler;
+use Drupal\quizz_question\Entity\QuestionType;
+use Drupal\quizz_question\QuestionHandler;
 
 /**
  * Extension of QuizQuestion.

@@ -24,7 +24,7 @@ class ResultGenerator {
     if (!$questions = $quiz->getQuestionIO()->getQuestionList()) {
       throw new RuntimeException(t(
         'No questions were found. Please !assign before trying to take this @quiz.', array(
-          '@quiz'   => QUIZ_NAME,
+          '@quiz'   => QUIZZ_NAME,
           '!assign' => l(t('assign questions'), 'quiz/' . $quiz->identifier() . '/questions')
       )));
     }

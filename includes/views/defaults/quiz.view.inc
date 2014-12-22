@@ -251,7 +251,7 @@ $handler->display->display_options['filters']['status']['value']['value'] = '0';
 
 /* Display: Page */
 $handler = $view->new_display('page', 'Page', 'page');
-$handler->display->display_options['path'] = 'admin/content/quiz';
+$handler->display->display_options['path'] = 'admin/content/quizz';
 $handler->display->display_options['menu']['type'] = 'tab';
 $handler->display->display_options['menu']['title'] = 'Quiz';
 $handler->display->display_options['menu']['weight'] = '0';

@@ -1,9 +1,9 @@
 <?php
 
 use Drupal\multichoice\FormDefinition;
-use Drupal\quiz_question\Entity\Question;
-use Drupal\quiz_question\QuestionHandler;
-use Drupal\quiz_question\ResponseHandler;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\QuestionHandler;
+use Drupal\quizz_question\ResponseHandler;
 use Drupal\quizz\Entity\Answer;
 
 /**
@@ -731,7 +731,7 @@ class MultichoiceResponse extends ResponseHandler {
           'answer_feedback'   => check_markup($alternative["feedback_if_{$not}chosen"]['value'], $alternative["feedback_if_{$not}chosen"]['format'], FALSE),
           'question_feedback' => 'Question feedback',
           'solution'          => $alternative['score_if_chosen'] > 0 ? quiz_icon('should') : ($simple_scoring ? quiz_icon('should-not') : ''),
-          'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZ_NAME)),
+          'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZZ_NAME)),
       );
     }
 

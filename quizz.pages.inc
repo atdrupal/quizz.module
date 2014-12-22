@@ -21,7 +21,7 @@ use Drupal\quizz\Form\QuizForm;
 use Drupal\quizz\Form\QuizQuestionsForm;
 use Drupal\quizz\Form\QuizReportForm;
 use Drupal\quizz\Form\QuizTypeForm;
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 /**
  * Form for /admin/quiz/settings/config.
@@ -136,7 +136,7 @@ function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
       )
   );
 
-  foreach (quiz_question_get_types() as $name => $question_type) {
+  foreach (quizz_question_get_types() as $name => $question_type) {
     $links['links'][] = array(
         'title'      => $question_type->label,
         'href'       => 'quiz-question/add/' . str_replace('_', '-', $name),
@@ -334,7 +334,7 @@ function quiz_answer_form_submit($form, &$form_state) {
 }
 
 function quiz_question_element_validate(&$element, &$form_state) {
-  /* @var $question \Drupal\quiz_question\Entity\Question */
+  /* @var $question \Drupal\quizz_question\Entity\Question */
   $question = $form_state['build_info']['args'][1];
   $result = $form_state['build_info']['args'][3];
   return $question->getHandler()->elementValidate($result, $element, $form_state);
@@ -425,7 +425,7 @@ function theme_quiz_progress($variables) {
  * @ingroup themeable
  */
 function theme_quiz_no_feedback() {
-  return t('Thanks for taking the @quiz!', array('@quiz' => QUIZ_NAME));
+  return t('Thanks for taking the @quiz!', array('@quiz' => QUIZZ_NAME));
 }
 
 /**
@@ -686,7 +686,7 @@ function quiz_result_form($form, &$form_state, Result $result) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
       '#type'  => 'submit',
-      '#value' => t('Start @quiz', array('@quiz' => QUIZ_NAME)),
+      '#value' => t('Start @quiz', array('@quiz' => QUIZZ_NAME)),
   );
 
   return $form;

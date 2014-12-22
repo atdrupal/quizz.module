@@ -21,7 +21,7 @@ class Render extends ResultBaseController {
 
     if (!$this->score['is_evaluated']) {
       $msg = t('Parts of this @quiz have not been evaluated yet. The score below is not final.', array(
-          '@quiz' => QUIZ_NAME
+          '@quiz' => QUIZZ_NAME
       ));
       drupal_set_message($msg, 'warning');
     }

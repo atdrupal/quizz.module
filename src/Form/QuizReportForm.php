@@ -2,7 +2,7 @@
 
 namespace Drupal\quizz\Form;
 
-use Drupal\quiz_question\Entity\Question;
+use Drupal\quizz_question\Entity\Question;
 
 class QuizReportForm {
 
@@ -113,7 +113,7 @@ class QuizReportForm {
     }
 
     // Notify the user if results got deleted as a result of him scoring an answer.
-    $add = $quiz->keep_results == QUIZ_KEEP_BEST && $results_got_deleted ? ' ' . t('Note that this @quiz is set to only keep each users best answer.', array('@quiz' => QUIZ_NAME)) : '';
+    $add = $quiz->keep_results == QUIZZ_KEEP_BEST && $results_got_deleted ? ' ' . t('Note that this @quiz is set to only keep each users best answer.', array('@quiz' => QUIZZ_NAME)) : '';
 
     $score_data = $this->getScoreArray($result->result_id, $quiz->vid, TRUE);
 
@@ -142,7 +142,7 @@ class QuizReportForm {
     if (!empty($_SESSION['messages']['warning'])) {
       // Search for the message, and remove it if we find it.
       foreach ($_SESSION['messages']['warning'] as $key => $val) {
-        if ($val == t('This @quiz has not been scored yet.', array('@quiz' => QUIZ_NAME))) {
+        if ($val == t('This @quiz has not been scored yet.', array('@quiz' => QUIZZ_NAME))) {
           unset($_SESSION['messages']['warning'][$key]);
         }
       }

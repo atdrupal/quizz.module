@@ -6,12 +6,12 @@ use Drupal\quizz\Controller\QuizTakeController;
  * This plugin array is more or less self documenting
  */
 $plugin = array(
-    'title'            => t('@quiz take pane', array('@quiz' => QUIZ_NAME)),
+    'title'            => t('@quiz take pane', array('@quiz' => QUIZZ_NAME)),
     'single'           => TRUE,
     'render callback'  => 'quiz_take_pane_content_type_render',
     'category'         => array(t('Quiz'), -9),
-    'description'      => t('@quiz take pane description.', array('@quiz' => QUIZ_NAME)),
-    'required context' => new ctools_context_required(QUIZ_NAME, 'quiz_entity'),
+    'description'      => t('@quiz take pane description.', array('@quiz' => QUIZZ_NAME)),
+    'required context' => new ctools_context_required(QUIZZ_NAME, 'quiz_entity'),
 );
 
 /**

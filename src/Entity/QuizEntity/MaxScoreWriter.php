@@ -44,7 +44,7 @@ class MaxScoreWriter {
       . ' FROM {quiz_relationship} relationship'
       . ' WHERE relationship.question_status = :status AND quiz_vid = {quiz_entity_revision}.vid';
     db_update('quiz_entity_revision')
-      ->expression('max_score', "($score_random) + ($score_always)", array(':status' => QUIZ_QUESTION_ALWAYS))
+      ->expression('max_score', "($score_random) + ($score_always)", array(':status' => QUIZZ_QUESTION_ALWAYS))
       ->condition('vid', $quiz_vids)
       ->execute();
   }
@@ -60,7 +60,7 @@ class MaxScoreWriter {
     $_score .= ' WHERE qt.qid = {quiz_entity_revision}.qid AND qt.vid = {quiz_entity_revision}.vid';
     db_update('quiz_entity_revision')
       ->expression('max_score', "($_score)")
-      ->condition('randomization', QUIZ_QUESTION_CATEGORIZED_RANDOM)
+      ->condition('randomization', QUIZZ_QUESTION_CATEGORIZED_RANDOM)
       ->condition('vid', $quiz_vids)
       ->execute();
   }

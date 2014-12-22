@@ -35,13 +35,13 @@ class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
   private function getQuizDisplayFields() {
     return array(
         'take'  => array(
-            'label'       => t('Take @quiz button', array('@quiz' => QUIZ_NAME)),
+            'label'       => t('Take @quiz button', array('@quiz' => QUIZZ_NAME)),
             'description' => t('The take button.'),
             'weight'      => 10,
         ),
         'stats' => array(
-            'label'       => t('@quiz summary', array('@quiz' => QUIZ_NAME)),
-            'description' => t('@quiz summary', array('@quiz' => QUIZ_NAME)),
+            'label'       => t('@quiz summary', array('@quiz' => QUIZZ_NAME)),
+            'description' => t('@quiz summary', array('@quiz' => QUIZZ_NAME)),
             'weight'      => 9,
         ),
     );

@@ -26,10 +26,10 @@ class Maintainer {
     }
 
     switch ($quiz->keep_results) {
-      case QUIZ_KEEP_BEST:
+      case QUIZZ_KEEP_BEST:
         return $this->keepBestResult($uid, $quiz);
 
-      case QUIZ_KEEP_LATEST:
+      case QUIZZ_KEEP_LATEST:
         return $this->keepLatestResult($uid, $quiz, $result->result_id);
     }
 
