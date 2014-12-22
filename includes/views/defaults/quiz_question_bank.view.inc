@@ -62,7 +62,7 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_setti
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['skip_batching'] = 1;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::quiz_add_question_to_quiz'                      => array(
+    'action::quizz_add_qestion_to_quiz_action'               => array(
         'selected'            => 1,
         'postpone_processing' => 0,
         'skip_confirmation'   => 1,

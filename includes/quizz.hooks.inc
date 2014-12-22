@@ -94,7 +94,7 @@ function quizz_admin_paths() {
 function quizz_action_info() {
   $actions = array();
 
-  $actions['quiz_add_question_to_quiz'] = array(
+  $actions['quizz_add_qestion_to_quiz_action'] = array(
       'type'             => 'quiz_question',
       'label'            => t('Add questions to @quiz', array('@quiz' => QUIZZ_NAME)),
       'configurable'     => FALSE,
@@ -300,8 +300,7 @@ function quizz_access_results($quiz, $result_id = NULL) {
 /**
  * Helper function to determine if a user has access to view his quiz results
  *
- * @param object $quiz
- *  The Quiz entity
+ * @param QuizEntity $quiz
  */
 function quizz_access_my_results($quiz) {
   global $user;

@@ -149,7 +149,7 @@ do
   question_ids=`drush sqlq 'SELECT nid FROM node WHERE type <> "quiz" ORDER BY RAND()  LIMIT '$rand`
   for question_id in $question_ids
   do
-    drush ev '$_GET["q"] = "node/'$quiz_id'"; $question = node_load('$question_id'); quiz_add_question_to_quiz($question);'
+    drush ev '$_GET["q"] = "node/'$quiz_id'"; $question = node_load('$question_id'); quizz_add_qestion_to_quiz_action($question);'
   done
 done
 
