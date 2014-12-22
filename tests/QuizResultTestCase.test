@@ -2,18 +2,15 @@
 
 class QuizResultTestCase extends QuizTestCase {
 
+  protected $extraModules = array('quizz_truefalse', 'text');
+  protected $questionHandlers = array('truefalse');
+
   public static function getInfo() {
     return array(
         'name'        => t('Quiz results'),
         'description' => t('Test cases for Quiz results.'),
         'group'       => t('Quiz'),
     );
-  }
-
-  public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = $this->questionHandler = 'truefalse';
-    $modules[] = 'text';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**

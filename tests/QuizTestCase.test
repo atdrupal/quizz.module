@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz_question\Entity\Question;
 
 /**
  * Base test class for Quiz questions.
@@ -23,12 +23,9 @@ abstract class QuizTestCase extends DrupalWebTestCase {
   /**
    * Set up a question test case.
    *
-   * @param array $modules
-   *   Array of modules to enable.
-   * @param array $admin_permissions
-   *   Array of admin permissions to add.
-   * @param array $user_permissions
-   *   Array of user permissions to add.
+   * @param string[] $modules
+   * @param string[] $admin_permissions
+   * @param string[] $user_permissions
    */
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
     $modules[] = 'quizz';
@@ -59,23 +56,24 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     // Test case needs create question handler
     if (!empty($this->questionHandler) && $this->questionHandler) {
       $this->questionHandlers[] = $this->questionHandler;
+    }
+
+    if (!empty($this->questionHandlers)) {
       foreach ($this->questionHandlers as $handler_name) {
         $admin_permissions[] = "create default_{$handler_name} question";
         $admin_permissions[] = "edit any default_{$handler_name} question";
+      }
+
+      $handler_info = quizz_question_get_handler_info();
+      $question_types = quizz_question_get_types();
+      foreach ($this->questionHandlers as $handler_name) {
+        $this->assertTrue(isset($handler_info[$handler_name]), "Found {$handler_name} question handler info.");
+        $this->assertTrue(isset($question_types['default_' . $handler_name]), "Default question type for {$handler_name} is created.");
       }
     }
 
     $this->admin = $this->drupalCreateUser(array_unique($admin_permissions));
     $this->user = $this->drupalCreateUser(array_unique($user_permissions));
-
-    if (!empty($this->questionHandlers)) {
-      $info = quizz_question_get_handler_info();
-      $question_types = quizz_question_get_types();
-      foreach ($this->questionHandlers as $handler_name) {
-        $this->assertTrue(isset($info[$this->questionHandler]), "Found {$handler_name} question handler info.");
-        $this->assertTrue(isset($question_types['default_' . $handler_name]), "Default question type for {$handler_name} is created.");
-      }
-    }
   }
 
   /**

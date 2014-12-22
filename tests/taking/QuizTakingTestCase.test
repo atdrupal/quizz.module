@@ -2,7 +2,8 @@
 
 class QuizTakingTestCase extends QuizTestCase {
 
-  protected $extraModules = array('truefalse');
+  protected $extraModules = array('quizz_truefalse');
+  protected $questionHandlers = array('truefalse');
 
   public static function getInfo() {
     return array(

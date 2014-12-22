@@ -8,14 +8,14 @@
 /**
  * Implements hook_install().
  */
-function truefalse_install() {
+function quizz_truefalse_install() {
   variable_set('node_options_truefalse', array('status'));
 }
 
 /**
  * Implements hook_schema().
  */
-function truefalse_schema() {
+function quizz_truefalse_schema() {
   // Extensions to nodes for T/F
   $schema['quiz_truefalse'] = array(
       'fields'      => array(
@@ -44,7 +44,7 @@ function truefalse_schema() {
 /**
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
-function truefalse_quiz_question_upgrade_schema_node_to_entity() {
+function quizz_truefalse_quiz_question_upgrade_schema_node_to_entity() {
   if (db_table_exists('quiz_truefalse_node')) {
     $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
     db_rename_table('quiz_truefalse_node', 'quiz_truefalse');
@@ -56,7 +56,7 @@ function truefalse_quiz_question_upgrade_schema_node_to_entity() {
 /**
  * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
  */
-function truefalse_quiz_question_upgrade_pre_drop_temp_columns() {
+function quizz_truefalse_quiz_question_upgrade_pre_drop_temp_columns() {
   // quiz_truefalse
   db_query(
     "UPDATE {quiz_truefalse} as tf"
@@ -74,7 +74,7 @@ function truefalse_quiz_question_upgrade_pre_drop_temp_columns() {
   );
 }
 
-function truefalse_update_7600() {
+function quizz_truefalse_update_7600() {
   require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }
