@@ -2,15 +2,7 @@
 
 use Drupal\quizz_question\Entity\Question;
 
-/**
- * @file
- * Unit tests for the short_answer Module.
- */
-
-/**
- * Test class for short answer.
- */
-class QuizDirectionsTestCase extends QuizTestCase {
+class DirectionsQuestionTestCase extends QuizTestCase {
 
   protected $questionHandler = 'quiz_directions';
 
@@ -22,14 +14,6 @@ class QuizDirectionsTestCase extends QuizTestCase {
     );
   }
 
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'quiz_directions';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
-  }
-
-  /**
-   * Test adding and taking a quiz directions question.
-   */
   private function createQuizQuestion($settings = array()) {
     return $this->drupalCreateQuestion(array(
           'type'  => $this->questionHandler,

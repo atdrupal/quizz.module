@@ -160,6 +160,21 @@ function quizz_question_entity_info() {
 }
 
 /**
+ * Implements hook_quiz_question_info().
+ */
+function quizz_question_quiz_question_info() {
+  return array(
+      'quiz_directions' => array(
+          'name'              => t('@quiz directions', array('@quiz' => QUIZZ_NAME)),
+          'description'       => t('@quiz directions allow you to drop in directions anywhere in a quiz. You can also use them to insert a confirmation step at the end of the quiz.', array('@quiz' => QUIZZ_NAME)),
+          'question provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsQuestionHandler',
+          'response provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsResponseHandler',
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
+      ),
+  );
+}
+
+/**
  * Implements hook_get_report().
  */
 function quizz_question_get_report($question_id, $question_vid, $result_id) {
@@ -295,7 +310,7 @@ function _quiz_delete_question(&$question, $only_this_version) {
 
   $quizzes_to_update = array();
   while ($quizzes_to_update[] = $res->fetchField()) {
-  
+
   }
 
   return quizz_entity_controller()->getMaxScoreWriter()->update($quizzes_to_update);
