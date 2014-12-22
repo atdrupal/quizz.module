@@ -97,6 +97,8 @@ class AccessHelper {
   }
 
   /**
+   * @TODO: Remove me
+   * 
    * Retrieves the quiz entity from the menu router.
    *
    * @return
@@ -104,7 +106,7 @@ class AccessHelper {
    *   router.
    */
   private function getQuizFromMenu() {
-    if ($to_return = menu_get_object('quiz_type_access', 4)) {
+    if ($to_return = menu_get_object('quizz_type_access', 4)) {
       return $to_return;
     }
 
@@ -145,7 +147,7 @@ class AccessHelper {
     }
 
     $result_id = (int) $_SESSION['quiz'][$quiz->qid]['result_id'];
-    $result = quiz_result_load($result_id);
+    $result = quizz_result_load($result_id);
     $question_index = $page_number;
     $qinfo_last = $page_number == 1 ? NULL : $result->layout[$question_index - 1];
     $qinfo = $result->layout[$question_index];
@@ -155,7 +157,7 @@ class AccessHelper {
     }
 
     // No backwards navigation & Already have an answer for the requested question.
-    if (!$quiz->backwards_navigation && quiz_result_is_question_answered($result, $question)) {
+    if (!$quiz->backwards_navigation && quizz_result_is_question_answered($result, $question)) {
       return FALSE;
     }
 
@@ -165,7 +167,7 @@ class AccessHelper {
     }
 
     // Enforce normal navigation. Previous answer was submitted.
-    if (!quiz_result_is_question_answered($result, $question_last)) {
+    if (!quizz_result_is_question_answered($result, $question_last)) {
       return FALSE;
     }
 

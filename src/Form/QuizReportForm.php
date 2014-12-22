@@ -38,7 +38,7 @@ class QuizReportForm {
 
     if (arg(4) === 'feedback') {
       // @todo figure something better than args.
-      $quiz = quiz_load(quiz_get_id_from_url());
+      $quiz = quizz_load(quizz_get_id_from_url());
       $quiz_id = $quiz->qid;
       if (empty($_SESSION['quiz'][$quiz_id])) { // Quiz is done.
         $form['finish'] = array('#type' => 'submit', '#value' => t('Finish'));
@@ -55,7 +55,7 @@ class QuizReportForm {
    * Submit handler to go to the next question from the question feedback.
    */
   public function formSubmitFeedback($form, &$form_state) {
-    $quiz_id = quiz_get_id_from_url();
+    $quiz_id = quizz_get_id_from_url();
     $form_state['redirect'] = "quiz/{$quiz_id}/take/" . $_SESSION['quiz'][$quiz_id]['current'];
   }
 
@@ -89,7 +89,7 @@ class QuizReportForm {
       }
 
       if (NULL === $result) {
-        $result = quiz_result_load($q_values['result_id']);
+        $result = quizz_result_load($q_values['result_id']);
         $quiz = $result->getQuiz();
       }
 
@@ -176,7 +176,7 @@ class QuizReportForm {
           WHERE result_id = :result_id', array(':result_id' => $result_id))->fetchField();
 
     $question_count = $properties->number_of_random_questions;
-    $question_count += quiz_controller()->getStats()->countAlwaysQuestions($quiz_vid);
+    $question_count += quizz_entity_controller()->getStats()->countAlwaysQuestions($quiz_vid);
 
     return array(
         'question_count'   => $question_count,
@@ -201,7 +201,7 @@ class QuizReportForm {
       ->addExpression('SUM(a.points_awarded)');
 
     $score = $subq1->execute()->fetchField();
-    $max_score = quiz_load(NULL, $quiz_vid)->max_score;
+    $max_score = quizz_load(NULL, $quiz_vid)->max_score;
     $final_score = round(100 * ($score / $max_score));
 
     db_update('quiz_results')

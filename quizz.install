@@ -159,7 +159,7 @@ function _quiz_update_7602($row) {
   // find quiz revision
   $sql = 'SELECT qid FROM {quiz_entity} WHERE node_nid = :nid';
   if ($quiz_id = db_query($sql, array(':nid' => $row->nid))->fetchColumn()) {
-    $quiz = quiz_load($quiz_id);
+    $quiz = quizz_load($quiz_id);
   }
 
   $quiz->uid = $row->uid;
@@ -196,7 +196,7 @@ function quizz_update_7603() {
   $sql = 'SELECT vid, node_vid FROM {quiz_entity_revision} WHERE 1 ORDER BY node_vid ASC';
   $rows = db_query($sql)->fetchAll();
   foreach ($rows as $row) {
-    $quiz_revision = quiz_load(NULL, $row->vid);
+    $quiz_revision = quizz_load(NULL, $row->vid);
     $node_revision = node_load(NULL, $row->node_vid);
     _quiz_update_7603($quiz_revision, $node_revision, $field_names);
   }
@@ -296,7 +296,7 @@ function quizz_update_7607() {
   $vars['quiz_pager_start'] = 100;
   $vars['quiz_pager_siblings'] = 5;
 
-  foreach (quiz_get_types() as $name => $quiz_type) {
+  foreach (quizz_get_types() as $name => $quiz_type) {
     // not yet remove 'quiz_auto_revisioning' global variable.
     $quiz_type->setConfig('quiz_auto_revisioning', variable_get('quiz_auto_revisioning', 1));
     foreach ($vars as $name => $default_value) {

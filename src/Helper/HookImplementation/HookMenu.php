@@ -10,9 +10,9 @@ class HookMenu {
     $items += $this->getQuizAdminMenuItems();
     $items += $this->getQuizUserMenuItems();
 
-    $items['quiz-result/%quiz_result'] = array(
+    $items['quiz-result/%quizz_result'] = array(
         'title'            => 'User results',
-        'access callback'  => 'quiz_access_my_result',
+        'access callback'  => 'quizz_access_my_result',
         'access arguments' => array(1),
         'page callback'    => 'quiz_result_page',
         'page arguments'   => array(1),
@@ -25,7 +25,7 @@ class HookMenu {
           'description'      => 'Generate a given number of quizzes',
           'access arguments' => array('create quiz content'),
           'page callback'    => 'drupal_get_form',
-          'page arguments'   => array('quiz_generate_form'),
+          'page arguments'   => array('quizz_generate_form'),
           'file'             => 'quiz.devel.inc',
       );
     }
@@ -43,7 +43,7 @@ class HookMenu {
         'description'      => 'View results, score answers, run reports and edit configurations.',
         'page callback'    => 'system_admin_menu_block_page',
         'access arguments' => array('administer quiz configuration', 'score any quiz', 'score own quiz', 'view any quiz results', 'view results for own quiz'),
-        'access callback'  => 'quiz_access_multi_or',
+        'access callback'  => 'quizz_access_multi_or',
         'type'             => MENU_NORMAL_ITEM,
         'file'             => 'system.admin.inc',
         'file path'        => drupal_get_path('module', 'system'),
@@ -88,7 +88,7 @@ class HookMenu {
         'description'      => 'View reports and score answers.',
         'page callback'    => 'system_admin_menu_block_page',
         'access arguments' => array('view any quiz results', 'view results for own quiz'),
-        'access callback'  => 'quiz_access_multi_or',
+        'access callback'  => 'quizz_access_multi_or',
         'type'             => MENU_NORMAL_ITEM,
         'file'             => 'system.admin.inc',
         'file path'        => drupal_get_path('module', 'system'),
@@ -101,10 +101,10 @@ class HookMenu {
     $items = array();
 
     // User pages.
-    $items['user/%/quiz-results/%quiz_result/view'] = array(
+    $items['user/%/quiz-results/%quizz_result/view'] = array(
         'title'            => 'User results',
         'access arguments' => array(3),
-        'access callback'  => 'quiz_access_my_result',
+        'access callback'  => 'quizz_access_my_result',
         'file'             => 'quizz.pages.inc',
         'page callback'    => 'quiz_result_page',
         'page arguments'   => array(3),

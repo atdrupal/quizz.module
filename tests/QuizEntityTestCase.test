@@ -117,8 +117,8 @@ class QuizEntityTestCase extends QuizTestCase {
     $quiz->save();
 
     // Load old revision
-    $quiz_1 = quiz_load($quiz->qid, $old_revision_id);
-    $quiz_2 = quiz_load($quiz->qid);
+    $quiz_1 = quizz_load($quiz->qid, $old_revision_id);
+    $quiz_2 = quizz_load($quiz->qid);
     $this->assertNotEqual($quiz_1->log, $quiz_2->log, 'New revision is created correctly.');
     $this->assertEqual(95, $quiz_1->pass_rate, 'Quiz property is saved and loaded correctly.');
 
@@ -207,7 +207,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->drupalLogin($this->admin);
     $this->drupalGet('quiz/add');
     $this->drupalPost(NULL, array('title' => 'Test quiz creation'), t('Save'));
-    $this->drupalGet('quiz/' . quiz_controller()->getLatestQuizId());
+    $this->drupalGet('quiz/' . quizz_entity_controller()->getLatestQuizId());
     $this->assertText('Test quiz creation');
     $this->assertText(t('Start !quiz', array('!quiz' => QUIZZ_NAME)));
   }
@@ -224,7 +224,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $quiz->is_new_revision = TRUE;
     $quiz->clone_relationships = TRUE;
     $quiz->save();
-    $quiz_reload = quiz_load($quiz->qid, NULL, TRUE);
+    $quiz_reload = quizz_load($quiz->qid, NULL, TRUE);
     $this->assertEqual(1, count($quiz_reload->getQuestionIO()->getQuestionList()));
   }
 

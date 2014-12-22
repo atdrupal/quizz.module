@@ -34,7 +34,7 @@ class HookEntityInfo {
         'bundle of'        => 'quiz_entity',
         'exportable'       => TRUE,
         'entity keys'      => array('id' => 'id', 'name' => 'type', 'label' => 'label'),
-        'access callback'  => 'quiz_type_access',
+        'access callback'  => 'quizz_type_access',
         'module'           => 'quizz',
         'admin ui'         => array(
             'path'             => 'admin/structure/quiz',
@@ -58,7 +58,7 @@ class HookEntityInfo {
         'fieldable'                     => TRUE,
         'entity keys'                   => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
         'bundle keys'                   => array('bundle' => 'type'),
-        'access callback'               => 'quiz_entity_access_callback',
+        'access callback'               => 'quizz_entity_access_callback',
         'label callback'                => 'entity_class_label',
         'uri callback'                  => 'entity_class_uri',
         'module'                        => 'quizz',
@@ -80,7 +80,7 @@ class HookEntityInfo {
         $entity_info['bundles'][$type] = array(
             'label' => $info->label,
             'admin' => array(
-                'path'             => 'admin/structure/quiz/manage/%quiz_type',
+                'path'             => 'admin/structure/quiz/manage/%quizz_type',
                 'real path'        => 'admin/structure/quiz/manage/' . $type,
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz'),
@@ -143,7 +143,7 @@ class HookEntityInfo {
         $info['bundles'][$name] = array(
             'label' => $question_type->label,
             'admin' => array(
-                'path'             => 'admin/structure/quiz/manage/%quiz_type/result',
+                'path'             => 'admin/structure/quiz/manage/%quizz_type/result',
                 'real path'        => 'admin/structure/quiz/manage/' . $name . '/result',
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz'),

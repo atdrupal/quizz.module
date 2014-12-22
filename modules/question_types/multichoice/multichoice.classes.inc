@@ -58,7 +58,7 @@ class MultichoiceQuestion extends QuestionHandler {
       for ($i = 0; isset($this->question->alternatives[$i]); $i++) {
         $short = &$this->question->alternatives[$i];
         $short['score_if_not_chosen'] = 0;
-        if (isset($short['correct']) && $short['correct'] == 1 && !quiz_valid_integer($short['score_if_chosen'], 1)) {
+        if (isset($short['correct']) && $short['correct'] == 1 && !quizz_valid_integer($short['score_if_chosen'], 1)) {
           $short['score_if_chosen'] = 1;
         }
       }
@@ -725,12 +725,12 @@ class MultichoiceResponse extends ResponseHandler {
 
       $data[] = array(
           'choice'            => check_markup($alternative['answer']['value'], $alternative['answer']['format']),
-          'attempt'           => $chosen ? quiz_icon('selected') : '',
-          'correct'           => $chosen ? $alternative['score_if_chosen'] > 0 ? quiz_icon('correct') : quiz_icon('incorrect') : '',
+          'attempt'           => $chosen ? quizz_icon('selected') : '',
+          'correct'           => $chosen ? $alternative['score_if_chosen'] > 0 ? quizz_icon('correct') : quizz_icon('incorrect') : '',
           'score'             => $alternative["score_if_{$not}chosen"],
           'answer_feedback'   => check_markup($alternative["feedback_if_{$not}chosen"]['value'], $alternative["feedback_if_{$not}chosen"]['format'], FALSE),
           'question_feedback' => 'Question feedback',
-          'solution'          => $alternative['score_if_chosen'] > 0 ? quiz_icon('should') : ($simple_scoring ? quiz_icon('should-not') : ''),
+          'solution'          => $alternative['score_if_chosen'] > 0 ? quizz_icon('should') : ($simple_scoring ? quizz_icon('should-not') : ''),
           'quiz_feedback'     => t('@quiz feedback', array('@quiz' => QUIZZ_NAME)),
       );
     }

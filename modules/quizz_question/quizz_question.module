@@ -94,7 +94,7 @@ function quizz_question_access_to_score($question_vid, $result_id) {
   }
 
   if (user_access('score taken quiz answer')) {
-    if ($result = quiz_result_load($result_id)) {
+    if ($result = quizz_result_load($result_id)) {
       if ($user->uid == $result->uid) {
         return TRUE;
       }
@@ -102,8 +102,8 @@ function quizz_question_access_to_score($question_vid, $result_id) {
   }
 
   if (user_access('score own quiz')) {
-    if ($result = quiz_result_load($result_id)) {
-      if ($quiz = quiz_load(NULL, $result->quiz_vid)) {
+    if ($result = quizz_result_load($result_id)) {
+      if ($quiz = quizz_load(NULL, $result->quiz_vid)) {
         return $user->uid == $quiz->uid;
       }
     }

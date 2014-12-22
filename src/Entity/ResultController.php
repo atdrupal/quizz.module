@@ -104,8 +104,8 @@ class ResultController extends EntityAPIController {
    * @param Result $result
    */
   public function buildContent($result, $view_mode = 'full', $langcode = NULL, $content = array()) {
-    $quiz = quiz_load($result->quiz_qid);
-    $quiz_revision = quiz_load(NULL, $result->quiz_vid);
+    $quiz = quizz_load($result->quiz_qid);
+    $quiz_revision = quizz_load(NULL, $result->quiz_vid);
     $obj = new Render($quiz, $quiz_revision, $result);
     $obj->render($content);
     return parent::buildContent($result, $view_mode, $langcode, $content);

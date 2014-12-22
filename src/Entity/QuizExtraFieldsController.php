@@ -12,7 +12,7 @@ class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
       return $extra;
     }
 
-    if ($types = quiz_get_types()) {
+    if ($types = quizz_get_types()) {
       foreach (array_keys($types) as $name) {
         $extra['quiz_entity'][$name] = array(
             'display' => $this->getQuizDisplayFields(),

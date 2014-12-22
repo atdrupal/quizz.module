@@ -90,7 +90,7 @@ class PoolQuestionHandler extends QuestionHandler {
    * to an administrator or to a quiz taker.
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
-    $quiz = quiz_result_load($result_id)->getQuiz();
+    $quiz = quizz_result_load($result_id)->getQuiz();
     $retry = $quiz->repeat_until_correct && !empty($_GET['retry']);
     $question = $this->getCurrentQuestion($quiz->qid, $retry);
     $form = array();

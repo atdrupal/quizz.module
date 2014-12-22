@@ -29,7 +29,7 @@ function quizz_scale_manage_collection_form_validate($form, &$form_state) {
  * Validate the scale config form values
  */
 function quizz_scale_config_validate($form, $form_state) {
-  if (!quiz_valid_integer($form_state['values']['configuration']['scale_max_num_of_alts'], 2, 50)) {
+  if (!quizz_valid_integer($form_state['values']['configuration']['scale_max_num_of_alts'], 2, 50)) {
     form_set_error('scale_max_num_of_alts', t('The number of alternatives must be between 2 and 50'));
   }
 }

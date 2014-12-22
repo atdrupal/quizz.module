@@ -35,8 +35,8 @@ class RevisionActionsForm {
 
     // Create a form element for each quiz
     foreach ($relationships as $relationship) {
-      $quiz = quiz_load($relationship->quiz_qid);
-      $answered = quiz_has_been_answered($quiz);
+      $quiz = quizz_load($relationship->quiz_qid);
+      $answered = quizz_has_been_answered($quiz);
 
       $form['quizzes']['#tree'] = TRUE;
       $form['quizzes'][$quiz->nid]['revise'] = array(
@@ -83,7 +83,7 @@ class RevisionActionsForm {
 
     foreach ($form_state['values']['quizzes'] as $quiz_id => $actions) {
       // Get the current version of the questions.
-      $quiz = quiz_load($quiz_id);
+      $quiz = quizz_load($quiz_id);
       $query = new EntityFieldQuery();
       $find = $query->entityCondition('entity_type', 'quiz_relationship')
         ->propertyCondition('quiz_qid', $quiz->qid)

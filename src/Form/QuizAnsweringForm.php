@@ -103,7 +103,7 @@ class QuizAnsweringForm {
     );
 
     // Should we disable this question?
-    if (empty($this->quiz->allow_change) && quiz_result_is_question_answered($this->result, $question)) {
+    if (empty($this->quiz->allow_change) && quizz_result_is_question_answered($this->result, $question)) {
       // This question was already answered, and not skipped.
       $form['question'][$question->qid]['#disabled'] = TRUE;
     }

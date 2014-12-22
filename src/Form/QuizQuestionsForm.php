@@ -119,7 +119,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
    */
   private function taxonomySelect($tid = 0) {
     $options = array();
-    foreach (quiz()->getVocabularies() as $vid => $vocabulary) {
+    foreach (quizz()->getVocabularies() as $vid => $vocabulary) {
       $temp = taxonomy_form($vid, $tid);
       $options = array_merge($options, $temp['#options']);
     }
@@ -267,7 +267,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
    * Validate that the supplied questions are real.
    */
   public function formValidate($form, $form_state) {
-    if (!$quiz = quiz_load(quiz_get_id_from_url())) {
+    if (!$quiz = quizz_load(quizz_get_id_from_url())) {
       $msg = t('A critical error has occured. Please report error code 28 on the quiz project page.');
       form_set_error('changed', $msg);
       return;
@@ -281,12 +281,12 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     $already_checked = array();
 
     // Make sure the number of random questions is a positive number
-    if (isset($form_state['values']['num_random_questions']) && !quiz_valid_integer($form_state['values']['num_random_questions'], 0)) {
+    if (isset($form_state['values']['num_random_questions']) && !quizz_valid_integer($form_state['values']['num_random_questions'], 0)) {
       form_set_error('num_random_questions', 'The number of random questions needs to be a positive number');
     }
 
     // Make sure the max score for random questions is a positive number
-    if (isset($form_state['values']['max_score_for_random']) && !quiz_valid_integer($form_state['values']['max_score_for_random'], 0)) {
+    if (isset($form_state['values']['max_score_for_random']) && !quizz_valid_integer($form_state['values']['max_score_for_random'], 0)) {
       form_set_error('max_score_for_random', 'The max score for random questions needs to be a positive number');
     }
 
@@ -317,7 +317,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     // We make sure max score is a positive number
     $max_scores = isset($form_state['values']['max_scores']) ? $form_state['values']['max_scores'] : array();
     foreach ($max_scores as $id => $max_score) {
-      if (!quiz_valid_integer($max_score, 0)) {
+      if (!quizz_valid_integer($max_score, 0)) {
         form_set_error("max_scores][$id", t('Max score needs to be a positive number'));
       }
     }
@@ -328,10 +328,10 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
    * @return QuizEntity
    */
   private function formSubmitFindQuiz($form_state) {
-    $quiz = quiz_load(quiz_get_id_from_url());
+    $quiz = quizz_load(quizz_get_id_from_url());
 
     // Update the refresh latest quizzes table so that we know what the users latest quizzes are
-    $new_revision = variable_get('quiz_auto_revisioning', 1) ? quiz_has_been_answered($quiz) : (bool) $form_state['values']['new_revision'];
+    $new_revision = variable_get('quiz_auto_revisioning', 1) ? quizz_has_been_answered($quiz) : (bool) $form_state['values']['new_revision'];
     if ($new_revision) {
       $quiz->is_new_revision = $new_revision;
       $quiz->old_vid = $quiz->vid;

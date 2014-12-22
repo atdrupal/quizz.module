@@ -132,7 +132,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       }
     }
 
-    if (quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
+    if (quizz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
       $form['score'] = $this->getReportFormScore();
     }
 
@@ -191,7 +191,7 @@ abstract class ResponseHandler extends ResponseHandlerBase {
       $class = $this->isCorrect() ? 'q-correct' : 'q-wrong';
     }
 
-    if ($this->canReview('score') || quiz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
+    if ($this->canReview('score') || quizz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
       $output['score_display']['#markup'] = theme('quiz_question_score', array(
           'score'     => $score,
           'max_score' => $this->getQuestionMaxScore(),

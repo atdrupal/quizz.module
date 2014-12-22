@@ -57,7 +57,7 @@ define('QUIZZ_KEEP_ALL', 2);
  * @param string $className
  * @return \Drupal\quizz\Quiz
  */
-function quiz($className = 'Drupal\quizz\Quiz') {
+function quizz($className = 'Drupal\quizz\Quiz') {
   if (!$obj = &drupal_static(__FUNCTION__)) {
     $obj = new $className;
   }
@@ -69,7 +69,7 @@ function quiz($className = 'Drupal\quizz\Quiz') {
  *
  * @return \Drupal\quizz\Entity\QuizController
  */
-function quiz_controller() {
+function quizz_entity_controller() {
   return entity_get_controller('quiz_entity');
 }
 
@@ -78,7 +78,7 @@ function quiz_controller() {
  *
  * @return \Drupal\quizz\Entity\ResultController
  */
-function quiz_result_controller() {
+function quizz_result_controller() {
   return entity_get_controller('quiz_result');
 }
 
@@ -87,7 +87,7 @@ function quiz_result_controller() {
  *
  * @return \Drupal\quizz\Entity\AnswerController
  */
-function quiz_answer_controller() {
+function quizz_answer_controller() {
   return entity_get_controller('quiz_result_answer');
 }
 
@@ -96,7 +96,7 @@ function quiz_answer_controller() {
  *
  * @return \Drupal\quizz\Entity\QuizType[]
  */
-function quiz_get_types() {
+function quizz_get_types() {
   return entity_load_multiple_by_name('quiz_type');
 }
 
@@ -106,7 +106,7 @@ function quiz_get_types() {
  * @param string $name
  * @return \Drupal\quizz\Entity\QuizType
  */
-function quiz_type_load($name) {
+function quizz_type_load($name) {
   $type = entity_load_multiple_by_name('quiz_type', array($name));
   return isset($type[$name]) ? $type[$name] : null;
 }
@@ -116,7 +116,7 @@ function quiz_type_load($name) {
  *
  * @return \Drupal\quizz\Entity\QuizEntity
  */
-function quiz_load($id = NULL, $vid = NULL, $reset = FALSE) {
+function quizz_load($id = NULL, $vid = NULL, $reset = FALSE) {
   $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
   if ($results = entity_load('quiz_entity', FALSE, $conditions, $reset)) {
     return reset($results);
@@ -128,7 +128,7 @@ function quiz_load($id = NULL, $vid = NULL, $reset = FALSE) {
  *
  * @return \Drupal\quizz\Entity\Result
  */
-function quiz_result_load($result_id) {
+function quizz_result_load($result_id) {
   return entity_load_single('quiz_result', $result_id);
 }
 
@@ -138,7 +138,7 @@ function quiz_result_load($result_id) {
  * @param int $relationship_id
  * @return \Drupal\quizz\Entity\Relationship
  */
-function quiz_relationship_load($relationship_id) {
+function quizz_relationship_load($relationship_id) {
   return entity_load_single('quiz_relationship', $relationship_id);
 }
 
@@ -147,25 +147,25 @@ function quiz_relationship_load($relationship_id) {
  * dependent on that module for the actions to work.  The trigger function is
  * called trigger_options().
  *
- * @param $type
+ * @param $entity_type
  *   One of 'node', 'user', 'comment'.
  *
  * @return
  *   Array keyed by action ID.
  */
-function quiz_action_options($type = 'all') {
+function quiz_action_options($entity_type = 'all') {
   $options = array(t('Choose an action'));
   foreach (actions_actions_map(actions_get_all_actions()) as $aid => $action) {
     $options[$action['type']][$aid] = $action['label'];
   }
 
-  if ('all' === $type) {
+  if ('all' === $entity_type) {
     return $options;
   }
 
-  $options[$type][0] = t('Choose an action');
-  ksort($options[$type]); # Sort to get the choose an action back first
-  return $options[$type];
+  $options[$entity_type][0] = t('Choose an action');
+  ksort($options[$entity_type]); # Sort to get the choose an action back first
+  return $options[$entity_type];
 }
 
 /**
@@ -174,8 +174,8 @@ function quiz_action_options($type = 'all') {
  * @return
  *   TRUE if there exists answers to the current question.
  */
-function quiz_has_been_answered($quiz) {
-  return quiz()->getQuizHelper()->isAnswered($quiz);
+function quizz_has_been_answered($quiz) {
+  return quizz()->getQuizHelper()->isAnswered($quiz);
 }
 
 /**
@@ -185,7 +185,7 @@ function quiz_has_been_answered($quiz) {
  * @return bool
  */
 function quiz_add_question_to_quiz($question) {
-  return quiz_load(quiz_get_id_from_url())->addQuestion($question);
+  return quizz_load(quizz_get_id_from_url())->addQuestion($question);
 }
 
 /**
@@ -194,18 +194,17 @@ function quiz_add_question_to_quiz($question) {
  * @param $quiz_vids
  *  Array with the vid's of the quizzes to update
  */
-function quiz_update_max_score_properties($quiz_vids) {
-  return quiz_controller()->getMaxScoreWriter()->update($quiz_vids);
+function quizz_update_max_score_properties($quiz_vids) {
+  return quizz_entity_controller()->getMaxScoreWriter()->update($quiz_vids);
 }
 
 /**
  * Check if the question has already been answered in the requested attempt.
  *
  * @return bool
- *   TRUE if the question has been answered in the attempt.
  */
-function quiz_result_is_question_answered($result, $question) {
-  if ($answer = quiz_answer_controller()->loadByResultAndQuestion($result->result_id, $question->vid)) {
+function quizz_result_is_question_answered($result, $question) {
+  if ($answer = quizz_answer_controller()->loadByResultAndQuestion($result->result_id, $question->vid)) {
     return !empty($answer->answer_timestamp);
   }
   return FALSE;
@@ -214,7 +213,7 @@ function quiz_result_is_question_answered($result, $question) {
 /**
  * Helper function to faciliate icon display, like "correct" or "selected".
  */
-function quiz_icon($icon) {
+function quizz_icon($icon) {
   return theme('quiz_answer_result', array('type' => $icon));
 }
 
@@ -231,7 +230,7 @@ function quiz_icon($icon) {
  * @return
  *   TRUE if integer in the allowed range. FALSE otherwise.
  */
-function quiz_valid_integer($value, $min = 1, $max = NULL) {
+function quizz_valid_integer($value, $min = 1, $max = NULL) {
   $to_return = (string) $value === (string) (int) $value;
   if ((!$to_return) || ($value < $min) || (isset($max) && ($value > $max))) {
     return FALSE;
@@ -243,6 +242,6 @@ function quiz_valid_integer($value, $min = 1, $max = NULL) {
  * Get quiz ID from page context — /quiz/%
  * @return int
  */
-function quiz_get_id_from_url($path = NULL) {
+function quizz_get_id_from_url($path = NULL) {
   return (int) arg(1, $path);
 }

@@ -17,7 +17,7 @@ class quiz_views_handler_field_quiz_link_take extends views_handler_field_node_l
    */
   function render_link($quiz, $values) {
     // Ensure user has access to take this quiz.
-    if (!quiz_take_access($quiz)) {
+    if (!quizz_take_access($quiz)) {
       return;
     }
 

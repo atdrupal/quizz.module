@@ -138,7 +138,7 @@ class ClozeResponseHandler extends ResponseHandler {
         array(
             'choice'            => theme('item_list', array('items' => $inputs)),
             'attempt'           => $this->answer,
-            'correct'           => quiz_icon($this->isCorrect() ? 'correct' : 'incorrect'),
+            'correct'           => quizz_icon($this->isCorrect() ? 'correct' : 'incorrect'),
             'score'             => $this->getScore(),
             'answer_feedback'   => '',
             'question_feedback' => '',

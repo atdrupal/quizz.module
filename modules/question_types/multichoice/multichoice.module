@@ -82,7 +82,7 @@ function multichoice_quiz_question_config(QuestionType $question_type) {
  * Validate the multichoice config form values
  */
 function multichoice_config_validate($form, $form_state) {
-  if (!quiz_valid_integer($form_state['values']['multichoice_def_num_of_alts'], 2, 50)) {
+  if (!quizz_valid_integer($form_state['values']['multichoice_def_num_of_alts'], 2, 50)) {
     form_set_error('multichoice_def_num_of_alts', t('The default number of alternatives must be between 2 and 50'));
   }
 }

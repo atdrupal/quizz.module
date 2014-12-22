@@ -12,8 +12,8 @@ function quiz_quiztake_page_manager_tasks() {
       'task type'                => 'page',
       'title'                    => t('Take @quiz', array('@quiz' => QUIZZ_NAME)),
       'admin title'              => t('The take page for @quiz.', array('@quiz' => QUIZZ_NAME)),
-      'admin description'        => t('When enabled, this overrides the default view at quiz/%quiz/take'),
-      'admin path'               => 'quiz/%quiz/take',
+      'admin description'        => t('When enabled, this overrides the default view at quiz/%quizz/take'),
+      'admin path'               => 'quiz/%quizz/take',
       // Menu hooks so that we can alter the quiz/%quiz menu entry to point to us.
       'hook menu alter'          => 'quiz_quiztake_menu_alter',
       // This is task uses 'context' handlers and must implement these to give the
@@ -30,20 +30,20 @@ function quiz_quiztake_page_manager_tasks() {
 /**
  * Callback defined by quiz_quiztake_page_manager_tasks().
  *
- * Alter menu item so that quiz/%quiz/take comes here.
+ * Alter menu item so that quiz/%quizz/take comes here.
  */
 function quiz_quiztake_menu_alter(&$items, $task) {
   if (variable_get('quiz_quiztake_disabled', TRUE)) {
     return;
   }
 
-  $callback = $items['quiz/%quiz/take']['page callback'];
+  $callback = $items['quiz/%quizz/take']['page callback'];
 
   // Override the quiz edit handler for our purpose.
   if ($callback === 'quiz_take' || variable_get('page_manager_override_anyway', FALSE)) {
-    $items['quiz/%quiz/take']['file path'] = $task['path'];
-    $items['quiz/%quiz/take']['file'] = $task['file'];
-    $items['quiz/%quiz/take']['page callback'] = 'quiz_quiztake';
+    $items['quiz/%quizz/take']['file path'] = $task['path'];
+    $items['quiz/%quizz/take']['file'] = $task['file'];
+    $items['quiz/%quizz/take']['page callback'] = 'quiz_quiztake';
   }
   elseif (!empty($GLOBALS['page_manager_enabling_quiz'])) {
     $msg = t('Page manager module is unable to enable Quiz take entity because some other module already has overridden with %callback.', array(

@@ -44,7 +44,7 @@ class ResultGenerator {
 
       // Found an existing result we need to rebuild from. We also need to retain the version.
       if (!empty($query_results['quiz_result'])) {
-        $prev_result = quiz_result_load(key($query_results['quiz_result']));
+        $prev_result = quizz_result_load(key($query_results['quiz_result']));
       }
     }
 
@@ -91,7 +91,7 @@ class ResultGenerator {
     $_SESSION['quiz'][$quiz->qid] = array('result_id' => $result->result_id, 'current' => 1);
     module_invoke_all('quiz_begin', $quiz, $result->result_id);
 
-    return quiz_result_load($result->result_id);
+    return quizz_result_load($result->result_id);
   }
 
   /**

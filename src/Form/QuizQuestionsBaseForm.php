@@ -12,7 +12,7 @@ abstract class QuizQuestionsBaseForm {
    */
   protected function addRevisionCheckbox(&$form, &$quiz) {
     // Recommend and preselect to create the quiz as a new revision if it already has been answered
-    if (quiz()->getQuizHelper()->isAnswered($quiz)) {
+    if (quizz()->getQuizHelper()->isAnswered($quiz)) {
       $rev_default = TRUE;
       $rev_description = t('This quiz has been answered. To maintain correctness of existing answers and reports, changes should be saved as a new revision.');
     }

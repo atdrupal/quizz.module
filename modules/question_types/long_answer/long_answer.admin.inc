@@ -139,7 +139,7 @@ function long_answer_score_form_validate($form, $form_state) {
   // Check to make sure that entered score is not higher than max allowed score.
   $max = (int) $form_state['values']['rel_max_score'];
   $given = $form_state['values']['score'];
-  if (!quiz_valid_integer($given, 0, $max)) {
+  if (!quizz_valid_integer($given, 0, $max)) {
     $args = array('@score' => $given, '@max' => $max);
     form_set_error('score', t('The given score (@score) must be an integer between 0 and @max', $args));
   }
@@ -149,7 +149,7 @@ function long_answer_score_form_validate($form, $form_state) {
  * Submit handler for the long answer score form
  */
 function long_answer_score_form_submit($form, &$form_state) {
-  $result = quiz_result_load($form_state['values']['result_id']);
+  $result = quizz_result_load($form_state['values']['result_id']);
 
   $return = long_answer_score_an_answer(array(
       'quiz'            => $result->getQuiz(),

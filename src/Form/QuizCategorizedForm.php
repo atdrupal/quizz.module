@@ -102,7 +102,7 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
     /* @var $quiz QuizEntity */
     $quiz = $form['#quiz'];
 
-    if (!quiz_valid_integer($quiz->qid)) {
+    if (!quizz_valid_integer($quiz->qid)) {
       $msg = t('A critical error has occured. Please report error code 28 on the quiz project page.');
       form_set_error('changed', $msg);
       return;
@@ -136,11 +136,11 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
         form_set_value($form['tid'], $tid, $form_state);
       }
 
-      if (!quiz_valid_integer($form_state['values']['number'])) {
+      if (!quizz_valid_integer($form_state['values']['number'])) {
         form_set_error('number', t('The number of questions needs to be a positive integer'));
       }
 
-      if (!quiz_valid_integer($form_state['values']['max_score'], 0)) {
+      if (!quizz_valid_integer($form_state['values']['max_score'], 0)) {
         form_set_error('max_score', t('The max score needs to be a positive integer or 0'));
       }
     }
@@ -166,12 +166,12 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
    * Submit the categorized form
    */
   public function formSubmit($form, $form_state) {
-    $quiz = quiz_load($form_state['values']['qid'], $form_state['values']['vid']);
+    $quiz = quizz_load($form_state['values']['qid'], $form_state['values']['vid']);
     $quiz->number_of_random_questions = 0;
 
     // Update the refresh latest quizzes table so that we know what the users latest quizzes are
     if ($quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1)) {
-      $is_new_revision = quiz_has_been_answered($quiz);
+      $is_new_revision = quizz_has_been_answered($quiz);
     }
     else {
       $is_new_revision = (bool) $form_state['values']['new_revision'];
@@ -266,7 +266,7 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
    *  The start of the string we are looking for
    */
   public static function searchTerms($start, $all = FALSE) {
-    if (!$sql_args = array_keys(quiz()->getVocabularies())) {
+    if (!$sql_args = array_keys(quizz()->getVocabularies())) {
       return array();
     }
 

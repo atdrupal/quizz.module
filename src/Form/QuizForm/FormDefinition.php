@@ -22,7 +22,7 @@ class FormDefinition extends FormHelper {
         drupal_set_message($msg);
       }
 
-      $defaults = quiz_controller()->getSettingIO()->get(TRUE, $this->quiz->type);
+      $defaults = quizz_entity_controller()->getSettingIO()->get(TRUE, $this->quiz->type);
       foreach ($defaults as $k => $v) {
         if (!isset($this->quiz->{$k}) || is_null($this->quiz->{$k})) {
           $this->quiz->{$k} = $v;
@@ -46,7 +46,7 @@ class FormDefinition extends FormHelper {
   public function get($form, &$form_state, $op) {
     global $language;
 
-    $quiz_type = quiz_type_load($this->quiz->type);
+    $quiz_type = quizz_type_load($this->quiz->type);
 
     if (!empty($quiz_type->help)) {
       $form['quiz_help'] = array(
@@ -239,7 +239,7 @@ class FormDefinition extends FormHelper {
         '#tree'        => TRUE,
     );
 
-    $review_options = quiz_controller()->getFeedbackOptions();
+    $review_options = quizz_entity_controller()->getFeedbackOptions();
     foreach (array('question' => t('After the question'), 'end' => t('After the @quiz', array('@quiz' => QUIZZ_NAME))) as $key => $when) {
       $form['taking']['taking_tabs']['review_options'][$key] = array(
           '#title'         => $when,
@@ -522,7 +522,7 @@ class FormDefinition extends FormHelper {
         ),
     );
 
-    if (quiz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
+    if (quizz_has_been_answered($this->quiz) && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
       $this->quiz->revision = 1;
       $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
     }
@@ -556,7 +556,7 @@ class FormDefinition extends FormHelper {
       $form['revision_information']['log']['#type'] = 'value';
       $form['revision_information']['log']['#value'] = $form['revision_information']['log']['#default_value'];
       $form['revision_information']['#access'] = FALSE;
-      if (quiz_has_been_answered($this->quiz)) {
+      if (quizz_has_been_answered($this->quiz)) {
         $this->quiz->revision = 1;
         $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
       }

@@ -79,7 +79,7 @@ function quiz_type_form_submit($form, &$form_state) {
  */
 function quiz_entity_adding_landing_page() {
   return theme_render_template(drupal_get_path('module', 'quizz') . '/theme/quiz-adding-landing.tpl.php', array(
-      'quiz_types' => quiz_get_types()
+      'quiz_types' => quizz_get_types()
   ));
 }
 
@@ -211,7 +211,7 @@ function quiz_page(QuizEntity $quiz, $view_mode = 'default', $langcode = NULL) {
 }
 
 /**
- * Callback for /quiz/%quiz/revisions.
+ * Callback for /quiz/%quizz/revisions.
  *
  * @param QuizEntity $quiz
  */
@@ -242,7 +242,7 @@ function quiz_question_take_page(QuizEntity $quiz, $page_number) {
   $quiz_id = $quiz->qid;
 
   if (isset($_SESSION['quiz'][$quiz_id]['result_id'])) {
-    $result = quiz_result_load($_SESSION['quiz'][$quiz_id]['result_id']);
+    $result = quizz_result_load($_SESSION['quiz'][$quiz_id]['result_id']);
   }
 
   // Load the page that the requested question belongs to.
@@ -273,7 +273,7 @@ function quiz_jumper_form($form, $form_state, $questions, $current) {
 }
 
 function quiz_jumper_form_submit($form, &$form_state) {
-  $quiz = quiz_load(quiz_get_id_from_url());
+  $quiz = quizz_load(quizz_get_id_from_url());
   $_SESSION['quiz'][$quiz->qid]['current'] = $form_state['values']['question_number'] - 1;
   $form_state['redirect'] = "quiz/" . $quiz->qid . "/take/" . $form_state['values']['question_number'];
 }
@@ -345,12 +345,12 @@ function quiz_report_form_element_validate(&$element, &$form_state) {
 }
 
 /**
- * Callback for quiz/%/take/%question_number/feedback. Show feedback for a
+ * Callback for quiz/%/take/%quizz_question_number/feedback. Show feedback for a
  * question response.
  */
 function quiz_question_feedback_page(QuizEntity $quiz, $page_number) {
   $result_id = empty($_SESSION['quiz'][$quiz->qid]['result_id']) ? $_SESSION['quiz']['temp']['result_id'] : $_SESSION['quiz'][$quiz->qid]['result_id'];
-  $result = quiz_result_load($result_id);
+  $result = quizz_result_load($result_id);
   $obj = new QuestionFeedbackController($result);
   return $obj->render($page_number);
 }
@@ -455,7 +455,7 @@ function theme_quiz_view_stats($variables) {
   }
 
   if (!empty($quiz->time_limit)) {
-    $stats[] = array('title' => t('Time limit'), 'data' => quiz()->formatDuration($quiz->time_limit));
+    $stats[] = array('title' => t('Time limit'), 'data' => quizz()->formatDuration($quiz->time_limit));
   }
 
   $stats[] = array('title' => t('Backwards navigation'), 'data' => $quiz->backwards_navigation ? t('Allowed') : t('Forbidden'));
@@ -472,7 +472,7 @@ function theme_quiz_view_stats($variables) {
 }
 
 /**
- * Callback for /quiz-result/%quiz_result.
+ * Callback for /quiz-result/%quizz_result.
  *
  * @param Result $result
  */
@@ -517,7 +517,7 @@ function quiz_report_form_submit($form, &$form_state) {
  * Theme the quiz pager.
  */
 function theme_quiz_pager($variables) {
-  return quiz()
+  return quizz()
       ->getQuizHelper()
       ->getTakeJumperHelper($variables['quiz'], $variables['total'], $variables['siblings'], $variables['current'])
       ->render();
@@ -706,7 +706,7 @@ function quiz_result_form_submit($form, &$form_state) {
     $quiz->build_on_last = $form_state['values']['build_on_last'];
   }
 
-  quiz_controller()
+  quizz_entity_controller()
     ->getResultGenerator()
     ->generate($base_result->getQuiz(), $user, $base_result)
   ;

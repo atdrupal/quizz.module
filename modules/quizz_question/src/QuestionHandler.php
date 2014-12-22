@@ -203,12 +203,12 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    *  TRUE if relationship is made.
    */
   public function saveRelationships($quiz_qid = NULL, $quiz_vid = NULL) {
-    if (!$quiz_qid || !$quiz_vid || !$quiz = quiz_load($quiz_qid, $quiz_vid)) {
+    if (!$quiz_qid || !$quiz_vid || !$quiz = quizz_load($quiz_qid, $quiz_vid)) {
       return FALSE;
     }
 
     // We need to revise the quiz if it has been answered.
-    if (quiz_has_been_answered($quiz)) {
+    if (quizz_has_been_answered($quiz)) {
       $quiz->is_new_revision = 1;
       $quiz->clone_relationships = 1;
       $quiz->save();
@@ -245,10 +245,10 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
       ->execute();
 
     if (!empty($update_quiz_ids)) {
-      quiz_controller()->getMaxScoreWriter()->update($update_quiz_ids);
+      quizz_entity_controller()->getMaxScoreWriter()->update($update_quiz_ids);
     }
 
-    quiz_controller()->getMaxScoreWriter()->update(array($quiz->vid));
+    quizz_entity_controller()->getMaxScoreWriter()->update(array($quiz->vid));
 
     return TRUE;
   }

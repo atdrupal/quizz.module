@@ -64,7 +64,7 @@ class FormSubmission extends QuizTakeBaseController {
       $question->getResponseHandler($this->result->result_id)->delete();
 
       // Mark our question attempt as skipped, reset the correct and points flag.
-      $answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $question->vid);
+      $answer = quizz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $question->vid);
       $answer->is_skipped = 1;
       $answer->is_correct = 0;
       $answer->points_awarded = 0;
@@ -124,7 +124,7 @@ class FormSubmission extends QuizTakeBaseController {
         }
         field_attach_submit('quiz_result_answer', $answer, $form['question'][$question_id], $fs);
 
-        quiz_result_controller()
+        quizz_result_controller()
           ->getWriter()
           ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
 
@@ -196,17 +196,17 @@ class FormSubmission extends QuizTakeBaseController {
       }
 
       // Load the Quiz answer submission from the database.
-      if (!$answer = quiz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $qinfo['vid'])) {
+      if (!$answer = quizz_answer_controller()->loadByResultAndQuestion($this->result->result_id, $qinfo['vid'])) {
         $handler = $current_question->getResponseHandler($this->result->result_id);
         $handler->delete();
         $answer = $handler->toBareObject();
-        quiz_result_controller()
+        quizz_result_controller()
           ->getWriter()
           ->saveAnswer($this->quiz, $answer, array('set_msg' => TRUE, 'question_data' => $question_array));
       }
     }
 
-    $score = quiz_result_controller()->getScoreIO()->calculate($this->result);
+    $score = quizz_result_controller()->getScoreIO()->calculate($this->result);
     if (!isset($score['percentage_score'])) {
       $score['percentage_score'] = 0;
     }
@@ -215,7 +215,7 @@ class FormSubmission extends QuizTakeBaseController {
     $this->result->time_end = REQUEST_TIME;
     entity_save('quiz_result', $this->result);
     if ($user->uid) {
-      $score['passing'] = quiz()->getQuizHelper()->isPassed($user->uid, $this->quiz->qid, $this->quiz->vid);
+      $score['passing'] = quizz()->getQuizHelper()->isPassed($user->uid, $this->quiz->qid, $this->quiz->vid);
     }
     else {
       $score['passing'] = $score['percentage_score'] >= $this->quiz->pass_rate;

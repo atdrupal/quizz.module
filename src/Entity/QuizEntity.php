@@ -88,14 +88,14 @@ class QuizEntity extends Entity {
    * @return \Drupal\quizz\Entity\QuizController
    */
   public function getController() {
-    return quiz_controller();
+    return quizz_entity_controller();
   }
 
   /**
    * @return \Drupal\quizz\Entity\QuizType
    */
   public function getQuizType() {
-    return quiz_type_load($this->type);
+    return quizz_type_load($this->type);
   }
 
   public function save() {

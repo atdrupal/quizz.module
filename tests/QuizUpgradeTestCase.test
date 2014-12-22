@@ -111,7 +111,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
    */
   private function checkConfiguration(array $info) {
     // Check configuration for quiz.
-    $type = quiz_type_load('quiz');
+    $type = quizz_type_load('quiz');
 
     $vars = array();
     $vars[] = 'quiz_auto_revisioning';
@@ -174,7 +174,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertEqual($info['count']['scale'], $c_scale, "Number of scale questions is not changed.");
 
     // Check quiz body field's data is migrated.
-    $this->assertTrue(!empty(quiz_load(1)->quiz_body['und'][0]['value']), "Quiz body field's data is migrated correctly.");
+    $this->assertTrue(!empty(quizz_load(1)->quiz_body['und'][0]['value']), "Quiz body field's data is migrated correctly.");
 
     // Check question's body field is migrated.
     $question_sql = 'SELECT quiz_question_body_value FROM {field_data_quiz_question_body} WHERE 1 LIMIT 1';

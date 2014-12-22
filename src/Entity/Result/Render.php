@@ -8,7 +8,7 @@ use Drupal\quizz\Controller\ResultBaseController;
  * Callback for:
  *
  *  - quiz-result/%
- *  - user/%/quiz-results/%quiz_result/view
+ *  - user/%/quiz-results/%quizz_result/view
  *
  * Show result page for a given result. Check issue #2362097
  */

@@ -56,7 +56,7 @@ class Result extends Entity {
    */
   public function getQuiz() {
     if (NULL == $this->quiz) {
-      $this->quiz = quiz_load(NULL, $this->quiz_vid);
+      $this->quiz = quizz_load(NULL, $this->quiz_vid);
     }
     return $this->quiz;
   }
@@ -101,7 +101,7 @@ class Result extends Entity {
       return TRUE;
     }
 
-    if ($quiz = quiz_load(NULL, $this->quiz_vid)) {
+    if ($quiz = quizz_load(NULL, $this->quiz_vid)) {
       return user_access('score own quiz', $account) && ($quiz->uid == $account->uid);
     }
 

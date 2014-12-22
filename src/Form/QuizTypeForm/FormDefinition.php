@@ -43,7 +43,7 @@ class FormDefinition {
         '#default_value' => isset($this->quiz_type->type) ? $this->quiz_type->type : '',
         '#maxlength'     => 32,
         '#disabled'      => $this->quiz_type->isLocked() && $op !== 'clone',
-        '#machine_name'  => array('exists' => 'quiz_type_load', 'source' => array('label')),
+        '#machine_name'  => array('exists' => 'quizz_type_load', 'source' => array('label')),
         '#description'   => t('A unique machine-readable name for this !quiz type. It must only contain lowercase letters, numbers, and underscores.', array('!quiz' => QUIZZ_NAME)),
     );
 

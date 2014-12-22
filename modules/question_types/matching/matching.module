@@ -68,7 +68,7 @@ function matching_quiz_question_config(QuestionType $question_type) {
  * Validate the matching config form values
  */
 function matching_config_validate($form, $form_state) {
-  if (!quiz_valid_integer($form_state['values']['quiz_matching_form_size'], 2, 50)) {
+  if (!quizz_valid_integer($form_state['values']['quiz_matching_form_size'], 2, 50)) {
     form_set_error('quiz_matching_form_size', t('The number of questions must be between 2 and 50'));
   }
 }

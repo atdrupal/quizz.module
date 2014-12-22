@@ -297,5 +297,5 @@ function _quiz_delete_question(&$question, $only_this_version) {
   while ($quizzes_to_update[] = $res->fetchField()) {
 
   }
-  quiz_update_max_score_properties($quizzes_to_update);
+  quizz_update_max_score_properties($quizzes_to_update);
 }

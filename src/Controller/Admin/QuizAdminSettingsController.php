@@ -164,15 +164,15 @@ class QuizAdminSettingsController {
    * Checks the values for the form administration form for quiz settings.
    */
   public function validate($form, &$form_state) {
-    if (!quiz_valid_integer($form_state['values']['quiz_default_close'])) {
+    if (!quizz_valid_integer($form_state['values']['quiz_default_close'])) {
       form_set_error('quiz_default_close', t('The default number of days before a quiz is closed must be a number greater than 0.'));
     }
 
-    if (!quiz_valid_integer($form_state['values']['quiz_autotitle_length'], 0, 128)) {
+    if (!quizz_valid_integer($form_state['values']['quiz_autotitle_length'], 0, 128)) {
       form_set_error('quiz_autotitle_length', t('The autotitle length value must be an integer between 0 and 128.'));
     }
 
-    if (!quiz_valid_integer($form_state['values']['quiz_max_result_options'], 0, 100)) {
+    if (!quizz_valid_integer($form_state['values']['quiz_max_result_options'], 0, 100)) {
       form_set_error('quiz_max_result_options', t('The number of result options must be an integer between 0 and 100.'));
     }
 
@@ -200,11 +200,11 @@ class QuizAdminSettingsController {
     global $user;
 
     if ($type === 'subject') {
-      return quiz()->getMailHelper()->formatSubject($target, $user);
+      return quizz()->getMailHelper()->formatSubject($target, $user);
     }
 
     if ($type === 'body') {
-      return quiz()->getMailHelper()->formatBody($target, $user);
+      return quizz()->getMailHelper()->formatBody($target, $user);
     }
   }
 

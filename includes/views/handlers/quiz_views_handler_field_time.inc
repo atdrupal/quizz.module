@@ -8,7 +8,7 @@
 class quiz_views_handler_field_time extends views_handler_field {
 
   function render($values) {
-    return quiz()->formatDuration($values->{$this->field_alias});
+    return quizz()->formatDuration($values->{$this->field_alias});
   }
 
 }

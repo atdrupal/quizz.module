@@ -12,7 +12,7 @@ use Drupal\quiz_stats\Controller\RevisionStatsController;
 /**
  * Page for selecting between several quiz revisions
  *
- * Callback for /quiz/%quiz/statistics
+ * Callback for /quiz/%quizz/statistics
  *
  * @return string
  */
@@ -36,7 +36,7 @@ function quiz_stats_revision_page($quiz_vid, $uid = 0) {
  */
 function quiz_stats_get_basic_stats($uid = 0) {
   return theme('quiz_stats_get_basic_stats', array(
-      'results' => quiz_controller()->getStats()->getQuizzesByUserId($uid)
+      'results' => quizz_entity_controller()->getStats()->getQuizzesByUserId($uid)
   ));
 }
 
@@ -244,7 +244,7 @@ function theme_quiz_stats_get_basic_stats($variables) {
         'created' => format_date($result['created'], 'short'),
     );
     if (user_access('access author stats')) {
-      $row['questions_count'] = quiz_controller()->getStats()->countAllQuestions($result['vid']);
+      $row['questions_count'] = quizz_entity_controller()->getStats()->countAllQuestions($result['vid']);
       $row['attempt_count'] = _quiz_get_attempt_count($result['qid']);
     }
     $rows[] = $row;

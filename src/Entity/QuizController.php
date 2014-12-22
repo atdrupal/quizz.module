@@ -187,13 +187,13 @@ class QuizController extends EntityAPIController {
       return;
     }
 
-    if (!$revision = quiz_load(NULL, $previous_vid, TRUE)) {
+    if (!$revision = quizz_load(NULL, $previous_vid, TRUE)) {
       return;
     }
 
     foreach ($revision->getQuestionIO()->getQuestionList() as $relationship) {
       if (empty($relationship['random'])) {
-        if ($relationship = quiz_relationship_load($relationship['qr_id'])) {
+        if ($relationship = quizz_relationship_load($relationship['qr_id'])) {
           $relationship->qr_id = NULL;
           $relationship->quiz_vid = $quiz->vid;
           $relationship->save();

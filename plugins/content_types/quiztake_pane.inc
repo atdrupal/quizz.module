@@ -32,7 +32,7 @@ function quiz_take_pane_content_type_render($subtype, $conf, $panel_args, $conte
     return $block;
   }
 
-  if (!quiz_take_access($quiz)) {
+  if (!quizz_take_access($quiz)) {
     return;
   }
 

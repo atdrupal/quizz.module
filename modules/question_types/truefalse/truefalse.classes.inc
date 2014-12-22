@@ -253,20 +253,20 @@ class TrueFalseResponse extends ResponseHandler {
     return array(
         array(
             'choice'          => t('True'),
-            'attempt'         => $input ? quiz_icon('selected') : '',
-            'correct'         => $input == 1 ? quiz_icon($correct_answer ? 'correct' : 'incorrect') : '',
+            'attempt'         => $input ? quizz_icon('selected') : '',
+            'correct'         => $input == 1 ? quizz_icon($correct_answer ? 'correct' : 'incorrect') : '',
             'score'           => intval($correct_answer == 1 && $input == 1),
             'answer_feedback' => '',
-            'solution'        => $correct_answer == 1 ? quiz_icon('should') : '',
+            'solution'        => $correct_answer == 1 ? quizz_icon('should') : '',
             'quiz_feedback'   => t('@quiz feedback', array('@quiz' => QUIZZ_NAME)),
         ),
         array(
             'choice'          => t('False'),
-            'attempt'         => !$input ? quiz_icon('selected') : '',
-            'correct'         => $input == 0 ? (quiz_icon(!$correct_answer ? 'correct' : 'incorrect')) : '',
+            'attempt'         => !$input ? quizz_icon('selected') : '',
+            'correct'         => $input == 0 ? (quizz_icon(!$correct_answer ? 'correct' : 'incorrect')) : '',
             'score'           => intval($correct_answer == 0 && $input == 0),
             'answer_feedback' => '',
-            'solution'        => $correct_answer == 0 ? quiz_icon('should') : '',
+            'solution'        => $correct_answer == 0 ? quizz_icon('should') : '',
         )
     );
   }

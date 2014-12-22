@@ -52,7 +52,7 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    */
   public function __construct($result_id, Question $question, $input = NULL) {
     $this->result_id = $result_id;
-    $this->result = quiz_result_load($result_id);
+    $this->result = quizz_result_load($result_id);
     $this->question = $question;
     $this->question_handler = $question->getHandler();
     $this->answer = $input;
@@ -64,7 +64,7 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    */
   public function loadAnswerEntity($refresh = TRUE) {
     if ($refresh || (NULL === $this->answer_entity)) {
-      if ($this->answer_entity = quiz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid)) {
+      if ($this->answer_entity = quizz_answer_controller()->loadByResultAndQuestion($this->result_id, $this->question->vid)) {
         $this->onLoad($this->answer_entity);
       }
     }

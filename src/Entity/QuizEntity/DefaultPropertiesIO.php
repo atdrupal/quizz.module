@@ -60,7 +60,7 @@ class DefaultPropertiesIO extends FormHelper {
    */
   public function getQuizDefaultPropertyValues($type = NULL) {
     $defaults = array();
-    if ($type && $question_type = quiz_type_load($type)) {
+    if ($type && $question_type = quizz_type_load($type)) {
       $defaults = $question_type->getConfigurations();
     }
 

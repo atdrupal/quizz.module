@@ -77,7 +77,7 @@ class QuizTakeController {
   public function initQuizResult() {
     // Inject result from user's session
     if (!empty($_SESSION['quiz'][$this->quiz->qid]['result_id'])) {
-      $this->result = quiz_result_load($result_id = $_SESSION['quiz'][$this->quiz->qid]['result_id']);
+      $this->result = quizz_result_load($result_id = $_SESSION['quiz'][$this->quiz->qid]['result_id']);
     }
 
     // Enforce that we have the same quiz version.
@@ -95,7 +95,7 @@ class QuizTakeController {
       if (!$this->checkAvailability()) {
         throw new RuntimeException(t('This @quiz is closed.', array('@quiz' => QUIZZ_NAME)));
       }
-      $this->result = quiz_controller()->getResultGenerator()->generate($this->quiz, $this->account);
+      $this->result = quizz_entity_controller()->getResultGenerator()->generate($this->quiz, $this->account);
     }
 
     if (TRUE !== $this->quiz->isAvailable($this->account)) {
@@ -115,8 +115,8 @@ class QuizTakeController {
 
     $_SESSION['quiz'][$this->quiz->qid]['result_id'] = $result_id;
     $_SESSION['quiz'][$this->quiz->qid]['current'] = 1;
-    $this->result = quiz_result_load($result_id);
-    $this->quiz = quiz_load($this->result->quiz_qid, $this->result->quiz_vid);
+    $this->result = quizz_result_load($result_id);
+    $this->quiz = quizz_load($this->result->quiz_qid, $this->result->quiz_vid);
 
     // Resume a quiz from the database.
     drupal_set_message(t('Resuming a previous @quiz in-progress.', array('@quiz' => QUIZZ_NAME)), 'status');
@@ -217,7 +217,7 @@ class QuizTakeController {
     }
 
     // Check to see if the user is registered, and user alredy passed this quiz.
-    if ($this->quiz->show_passed && $this->account->uid && quiz()->getQuizHelper()->isPassed($this->account->uid, $this->quiz->qid, $this->quiz->vid)) {
+    if ($this->quiz->show_passed && $this->account->uid && quizz()->getQuizHelper()->isPassed($this->account->uid, $this->quiz->qid, $this->quiz->vid)) {
       $msg = t('You have already passed this @quiz.', array('@quiz' => QUIZZ_NAME));
       drupal_set_message($msg, 'status');
     }

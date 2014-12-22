@@ -2,8 +2,8 @@
 
 use Drupal\quizz\Generator\Generator;
 
-function quiz_generate_form($form, $form_state) {
-  foreach (quiz_get_types() as $name => $quiz_type) {
+function quizz_generate_form($form, $form_state) {
+  foreach (quizz_get_types() as $name => $quiz_type) {
     $quiz_options[$name] = $quiz_type->label;
   }
 
@@ -56,7 +56,7 @@ function quiz_generate_form($form, $form_state) {
   return $form;
 }
 
-function quiz_generate_form_submit($form, &$form_state) {
+function quizz_generate_form_submit($form, &$form_state) {
   $quiz_types = array_filter($form_state['values']['quiz_types']);
   $quiz_limit = $form_state['values']['quiz_limit'];
   $question_types = array_filter($form_state['values']['quiz_question_types']);

@@ -57,14 +57,14 @@ function quizz_ctools_plugin_api($module, $api) {
  * Implements hook_entity_info().
  */
 function quizz_entity_info() {
-  return quiz()->getHookImplementation()->getHookEntityInfo()->execute();
+  return quizz()->getHookImplementation()->getHookEntityInfo()->execute();
 }
 
 /**
  * Implements hook_permission().
  */
 function quizz_permission() {
-  return quiz()->getHookImplementation()->getHookPermission()->execute();
+  return quizz()->getHookImplementation()->getHookPermission()->execute();
 }
 
 /**
@@ -110,7 +110,7 @@ function quizz_action_info() {
  * Remove old quiz results that haven't been finished.
  */
 function quizz_cron() {
-  foreach (quiz_get_types() as $name => $quiz_type) {
+  foreach (quizz_get_types() as $name => $quiz_type) {
     if ($rm_time = $quiz_type->getConfig('quiz_remove_partial_quiz_record', 0)) { // time = 0 for never.
       $sql = 'DELETE FROM {quiz_results} result';
       $sql .= ' INNER JOIN {quiz_entity} quiz ON result.quiz_qid = quiz.qid';
@@ -125,17 +125,17 @@ function quizz_cron() {
  * Implements hook_menu().
  */
 function quizz_menu() {
-  return quiz()->getHookImplementation()->getHookMenu()->execute();
+  return quizz()->getHookImplementation()->getHookMenu()->execute();
 }
 
 /**
  * Implements hook_menu_alter()
  */
 function quizz_menu_alter(&$items) {
-  $items['admin/structure/quiz/manage/%quiz_type/result/fields']['title'] = 'Result fields';
-  $items['admin/structure/quiz/manage/%quiz_type/result/fields']['weight'] = 3;
-  $items['admin/structure/quiz/manage/%quiz_type/result/display']['title'] = 'Result display';
-  $items['admin/structure/quiz/manage/%quiz_type/result/display']['weight'] = 4;
+  $items['admin/structure/quiz/manage/%quizz_type/result/fields']['title'] = 'Result fields';
+  $items['admin/structure/quiz/manage/%quizz_type/result/fields']['weight'] = 3;
+  $items['admin/structure/quiz/manage/%quizz_type/result/display']['title'] = 'Result display';
+  $items['admin/structure/quiz/manage/%quizz_type/result/display']['weight'] = 4;
 
   $items['admin/structure/quizz-questions/manage/%quizz_question_type/answer/fields']['title'] = 'Answer fields';
   $items['admin/structure/quizz-questions/manage/%quizz_question_type/answer/fields']['weight'] = 5;
@@ -216,7 +216,7 @@ function quizz_theme($existing, $type, $theme, $path) {
  * Implements hook_user_cancel().
  */
 function quizz_user_cancel($edit, $account, $method) {
-  quiz()->getHookImplementation()->getHookUserCancel($account, $method)->execute();
+  quizz()->getHookImplementation()->getHookUserCancel($account, $method)->execute();
 }
 
 /**
@@ -228,7 +228,7 @@ function quizz_mail($key, &$message, $params) {
   switch ($key) {
     case 'notice':
       list($quiz, $score, $result_id, $target) = $params;
-      list($subject, $body) = quiz()->getMailHelper()->notice($user, $quiz, $score, $result_id, $target);
+      list($subject, $body) = quizz()->getMailHelper()->notice($user, $quiz, $score, $result_id, $target);
       $message['subject'] = $subject;
       $message['body'][] = $body;
       break;
@@ -241,34 +241,13 @@ function quizz_mail($key, &$message, $params) {
  * Performs actions like sending quiz results over email at the end of quiz.
  */
 function quizz_quiz_scored($quiz, $score, $result_id) {
-  return quiz()->getHookImplementation()->getHookQuizScored($quiz, $score, $result_id)->execute();
+  return quizz()->getHookImplementation()->getHookQuizScored($quiz, $score, $result_id)->execute();
 }
-
-// ---------------------
-// Helper functions
-// ---------------------
 
 /**
  * Workaround for menu_translate bug.
  */
-function question_number_to_arg() {
-  return 0;
-}
-
-/**
- * Result_id, menu argument loader.
- */
-function quiz_rid_load($result_id) {
-  if ($result_id > 0) {
-    return $result_id;
-  }
-  return FALSE;
-}
-
-/**
- * Workaround for a _menu_translate() bug.
- */
-function quiz_rid_to_arg() {
+function quizz_question_number_to_arg() {
   return 0;
 }
 
@@ -280,7 +259,7 @@ function quiz_rid_to_arg() {
  * @return
  *   TRUE if the user has access to any of the arguments given.
  */
-function quiz_access_multi_or() {
+function quizz_access_multi_or() {
   foreach (func_get_args() as $perm) {
     if (user_access($perm)) {
       return TRUE;
@@ -295,10 +274,10 @@ function quiz_access_multi_or() {
  * @return boolean
  *  True if access, false otherwise
  */
-function quiz_access_my_result($result) {
+function quizz_access_my_result($result) {
   global $user;
 
-  if (is_numeric($result) && !$result = quiz_result_load($result)) {
+  if (is_numeric($result) && !$result = quizz_result_load($result)) {
     throw new RuntimeException('Invalid result ID.');
   }
 
@@ -309,16 +288,13 @@ function quiz_access_my_result($result) {
  * Helper function to determine if a user has access to the different results
  * pages.
  *
- * @param $quiz
- *   The quiz entity.
- * @param $result_id
- *   The result id of a result we are trying to access.
+ * @param \Drupal\quizz\Entity\QuizEntity $quiz
+ * @param int $result_id
  * @return boolean
- *   TRUE if user has permission.
  */
-function quiz_access_results($quiz, $result_id = NULL) {
+function quizz_access_results($quiz, $result_id = NULL) {
   global $user;
-  return quiz()->getQuizHelper()->getAccessHelper()->canAccessResults($user, $quiz, $result_id);
+  return quizz()->getQuizHelper()->getAccessHelper()->canAccessResults($user, $quiz, $result_id);
 }
 
 /**
@@ -327,9 +303,9 @@ function quiz_access_results($quiz, $result_id = NULL) {
  * @param object $quiz
  *  The Quiz entity
  */
-function quiz_access_my_results($quiz) {
+function quizz_access_my_results($quiz) {
   global $user;
-  return quiz()->getQuizHelper()->getAccessHelper()->canAccessMyResults($quiz, $user);
+  return quizz()->getQuizHelper()->getAccessHelper()->canAccessMyResults($quiz, $user);
 }
 
 /**
@@ -337,16 +313,16 @@ function quiz_access_my_results($quiz) {
  *
  * @param QuizEntity $quiz
  */
-function quiz_take_access($quiz) {
+function quizz_take_access($quiz) {
   global $user;
-  return quiz()->getQuizHelper()->getAccessHelper()->canTakeQuiz($quiz, $user);
+  return quizz()->getQuizHelper()->getAccessHelper()->canTakeQuiz($quiz, $user);
 }
 
 /**
  * Menu check to see if user has access to take this question.
  */
-function quiz_access_question($quiz, $page_number) {
-  return quiz()->getQuizHelper()->getAccessHelper()->canAccessQuestion($quiz, $page_number);
+function quizz_access_question($quiz, $page_number) {
+  return quizz()->getQuizHelper()->getAccessHelper()->canAccessQuestion($quiz, $page_number);
 }
 
 /**
@@ -356,7 +332,7 @@ function quiz_access_question($quiz, $page_number) {
  * @param string $type
  * @param stdClass $account
  */
-function quiz_type_access($op, $type = NULL, $account = NULL) {
+function quizz_type_access($op, $type = NULL, $account = NULL) {
   return user_access('administer quiz configuration', $account);
 }
 
@@ -366,7 +342,7 @@ function quiz_type_access($op, $type = NULL, $account = NULL) {
  * @param QuizEntity $quiz
  * @param stdClass $account
  */
-function quiz_entity_access_callback($op, $quiz = NULL, $account = NULL) {
+function quizz_entity_access_callback($op, $quiz = NULL, $account = NULL) {
   switch ($op) {
     case 'create':
       return user_access('create quiz content', $account);
@@ -382,26 +358,17 @@ function quiz_entity_access_callback($op, $quiz = NULL, $account = NULL) {
 }
 
 /**
- * @TODO: Fix me
  * Validate that a node is of type quiz, and that the user has access to it.
  *
- * @param stdClass $node
+ * @param \Drupal\quizz\Entity\QuizEntity $quiz
  * @param string $op
  * @return bool
  */
-function quiz_type_confirm($node, $op = NULL) {
-  if ($node->type !== 'quiz') {
-    return FALSE;
+function quizz_type_confirm($quiz, $op = NULL) {
+  if (in_array($op, array('view', 'update', 'delete', 'create'))) {
+    return entity_access($op, 'quiz_entity', $quiz);
   }
-
-  if (isset($op)) {
-    if (in_array($op, array('view', 'update', 'delete', 'create'))) {
-      return node_access($op, $node);
-    }
-    return user_access($op);
-  }
-
-  return user_access('access quiz');
+  return user_access(NULL === $op ? 'access quiz' : $op);
 }
 
 /**
@@ -410,14 +377,14 @@ function quiz_type_confirm($node, $op = NULL) {
  * @param int $page_number
  * @return boolean
  */
-function quiz_question_feedback_access(QuizEntity $quiz, $page_number) {
+function quizz_question_feedback_access(QuizEntity $quiz, $page_number) {
   if (($page_number <= 0) || !array_filter($quiz->review_options['question'])) {
     return FALSE;
   }
 
   $result_id = empty($_SESSION['quiz'][$quiz->qid]['result_id']) ? $_SESSION['quiz']['temp']['result_id'] : $_SESSION['quiz'][$quiz->qid]['result_id'];
-  $result = quiz_result_load($result_id);
+  $result = quizz_result_load($result_id);
   $question_vid = $result->layout[$page_number]['vid'];
 
-  return (bool) quiz_answer_controller()->loadByResultAndQuestion($result_id, $question_vid);
+  return (bool) quizz_answer_controller()->loadByResultAndQuestion($result_id, $question_vid);
 }
