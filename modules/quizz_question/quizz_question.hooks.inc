@@ -171,6 +171,13 @@ function quizz_question_quiz_question_info() {
           'response provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsResponseHandler',
           'module'            => 'quizz_question', // All wrapper functions are in that module.
       ),
+      'quiz_page'       => array(
+          'name'              => t('@quiz page', array('@quiz' => QUIZZ_NAME)),
+          'description'       => t('Quiz pages allow you display questions across multiple pages.'),
+          'question provider' => 'Drupal\quizz_question\Handler\Page\PageQuestionHandler',
+          'response provider' => 'Drupal\quizz_question\Handler\Page\PageResonseHandler',
+          'module'            => 'quizz_question', // All wrapper functions are in that module.
+      ),
   );
 }
 
