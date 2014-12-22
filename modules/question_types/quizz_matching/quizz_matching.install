@@ -1,21 +1,16 @@
 <?php
 
 /**
- * @file
- * matching install file.
- */
-
-/**
  * Implements hook_install().
  */
-function matching_install() {
+function quizz_matching_install() {
   variable_set('node_options_matching', array('status'));
 }
 
 /**
  * Implements hook_schema().
  */
-function matching_schema() {
+function quizz_matching_schema() {
   // Properties for a question nodes go in here:
   $schema['quiz_matching_properties'] = array(
       'fields'      => array(
@@ -63,7 +58,7 @@ function matching_schema() {
 /**
  * Add a table to store properties for the matching questions
  */
-function matching_update_7400() {
+function quizz_matching_update_7400() {
   $schema = array(
       'fields'      => array(
           'nid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
@@ -92,7 +87,7 @@ function matching_update_7400() {
 /**
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
-function matching_quiz_question_upgrade_schema_node_to_entity() {
+function quizz_matching_quiz_question_upgrade_schema_node_to_entity() {
   if (db_table_exists('quiz_matching_node')) {
     $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
     $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
@@ -105,7 +100,7 @@ function matching_quiz_question_upgrade_schema_node_to_entity() {
 /**
  * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
  */
-function matching_quiz_question_upgrade_pre_drop_temp_columns() {
+function quizz_matching_quiz_question_upgrade_pre_drop_temp_columns() {
   // quiz_matching_properties
   db_query(
     "UPDATE {quiz_matching_properties} as qp"
@@ -126,7 +121,7 @@ function matching_quiz_question_upgrade_pre_drop_temp_columns() {
 /**
  * Make sure update script from main module is run before all.
  */
-function matching_update_7600() {
+function quizz_matching_update_7600() {
   require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }
@@ -134,7 +129,7 @@ function matching_update_7600() {
 /**
  * Convert global configuration for questions to question type entity.
  */
-function matching_update_7601() {
+function quizz_matching_update_7601() {
   foreach (quizz_question_get_types() as $question_type) {
     if ('matching' === $question_type->handler) {
       $question_type
