@@ -5,5 +5,4 @@ core = 7.x
 dependencies[] = quizz
 dependencies[] = quizz_question
 
-files[] = matching.classes.inc
-files[] = tests/MatchingUnitTest.test
+files[] = tests/MatchingQuestionTestCase.test
