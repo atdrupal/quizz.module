@@ -9,7 +9,7 @@
 class QuizRandomTestCase extends QuizTestCase {
 
   protected $questionHandlers = array('truefalse');
-  protected $extraModules = array('quiz_page', 'taxonomy', 'quizz_truefalse');
+  protected $extraModules = array('taxonomy', 'quizz_truefalse');
 
   public static function getInfo() {
     return array(

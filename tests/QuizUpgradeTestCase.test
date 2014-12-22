@@ -7,7 +7,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   protected static $testDumpFile = '…';
   protected static $dependencies = array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload');
   protected static $testDescription = 'Test an upgrade from various Quiz versions.';
-  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quiz_page', 'quizz_question', 'quizz_scale', 'short_answer', 'quizz_truefalse');
+  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quizz_question', 'quizz_scale', 'short_answer', 'quizz_truefalse');
 
   /**
    * Some warnings are produced by other modules, we cann't do anything, just
@@ -142,9 +142,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $this->assertTrue($question_types['short_answer'] instanceof QuestionType);
     $this->assertTrue($question_types['truefalse'] instanceof QuestionType);
     $this->assertTrue($question_types['scale'] instanceof QuestionType);
-    if (in_array('quiz_page', static::$subModules)) {
-      $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
-    }
+    $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
 
     // Check configuration for question types.
     foreach (quizz_question_get_types() as $question_type) {
@@ -193,7 +191,6 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 class QuizUpgradeFrom7x4xTestCase extends QuizUpgradeBaseTestCase {
 
   protected static $testDumpFile = 'quiz-4x.php.gz';
-  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quizz_question', 'quizz_scale', 'short_answer', 'quizz_truefalse');
 
   public static function getInfo() {
     return array(

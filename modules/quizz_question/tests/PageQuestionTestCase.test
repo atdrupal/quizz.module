@@ -1,8 +1,8 @@
 <?php
 
-class QuizPageTestCase extends QuizTestCase {
+class PageQuestionTestCase extends QuizTestCase {
 
-  protected $extraModules = array('quizz_truefalse', 'quiz_page');
+  protected $extraModules = array('quizz_truefalse');
   protected $questionHandlers = array('truefalse', 'quiz_page');
 
   public static function getInfo() {
