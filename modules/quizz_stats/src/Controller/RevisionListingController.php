@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz_stats\Controller;
+namespace Drupal\quizz_stats\Controller;
 
 use Drupal\quizz\Entity\QuizEntity;
 
@@ -35,7 +35,7 @@ class RevisionListingController {
     foreach ($vids as $vid) {
       $content['links'][] = 'quiz/' . $this->quiz->qid . '/statistics/' . $vid;
     }
-    return theme('quiz_stats_revision_selector', array('content' => $content));
+    return theme('quizz_stats_revision_selector', array('content' => $content));
   }
 
 }

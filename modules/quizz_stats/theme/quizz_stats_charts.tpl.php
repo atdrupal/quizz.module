@@ -20,9 +20,9 @@
  */
 global $chart_found;
 
-if (!function_exists('__quiz_stats_chart')) {
+if (!function_exists('__quizz_stats_chart')) {
 
-  function __quiz_stats_chart($chart) {
+  function __quizz_stats_chart($chart) {
     global $chart_found;
 
     if (!$chart) {
@@ -37,10 +37,10 @@ if (!function_exists('__quiz_stats_chart')) {
 
 }
 
-echo __quiz_stats_chart($charts['takeup']);
-echo __quiz_stats_chart($charts['top_scorers']);
-echo __quiz_stats_chart($charts['status']);
-echo __quiz_stats_chart($charts['grade_range']);
+echo __quizz_stats_chart($charts['takeup']);
+echo __quizz_stats_chart($charts['top_scorers']);
+echo __quizz_stats_chart($charts['status']);
+echo __quizz_stats_chart($charts['grade_range']);
 
 if (empty($chart_found)) {
   echo '<p>' . t('If there are no statistics for this quiz (or quiz revision), this is probably because nobody has yet run this quiz (or quiz revision). If the quiz has multiple revisions, it is possible that the other revisions do have statistics. If this is the last revision, taking the quiz should generate some statistics.') . '</p>';

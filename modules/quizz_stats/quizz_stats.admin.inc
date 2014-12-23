@@ -1,8 +1,8 @@
 <?php
 
 use Drupal\quizz\Entity\QuizEntity;
-use Drupal\quiz_stats\Controller\RevisionListingController;
-use Drupal\quiz_stats\Controller\RevisionStatsController;
+use Drupal\quizz_stats\Controller\RevisionListingController;
+use Drupal\quizz_stats\Controller\RevisionStatsController;
 
 /**
  * @file
@@ -16,12 +16,12 @@ use Drupal\quiz_stats\Controller\RevisionStatsController;
  *
  * @return string
  */
-function quiz_stats_page(QuizEntity $quiz) {
+function quizz_stats_page(QuizEntity $quiz) {
   $obj = new RevisionListingController($quiz);
   return $obj->render();
 }
 
-function quiz_stats_revision_page($quiz_vid, $uid = 0) {
+function quizz_stats_revision_page($quiz_vid, $uid = 0) {
   $obj = new RevisionStatsController($quiz_vid, $uid);
   return $obj->render($quiz_vid, $uid);
 }
@@ -34,8 +34,8 @@ function quiz_stats_revision_page($quiz_vid, $uid = 0) {
  * @return string
  *   HTML table
  */
-function quiz_stats_get_basic_stats($uid = 0) {
-  return theme('quiz_stats_get_basic_stats', array(
+function quizz_stats_get_basic_stats($uid = 0) {
+  return theme('quizz_stats_get_basic_stats', array(
       'results' => quizz_entity_controller()->getStats()->getQuizzesByUserId($uid)
   ));
 }
@@ -216,7 +216,7 @@ function theme_date_vs_takeup_count($variables) {
  * @return
  *   HTML table containing quiz title, author, questions count, attempt count
  */
-function theme_quiz_stats_get_basic_stats($variables) {
+function theme_quizz_stats_get_basic_stats($variables) {
   module_load_include('inc', 'quiz', 'quiz.pages');
 
   $results = $variables['results'];
@@ -232,7 +232,7 @@ function theme_quiz_stats_get_basic_stats($variables) {
   }
 
   $chart_icon = theme('image', array(
-      'path'   => drupal_get_path('module', 'quiz_stats') . '/chart.png',
+      'path'   => drupal_get_path('module', 'quizz_stats') . '/chart.png',
       'width'  => t('Charts'),
       'height' => t('See charts')
   ));

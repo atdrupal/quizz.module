@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz_stats\Controller;
+namespace Drupal\quizz_stats\Controller;
 
 class RevisionStatsController {
 
@@ -26,9 +26,9 @@ class RevisionStatsController {
    */
   public function render() {
     return array(
-        '#theme'    => 'quiz_stats_charts',
+        '#theme'    => 'quizz_stats_charts',
         '#attached' => array(
-            'css' => array(drupal_get_path('module', 'quiz_stats') . '/quiz_stats.css')
+            'css' => array(drupal_get_path('module', 'quizz_stats') . '/quizz_stats.css')
         ),
         '#charts'   => array(
             'takeup'      => $this->getDateVSTakeupCountChart(),
