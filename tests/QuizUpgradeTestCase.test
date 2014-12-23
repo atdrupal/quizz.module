@@ -7,7 +7,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   protected static $testDumpFile = '…';
   protected static $dependencies = array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload');
   protected static $testDescription = 'Test an upgrade from various Quiz versions.';
-  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quiz_ddlines', 'quizz_question', 'short_answer', 'quizz_truefalse');
+  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quizz_ddlines', 'quizz_question', 'short_answer', 'quizz_truefalse');
 
   /**
    * Some warnings are produced by other modules, we cann't do anything, just
