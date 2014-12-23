@@ -7,7 +7,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   protected static $testDumpFile = '…';
   protected static $dependencies = array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload');
   protected static $testDescription = 'Test an upgrade from various Quiz versions.';
-  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quizz_ddlines', 'quizz_question', 'short_answer', 'quizz_truefalse');
+  protected static $subModules = array('long_answer', 'matching', 'multichoice', 'quizz_question', 'short_answer', 'quizz_truefalse');
 
   /**
    * Some warnings are produced by other modules, we cann't do anything, just
@@ -35,7 +35,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz', 'name' => 'quizz'));
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz_question', 'name' => 'quizz_question'));
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'truefalse', 'name' => 'quizz_truefalse'));
-    db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz_ddlines', 'name' => 'quizz_ddlines'));
+    # db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz_ddlines', 'name' => 'quizz_ddlines'));
     # db_query($sql_1, array(':module' => 'module', 'old_name' => 'scale', 'name' => 'quizz_scale'));
 
     module_enable(static::$dependencies);
@@ -135,14 +135,15 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
 
     // Make sure question types are converted from node types
     $question_types = quizz_question_get_types();
+
+    # $this->assertTrue($question_types['quiz_ddlines'] instanceof QuestionType);
+    # $this->assertTrue($question_types['scale'] instanceof QuestionType);
     $this->assertTrue($question_types['long_answer'] instanceof QuestionType);
     $this->assertTrue($question_types['matching'] instanceof QuestionType);
     $this->assertTrue($question_types['multichoice'] instanceof QuestionType);
-    $this->assertTrue($question_types['quiz_ddlines'] instanceof QuestionType);
     $this->assertTrue($question_types['quiz_directions'] instanceof QuestionType);
     $this->assertTrue($question_types['short_answer'] instanceof QuestionType);
     $this->assertTrue($question_types['truefalse'] instanceof QuestionType);
-    # $this->assertTrue($question_types['scale'] instanceof QuestionType);
     $this->assertTrue($question_types['quiz_page'] instanceof QuestionType);
 
     // Check configuration for question types.
@@ -161,7 +162,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     $c_la = db_query($sql, array(':type' => 'long_answer'))->fetchColumn();
     $c_match = db_query($sql, array(':type' => 'matching'))->fetchColumn();
     $c_page = db_query($sql, array(':type' => 'quiz_page'))->fetchColumn();
-    $c_scale = db_query($sql, array(':type' => 'scale'))->fetchColumn();
+    # $c_scale = db_query($sql, array(':type' => 'scale'))->fetchColumn();
     $c_short = db_query($sql, array(':type' => 'short_answer'))->fetchColumn();
     $c_truefalse = db_query($sql, array(':type' => 'truefalse'))->fetchColumn();
 
