@@ -16,7 +16,7 @@ class HookMenu {
         'access arguments' => array(1),
         'page callback'    => 'quiz_result_page',
         'page arguments'   => array(1),
-        'file'             => 'quizz.pages.inc',
+        'file'             => 'includes/quizz.pages.inc',
     );
 
     if (module_exists('devel')) {
@@ -68,7 +68,7 @@ class HookMenu {
         'page arguments'   => array('quiz_admin_settings_form'),
         'access arguments' => array('administer quiz configuration'),
         'type'             => MENU_NORMAL_ITEM, // optional
-        'file'             => 'quizz.pages.inc',
+        'file'             => 'includes/quizz.pages.inc',
     );
 
     $items['admin/quiz/settings/quiz-form'] = array(
@@ -79,7 +79,7 @@ class HookMenu {
         'page arguments'   => array('quiz_admin_entity_form'),
         'access arguments' => array('administer quiz configuration'),
         'type'             => MENU_NORMAL_ITEM, // optional
-        'file'             => 'quizz.pages.inc',
+        'file'             => 'includes/quizz.pages.inc',
     );
 
     $items['admin/quiz/reports'] = array(
@@ -105,7 +105,7 @@ class HookMenu {
         'title'            => 'User results',
         'access arguments' => array(3),
         'access callback'  => 'quizz_access_my_result',
-        'file'             => 'quizz.pages.inc',
+        'file'             => 'includes/quizz.pages.inc',
         'page callback'    => 'quiz_result_page',
         'page arguments'   => array(3),
         'type'             => MENU_CALLBACK,

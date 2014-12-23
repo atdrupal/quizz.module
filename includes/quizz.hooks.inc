@@ -165,11 +165,11 @@ function quizz_theme($existing, $type, $theme, $path) {
   return array(
       'quiz_view_stats'          => array(
           'variables' => array('quiz' => NULL),
-          'file'      => 'quizz.pages.inc'
+          'file'      => 'includes/quizz.pages.inc'
       ),
       'quiz_categorized_form'    => array(
           'render element' => 'form',
-          'file'           => 'quizz.pages.inc'
+          'file'           => 'includes/quizz.pages.inc'
       ),
       'quiz_progress'            => array(
           'variables' => array(
@@ -178,18 +178,18 @@ function quizz_theme($existing, $type, $theme, $path) {
               'num_questions'   => NULL,
               'allow_jumping'   => NULL,
               'time_limit'      => NULL),
-          'file'      => 'quizz.pages.inc',
+          'file'      => 'includes/quizz.pages.inc',
       ),
       'quiz_no_feedback'         => array(
-          'file'      => 'quizz.pages.inc',
+          'file'      => 'includes/quizz.pages.inc',
           'variables' => array(),
       ),
       'question_selection_table' => array(
-          'file'           => 'quizz.pages.inc',
+          'file'           => 'includes/quizz.pages.inc',
           'render element' => 'form',
       ),
       'quiz_answer_result'       => array(
-          'file'      => 'quizz.pages.inc',
+          'file'      => 'includes/quizz.pages.inc',
           'variables' => array(),
       ),
       'quiz_report_form'         => array(
@@ -199,7 +199,7 @@ function quizz_theme($existing, $type, $theme, $path) {
       ),
       'quiz_browser'             => array(
           'render element' => 'form',
-          'file'           => 'quizz.pages.inc',
+          'file'           => 'includes/quizz.pages.inc',
       ),
       'quiz_question_score'      => array(
           'variables' => array('score' => NULL, 'max_score' => NULL),

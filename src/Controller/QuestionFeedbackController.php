@@ -20,7 +20,7 @@ class QuestionFeedbackController {
   }
 
   public function buildFormArray(Question $question) {
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'quizz') . '/includes/quizz.pages.inc';
     return drupal_get_form('quiz_report_form', $this->result, array($question));
   }
 

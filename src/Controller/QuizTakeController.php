@@ -24,7 +24,7 @@ class QuizTakeController {
   }
 
   private function renderResultForm() {
-    require_once drupal_get_path('module', 'quizz') . '/quizz.pages.inc';
+    require_once drupal_get_path('module', 'quizz') . '/includes/quizz.pages.inc';
     $result = entity_create('quiz_result', array(
         'type'     => $this->quiz->type,
         'quiz_qid' => $this->quiz->qid,

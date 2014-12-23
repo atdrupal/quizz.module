@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * quizz.pages.inc
- *
- * This file contains function callbacks for forms and pages. Long or complex
- * functions are moved to classes.
- */
 use Drupal\quizz\Controller\Admin\QuizAdminSettingsController;
 use Drupal\quizz\Controller\Admin\QuizRevisionsAdminController;
 use Drupal\quizz\Controller\QuestionFeedbackController;
