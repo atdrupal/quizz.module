@@ -93,7 +93,7 @@ before_script:
   # Prepare env for the module
   # ---------------------
   - drush vset --yes file_temporary_path /tmp
-  - drush en -y simpletest long_answer quizz_question short_answer quizz_truefalse
+  - drush en -y simpletest quizz_question quizz_truefalse
   - drush vset --yes simpletest_verbose FALSE
 
   # ---------------------
