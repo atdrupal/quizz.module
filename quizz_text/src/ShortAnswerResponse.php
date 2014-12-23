@@ -5,7 +5,6 @@ namespace Drupal\quizz_text;
 use Drupal\quizz\Entity\Answer;
 use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz_question\ResponseHandler;
-use ShortAnswerQuestion;
 
 class ShortAnswerResponse extends ResponseHandler {
 

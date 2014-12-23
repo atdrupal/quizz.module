@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quizz_text\ShortAnswerQuestion;
+
 /**
  * Test class for short answer.
  */
@@ -7,6 +9,7 @@ class ShortAnswerTestCase extends QuizTestCase {
 
   protected $questionHandlers = array('short_answer');
   protected $extraModules = array('quizz_text');
+  protected $extraAdminPermissions = array('score any quiz');
 
   public static function getInfo() {
     return array(
@@ -16,19 +19,28 @@ class ShortAnswerTestCase extends QuizTestCase {
     );
   }
 
-  function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $admin_permissions[] = 'score any quiz';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
+  /**
+   * Test adding and taking a truefalse question.
+   */
+  private function createQuizQuestion($settings = NULL) {
+    return $this->drupalCreateQuestion($settings + array(
+          'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_INSENSITIVE_MATCH,
+          'correct_answer'            => 'SA 1 correct answer.',
+          'type'                      => 'short_answer',
+          'title'                     => 'SA 1 title',
+          'body'                      => 'SA 1 body text.',
+    ));
   }
 
   /**
    * Test case insensitive graded questions.
    */
   public function testGradeAnswerInsensitive() {
-    $question = $this->testCreateQuizQuestion(array(
+    $question = $this->createQuizQuestion(array(
         'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_INSENSITIVE_MATCH,
         'correct_answer'            => 'the Zero One Infinity rule',
     ));
+
     $quiz = $this->linkQuestionToQuiz($question);
 
     // Login as our privileged user.
@@ -58,7 +70,7 @@ class ShortAnswerTestCase extends QuizTestCase {
         'review_options' => array('end' => array('score' => 'score')),
     ));
 
-    $question = $this->testCreateQuizQuestion(array(
+    $question = $this->createQuizQuestion(array(
         'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_MATCH,
         'correct_answer'            => 'the Zero One Infinity rule',
     ));
@@ -84,7 +96,7 @@ class ShortAnswerTestCase extends QuizTestCase {
   public function testGradeAnswerRegex() {
     $quiz = $this->drupalCreateQuiz();
 
-    $question = $this->testCreateQuizQuestion(array(
+    $question = $this->createQuizQuestion(array(
         'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_REGEX,
         'correct_answer'            => '/Zero One Infinity/i',
     ));
@@ -111,13 +123,13 @@ class ShortAnswerTestCase extends QuizTestCase {
   public function testGradeAnswerManualFeedback() {
     $quiz = $this->drupalCreateQuiz();
 
-    $question_1 = $this->testCreateQuizQuestion(array(
+    $question_1 = $this->createQuizQuestion(array(
         'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_MANUAL,
         'correct_answer'            => 'the Zero One Infinity rule',
     ));
     $this->linkQuestionToQuiz($question_1, $quiz);
 
-    $question_2 = $this->testCreateQuizQuestion(array(
+    $question_2 = $this->createQuizQuestion(array(
         'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_MANUAL,
         'correct_answer'            => 'The number two is ridiculous and cannot exist',
     ));
@@ -159,29 +171,8 @@ class ShortAnswerTestCase extends QuizTestCase {
     $this->drupalGet($result_url);
     $this->assertText('You got 5 of 10 possible points.');
     $this->assertText('Your score: 50%');
-    // Strange behavior - extra spaces in HTML.
-    //$this->assertText('Score 2 of 5');
-    //$this->assertText('Score 3 of 5');
     $this->assertText('Feedback for answer 1.');
     $this->assertText('Feedback for answer 2.');
-  }
-
-  /**
-   * Test adding and taking a truefalse question.
-   */
-  function testCreateQuizQuestion($settings = NULL) {
-    if (!$settings) {
-      $settings = array(
-          'correct_answer_evaluation' => ShortAnswerQuestion::ANSWER_INSENSITIVE_MATCH,
-          'correct_answer'            => 'SA 1 correct answer.',
-      );
-    }
-
-    return $this->drupalCreateQuestion(array(
-          'type'  => $this->questionHandler,
-          'title' => 'SA 1 title',
-          'body'  => 'SA 1 body text.',
-        ) + $settings);
   }
 
 }

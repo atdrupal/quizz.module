@@ -10,6 +10,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
   protected $profile = 'testing';
   protected $extraModules = array();
+  protected $extraAdminPermissions = array();
   protected $extraUserPermissions = array();
   protected $questionHandler;
   protected $questionHandlers = array();
@@ -45,6 +46,11 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     $admin_permissions[] = 'edit question titles';
     $admin_permissions[] = 'access quiz';
     $admin_permissions[] = 'view any questions';
+    foreach ($this->extraAdminPermissions as $perm) {
+      if (!in_array($perm, $admin_permissions)) {
+        $admin_permissions[] = $perm;
+      }
+    }
 
     $user_permissions[] = 'access quiz';
     foreach ($this->extraUserPermissions as $perm) {
@@ -66,6 +72,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
       $handler_info = quizz_question_get_handler_info();
       $question_types = quizz_question_get_types();
+
       foreach ($this->questionHandlers as $handler_name) {
         $this->assertTrue(isset($handler_info[$handler_name]), "Found {$handler_name} question handler info.");
         $this->assertTrue(isset($question_types['default_' . $handler_name]), "Default question type for {$handler_name} is created.");

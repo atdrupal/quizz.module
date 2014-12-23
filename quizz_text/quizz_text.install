@@ -8,7 +8,7 @@
 /**
  * Implements hook_install().
  */
-function long_answer_install() {
+function quizz_text_install() {
   variable_set('node_options_long_answer', array('status'));
   variable_set('node_options_short_answer', array('status'));
 }
@@ -16,7 +16,7 @@ function long_answer_install() {
 /**
  * Implements hook_schema().
  */
-function long_answer_schema() {
+function quizz_text_schema() {
   // Properties for a question nodes go in here:
   $schema['quiz_long_answer_properties'] = array(
       'fields'      => array(
@@ -92,7 +92,7 @@ function long_answer_schema() {
 /**
  * Adding feedback field to table {quiz_long_answer_user_answers}
  */
-function long_answer_update_7401() {
+function quizz_text_update_7401() {
   if (!db_field_exists('quiz_long_answer_user_answers', 'answer_feedback')) {
     $spec = array('type' => 'text', 'not null' => FALSE);
     db_add_field('quiz_long_answer_user_answers', 'answer_feedback', $spec);
@@ -107,7 +107,7 @@ function long_answer_update_7401() {
 /**
  * Adding feedback format field to table {quiz_long_answer_user_answers}
  */
-function long_answer_update_7402() {
+function quizz_text_update_7402() {
   if (!db_field_exists('quiz_long_answer_user_answers', 'answer_feedback_format')) {
     $spec = array('type' => 'varchar', 'length' => 255);
     db_add_field('quiz_long_answer_user_answers', 'answer_feedback_format', $spec);
@@ -122,7 +122,7 @@ function long_answer_update_7402() {
 /**
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
-function long_answer_quiz_question_upgrade_schema_node_to_entity() {
+function quizz_text_quiz_question_upgrade_schema_node_to_entity() {
   if (db_table_exists('quiz_long_answer_node_properties')) {
     $spec_1 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
     $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
@@ -142,7 +142,7 @@ function long_answer_quiz_question_upgrade_schema_node_to_entity() {
 /**
  * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
  */
-function long_answer_quiz_question_upgrade_pre_drop_temp_columns() {
+function quizz_text_quiz_question_upgrade_pre_drop_temp_columns() {
   // quiz_long_answer_properties
   db_query("UPDATE {quiz_long_answer_properties} ap"
     . " INNER JOIN {quiz_question_revision} revision ON ap.vid = revision.node_vid"
@@ -175,7 +175,7 @@ function long_answer_quiz_question_upgrade_pre_drop_temp_columns() {
 /**
  * Make sure update script from main module is run before all.
  */
-function long_answer_update_7600() {
+function quizz_text_update_7600() {
   require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }
@@ -183,7 +183,7 @@ function long_answer_update_7600() {
 /**
  * Convert global configuration for questions to question type entity.
  */
-function long_answer_update_7601() {
+function quizz_text_update_7601() {
   foreach (quizz_question_get_types() as $question_type) {
     if ('long_answer' === $question_type->handler) {
       $question_type

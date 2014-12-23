@@ -72,17 +72,17 @@ function quizz_text_theme() {
   return array(
       'long_answer_view_unscored'  => array(
           'variables' => array('unscored' => array()),
-          'path'      => drupal_get_path('module', 'long_answer') . '/theme',
-          'file'      => 'long_answer.theme.inc',
+          'path'      => drupal_get_path('module', 'quizz_text') . '/theme',
+          'file'      => 'quizz_text.theme.inc',
       ),
       'long_answer_response_form'  => array(
           'render element' => 'form',
-          'path'           => drupal_get_path('module', 'long_answer') . '/theme',
-          'file'           => 'long_answer.theme.inc',
+          'path'           => drupal_get_path('module', 'quizz_text') . '/theme',
+          'file'           => 'quizz_text.theme.inc',
       ),
       'long_answer_answering_form' => array(
           'render element' => 'form',
-          'path'           => drupal_get_path('module', 'long_answer') . '/theme',
+          'path'           => drupal_get_path('module', 'quizz_text') . '/theme',
           'template'       => 'long-answer-answering-form',
       ),
   );
@@ -143,22 +143,22 @@ function quizz_text_menu() {
  * Implements hook_theme().
  */
 function short_answer_theme($existing, $type, $theme, $path) {
-  $module_path = drupal_get_path('module', 'short_answer');
+  $module_path = drupal_get_path('module', 'quizz_text');
   return array(
       'short_answer_view_unscored'  => array(
           'variables' => array('unscored' => array()),
           'path'      => $module_path . '/theme',
-          'file'      => 'short_answer.theme.inc',
+          'file'      => 'quizz_text.theme.inc',
       ),
       'short_answer_response_form'  => array(
           'render element' => 'form',
           'path'           => $module_path . '/theme',
-          'file'           => 'short_answer.theme.inc',
+          'file'           => 'quizz_text.theme.inc',
       ),
       'short_answer_user_answer'    => array(
           'variables' => array('answer' => NULL, 'correct' => NULL),
           'path'      => $module_path . '/theme',
-          'file'      => 'short_answer.theme.inc',
+          'file'      => 'quizz_text.theme.inc',
       ),
       'short_answer_answering_form' => array(
           'render element' => 'form',
