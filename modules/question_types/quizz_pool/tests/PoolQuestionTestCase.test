@@ -2,7 +2,7 @@
 
 use Drupal\quizz\Entity\QuizEntity;
 
-class QuestionPoolTestCase extends QuizTestCase {
+class PoolQuestionTestCase extends QuizTestCase {
 
   protected $extraModules = array('quizz_truefalse', 'quizz_pool', 'entityreference');
   protected $questionHandler = 'pool';

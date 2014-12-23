@@ -7,4 +7,4 @@ dependencies[] = quizz
 dependencies[] = quizz_question
 dependencies[] = entityreference
 
-files[] = tests/QuestionPoolTestCase.test
+files[] = tests/PoolQuestionTestCase.test

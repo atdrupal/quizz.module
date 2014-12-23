@@ -3,7 +3,7 @@
 /**
  * Implement hooks_uninstall().
  */
-function question_pool_uninstall() {
+function quizz_pool_uninstall() {
   // @TODO: Really?
   // field_delete_field('field_question_reference');
 }
@@ -11,7 +11,7 @@ function question_pool_uninstall() {
 /**
  * Implements hook_schema().
  */
-function question_pool_schema() {
+function quizz_pool_schema() {
   // Place to store user answers for pool questions
   $schema['quiz_pool_user_answers'] = array(
       'fields'      => array(
@@ -50,7 +50,7 @@ function question_pool_schema() {
 /**
  * Implements hook_quiz_question_upgrade_schema_node_to_entity().
  */
-function question_pool_quiz_question_upgrade_schema_node_to_entity() {
+function quizz_pool_quiz_question_upgrade_schema_node_to_entity() {
   if (db_field_exists('quiz_pool_user_answers', 'question_nid')) {
     db_change_field('quiz_pool_user_answers', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
     db_change_field('quiz_pool_user_answers_questions', 'question_nid', 'question_qid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
@@ -61,7 +61,7 @@ function question_pool_quiz_question_upgrade_schema_node_to_entity() {
 /**
  * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
  */
-function question_pool_quiz_question_upgrade_pre_drop_temp_columns() {
+function quizz_pool_quiz_question_upgrade_pre_drop_temp_columns() {
   // quiz_pool_user_answers
   db_query(
     "UPDATE {quiz_pool_user_answers} as ua"
@@ -82,7 +82,7 @@ function question_pool_quiz_question_upgrade_pre_drop_temp_columns() {
 /**
  * Make sure update script from main module is run before all.
  */
-function question_pool_update_7600() {
+function quizz_pool_update_7600() {
   require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
   return quizz_question_update_7600();
 }
