@@ -1,83 +1,10 @@
 <?php
 
-use Drupal\quizz_question\Entity\QuestionType;
+use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
-
-/**
- * This module defines a long answer question type for quizzes.
- */
-
-/**
- * Implements hook_help().
- */
-function long_answer_help($path, $arg) {
-  if ($path == 'admin/help#long_answer') {
-    return '<p>' . t('This module provides long-answer (essay, multi-paragraph) questions to the quiz module.') .
-      '</p><p>' . t('A long-answer question is designed to provide the quiz taker a lengthy area to expand on ideas.
-      Common forms of long-answer questions include essays, single paragraph responses, hypothesis design problems,
-      outlines and summaries, and lengthier math problems
-      where the focus is on showing work rather than simply getting the correct answer.') . '</p>';
-  }
-}
-
-/**
- * Implements hook_menu().
- */
-function long_answer_menu() {
-  $items['admin/quiz/reports/score-long-answer'] = array(
-      'title'            => 'Score long answer questions',
-      'description'      => 'Score the answers from quizzes that use long answer questions.',
-      'page callback'    => 'long_answer_view_unscored',
-      'access arguments' => array('score any quiz', 'score own quiz', 'score taken quiz answer'),
-      'access callback'  => 'quizz_access_multi_or',
-      'type'             => MENU_NORMAL_ITEM,
-      'file'             => 'long_answer.admin.inc',
-  );
-
-  // Pass vid and rid to this path.
-  $items['admin/quiz/reports/score-long-answer/%/%'] = array(
-      'title'            => 'Score long answer response',
-      'description'      => 'Score a response to a long answer question.',
-      'access arguments' => array(4, 5),
-      'access callback'  => 'quizz_question_access_to_score',
-      'page callback'    => 'long_answer_edit_score',
-      'page arguments'   => array(4, 5),
-      'type'             => MENU_NORMAL_ITEM,
-      'file'             => 'long_answer.admin.inc'
-  );
-
-  return $items;
-}
-
-/**
- * Implements hook_quiz_question_info().
- */
-function long_answer_quiz_question_info() {
-  return array(
-      'long_answer' => array(
-          'name'              => t('Long answer question'),
-          'description'       => t('Quiz questions that allow a user to enter multiple paragraphs of text.'),
-          'question provider' => 'LongAnswerQuestion',
-          'response provider' => 'LongAnswerResponse',
-          'module'            => 'quizz_question', // All wrapper functions are in that module.
-      ),
-  );
-}
-
-/**
- * Implements hook_quiz_question_config().
- */
-function long_answer_quiz_question_config(QuestionType $question_type) {
-  $form = array('#validate' => array('long_answer_config_validate'));
-  $form['long_answer_default_max_score'] = array(
-      '#type'          => 'textfield',
-      '#title'         => t('Default max score'),
-      '#description'   => t('Choose the default maximum score for a long answer question.'),
-      '#default_value' => $question_type->getConfig('long_answer_default_max_score', 10),
-  );
-  return $form;
-}
+use Drupal\quizz\Entity\Result;
+use Drupal\quizz_text\LongAnswerResponse;
 
 /**
  * Validate the long_answer config form values
@@ -89,46 +16,20 @@ function long_answer_config_validate($form, $form_state) {
 }
 
 /**
- * Implements hook_theme().
- */
-function long_answer_theme() {
-  return array(
-      'long_answer_view_unscored'  => array(
-          'variables' => array('unscored' => array()),
-          'path'      => drupal_get_path('module', 'long_answer') . '/theme',
-          'file'      => 'long_answer.theme.inc',
-      ),
-      'long_answer_response_form'  => array(
-          'render element' => 'form',
-          'path'           => drupal_get_path('module', 'long_answer') . '/theme',
-          'file'           => 'long_answer.theme.inc',
-      ),
-      'long_answer_answering_form' => array(
-          'render element' => 'form',
-          'path'           => drupal_get_path('module', 'long_answer') . '/theme',
-          'template'       => 'long-answer-answering-form',
-      ),
-  );
-}
-
-/**
  * Set a score for a long answer question.
  *
- * This stores a score for a long answer question and marks that question as having been evaluated.
- * The function updates all of the necessary data sources so that the individual answer results should be
- * reflected in the total scoring table.
+ * This stores a score for a long answer question and marks that question as
+ * having been evaluated.
+ *
+ * The function updates all of the necessary data sources so that the individual
+ * answer results should be reflected in the total scoring table.
  *
  * @param Result $result
  * @param QuizEntity $quiz
- *  Quiz entity.
- * @param $qid
- *  ID of question.
- * @param $vid
- *  Version ID of question.
- * @param $score
- *  The numeric score to assign the result.
- * @param $update_total
- *  Shall the total score be updated?
+ * @param int $qid       ID of question.
+ * @param int $vid       Version ID of question.
+ * @param $score         The numeric score to assign the result.
+ * @param $update_total  Shall the total score be updated?
  *
  * @return int
  *  Number of scores adjusted. If a change was made, this should be 1.
@@ -278,17 +179,130 @@ function long_answer_report_submit($values) {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Validate the long_answer config form values
  */
-function long_answer_field_extra_fields() {
-  $extra['node']['long_answer'] = array(
-      'form' => array(
-          'rubric' => array(
-              'label'       => t('Rubric'),
-              'description' => t('Specify the criteria for grading the response'),
-              'weight'      => -4,
-          ),
-      ),
-  );
-  return $extra;
+function short_answer_config_validate($form, $form_state) {
+  if ($form_state['values']['short_answer_default_max_score'] <= 0) {
+    form_set_error('short_answer_default_max_score', t('The default max score must be greater than 0'));
+  }
+}
+
+/**
+ * Set a score for a short answer question.
+ *
+ * This stores a score for a short answer question and marks that question as having been evaluated.
+ * The function updates all of the necessary data sources so that the individual answer results should be
+ * reflected in the total scoring table.
+ *
+ * @param Result $result
+ * @param QuizEntity $quiz
+ * @param int $qid      Question ID
+ * @param int $vid      Question VID
+ * @param $score        The numeric score to assign the result.
+ * @param $update_total Shall the total score for a quiz be updated?
+ * @return int          Number of scores adjusted. If a change was made, this should be 1.
+ */
+function short_answer_score_an_answer(Result $result, $values, $update_total = TRUE) {
+  extract($values);
+
+  // When we set the score we make sure that the max score in the quiz the
+  // question belongs to is considered
+  $question_max_score = db_query(
+    'SELECT max_score '
+    . ' FROM {quiz_question_revision} '
+    . ' WHERE vid = :vid', array(':vid' => $vid))->FetchField();
+
+  $quiz_max_score = db_query(
+    'SELECT max_score '
+    . ' FROM {quiz_relationship} '
+    . ' WHERE quiz_vid = :pvid AND question_vid = :cvid', array(
+      ':pvid' => $quiz->vid,
+      ':cvid' => $vid))->fetchField();
+
+  $changed = db_update('quiz_short_answer_user_answers')
+    ->fields(array(
+        'score'                  => $score * $question_max_score / $quiz_max_score,
+        'is_evaluated'           => 1,
+        'answer_feedback'        => empty($answer_feedback['value']) ? '' : $answer_feedback['value'],
+        'answer_feedback_format' => empty($answer_feedback['format']) ? '' : $answer_feedback['format'],
+    ))
+    ->condition('question_vid', $vid)
+    ->condition('result_id', $result->result_id)
+    ->execute();
+
+  // Now the short answer user data has been updated. We also need to update the
+  // data in the quiz tables
+  if ($changed > 0) {
+    $max = db_query('SELECT max_score'
+      . ' FROM {quiz_question_revision} '
+      . ' WHERE vid = :vid', array(':vid' => $vid))->fetchField();
+    if ($max <= 0) {
+      $is_correct = 0;
+      $points_awarded = 0;
+    }
+    else {
+      $is_correct = ($score / $max > 0.5) ? 1 : 0;
+      $points_awarded = $score;
+    }
+
+    db_update('quiz_results_answers')
+      ->fields(array(
+          'points_awarded' => $points_awarded,
+          'is_correct'     => $is_correct,
+      ))
+      ->condition('question_vid', $vid)
+      ->condition('result_id', $result->result_id)
+      ->execute();
+
+    // Third, we update the main quiz results table
+    if ($update_total) {
+      quizz_result_controller()->getScoreIO()->updateTotalScore($result);
+    }
+  }
+  return $changed;
+}
+
+/**
+ * Submit the result report for short answer.
+ *
+ * @see ShortAnswerResponse::getReportFormSubmit(),
+ */
+function short_answer_report_submit($values) {
+  $result = quizz_result_load($values['result_id']);
+  short_answer_score_an_answer($result, $values, FALSE);
+}
+
+/**
+ * Get the answer for a question.
+ *
+ * This stores a score for a short answer question and marks that question as having been evaluated.
+ * @param $question_qid
+ *  Node ID of question.
+ * @param $question_vid
+ *  Version ID of question.
+ * @param $result_id
+ *  Result ID for the quiz results.
+ *
+ * @return Assoc array
+ *  An array if successful, or FALSE if no result could be found. The array contains the following properties:
+ *  <code>
+ *  answer_id; // The answer ID
+ *  answer; // The full text of the answer
+ *  is_evaluated; // 0 if the question has not been evaluated, 1 if it has
+ *  score; // The score the evaluator gave the user; this should be 0 if is_evaluated is 0.
+ *  question_vid
+ *  question_qid
+ *  result_id
+ *  </code>
+ */
+function short_answer_get_answer($question_qid, $question_vid, $result_id) {
+  $results = db_query('SELECT sa.answer_id, sa.answer, sa.is_evaluated, sa.score, sa.question_vid, sa.question_qid, sa.result_id, sa.answer_feedback, sa.answer_feedback_format, rel.max_score AS rel_max_score
+    FROM {quiz_short_answer_user_answers} sa
+    JOIN {quiz_results} qnr ON (sa.result_id = qnr.result_id)
+    JOIN {quiz_relationship} rel ON (qnr.quiz_vid = rel.quiz_vid AND rel.question_vid = sa.question_vid)
+    WHERE sa.question_qid = :question_id AND sa.question_vid = :qvid AND sa.result_id = :rid', array(
+      ':question_id' => $question_qid,
+      ':qvid'        => $question_vid,
+      ':rid'         => $result_id))->fetchAssoc();
+  return $results ? $results : FALSE;
 }
