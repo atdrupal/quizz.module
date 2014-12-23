@@ -3,8 +3,24 @@
 use Drupal\quizz\Entity\QuizEntity;
 
 /**
- * @file
+ * NOTES ON DEVELOPING EXTENSIONS FOR QUIZ
+ * =======================================
+ *
+ * DEVELOPING NEW QUESTION TYPES:
+ *
+ * You need to create a new module that extends the existing
+ * question type core. The multichoice question type provides a precise example.
+ *
+ * Here are the steps:
+ *
+ *  1. Create a new module
+ *  2. Use your module's .install file to create the necessary tables
+ *  3. Implements hook_quiz_question_info()
+ *  4. Define classes that extends Drupal\quizz_question\QuestionHandler and Drupal\quizz_question\ResponseHandler.
+ *
+ *
  * Hooks provided by Quiz module.
+ * =======================================
  *
  * These entity types provided by Quiz also have entity API hooks.
  *
