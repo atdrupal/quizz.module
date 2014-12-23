@@ -37,6 +37,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'truefalse', 'name' => 'quizz_truefalse'));
     # db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz_ddlines', 'name' => 'quizz_ddlines'));
     # db_query($sql_1, array(':module' => 'module', 'old_name' => 'scale', 'name' => 'quizz_scale'));
+    # db_query($sql_1, array(':module' => 'module', 'old_name' => 'multichoice', 'name' => 'quizz_multichoice'));
 
     module_enable(static::$dependencies);
     registry_rebuild();
