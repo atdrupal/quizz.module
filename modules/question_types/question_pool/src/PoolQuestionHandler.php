@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\question_pool;
+namespace Drupal\quizz_pool;
 
 use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz_question\QuestionHandler;
