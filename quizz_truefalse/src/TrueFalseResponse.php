@@ -12,7 +12,7 @@ class TrueFalseResponse extends ResponseHandler {
    * {@inheritdoc}
    * @var string
    */
-  protected $base_table = 'quiz_truefalse_user_answers';
+  protected $base_table = 'quizz_truefalse_user_answers';
 
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
@@ -32,7 +32,7 @@ class TrueFalseResponse extends ResponseHandler {
    * {@inheritdoc}
    */
   public function save() {
-    db_insert('quiz_truefalse_user_answers')
+    db_insert('quizz_truefalse_user_answers')
       ->fields(array(
           'question_qid' => $this->question->qid,
           'question_vid' => $this->question->vid,
@@ -53,7 +53,7 @@ class TrueFalseResponse extends ResponseHandler {
   }
 
   public function onLoad(Answer $answer) {
-    $input = db_select('quiz_truefalse_user_answers', 'input')
+    $input = db_select('quizz_truefalse_user_answers', 'input')
       ->fields('input', array('answer', 'score'))
       ->condition('question_vid', $answer->question_qid)
       ->condition('result_id', $answer->result_id)

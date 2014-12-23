@@ -16,7 +16,7 @@ class TrueFalseQuestion extends QuestionHandler {
    */
   public function onSave($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
-      db_insert('quiz_truefalse')
+      db_insert('quizz_truefalse')
         ->fields(array(
             'qid'            => $this->question->qid,
             'vid'            => $this->question->vid,
@@ -25,7 +25,7 @@ class TrueFalseQuestion extends QuestionHandler {
         ->execute();
     }
     else {
-      db_update('quiz_truefalse')
+      db_update('quizz_truefalse')
         ->fields(array(
             'correct_answer' => (int) $this->question->correct_answer
         ))
@@ -50,10 +50,10 @@ class TrueFalseQuestion extends QuestionHandler {
   public function delete($only_this_version = FALSE) {
     parent::delete($only_this_version);
 
-    $delete_ans = db_delete('quiz_truefalse_user_answers');
+    $delete_ans = db_delete('quizz_truefalse_user_answers');
     $delete_ans->condition('question_qid', $this->question->qid);
 
-    $delete_node = db_delete('quiz_truefalse');
+    $delete_node = db_delete('quizz_truefalse');
     $delete_node->condition('qid', $this->question->qid);
 
     if ($only_this_version) {
@@ -75,7 +75,7 @@ class TrueFalseQuestion extends QuestionHandler {
     $props = parent::load();
 
     $res_a = db_query('SELECT correct_answer '
-      . ' FROM {quiz_truefalse} '
+      . ' FROM {quizz_truefalse} '
       . ' WHERE qid = :qid AND vid = :vid', array(
         ':qid' => $this->question->qid,
         ':vid' => $this->question->vid))->fetchAssoc();
@@ -171,7 +171,7 @@ class TrueFalseQuestion extends QuestionHandler {
    * This is a utility function. It is not defined in the interface.
    */
   public function getCorrectAnswer() {
-    return db_query('SELECT correct_answer FROM {quiz_truefalse} WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchField();
+    return db_query('SELECT correct_answer FROM {quizz_truefalse} WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchField();
   }
 
 }
