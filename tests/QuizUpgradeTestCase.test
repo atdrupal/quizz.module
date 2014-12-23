@@ -7,7 +7,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
   protected static $testDumpFile = '…';
   protected static $dependencies = array('ctools', 'entity', 'filter', 'views', 'views_bulk_operations', 'xautoload');
   protected static $testDescription = 'Test an upgrade from various Quiz versions.';
-  protected static $subModules = array('long_answer', 'multichoice', 'quizz_question', 'short_answer', 'quizz_truefalse');
+  protected static $subModules = array('long_answer', 'quizz_multichoice', 'quizz_question', 'short_answer', 'quizz_truefalse');
 
   /**
    * Some warnings are produced by other modules, we cann't do anything, just
@@ -37,6 +37,7 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     db_query($sql_1, array(':module' => 'module', 'old_name' => 'truefalse', 'name' => 'quizz_truefalse'));
     # db_query($sql_1, array(':module' => 'module', 'old_name' => 'quiz_ddlines', 'name' => 'quizz_ddlines'));
     # db_query($sql_1, array(':module' => 'module', 'old_name' => 'scale', 'name' => 'quizz_scale'));
+    db_query($sql_1, array(':module' => 'module', 'old_name' => 'multichoice', 'name' => 'quizz_multichoice'));
 
     module_enable(static::$dependencies);
     registry_rebuild();
@@ -139,8 +140,8 @@ abstract class QuizUpgradeBaseTestCase extends UpdatePathTestCase {
     # $this->assertTrue($question_types['quiz_ddlines'] instanceof QuestionType);
     # $this->assertTrue($question_types['scale'] instanceof QuestionType);
     # $this->assertTrue($question_types['matching'] instanceof QuestionType);
+    # $this->assertTrue($question_types['multichoice'] instanceof QuestionType);
     $this->assertTrue($question_types['long_answer'] instanceof QuestionType);
-    $this->assertTrue($question_types['multichoice'] instanceof QuestionType);
     $this->assertTrue($question_types['quiz_directions'] instanceof QuestionType);
     $this->assertTrue($question_types['short_answer'] instanceof QuestionType);
     $this->assertTrue($question_types['truefalse'] instanceof QuestionType);
