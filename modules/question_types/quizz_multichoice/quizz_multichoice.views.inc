@@ -90,9 +90,7 @@ function multichoice_views_data() {
       ),
   ); // End quiz_multichoice_answers
 
-
   $data['quiz_multichoice_user_answers'] = array(
-      // Table Definition
       'table'        => array(
           'group' => 'Quiz Multichoice Answers',
           'join'  => array(

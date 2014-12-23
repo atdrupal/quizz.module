@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multichoice;
+namespace Drupal\quizz_multichoice;
 
 use Drupal\quizz_question\Entity\Question;
 
@@ -66,7 +66,7 @@ class FormDefinition {
       $action = url('quiz-question/' . $this->question->qid . '/edit', $options);
     }
     $form['#action'] = $action;
-    $form['#attached']['js'][] = drupal_get_path('module', 'multichoice') . '/js/multichoice.js';
+    $form['#attached']['js'][] = drupal_get_path('module', 'quizz_multichoice') . '/js/multichoice.js';
 
     // choice_count might be stored in the form_state after an ajax callback
     if (isset($form_state['values']['op']) && $form_state['values']['op'] == t('Add choice')) {
@@ -103,7 +103,7 @@ class FormDefinition {
             '#ajax'   => array(
                 'method'   => 'replace',
                 'wrapper'  => 'multichoice-alternatives-wrapper',
-                'callback' => 'multichoice_add_alternative_ajax_callback',
+                'callback' => 'quizz_multichoice_add_alternative_ajax_callback',
             ),
             '#weight' => 50,
         ),

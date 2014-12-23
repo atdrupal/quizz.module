@@ -1,11 +1,9 @@
 <?php
 
-/**
- * Test class for multichoice questions.
- */
 class MultichoiceTestCase extends QuizTestCase {
 
   protected $questionHandler = 'multichoice';
+  protected $extraModules = array('quizz_multichoice');
 
   public static function getInfo() {
     return array(
@@ -13,11 +11,6 @@ class MultichoiceTestCase extends QuizTestCase {
         'description' => t('Test cases for the multichoice question type.'),
         'group'       => 'Quiz question',
     );
-  }
-
-  public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'multichoice';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
   }
 
   /**

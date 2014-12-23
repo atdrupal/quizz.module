@@ -16,7 +16,7 @@
  */
 function theme_multichoice_creation_form($variables) {
   $form = $variables['form'];
-  $path = drupal_get_path('module', 'multichoice') . '/js/multichoice.js';
+  $path = drupal_get_path('module', 'quizz_multichoice') . '/js/multichoice.js';
   drupal_add_js($path);
 
   // We open the settings fieldset if there is errors involving the choice_multi setting
@@ -50,7 +50,7 @@ function theme_multichoice_answer_node_view($variables) {
   $show_correct = $variables['show_correct'];
   $header = array('', '');
 
-  $p = drupal_get_path('module', 'multichoice');
+  $p = drupal_get_path('module', 'quizz_multichoice');
   drupal_add_css($p . '/theme/multichoice.css');
 
   foreach ($alternatives as $i => $short) {
