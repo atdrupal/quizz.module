@@ -116,7 +116,7 @@ class DDLinesResponse extends ResponseHandler {
     $img_field = field_get_items('quiz_question', quiz_question_entity_load($this->question->qid), 'field_image');
     $img_rendered = theme('image', array('path' => image_style_url('large', $img_field[0]['uri'])));
 
-    $image_path = base_path() . drupal_get_path('module', 'quiz_ddlines') . '/theme/images/';
+    $image_path = base_path() . drupal_get_path('module', 'quizz_ddlines') . '/theme/images/';
 
     $html = '<h3>' . t('Your answers') . '</h3>';
     $html .= '<div class="icon-descriptions"><div><img src="' . $image_path . 'icon_ok.gif">' . t('Means alternative is placed on the correct spot') . '</div>';
@@ -202,7 +202,7 @@ class DDLinesResponse extends ResponseHandler {
     $settings['hotspot']['radius'] = $this->question->hotspot_radius;
 
     // Image path:
-    $settings['quiz_imagepath'] = base_path() . drupal_get_path('module', 'quiz_ddlines') . '/theme/images/';
+    $settings['quiz_imagepath'] = base_path() . drupal_get_path('module', 'quizz_ddlines') . '/theme/images/';
 
     drupal_add_js(array('quiz_ddlines' => $settings), 'setting');
 

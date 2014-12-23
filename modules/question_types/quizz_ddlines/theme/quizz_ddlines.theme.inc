@@ -17,7 +17,7 @@
  */
 function theme_quiz_ddlines_response($vars) {
   if (!$css_added = &drupal_static(__FUNCTION__)) {
-    drupal_add_css(drupal_get_path('module', 'quiz_ddlines') . '/theme/quiz_ddlines.css');
+    drupal_add_css(drupal_get_path('module', 'quizz_ddlines') . '/theme/quizz_ddlines.css');
     $css_added = TRUE;
   }
 

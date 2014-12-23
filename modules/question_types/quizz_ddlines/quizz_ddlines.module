@@ -47,8 +47,8 @@ function quizz_ddlines_theme() {
   return array(
       'quiz_ddlines_response' => array(
           'variables' => array('result' => array()),
-          'path'      => drupal_get_path('module', 'quiz_ddlines') . '/theme',
-          'file'      => 'quiz_ddlines.theme.inc',
+          'path'      => drupal_get_path('module', 'quizz_ddlines') . '/theme',
+          'file'      => 'quizz_ddlines.theme.inc',
       ),
   );
 }
@@ -107,9 +107,9 @@ function quizz_ddlines_config_validate($form, $form_state) {
 }
 
 function _quiz_ddlines_add_js_and_css() {
-  $module_path = drupal_get_path('module', 'quiz_ddlines');
+  $module_path = drupal_get_path('module', 'quizz_ddlines');
   drupal_add_js($module_path . '/js/raphael-min.js');
   drupal_add_js($module_path . '/js/colorwheel.js');
   drupal_add_js($module_path . '/js/quiz_ddlines.js');
-  drupal_add_css($module_path . '/theme/quiz_ddlines.css');
+  drupal_add_css($module_path . '/theme/quizz_ddlines.css');
 }
