@@ -37,10 +37,10 @@ function quizz_views_api() {
  */
 function quizz_ctools_plugin_directory($owner, $plugin_type) {
   if ($owner === 'page_manager') {
-    return 'plugins/page_manager/' . $plugin_type;
+    return 'includes/plugins/page_manager/' . $plugin_type;
   }
   if ($owner === 'ctools' && $plugin_type === 'content_types') {
-    return 'plugins/content_types';
+    return 'includes/plugins/content_types';
   }
 }
 
