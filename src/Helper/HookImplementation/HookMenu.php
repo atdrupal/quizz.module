@@ -26,7 +26,7 @@ class HookMenu {
           'access arguments' => array('create quiz content'),
           'page callback'    => 'drupal_get_form',
           'page arguments'   => array('quizz_generate_form'),
-          'file'             => 'quiz.devel.inc',
+          'file'             => 'includes/quizz.devel.inc',
       );
     }
 
