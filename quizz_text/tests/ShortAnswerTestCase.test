@@ -5,7 +5,8 @@
  */
 class ShortAnswerTestCase extends QuizTestCase {
 
-  protected $questionHandler = 'short_answer';
+  protected $questionHandlers = array('short_answer');
+  protected $extraModules = array('quizz_text');
 
   public static function getInfo() {
     return array(
@@ -16,7 +17,6 @@ class ShortAnswerTestCase extends QuizTestCase {
   }
 
   function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $modules[] = 'short_answer';
     $admin_permissions[] = 'score any quiz';
     parent::setUp($modules, $admin_permissions, $user_permissions);
   }

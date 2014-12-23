@@ -1,10 +1,10 @@
 <?php
 
 use Drupal\quizz\Entity\QuizEntity;
-use Drupal\quizz\Entity\QuizEntity;
-use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz_text\LongAnswerResponse;
+
+require_once dirname(__FILE__) . '/quizz_text.hooks.inc';
 
 /**
  * Validate the long_answer config form values

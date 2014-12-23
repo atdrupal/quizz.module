@@ -1,20 +1,16 @@
 <?php
 
+namespace Drupal\quizz_text;
+
 use Drupal\quizz_question\QuestionHandler;
 use Drupal\quizz_text\ShortAnswerResponse;
-
-namespace Drupal\quizz_text;
 
 /**
  * The main classes for the short answer question type.
  *
- * These inherit or implement code found in quiz_question.classes.inc.
- *
  * If you are developing your own question type, the easiest place to start is with
- * multichoice.classes.inc. short_answer and long_answer are good for understanding
- * question types that involve textual answers.
- *
- * @file
+ * short_answer and long_answer are good for understanding question types that
+ * involve textual answers.
  */
 
 /**
@@ -187,6 +183,7 @@ class ShortAnswerQuestion extends QuestionHandler {
         '#default_value' => isset($this->question->correct_answer_evaluation) ? $this->question->correct_answer_evaluation : self::ANSWER_INSENSITIVE_MATCH,
         '#required'      => FALSE,
     );
+
     if ($access_regex) {
       $form['answer']['regex_box'] = array(
           '#type'        => 'fieldset',

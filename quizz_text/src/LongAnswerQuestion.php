@@ -1,9 +1,9 @@
 <?php
 
+namespace Drupal\quizz_text;
+
 use Drupal\quizz_question\QuestionHandler;
 use Drupal\quizz_text\LongAnswerResponse;
-
-namespace Drupal\quizz_text;
 
 /**
  * Long answer classes.
