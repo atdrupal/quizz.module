@@ -9,7 +9,7 @@ use Drupal\quizz_question\Entity\Question;
 class DDLinesTestCase extends QuizTestCase {
 
   protected $questionHandler = 'quiz_ddlines';
-  protected $extraModules = array('quiz_ddlines');
+  protected $extraModules = array('quizz_ddlines');
 
   public static function getInfo() {
     return array(
