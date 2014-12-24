@@ -4,7 +4,7 @@ namespace Drupal\quizz\Helper\Quiz;
 
 use Drupal\quizz\Controller\QuizTakeController;
 use Drupal\quizz\Entity\QuizEntity;
-use Drupal\quizz\Quiz;
+use Drupal\quizz\Quizz;
 use stdClass;
 
 /**
@@ -102,7 +102,7 @@ class AccessHelper {
    * Retrieves the quiz entity from the menu router.
    *
    * @return
-   *   Quiz entity, if found, or FALSE if quiz entity can't be retrieved from the menu
+   *   Quizz entity, if found, or FALSE if quiz entity can't be retrieved from the menu
    *   router.
    */
   private function getQuizFromMenu() {

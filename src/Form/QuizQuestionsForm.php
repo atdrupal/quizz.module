@@ -295,7 +295,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       list($question_qid, ) = explode('-', $id, 2);
 
       // If a question isn't one of the question types we remove it from the question list
-      $valid_question = db_select('quiz_question', 'question')
+      $valid_question = db_select('quiz_question_entity', 'question')
         ->fields('question', array('qid'))
         ->condition('question.qid', $question_qid)
         ->execute()

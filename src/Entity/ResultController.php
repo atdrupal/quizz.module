@@ -83,7 +83,7 @@ class ResultController extends EntityAPIController {
       // current version to get the hieararchy.
       $select = db_select('quiz_results', 'result');
       $select->innerJoin('quiz_relationship', 'relationship', 'result.quiz_vid = relationship.quiz_vid');
-      $select->innerJoin('quiz_question', 'question', 'relationship.question_qid = question.qid');
+      $select->innerJoin('quiz_question_entity', 'question', 'relationship.question_qid = question.qid');
       $select
         ->fields('question', array('type'))
         ->fields('relationship', array('qr_id', 'qr_pid'))

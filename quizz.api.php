@@ -49,7 +49,7 @@ function hook_quiz_question_info() {
           'description'       => t('An example question type that does something.'),
           'question provider' => 'ExampleAnswerQuestion',
           'response provider' => 'ExampleAnswerResponse',
-          'module'            => 'quiz_question',
+          'module'            => 'quizz_question',
       ),
   );
 }

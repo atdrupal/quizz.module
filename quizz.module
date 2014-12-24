@@ -154,7 +154,7 @@ function quizz_add_qestion_to_quiz_action($question) {
 
 /**
  * Check if the question has already been answered in the requested attempt.
- *
+ * 
  * @return bool
  */
 function quizz_result_is_question_answered($result, $question) {

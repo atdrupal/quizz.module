@@ -47,7 +47,7 @@ class QuestionIO {
     $question_ids = array();
     $total_count = 0;
     foreach ($this->quiz->getTermsByVid() as $term) {
-      $select = db_select('quiz_question', 'question');
+      $select = db_select('quiz_question_entity', 'question');
       if (!empty($question_ids)) {
         $select->condition('question.qid', $question_ids, 'NOT IN');
       }
@@ -88,7 +88,7 @@ class QuestionIO {
    */
   private function getRequiredQuestions() {
     $select = db_select('quiz_relationship', 'relationship');
-    $select->innerJoin('quiz_question', 'question', 'relationship.question_qid = question.qid');
+    $select->innerJoin('quiz_question_entity', 'question', 'relationship.question_qid = question.qid');
 
     // Sub relationship
     $cond_1 = 'relationship.qr_pid = sub_relationship.qr_id';
@@ -181,7 +181,7 @@ class QuestionIO {
 
   private function doGetRandomQuestion($amount) {
     $select = db_select('quiz_relationship', 'relationship');
-    $select->join('quiz_question', 'question', 'relationship.question_qid = question.qid');
+    $select->join('quiz_question_entity', 'question', 'relationship.question_qid = question.qid');
     $select->addField('relationship', 'question_qid', 'qid');
     $select->addField('relationship', 'question_vid', 'vid');
     $select->addExpression(':true', 'random', array(':true' => TRUE));
@@ -272,7 +272,7 @@ class QuestionIO {
       $question_vid = $relationship->question_vid;
 
       if (!empty($relationship->refresh)) {
-        $sql = 'SELECT vid FROM {quiz_question} WHERE qid = :qid';
+        $sql = 'SELECT vid FROM {quiz_question_entity} WHERE qid = :qid';
         $question_vid = db_query($sql, array(':qid' => $relationship->question_qid))->fetchField();
       }
 

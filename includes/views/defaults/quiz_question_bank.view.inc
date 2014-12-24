@@ -4,7 +4,7 @@ $view = new view();
 $view->name = 'quiz_question_bank';
 $view->description = '';
 $view->tag = 'default';
-$view->base_table = 'quiz_question';
+$view->base_table = 'quiz_question_entity';
 $view->human_name = 'Question Bank';
 $view->core = 7;
 $view->api_version = '3.0';
@@ -43,18 +43,18 @@ $handler->display->display_options['style_options']['info'] = array(
 );
 /* Relationship: Question: Uid */
 $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-$handler->display->display_options['relationships']['uid']['table'] = 'quiz_question';
+$handler->display->display_options['relationships']['uid']['table'] = 'quiz_question_entity';
 $handler->display->display_options['relationships']['uid']['field'] = 'uid';
 $handler->display->display_options['relationships']['uid']['label'] = 'Author';
 /* Field: Question: Question ID */
 $handler->display->display_options['fields']['qid']['id'] = 'qid';
-$handler->display->display_options['fields']['qid']['table'] = 'quiz_question';
+$handler->display->display_options['fields']['qid']['table'] = 'quiz_question_entity';
 $handler->display->display_options['fields']['qid']['field'] = 'qid';
 $handler->display->display_options['fields']['qid']['exclude'] = TRUE;
 $handler->display->display_options['fields']['qid']['separator'] = '';
 /* Field: Bulk operations: Question */
 $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-$handler->display->display_options['fields']['views_bulk_operations']['table'] = 'quiz_question';
+$handler->display->display_options['fields']['views_bulk_operations']['table'] = 'quiz_question_entity';
 $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -122,13 +122,13 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_opera
 );
 /* Field: Question: Label */
 $handler->display->display_options['fields']['title']['id'] = 'title';
-$handler->display->display_options['fields']['title']['table'] = 'quiz_question';
+$handler->display->display_options['fields']['title']['table'] = 'quiz_question_entity';
 $handler->display->display_options['fields']['title']['field'] = 'title';
 $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
 $handler->display->display_options['fields']['title']['alter']['path'] = 'quiz-question/[qid]';
 /* Field: Question: Type */
 $handler->display->display_options['fields']['type']['id'] = 'type';
-$handler->display->display_options['fields']['type']['table'] = 'quiz_question';
+$handler->display->display_options['fields']['type']['table'] = 'quiz_question_entity';
 $handler->display->display_options['fields']['type']['field'] = 'type';
 /* Field: User: Name */
 $handler->display->display_options['fields']['name']['id'] = 'name';
@@ -138,20 +138,20 @@ $handler->display->display_options['fields']['name']['relationship'] = 'uid';
 $handler->display->display_options['fields']['name']['label'] = 'Author';
 /* Field: Question: Changed */
 $handler->display->display_options['fields']['changed']['id'] = 'changed';
-$handler->display->display_options['fields']['changed']['table'] = 'quiz_question';
+$handler->display->display_options['fields']['changed']['table'] = 'quiz_question_entity';
 $handler->display->display_options['fields']['changed']['field'] = 'changed';
 $handler->display->display_options['fields']['changed']['date_format'] = 'short';
 $handler->display->display_options['fields']['changed']['second_date_format'] = 'long';
 /* Sort criterion: Question: Changed */
 $handler->display->display_options['sorts']['changed']['id'] = 'changed';
-$handler->display->display_options['sorts']['changed']['table'] = 'quiz_question';
+$handler->display->display_options['sorts']['changed']['table'] = 'quiz_question_entity';
 $handler->display->display_options['sorts']['changed']['field'] = 'changed';
 $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
 $handler->display->display_options['sorts']['changed']['exposed'] = TRUE;
 $handler->display->display_options['sorts']['changed']['expose']['label'] = 'Updated';
 /* Filter criterion: Question: Type */
 $handler->display->display_options['filters']['type']['id'] = 'type';
-$handler->display->display_options['filters']['type']['table'] = 'quiz_question';
+$handler->display->display_options['filters']['type']['table'] = 'quiz_question_entity';
 $handler->display->display_options['filters']['type']['field'] = 'type';
 $handler->display->display_options['filters']['type']['exposed'] = TRUE;
 $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';

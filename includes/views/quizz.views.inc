@@ -77,51 +77,17 @@ function quizz_views_handlers() {
  * Implements hook_views_data_alter().
  */
 function quizz_views_data_alter(&$data) {
-  // Join the quiz properties table to quiz entities.
   $data['quiz_entity_revision']['table']['join'] = array(
       'quiz_entity' => array('left_field' => 'vid', 'field' => 'vid', 'type' => 'INNER'),
   );
 
   $data['quiz_results']['table']['join'] = array(
-      // This is vid because vid is always more specific.
       'quiz_entity'          => array('left_field' => 'vid', 'field' => 'quiz_vid'),
       'quiz_entity_revision' => array('left_field' => 'vid', 'field' => 'quiz_vid'),
   );
 
   $data['quiz_relationship']['table']['join'] = array(
-      // This is vid because vid is always more specific.
       'quiz_entity'          => array('left_field' => 'vid', 'field' => 'quiz_vid', 'type' => 'INNER'),
       'quiz_entity_revision' => array('left_field' => 'vid', 'field' => 'quiz_vid', 'type' => 'INNER'),
-  );
-
-  $data['quiz_results_answers']['table']['join'] = array(
-      'quiz_entity_revision' => array(
-          'left_table' => 'quiz_relationship',
-          'left_field' => 'question_qid',
-          'field'      => 'question_qid',
-          'extra'      => 'quiz_results_answers.result_id = quiz_results.result_id',
-      ),
-  );
-
-  // Filter for the node being a quiz question.
-  $data['node']['quiz_question_type'] = array(
-      'title'      => t('Question type'),
-      'help'       => t('Filter by quiz question type.'),
-      'real field' => 'type',
-      'filter'     => array(
-          'label'   => 'Quiz question type',
-          'handler' => 'quiz_views_handler_filter_quiz_question_type',
-      ),
-  );
-
-  // Filter for the node being a quiz question.
-  $data['node']['quiz_question'] = array(
-      'title'      => t('Quiz question'),
-      'help'       => t('Filter by quiz question.'),
-      'real field' => 'type',
-      'filter'     => array(
-          'label'   => 'Quiz question',
-          'handler' => 'quiz_views_handler_filter_quiz_question',
-      ),
   );
 }

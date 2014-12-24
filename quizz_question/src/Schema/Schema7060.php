@@ -13,7 +13,7 @@ class Schema7060 {
   }
 
   private function getQuestionSchema() {
-    $schema['quiz_question'] = array(
+    $schema['quiz_question_entity'] = array(
         'description' => 'Store quiz questions',
         'fields'      => array(
             'qid'      => array('type' => 'serial', 'not null' => TRUE, 'description' => 'Primary Key: Unique question item ID.'),

@@ -29,7 +29,7 @@ class Answer extends Entity {
 
   public function bundle() {
     if (NULL == $this->type) {
-      $sql = 'SELECT type FROM {quiz_question} WHERE vid = :vid';
+      $sql = 'SELECT type FROM {quiz_question_entity} WHERE vid = :vid';
       $this->type = db_query($sql, array(':vid' => $this->question_vid))->fetchColumn();
     }
     return parent::bundle();

@@ -121,7 +121,7 @@ function quizz_question_entity_info() {
       'controller class'          => 'Drupal\quizz_question\Entity\QuestionController',
       'metadata controller class' => 'Drupal\quizz_question\Entity\QuestionMetadataController',
       'views controller class'    => 'Drupal\quizz_question\Entity\QuestionViewsController',
-      'base table'                => 'quiz_question',
+      'base table'                => 'quiz_question_entity',
       'revision table'            => 'quiz_question_revision',
       'fieldable'                 => TRUE,
       'entity keys'               => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
@@ -272,53 +272,4 @@ function quizz_question_modules_disabled($modules) {
       ->execute()
     ;
   }
-}
-
-# ---------------------------------------------------------------
-# To be removed
-# ---------------------------------------------------------------
-
-/**
- * Delete the question from the db, and mark its identifiers in the quiz linking
- * table as "NEVER".  This is safer than deleting them and allows for same
- * tracing of what's happened if a question was deleted unintentionally.
- *
- * @param \Drupal\quizz_question\Entity\Question $question the question
- * @param bool $only_this_version whether to delete only the specific revision of the question
- */
-function _quiz_delete_question(&$question, $only_this_version) {
-  // let each question class delete its own stuff
-  $question->getHandler()->delete($only_this_version);
-
-  // FIXME QuizQuestion class makes these relationships, so it should handle their 'deletion' too
-  // FIXME alternately, move the relationship handling out of QuizQuestion class
-  // @todo reconsider this QUESTION_NEVER status, since the node is actually gone
-  // then remove it from {quiz_relationship} linking table
-  //$base_sql = "UPDATE {quiz_relationship} SET question_status = " . QUESTION_NEVER;
-  $select_sql = 'SELECT quiz_vid FROM {quiz_relationship}';
-  if ($only_this_version) {
-    $select_sql .= ' WHERE question_qid = :question_qid AND question_vid = :question_vid';
-    $filter_arg = array(':question_qid' => $question->qid, ':question_vid' => $question->vid);
-  }
-  else {
-    $select_sql .= ' WHERE question_qid = :question_qid';
-    $filter_arg = array(':question_qid' => $question->qid);
-  }
-
-  $res = db_query($select_sql, $filter_arg);
-
-  $update = db_update('quiz_relationship')
-    ->fields(array('question_status' => QUIZZ_QUESTION_NEVER))
-    ->condition('question_qid', $question->qid);
-  if ($only_this_version) {
-    $update = $update->condition('question_vid', $question->vid);
-  }
-  $update->execute();
-
-  $quizzes_to_update = array();
-  while ($quizzes_to_update[] = $res->fetchField()) {
-
-  }
-
-  return quizz_entity_controller()->getMaxScoreWriter()->update($quizzes_to_update);
 }
