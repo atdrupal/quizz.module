@@ -6,7 +6,7 @@ use Drupal\quizz\Helper\HookImplementation;
 use Drupal\quizz\Helper\MailHelper;
 use Drupal\quizz\Helper\QuestionCategoryFieldInfo;
 use Drupal\quizz\Helper\QuizHelper;
-use Drupal\quizz\Quiz;
+use Drupal\quizz\Quizz;
 
 /**
  * Wrapper for helper classes. We just use classes to organise functions, make
@@ -24,7 +24,7 @@ use Drupal\quizz\Quiz;
  * You should not create object directly from this class, use quiz() factory
  * function instead — which support overriding from module's side.
  */
-class Quiz {
+class Quizz {
 
   private $hookImplementation;
   private $quizHelper;
@@ -60,7 +60,7 @@ class Quiz {
    * Inject quizHelper.
    *
    * @param QuizHelper $quizHelper
-   * @return Quiz
+   * @return Quizz
    */
   public function setQuizHelper($quizHelper) {
     $this->quizHelper = $quizHelper;
@@ -81,7 +81,7 @@ class Quiz {
    * Inject mail helper.
    *
    * @param MailHelper $mailHelper
-   * @return Quiz
+   * @return Quizz
    */
   public function setMailHelper($mailHelper) {
     $this->mailHelper = $mailHelper;

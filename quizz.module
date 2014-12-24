@@ -2,7 +2,7 @@
 
 use Drupal\quizz\Entity\QuizType;
 use Drupal\quizz\Entity\Result;
-use Drupal\quizz\Quiz;
+use Drupal\quizz\Quizz;
 use Drupal\quizz\Entity\QuizEntity;
 
 /**
@@ -55,9 +55,9 @@ define('QUIZZ_KEEP_ALL', 2);
  *
  * @staticvar Quiz $quiz
  * @param string $className
- * @return \Drupal\quizz\Quiz
+ * @return \Drupal\quizz\Quizz
  */
-function quizz($className = 'Drupal\quizz\Quiz') {
+function quizz($className = 'Drupal\quizz\Quizz') {
   if (!$obj = &drupal_static(__FUNCTION__)) {
     $obj = new $className;
   }
