@@ -168,7 +168,7 @@ function quizz_result_is_question_answered($result, $question) {
  * Helper function to faciliate icon display, like "correct" or "selected".
  */
 function quizz_icon($icon) {
-  return theme('quiz_answer_result', array('type' => $icon));
+  return theme('quizz_answer_result', array('type' => $icon));
 }
 
 /**

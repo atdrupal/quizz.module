@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Implements hook_quiz_question_info().
+ * Implements hook_quizz_question_info().
  */
-function quizz_truefalse_quiz_question_info() {
+function quizz_truefalse_quizz_question_info() {
   return array(
       'truefalse' => array(
           'name'              => t('True/false question'),

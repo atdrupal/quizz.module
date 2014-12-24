@@ -202,7 +202,7 @@ class Schema7060 {
         ),
     );
 
-    $schema['quiz_terms'] = array(
+    $schema['quiz_entity_terms'] = array(
         'description' => 'Table storing what terms belongs to what quiz for categorized random quizzes',
         'fields'      => array(
             'qid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'Question ID'),

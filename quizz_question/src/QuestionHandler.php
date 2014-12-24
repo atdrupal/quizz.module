@@ -167,7 +167,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    * @return array
    */
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
-    return array('#element_validate' => array('quiz_question_element_validate'));
+    return array('#element_validate' => array('quizz_question_element_validate'));
   }
 
   /**

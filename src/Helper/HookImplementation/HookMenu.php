@@ -14,7 +14,7 @@ class HookMenu {
         'title'            => 'User results',
         'access callback'  => 'quizz_access_my_result',
         'access arguments' => array(1),
-        'page callback'    => 'quiz_result_page',
+        'page callback'    => 'quizz_result_page',
         'page arguments'   => array(1),
         'file'             => 'includes/quizz.pages.inc',
     );
@@ -65,7 +65,7 @@ class HookMenu {
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Configure the Quiz module.',
         'page callback'    => 'drupal_get_form',
-        'page arguments'   => array('quiz_admin_settings_form'),
+        'page arguments'   => array('quizz_admin_settings_form'),
         'access arguments' => array('administer quiz configuration'),
         'type'             => MENU_NORMAL_ITEM, // optional
         'file'             => 'includes/quizz.pages.inc',
@@ -76,7 +76,7 @@ class HookMenu {
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Configure default values for the quiz creation form.',
         'page callback'    => 'drupal_get_form',
-        'page arguments'   => array('quiz_admin_entity_form'),
+        'page arguments'   => array('quizz_admin_entity_form'),
         'access arguments' => array('administer quiz configuration'),
         'type'             => MENU_NORMAL_ITEM, // optional
         'file'             => 'includes/quizz.pages.inc',
@@ -106,7 +106,7 @@ class HookMenu {
         'access arguments' => array(3),
         'access callback'  => 'quizz_access_my_result',
         'file'             => 'includes/quizz.pages.inc',
-        'page callback'    => 'quiz_result_page',
+        'page callback'    => 'quizz_result_page',
         'page arguments'   => array(3),
         'type'             => MENU_CALLBACK,
     );

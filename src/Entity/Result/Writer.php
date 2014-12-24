@@ -89,7 +89,7 @@ class Writer {
 
       return db_query("
           SELECT (max_score/{$ssql}) as scale
-          FROM {quiz_terms} WHERE vid = :vid AND tid = :tid", array(
+          FROM {quiz_entity_terms} WHERE vid = :vid AND tid = :tid", array(
             ':question_qid' => $answer->question_qid,
             ':question_vid' => $answer->question_vid,
             ':vid'          => $quiz->vid,

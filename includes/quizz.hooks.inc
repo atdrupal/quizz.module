@@ -163,15 +163,15 @@ function quizz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  */
 function quizz_theme($existing, $type, $theme, $path) {
   return array(
-      'quiz_view_stats'          => array(
+      'quizz_view_stats'          => array(
           'variables' => array('quiz' => NULL),
           'file'      => 'includes/quizz.pages.inc'
       ),
-      'quiz_categorized_form'    => array(
+      'quizz_categorized_form'    => array(
           'render element' => 'form',
           'file'           => 'includes/quizz.pages.inc'
       ),
-      'quiz_progress'            => array(
+      'quizz_progress'            => array(
           'variables' => array(
               'quiz'            => null,
               'question_number' => NULL,
@@ -180,19 +180,19 @@ function quizz_theme($existing, $type, $theme, $path) {
               'time_limit'      => NULL),
           'file'      => 'includes/quizz.pages.inc',
       ),
-      'quiz_no_feedback'         => array(
+      'quizz_no_feedback'         => array(
           'file'      => 'includes/quizz.pages.inc',
           'variables' => array(),
       ),
-      'question_selection_table' => array(
+      'quizz_question_selection_table' => array(
           'file'           => 'includes/quizz.pages.inc',
           'render element' => 'form',
       ),
-      'quiz_answer_result'       => array(
+      'quizz_answer_result'       => array(
           'file'      => 'includes/quizz.pages.inc',
           'variables' => array(),
       ),
-      'quiz_report_form'         => array(
+      'quizz_report_form'         => array(
           'render element' => 'form',
           'path'           => $path . '/theme',
           'template'       => 'quiz-report-form',
@@ -206,7 +206,7 @@ function quizz_theme($existing, $type, $theme, $path) {
           'path'      => $path . '/theme',
           'template'  => 'quiz-question-score',
       ),
-      'quiz_pager'               => array(
+      'quizz_pager'               => array(
           'variables' => array('quiz' => null, 'total' => 0, 'current' => 0, 'siblings' => 0),
       ),
   );

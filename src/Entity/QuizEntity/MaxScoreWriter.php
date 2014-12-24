@@ -56,7 +56,7 @@ class MaxScoreWriter {
     // If quiz as question mode = QUESTION_ALWAYS
     // Max score = sum of max score of each question in quiz.
     $_score = 'SELECT COALESCE(SUM(qt.max_score * qt.number), 0)';
-    $_score .= ' FROM {quiz_terms} qt';
+    $_score .= ' FROM {quiz_entity_terms} qt';
     $_score .= ' WHERE qt.qid = {quiz_entity_revision}.qid AND qt.vid = {quiz_entity_revision}.vid';
     db_update('quiz_entity_revision')
       ->expression('max_score', "($_score)")

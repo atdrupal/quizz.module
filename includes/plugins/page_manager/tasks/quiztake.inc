@@ -73,7 +73,7 @@ function quiz_quiztake(QuizEntity $quiz) {
     return $output;
   }
 
-  $function = 'quiz_take_page';
+  $function = 'quizz_take_page';
   foreach (module_implements('page_manager_override') as $module) {
     $call = $module . '_page_manager_override';
     if (($rc = $call('quiz')) && function_exists($rc)) {

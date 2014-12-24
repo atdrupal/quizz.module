@@ -51,7 +51,7 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
       }
     }
 
-    $content['progress']['#markup'] = theme('quiz_progress', array(
+    $content['progress']['#markup'] = theme('quizz_progress', array(
         'quiz'          => $this->quiz,
         'questions'     => $questions,
         'current'       => $this->page_number,

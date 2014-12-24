@@ -16,7 +16,7 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
    */
   public function getForm($form, $form_state, QuizEntity $quiz) {
     $form['#tree'] = TRUE;
-    $form['#theme'] = 'quiz_categorized_form';
+    $form['#theme'] = 'quizz_categorized_form';
     $form['#quiz'] = $quiz;
 
     $this->existingTermsForm($form, $form_state, $quiz);
@@ -65,7 +65,7 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
   /**
    * Form for adding new terms to a quiz
    *
-   * @see quiz_categorized_form
+   * @see quizz_categorized_form
    */
   private function categorizedNewTermForm(&$form, $form_state, $quiz) {
     $form['new'] = array(
@@ -199,14 +199,14 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
 
     // Needs to be set to avoid error-message from db:
     $form_state['values']['weight'] = 0;
-    drupal_write_record('quiz_terms', $form_state['values']);
+    drupal_write_record('quiz_entity_terms', $form_state['values']);
     return $form_state['values']['number'];
   }
 
   /**
    * Update the categoriez belonging to a quiz with categorized random questions.
    *
-   * Helper function for quiz_categorized_form_submit
+   * Helper function for quizz_categorized_form_submit
    */
   private function categorizedUpdateTerms(&$form, &$form_state) {
     $changed = array();
@@ -245,11 +245,11 @@ class QuizCategorizedForm extends QuizQuestionsBaseForm {
           $existing['weight'] = 1;
         }
         $changed[] = $form[$key]['name']['#markup'];
-        drupal_write_record('quiz_terms', $existing, array('vid', 'tid'));
+        drupal_write_record('quiz_entity_terms', $existing, array('vid', 'tid'));
         break;
       }
       elseif ($existing['remove']) {
-        db_delete('quiz_terms')
+        db_delete('quiz_entity_terms')
           ->condition('tid', $key)
           ->condition('vid', $form_state['values']['vid'])
           ->execute();

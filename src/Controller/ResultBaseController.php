@@ -50,7 +50,7 @@ abstract class ResultBaseController {
       . "   LEFT JOIN {quiz_question_entity} question ON ra.question_qid = question.qid"
       . "   LEFT JOIN {quiz_results} r ON ra.result_id = r.result_id"
       . "   LEFT OUTER JOIN {quiz_relationship} rs ON (ra.question_vid = rs.question_vid) AND rs.quiz_vid = r.quiz_vid"
-      . "   LEFT OUTER JOIN {quiz_terms} qt ON (qt.vid = :vid AND qt.tid = ra.tid) "
+      . "   LEFT OUTER JOIN {quiz_entity_terms} qt ON (qt.vid = :vid AND qt.tid = ra.tid) "
       . " WHERE ra.result_id = :rid "
       . " ORDER BY ra.number, ra.answer_timestamp";
     $ids = db_query($sql, array(':vid' => $this->quiz_revision->vid, ':rid' => $this->result->result_id));

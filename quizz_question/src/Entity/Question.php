@@ -187,7 +187,7 @@ class Question extends Entity {
       $max_score = db_query('SELECT qt.max_score
         FROM {quiz_results} result
          JOIN {quiz_results_answers} answer ON (result.result_id = answer.result_id)
-         JOIN {quiz_terms} qt ON (qt.vid = result.quiz_vid AND qt.tid = answer.tid)
+         JOIN {quiz_entity_terms} qt ON (qt.vid = result.quiz_vid AND qt.tid = answer.tid)
          WHERE result.result_id = :rid
           AND answer.question_qid = :question_id
           AND answer.question_vid = :question_vid', array(

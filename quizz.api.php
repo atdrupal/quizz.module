@@ -15,7 +15,7 @@ use Drupal\quizz\Entity\QuizEntity;
  *
  *  1. Create a new module
  *  2. Use your module's .install file to create the necessary tables
- *  3. Implements hook_quiz_question_info()
+ *  3. Implements hook_quizz_question_info()
  *  4. Define classes that extends Drupal\quizz_question\QuestionHandler and Drupal\quizz_question\ResponseHandler.
  *
  *
@@ -40,9 +40,9 @@ use Drupal\quizz\Entity\QuizEntity;
  */
 
 /**
- * Implements hook_quiz_question_info().
+ * Implements hook_quizz_question_info().
  */
-function hook_quiz_question_info() {
+function hook_quizz_question_info() {
   return array(
       'long_answer' => array(
           'name'              => t('Example question type'),
@@ -55,9 +55,9 @@ function hook_quiz_question_info() {
 }
 
 /**
- * Implements hook_quiz_question_info_alter().
+ * Implements hook_quizz_question_info_alter().
  */
-function hook_quiz_question_info_alter(&$info) {
+function hook_quizz_question_info_alter(&$info) {
   // …
 }
 

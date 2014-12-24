@@ -26,7 +26,7 @@ class QuizReportForm {
       }
 
       if (!isset($form_to_add['#no_report'])) {
-        $form_to_add['#element_validate'][] = 'quiz_report_form_element_validate';
+        $form_to_add['#element_validate'][] = 'quizz_report_form_element_validate';
         $form[] = $form_to_add;
       }
     }

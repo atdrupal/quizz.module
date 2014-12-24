@@ -99,7 +99,7 @@ class QuizController extends EntityAPIController {
       $quiz->number_of_questions += $this->getStats()->countAlwaysQuestions($quiz->vid);
 
       $content['quiz_entity'][$quiz->qid]['stats'] = array(
-          '#markup' => theme('quiz_view_stats', array('quiz' => $quiz)),
+          '#markup' => theme('quizz_view_stats', array('quiz' => $quiz)),
           '#weight' => $extra_fields['stats']['weight'],
       );
     }

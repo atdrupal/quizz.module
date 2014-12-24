@@ -29,7 +29,7 @@ class QuizUIController extends EntityDefaultUIController {
         'title arguments'  => array(1),
         'access callback'  => 'quizz_entity_access_callback',
         'access arguments' => array('view'),
-        'page callback'    => 'quiz_page',
+        'page callback'    => 'quizz_page',
         'page arguments'   => array(1),
     );
 
@@ -65,7 +65,7 @@ class QuizUIController extends EntityDefaultUIController {
         'type'             => MENU_LOCAL_TASK,
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_entity', 1),
-        'page callback'    => 'quiz_revisions_page',
+        'page callback'    => 'quizz_revisions_page',
         'page arguments'   => array(1),
         'weight'           => -20,
     );
@@ -77,7 +77,7 @@ class QuizUIController extends EntityDefaultUIController {
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_entity', 1),
         'page callback'    => 'drupal_get_form',
-        'page arguments'   => array('quiz_question_admin_page', 1),
+        'page arguments'   => array('quizz_question_admin_page', 1),
         'weight'           => 5,
     );
 
@@ -87,7 +87,7 @@ class QuizUIController extends EntityDefaultUIController {
         'type'             => MENU_LOCAL_TASK,
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_entity', 1),
-        'page callback'    => 'quiz_results_page',
+        'page callback'    => 'quizz_results_page',
         'page arguments'   => array(1),
         'weight'           => 6,
     );
@@ -138,7 +138,7 @@ class QuizUIController extends EntityDefaultUIController {
           'access arguments' => array('create', 'quiz_entity'),
           'file path'        => drupal_get_path('module', 'quizz'),
           'file'             => 'includes/quizz.pages.inc',
-          'page callback'    => 'quiz_entity_adding_landing_page',
+          'page callback'    => 'quizz_entity_adding_landing_page',
       );
 
       foreach (array_keys($types) as $name) {
@@ -147,7 +147,7 @@ class QuizUIController extends EntityDefaultUIController {
             'title arguments'  => array('add', 'quiz_entity'),
             'access callback'  => 'entity_access',
             'access arguments' => array('create', 'quiz_entity'),
-            'page callback'    => 'quiz_entity_adding_page',
+            'page callback'    => 'quizz_entity_adding_page',
             'page arguments'   => array($name),
             'file path'        => drupal_get_path('module', 'quizz'),
             'file'             => 'includes/quizz.pages.inc',
@@ -160,7 +160,7 @@ class QuizUIController extends EntityDefaultUIController {
     $items['quiz/%quizz/take'] = $base + array(
         'title callback'   => 'entity_class_label',
         'title arguments'  => array(1),
-        'page callback'    => 'quiz_take_page',
+        'page callback'    => 'quizz_take_page',
         'page arguments'   => array(1),
         'access callback'  => 'entity_access',
         'access arguments' => array('view', 'quiz_entity', 1),
@@ -171,7 +171,7 @@ class QuizUIController extends EntityDefaultUIController {
         'access arguments' => array(1, 3),
         'file path'        => drupal_get_path('module', 'quizz'),
         'file'             => 'includes/quizz.pages.inc',
-        'page callback'    => 'quiz_question_take_page',
+        'page callback'    => 'quizz_question_take_page',
         'page arguments'   => array(1, 3),
     );
 
@@ -179,7 +179,7 @@ class QuizUIController extends EntityDefaultUIController {
         'title'            => 'Feedback',
         'file path'        => drupal_get_path('module', 'quizz'),
         'file'             => 'includes/quizz.pages.inc',
-        'page callback'    => 'quiz_question_feedback_page',
+        'page callback'    => 'quizz_question_feedback_page',
         'page arguments'   => array(1, 3),
         'access callback'  => 'quizz_question_feedback_access',
         'access arguments' => array(1, 3),

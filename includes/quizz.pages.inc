@@ -19,32 +19,32 @@ use Drupal\quizz_question\Entity\Question;
 /**
  * Form for /admin/quiz/settings/config.
  */
-function quiz_admin_settings_form($form, $form_state) {
+function quizz_admin_settings_form($form, $form_state) {
   $obj = new QuizAdminSettingsController();
   return $obj->getForm($form, $form_state);
 }
 
-function quiz_admin_settings_form_validate($form, $form_state) {
+function quizz_admin_settings_form_validate($form, $form_state) {
   $obj = new QuizAdminSettingsController();
   return $obj->validate($form, $form_state);
 }
 
-function quiz_admin_settings_form_submit($form, $form_state) {
+function quizz_admin_settings_form_submit($form, $form_state) {
   $obj = new QuizAdminSettingsController();
   return $obj->submit($form, $form_state);
 }
 
-function quiz_admin_entity_form($form, $form_state) {
+function quizz_admin_entity_form($form, $form_state) {
   $obj = new QuizAdminEntityForm();
   return $obj->getForm($form, $form_state);
 }
 
-function quiz_admin_entity_form_validate($form, $form_state) {
+function quizz_admin_entity_form_validate($form, $form_state) {
   $obj = new QuizAdminEntityForm();
   return $obj->validateForm($form, $form_state);
 }
 
-function quiz_admin_entity_form_submit($form, $form_state) {
+function quizz_admin_entity_form_submit($form, $form_state) {
   $obj = new QuizAdminEntityForm();
   return $obj->submitForm($form, $form_state);
 }
@@ -70,7 +70,7 @@ function quiz_type_form_submit($form, &$form_state) {
  * @TODO Only list quiz type if user has permission to create it.
  * @return string
  */
-function quiz_entity_adding_landing_page() {
+function quizz_entity_adding_landing_page() {
   return theme_render_template(drupal_get_path('module', 'quizz') . '/theme/quiz-adding-landing.tpl.php', array(
       'quiz_types' => quizz_get_types()
   ));
@@ -81,7 +81,7 @@ function quiz_entity_adding_landing_page() {
  *
  * @param string $quiz_type_name
  */
-function quiz_entity_adding_page($quiz_type_name) {
+function quizz_entity_adding_page($quiz_type_name) {
   $quiz = entity_create('quiz_entity', array('type' => $quiz_type_name));
   return entity_ui_get_form('quiz_entity', $quiz, 'add');
 }
@@ -106,13 +106,13 @@ function quiz_entity_form_submit($form, &$form_state) {
   return $obj->submit($form, $form_state);
 }
 
-function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
+function quizz_question_admin_page($form, $form_state, QuizEntity $quiz) {
   // Vertical tabs does not play well without form.
   $form['hack_prefix'] = array('#weight' => -1000, '#markup' => '</div></form>');
   $form['hack_suffix'] = array('#weight' => 1000, '#markup' => '<form><div>');
 
   if ($quiz->randomization >= 3) {
-    $form['quiz_categorized_form'] = drupal_get_form('quiz_categorized_form', $quiz);
+    $form['quizz_categorized_form'] = drupal_get_form('quizz_categorized_form', $quiz);
     return $form;
   }
 
@@ -144,7 +144,7 @@ function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
           '#type'  => 'fieldset',
           '#title' => t('Manage questions'),
           'links'  => array('#markup' => theme_ctools_dropdown($links)),
-          'form'   => drupal_get_form('quiz_questions_form', $quiz),
+          'form'   => drupal_get_form('quizz_questions_form', $quiz),
       ),
       'global_questions' => array(
           '#type'  => 'fieldset',
@@ -164,34 +164,34 @@ function quiz_question_admin_page($form, $form_state, QuizEntity $quiz) {
 /**
  * Quiz's questions management form.
  */
-function quiz_questions_form($form, $form_state, QuizEntity $quiz) {
+function quizz_questions_form($form, $form_state, QuizEntity $quiz) {
   $obj = new QuizQuestionsForm();
   $array = $obj->formGet($form, $form_state, $quiz);
-  $array['#validate'][] = 'quiz_questions_form_validate';
+  $array['#validate'][] = 'quizz_questions_form_validate';
   return $array;
 }
 
-function quiz_questions_form_validate($form, $form_state) {
+function quizz_questions_form_validate($form, $form_state) {
   $obj = new QuizQuestionsForm();
   return $obj->formValidate($form, $form_state);
 }
 
-function quiz_questions_form_submit($form, $form_state) {
+function quizz_questions_form_submit($form, $form_state) {
   $obj = new QuizQuestionsForm();
   return $obj->formSubmit($form, $form_state);
 }
 
-function quiz_categorized_form($form, $form_state, QuizEntity $quiz) {
+function quizz_categorized_form($form, $form_state, QuizEntity $quiz) {
   $obj = new QuizCategorizedForm();
   return $obj->getForm($form, $form_state, $quiz);
 }
 
-function quiz_categorized_form_validate($form, &$form_state) {
+function quizz_categorized_form_validate($form, &$form_state) {
   $obj = new QuizCategorizedForm();
   return $obj->formValidate($form, $form_state);
 }
 
-function quiz_categorized_form_submit($form, &$form_state) {
+function quizz_categorized_form_submit($form, &$form_state) {
   $obj = new QuizCategorizedForm();
   return $obj->formSubmit($form, $form_state);
 }
@@ -199,7 +199,7 @@ function quiz_categorized_form_submit($form, &$form_state) {
 /**
  * Callback for quiz/%quiz
  */
-function quiz_page(QuizEntity $quiz, $view_mode = 'default', $langcode = NULL) {
+function quizz_page(QuizEntity $quiz, $view_mode = 'default', $langcode = NULL) {
   return entity_view('quiz_entity', array($quiz), $view_mode, $langcode);
 }
 
@@ -208,7 +208,7 @@ function quiz_page(QuizEntity $quiz, $view_mode = 'default', $langcode = NULL) {
  *
  * @param QuizEntity $quiz
  */
-function quiz_revisions_page(QuizEntity $quiz) {
+function quizz_revisions_page(QuizEntity $quiz) {
   $obj = new QuizRevisionsAdminController();
   return $obj->render($quiz);
 }
@@ -216,7 +216,7 @@ function quiz_revisions_page(QuizEntity $quiz) {
 /**
  * Callback for quiz/%/take
  */
-function quiz_take_page(QuizEntity $quiz) {
+function quizz_take_page(QuizEntity $quiz) {
   global $user;
   $obj = new QuizTakeController($quiz, $user);
   return $obj->render();
@@ -230,7 +230,7 @@ function quiz_take_page(QuizEntity $quiz) {
  *   A question number, starting at 1. Pages do not have question numbers. Quiz
  *   directions are considered part of the numbering.
  */
-function quiz_question_take_page(QuizEntity $quiz, $page_number) {
+function quizz_question_take_page(QuizEntity $quiz, $page_number) {
   $result = $layout_item = NULL;
   $quiz_id = $quiz->qid;
 
@@ -250,7 +250,7 @@ function quiz_question_take_page(QuizEntity $quiz, $page_number) {
 /**
  * Jumper form.
  */
-function quiz_jumper_form($form, $form_state, $questions, $current) {
+function quizz_jumper_form($form, $form_state, $questions, $current) {
   $form['#attached']['js'][] = drupal_get_path('module', 'quizz') . '/misc/js/quiz.jumper.js';
   $form['question_number'] = array(
       '#type'          => 'select',
@@ -265,7 +265,7 @@ function quiz_jumper_form($form, $form_state, $questions, $current) {
   return $form;
 }
 
-function quiz_jumper_form_submit($form, &$form_state) {
+function quizz_jumper_form_submit($form, &$form_state) {
   $quiz = quizz_load(quizz_get_id_from_url());
   $_SESSION['quiz'][$quiz->qid]['current'] = $form_state['values']['question_number'] - 1;
   $form_state['redirect'] = "quiz/" . $quiz->qid . "/take/" . $form_state['values']['question_number'];
@@ -326,14 +326,14 @@ function quiz_answer_form_submit($form, &$form_state) {
   return $obj->getSubmit()->formSubmit($form, $form_state);
 }
 
-function quiz_question_element_validate(&$element, &$form_state) {
+function quizz_question_element_validate(&$element, &$form_state) {
   /* @var $question \Drupal\quizz_question\Entity\Question */
   $question = $form_state['build_info']['args'][1];
   $result = $form_state['build_info']['args'][3];
   return $question->getHandler()->elementValidate($result, $element, $form_state);
 }
 
-function quiz_report_form_element_validate(&$element, &$form_state) {
+function quizz_report_form_element_validate(&$element, &$form_state) {
   return QuizReportForm::validateElement($element, $form_state);
 }
 
@@ -341,14 +341,14 @@ function quiz_report_form_element_validate(&$element, &$form_state) {
  * Callback for quiz/%/take/%quizz_question_number/feedback. Show feedback for a
  * question response.
  */
-function quiz_question_feedback_page(QuizEntity $quiz, $page_number) {
+function quizz_question_feedback_page(QuizEntity $quiz, $page_number) {
   $result_id = empty($_SESSION['quiz'][$quiz->qid]['result_id']) ? $_SESSION['quiz']['temp']['result_id'] : $_SESSION['quiz'][$quiz->qid]['result_id'];
   $result = quizz_result_load($result_id);
   $obj = new QuestionFeedbackController($result);
   return $obj->render($page_number);
 }
 
-function quiz_results_page(QuizEntity $quiz) {
+function quizz_results_page(QuizEntity $quiz) {
   return views_embed_view('quiz_results', 'default', $quiz->qid);
 }
 
@@ -362,7 +362,7 @@ function quiz_results_user_page(QuizEntity $quiz) {
  *
  * @ingroup themeable
  */
-function theme_quiz_answer_result($variables) {
+function theme_quizz_answer_result($variables) {
   return '<div class="quiz-score-icon ' . $variables['type'] . '"></div>';
 }
 
@@ -377,14 +377,14 @@ function theme_quiz_answer_result($variables) {
  *
  * @ingroup themeable
  */
-function theme_quiz_progress($variables) {
+function theme_quizz_progress($variables) {
   $output = '';
   $output .= '<div id="quiz-progress">';
   $text = 'Page <span id="quiz-question-number">!x</span> of <span id="quiz-num-questions">@y</span>';
   if ($variables['allow_jumping']) {
     // Show jump form.
     if ($variables['pager']) {
-      $output .= theme('quiz_pager', array(
+      $output .= theme('quizz_pager', array(
           'quiz'     => $variables['quiz'],
           'siblings' => $variables['quiz']->getQuizType()->getConfig('quiz_pager_siblings', 5),
           'current'  => $variables['current'],
@@ -392,7 +392,7 @@ function theme_quiz_progress($variables) {
       ));
     }
     else {
-      $selectbox = drupal_get_form('quiz_jumper_form', $variables['questions'], $variables['current']);
+      $selectbox = drupal_get_form('quizz_jumper_form', $variables['questions'], $variables['current']);
       $output .= t($text, array('!x' => drupal_render($selectbox), '@y' => count($variables['questions'])));
     }
   }
@@ -417,14 +417,14 @@ function theme_quiz_progress($variables) {
  *
  * @ingroup themeable
  */
-function theme_quiz_no_feedback() {
+function theme_quizz_no_feedback() {
   return t('Thanks for taking the @quiz!', array('@quiz' => QUIZZ_NAME));
 }
 
 /**
  * Theme the stats on the views page
  */
-function theme_quiz_view_stats($variables) {
+function theme_quizz_view_stats($variables) {
   $quiz = $variables['quiz'];
 
   // Fetch data
@@ -469,39 +469,39 @@ function theme_quiz_view_stats($variables) {
  *
  * @param Result $result
  */
-function quiz_result_page(Result $result) {
+function quizz_result_page(Result $result) {
   return entity_view('quiz_result', array($result), 'default', $GLOBALS['language']->language, TRUE);
 }
 
 /**
  * Feedback form.
  */
-function quiz_report_form($form, $form_state, $result, $questions) {
+function quizz_report_form($form, $form_state, $result, $questions) {
   $obj = new QuizReportForm();
   $form += $obj->getForm($form, $form_state, $result, $questions);
 
   if (isset($form['next'])) {
-    $form['next']['#submit'] = array('quiz_report_form_submit_next');
+    $form['next']['#submit'] = array('quizz_report_form_submit_next');
   }
 
   if (isset($form['finish'])) {
-    $form['finish']['#submit'] = array('quiz_report_form_submit_finish');
+    $form['finish']['#submit'] = array('quizz_report_form_submit_finish');
   }
 
   return $form;
 }
 
-function quiz_report_form_submit_next($form, &$form_state) {
+function quizz_report_form_submit_next($form, &$form_state) {
   $obj = new QuizReportForm();
   return $obj->formSubmitFeedback($form, $form_state);
 }
 
-function quiz_report_form_submit_finish($form, &$form_state) {
+function quizz_report_form_submit_finish($form, &$form_state) {
   $obj = new QuizReportForm();
   return $obj->formEndSubmit($form, $form_state);
 }
 
-function quiz_report_form_submit($form, &$form_state) {
+function quizz_report_form_submit($form, &$form_state) {
   $obj = new QuizReportForm();
   return $obj->formSubmit($form, $form_state);
 }
@@ -509,7 +509,7 @@ function quiz_report_form_submit($form, &$form_state) {
 /**
  * Theme the quiz pager.
  */
-function theme_quiz_pager($variables) {
+function theme_quizz_pager($variables) {
   return quizz()
       ->getQuizHelper()
       ->getTakeJumperHelper($variables['quiz'], $variables['total'], $variables['siblings'], $variables['current'])
@@ -519,7 +519,7 @@ function theme_quiz_pager($variables) {
 /**
  * Theme a question selection table, adding drag and drop support.
  */
-function theme_question_selection_table($variables) {
+function theme_quizz_question_selection_table($variables) {
   $form = $variables['form'];
 
   // Building headers
@@ -537,7 +537,7 @@ function theme_question_selection_table($variables) {
       $form['weights'][$id]['#attributes']['class'] = array('question-list-weight');
       $form['qr_ids'][$id]['#attributes']['class'] = array('relationship-id');
       $form['qr_pids'][$id]['#attributes']['class'] = array('relationship-pid');
-      $rows[] = _quiz_get_question_row($form, $id, 'quiz_page' === $form['#question_handlers'][$id] ? 'tabledrag-root' : 'tabledrag-leaf');
+      $rows[] = _quizz_get_question_row($form, $id, 'quiz_page' === $form['#question_handlers'][$id] ? 'tabledrag-root' : 'tabledrag-leaf');
     }
     // Make sure the same fields aren't rendered twice
     unset($form['types'], $form['view_links'], $form['remove_links'], $form['stayers']);
@@ -564,12 +564,12 @@ function theme_question_selection_table($variables) {
 }
 
 /**
- * Helper function for theme_question_selection_table
+ * Helper function for theme_quizz_question_selection_table
  *
  * TODO: DELETE
  *
- * @see quiz_questions_form()
- * @see theme_question_selection_table()
+ * @see quizz_questions_form()
+ * @see theme_quizz_question_selection_table()
  *
  * @param $sub_form
  *   Form definition array for a filtered questions list
@@ -578,7 +578,7 @@ function theme_question_selection_table($variables) {
  * @return table row
  *   Array defining a table row
  */
-function _quiz_get_question_row($sub_form, $id, $item_type) {
+function _quizz_get_question_row($sub_form, $id, $item_type) {
   $type = $sub_form['types'][$id]['#markup'];
 
   $action = theme('item_list', array(
@@ -621,7 +621,7 @@ function _quiz_get_question_row($sub_form, $id, $item_type) {
 /**
  * Themes a categorized quiz form
  */
-function theme_quiz_categorized_form($variables) {
+function theme_quizz_categorized_form($variables) {
   $form = $variables['form'];
 
   drupal_add_js(drupal_get_path('module', 'quizz') . '/misc/js/quiz.admin.categorized-form.js');

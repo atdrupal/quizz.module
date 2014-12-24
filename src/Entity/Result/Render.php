@@ -29,7 +29,7 @@ class Render extends ResultBaseController {
     $this->doRenderScore($output);
     $this->doRenderFeedback($output, $summary = $this->getSummaryText());
     $output['feedback_form'] = array(
-        drupal_get_form('quiz_report_form', $this->result, $this->getAnswers())
+        drupal_get_form('quizz_report_form', $this->result, $this->getAnswers())
     );
   }
 

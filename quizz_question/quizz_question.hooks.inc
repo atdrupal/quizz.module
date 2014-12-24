@@ -160,9 +160,9 @@ function quizz_question_entity_info() {
 }
 
 /**
- * Implements hook_quiz_question_info().
+ * Implements hook_quizz_question_info().
  */
-function quizz_question_quiz_question_info() {
+function quizz_question_quizz_question_info() {
   return array(
       'quiz_directions' => array(
           'name'              => t('@quiz directions', array('@quiz' => QUIZZ_NAME)),
@@ -229,7 +229,7 @@ function quizz_question_quiz_question_score(Question $question, $result_id = NUL
  */
 function quizz_question_modules_enabled($modules) {
   foreach ($modules as $module) {
-    if (!$info = module_invoke($module, 'quiz_question_info')) {
+    if (!$info = module_invoke($module, 'quizz_question_info')) {
       continue;
     }
 
@@ -260,7 +260,7 @@ function quizz_question_modules_disabled($modules) {
   $handler_names = array();
 
   foreach ($modules as $module) {
-    if ($info = module_invoke($module, 'quiz_question_info')) {
+    if ($info = module_invoke($module, 'quizz_question_info')) {
       $handler_names[] = $module;
     }
   }

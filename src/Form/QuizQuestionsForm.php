@@ -23,7 +23,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     $form['question_list'] = array(
         '#type'           => 'fieldset',
         '#title'          => t('Questions in this @quiz', array('@quiz' => QUIZZ_NAME)),
-        '#theme'          => 'question_selection_table',
+        '#theme'          => 'quizz_question_selection_table',
         '#collapsible'    => TRUE,
         '#attributes'     => array('id' => 'mq-fieldset'),
         'question_status' => array('#tree' => TRUE),
@@ -61,7 +61,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
   }
 
   /**
-   * Add fields for random quiz to the quiz_questions_form
+   * Add fields for random quiz to the quizz_questions_form
    *
    * @param array $form
    *   FAPI form array

@@ -49,18 +49,18 @@ function quizz_question_type_load($name) {
  *  If this is true, the cache will be reset.
  * @return
  *  An array of information about quiz question implementations.
- * @see quiz_question_quiz_question_info() for an example of a quiz question info hook.
+ * @see quiz_question_quizz_question_info() for an example of a quiz question info hook.
  */
 function quizz_question_get_handler_info($name = NULL, $reset = FALSE) {
   $info = &drupal_static(__FUNCTION__, array());
 
   if (empty($info) || $reset) {
-    foreach (module_invoke_all('quiz_question_info') as $type => $definition) {
+    foreach (module_invoke_all('quizz_question_info') as $type => $definition) {
       if (!empty($definition['question provider'])) { # We only want the ones with classes.
         $info[$type] = $definition;
       }
     }
-    drupal_alter('quiz_question_info', $info);
+    drupal_alter('quizz_question_info', $info);
   }
 
   // Question provider must be instance of QuizQuestion class.
