@@ -109,5 +109,6 @@ notifications:
   flowdock: 8e80a6538fa73fda0f7dd60bf2d44356
 
 after_failure:
+  - drush vl
   - gem install gist
   - gist $DRUPAL/sites/default/files/simpletest/verbose/*.html
