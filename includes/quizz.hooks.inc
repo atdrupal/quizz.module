@@ -228,7 +228,7 @@ function quizz_mail($key, &$message, $params) {
   switch ($key) {
     case 'notice':
       list($quiz, $score, $result_id, $target) = $params;
-      list($subject, $body) = quizz()->getMailHelper()->notice($user, $quiz, $score, $result_id, $target);
+      list($subject, $body) = quizz()->getMailHelper()->buildNotice($user, $quiz, $score, $result_id, $target);
       $message['subject'] = $subject;
       $message['body'][] = $body;
       break;

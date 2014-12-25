@@ -15,7 +15,7 @@ class MailHelper {
    * @return array($subject, $body)
    */
   public function buildNotice($account, $quiz, $score, $result_id, $target) {
-    $quiz_body = field_get_items('node', $quiz, 'body');
+    $body = field_get_items('quiz_entity', $quiz, 'quiz_body');
     $substitutions = array(
         '!title'      => $quiz->title,
         '!sitename'   => variable_get('site_name', 'Quiz'),
@@ -23,7 +23,7 @@ class MailHelper {
         '!author'     => $quiz->name,
         '!title'      => check_plain($quiz->title),
         '!date'       => format_date(REQUEST_TIME),
-        '!desc'       => $quiz_body ? $quiz_body[0]['value'] : '',
+        '!desc'       => $body ? $body[0]['value'] : '',
         '!correct'    => isset($score['numeric_score']) ? $score['numeric_score'] : 0,
         '!total'      => $score['possible_score'],
         '!percentage' => $score['percentage_score'],
@@ -43,6 +43,7 @@ class MailHelper {
     if ($target === 'author') {
       return t('!title Results Notice from !sitename');
     }
+
     if ($target === 'taker') {
       return t('!title Results Notice from !sitename');
     }
@@ -56,6 +57,7 @@ class MailHelper {
         t('!taker got !correct out of !total points in !minutes minutes. Score given in percentage is !percentage') . "\n" .
         t('You can access the result here !url') . "\n";
     }
+
     if ($target === 'taker') {
       return t('Dear !taker') . "\n\n" .
         t('You attended the @quiz !title on !date', array('@quiz' => QUIZZ_NAME)) . "\n" .

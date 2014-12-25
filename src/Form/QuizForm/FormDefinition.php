@@ -101,7 +101,7 @@ class FormDefinition extends FormHelper {
     $this->defineRevisionOptionsFields($form);
 
     // Attach custom fields by admin
-    if (0 <= $this->quiz->status) {
+    if ('admin' !== arg(0)) {
       field_attach_form('quiz_entity', $this->quiz, $form, $form_state);
     }
 
