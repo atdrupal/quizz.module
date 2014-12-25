@@ -13,7 +13,7 @@ function quizz_views_default_views() {
   $files = file_scan_directory(dirname(__FILE__) . '/defaults', '/\.view\.inc/');
   $views = array();
   foreach ($files as $path => $file) {
-    require $path;
+    $view = require $path;
     $views[$view->name] = $view;
   }
   return $views;

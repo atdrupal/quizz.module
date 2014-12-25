@@ -163,3 +163,5 @@ $handler->display->display_options['filters']['type']['expose']['remember_roles'
     1 => 0,
     3 => 0,
 );
+
+return $view;

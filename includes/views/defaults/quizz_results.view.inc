@@ -141,3 +141,5 @@ $handler->display->display_options['arguments']['result_id']['default_argument_t
 $handler->display->display_options['arguments']['result_id']['summary']['number_of_records'] = '0';
 $handler->display->display_options['arguments']['result_id']['summary']['format'] = 'default_summary';
 $handler->display->display_options['arguments']['result_id']['summary_options']['items_per_page'] = '25';
+
+return $view;
