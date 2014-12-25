@@ -17,30 +17,6 @@ function quiz_node_presave($node) {
 }
 
 /**
- * Implements hook_node_presave().
- */
-function quiz_question_node_presave($node) {
-  if (isset($node->is_quiz_question) && variable_get('quiz_auto_revisioning', 1)) {
-    $node->revision = 0;
-    if (($handler = quiz_question_get_provider($node, TRUE)) && $handler->hasBeenAnswered()) {
-      $node->revision = 1;
-    }
-  }
-}
-
-/**
- * Implements hook_node_prepare().
- */
-function quiz_question_node_prepare($node) {
-  if (isset($node->is_quiz_question) && variable_get('quiz_auto_revisioning', 1)) {
-    $node->revision = 0;
-    if (($handler = quiz_question_get_provider($node, TRUE)) && $handler->hasBeenAnswered()) {
-      $node->revision = 1;
-    }
-  }
-}
-
-/**
  * Implements hook_node_access_records().
  */
 function quiz_question_node_access_records($node) {
@@ -108,22 +84,18 @@ function quiz_question_view($node, $view_mode) {
 /**
  * Implements hook_form_alter().
  */
-function quiz_question_form_alter(&$form, $form_state) {
+function quiz_question_form_alter(&$form) {
   if (!isset($form['#quiz_check_revision_access'])) {
     return;
   }
 
   // Remove revision fieldset if user don't have access to revise quiz manually.
   if (!user_access('manual quiz revisioning') || variable_get('quiz_auto_revisioning', 1)) {
-    $form['revision_information']['revision']['#type'] = 'value';
-    $form['revision_information']['revision']['#value'] = $form['revision_information']['revision']['#default_value'];
-    $form['revision_information']['log']['#type'] = 'value';
-    $form['revision_information']['log']['#value'] = $form['revision_information']['log']['#default_value'];
-    $form['revision_information']['#access'] = FALSE;
-  }
-
-  // Quiz questions might want to add a cancel button.
-  if (isset($form['#cancel_button'])) {
-    $form['actions']['cancel'] = array('#weight' => 6, '#markup' => l(t('Cancel'), $form_state['redirect']));
+    $e = $form['revision_information'];
+    $e['revision']['#type'] = 'value';
+    $e['revision']['#value'] = $e['revision']['#default_value'];
+    $e['log']['#type'] = 'value';
+    $e['log']['#value'] = $e['log']['#default_value'];
+    $e['#access'] = FALSE;
   }
 }
