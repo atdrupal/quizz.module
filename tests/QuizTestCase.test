@@ -29,6 +29,8 @@ abstract class QuizTestCase extends DrupalWebTestCase {
    * @param string[] $user_permissions
    */
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
+    $this->assertTrue(TRUE, 'PHP Version: ' . phpversion());
+
     $modules[] = 'quizz';
     $modules[] = 'quizz_question';
     foreach ($this->extraModules as $module) {
