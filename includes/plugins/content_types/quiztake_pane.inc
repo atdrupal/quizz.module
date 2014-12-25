@@ -42,7 +42,7 @@ function quiz_take_pane_content_type_render($subtype, $conf, $panel_args, $conte
     $block->content = $quiz->rendered_content;
   }
   else {
-    module_load_include('pages.inc', 'quiz');
+    module_load_include('pages.inc', 'quizz');
     $block->content = quizz_take_page($quiz);
   }
   return $block;

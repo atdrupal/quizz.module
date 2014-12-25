@@ -257,11 +257,11 @@ class FormSubmission extends QuizTakeBaseController {
   private function endActionMailing() {
     if (variable_get('quiz_results_to_quiz_author', 0)) {
       $author_mail = db_query('SELECT mail FROM {users} WHERE uid = :uid', array(':uid' => $this->quiz->uid))->fetchField();
-      drupal_mail('quiz', 'notice', $author_mail, NULL, array($this->quiz, $this->score, $this->result_id, 'author'));
+      drupal_mail('quizz', 'notice', $author_mail, NULL, array($this->quiz, $this->score, $this->result_id, 'author'));
     }
 
     if (variable_get('quiz_email_results', 0) && $this->quiz->getQuizType()->getConfig('quiz_use_passfail', 1) && $this->taker->uid && $this->score['is_evaluated']) {
-      drupal_mail('quiz', 'notice', $this->taker->mail, NULL, array($this->quiz, $this->score, $this->result_id, 'taker'));
+      drupal_mail('quizz', 'notice', $this->taker->mail, NULL, array($this->quiz, $this->score, $this->result_id, 'taker'));
       drupal_set_message(t('Your results have been sent to your email address.'));
     }
   }
