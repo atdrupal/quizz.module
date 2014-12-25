@@ -46,7 +46,7 @@ class Answer extends Entity {
 
   public function getQuestion() {
     if (NULL === $this->question) {
-      $this->question = quiz_question_entity_load(NULL, $this->question_vid);
+      $this->question = quizz_question_load(NULL, $this->question_vid);
     }
     return $this->question;
   }

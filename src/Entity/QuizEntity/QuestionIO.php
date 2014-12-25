@@ -55,7 +55,7 @@ class QuestionIO {
       $table = quizz()->getQuestionCategoryField()->getTableName();
       $column = quizz()->getQuestionCategoryField()->getColumnName();
 
-      $select->join($table, 'tn', 'question.qid = tn.entity_id AND entity_type = :quiz_question', array(':quiz_question' => 'quiz_question'));
+      $select->join($table, 'tn', 'question.qid = tn.entity_id AND entity_type = :quiz_question', array(':quiz_question' => 'quiz_question_entity'));
       $find = $select
         ->fields('question', array('qid', 'vid', 'type'))
         ->fields('tn', array($column))

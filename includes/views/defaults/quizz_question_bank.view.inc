@@ -1,7 +1,7 @@
 <?php
 
 $view = new view();
-$view->name = 'quiz_question_bank';
+$view->name = 'quizz_question_bank';
 $view->description = '';
 $view->tag = 'default';
 $view->base_table = 'quiz_question_entity';

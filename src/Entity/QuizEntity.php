@@ -102,7 +102,8 @@ class QuizEntity extends Entity {
     global $user;
 
     // Entity datetime
-    $this->changed = time();
+    $this->changed = isset($this->changed) ? $this->changed : time();
+
     if ($this->is_new = isset($this->is_new) ? $this->is_new : 0) {
       $this->created = time();
       if (NULL === $this->uid) {

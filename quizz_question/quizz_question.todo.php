@@ -20,10 +20,12 @@ function quizz_question_type_access() {
  * @param bool $reset
  * @return \Drupal\quizz_question\Entity\Question
  */
-function quiz_question_entity_load($id = NULL, $vid = NULL, $reset = FALSE) {
-  $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
-  if ($results = entity_load('quiz_question', FALSE, $conditions, $reset)) {
-    return reset($results);
+function quizz_question_load($id = NULL, $vid = NULL, $reset = FALSE) {
+  if (NULL === $id || is_numeric($id)) { // Drupal this is hook_entity_load!
+    $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
+    if ($results = entity_load('quiz_question_entity', FALSE, $conditions, $reset)) {
+      return reset($results);
+    }
   }
 }
 
@@ -35,7 +37,7 @@ function quizz_question_field_extra_fields() {
   $extra = array();
 
   foreach (quizz_question_get_types() as $name => $question_type) {
-    $extra['quiz_question'][$name] = array(
+    $extra['quiz_question_entity'][$name] = array(
         'display' => array(
             'title'            => array(
                 'label'       => t('Title'),
@@ -68,7 +70,7 @@ function quizz_question_field_extra_fields() {
     );
 
     if (module_exists('locale')) {
-      $extra['quiz_question'][$name]['form']['language'] = array(
+      $extra['quiz_question_entity'][$name]['form']['language'] = array(
           'label'       => t('Language'),
           'description' => t('Language selector'),
           'weight'      => -20,

@@ -153,7 +153,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     // @TODO: Replace entire form with usage of question instance
     foreach ($relationships as $relationship) {
       $relationship = is_array($relationship) ? (object) $relationship : $relationship;
-      $question = quiz_question_entity_load($relationship->qid);
+      $question = quizz_question_load($relationship->qid);
       $handler = $question->getHandler();
 
       $fieldset = 'question_list';
@@ -425,7 +425,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     foreach ($titles as $id) {
       if ($id) {
         list($question_qid, $question_vid) = explode('-', $id, 2);
-        $question = quiz_question_entity_load($question_qid, $question_vid);
+        $question = quizz_question_load($question_qid, $question_vid);
         $form_state['values']['weights'][$id] = ++$weight;
         $form_state['values']['max_scores'][$id] = $question->max_score;
         $form_state['values']['stayers'][$id] = 1;

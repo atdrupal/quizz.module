@@ -50,9 +50,9 @@ class QuestionGenerator {
     }
 
     /* @var $question Question */
-    $question = entity_create('quiz_question', $question_array);
+    $question = entity_create('quiz_question_entity', $question_array);
     $question->save();
-    devel_generate_fields($question, 'quiz_question', $question->type);
+    devel_generate_fields($question, 'quiz_question_entity', $question->type);
 
     return $question;
   }

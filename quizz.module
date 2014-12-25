@@ -5,27 +5,6 @@ use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Quizz;
 use Drupal\quizz\Entity\QuizEntity;
 
-/**
- * @file
- * Quiz Module
- *
- * This module allows the creation of interactive quizzes for site visitors.
- *
- * Where possible, user pages are located in quizz.pages.inc, and admin pages
- * are in quizz.pages.inc. Most utility functions have been left here, even if they
- * are only used by a function in one of the other files. quiz_datetime.inc holds
- * some additional date/time functions.
- *
- * Themes are in quizz.pages.inc unless they clearly only apply to admin screens.
- * Then they are in quizz.pages.inc.
- *
- * Views support is included in includes/views/quiz.views.inc
- */
-define('QUIZ_VIEWS_DIR', drupal_get_path('module', 'quizz') . '/includes/views');
-
-/**
- * Include hook implementations.
- */
 require_once dirname(__FILE__) . '/includes/quizz.hooks.inc';
 
 /**
@@ -154,7 +133,7 @@ function quizz_add_qestion_to_quiz_action($question) {
 
 /**
  * Check if the question has already been answered in the requested attempt.
- * 
+ *
  * @return bool
  */
 function quizz_result_is_question_answered($result, $question) {

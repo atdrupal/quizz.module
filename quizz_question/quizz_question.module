@@ -17,7 +17,7 @@ require_once dirname(__FILE__) . '/quizz_question.todo.php';
  * @return \Drupal\quizz_question\Entity\QuestionController
  */
 function quizz_question_controller() {
-  return entity_get_controller('quiz_question');
+  return entity_get_controller('quiz_question_entity');
 }
 
 /**

@@ -41,7 +41,7 @@ class QuestionUIController extends EntityDefaultUIController {
     unset($items['admin/content/quizz-questions/manage/%entity_object/clone']);
     unset($items['admin/content/quizz-questions/add']);
 
-    $items['quiz-question/%quiz_question_entity/revision-actions'] = array(
+    $items['quiz-question/%quizz_question/revision-actions'] = array(
         'title'            => 'Revision actions',
         'page callback'    => 'drupal_get_form',
         'page arguments'   => array('quiz_question_revision_actions_form', 1),
@@ -64,11 +64,11 @@ class QuestionUIController extends EntityDefaultUIController {
   private function getExtraMenuItems() {
     $items = array();
 
-    $items['quiz-question/%quiz_question_entity/revisions'] = array(
+    $items['quiz-question/%quizz_question/revisions'] = array(
         'title'            => 'Revisions',
         'type'             => MENU_LOCAL_ACTION,
         'access callback'  => 'entity_access',
-        'access arguments' => array('update', 'quiz_question', 1),
+        'access arguments' => array('update', 'quiz_question_entity', 1),
         'file path'        => drupal_get_path('module', 'quizz_question'),
         'file'             => 'quizz_question.pages.inc',
         'page callback'    => 'quiz_question_revisions_page',
@@ -78,7 +78,7 @@ class QuestionUIController extends EntityDefaultUIController {
     foreach (array_keys(quizz_question_get_types()) as $name) {
       $items['quiz-question/add/' . str_replace('_', '-', $name)] = array(
           'title callback'   => 'entity_ui_get_action_title',
-          'title arguments'  => array('add', 'quiz_question'),
+          'title arguments'  => array('add', 'quiz_question_entity'),
           'access callback'  => 'user_access',
           'access arguments' => array('create ' . $name . ' question'),
           'page callback'    => 'quiz_question_adding_page',
@@ -98,7 +98,7 @@ class QuestionUIController extends EntityDefaultUIController {
         'type'             => MENU_NORMAL_ITEM,
     );
 
-    $items['quiz-question/%quiz_question_entity'] = array(
+    $items['quiz-question/%quizz_question'] = array(
         'title callback'   => 'entity_class_label',
         'title arguments'  => array(1),
         'access callback'  => 'quizz_question_access_callback',
@@ -109,18 +109,18 @@ class QuestionUIController extends EntityDefaultUIController {
         'page arguments'   => array(1),
     );
 
-    $items['quiz-question/%quiz_question_entity/view'] = array(
+    $items['quiz-question/%quizz_question/view'] = array(
         'title'  => 'View',
         'type'   => MENU_DEFAULT_LOCAL_TASK,
         'weight' => -10,
     );
 
     if (module_exists('devel')) {
-      $items['quiz-question/%quiz_question_entity/devel'] = array(
+      $items['quiz-question/%quizz_question/devel'] = array(
           'title'            => 'Devel',
           'access arguments' => array('access devel information'),
           'page callback'    => 'devel_load_object',
-          'page arguments'   => array('quiz_question', 1),
+          'page arguments'   => array('quiz_question_entity', 1),
           'type'             => MENU_LOCAL_TASK,
           'file'             => 'devel.pages.inc',
           'file path'        => drupal_get_path('module', 'devel'),

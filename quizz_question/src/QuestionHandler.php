@@ -45,20 +45,20 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    * Create body field for new entity bundle (question type).
    */
   public function onNewQuestionTypeCreated(QuestionType $question_type) {
-    if (!field_info_instance('quiz_question', 'quiz_question_body', $question_type->type)) {
+    if (!field_info_instance('quiz_question_entity', 'quiz_question_body', $question_type->type)) {
       $bundle = $question_type->type;
 
       if (!field_info_field('quiz_question_body')) {
         field_create_field(array(
             'field_name'   => 'quiz_question_body',
             'type'         => 'text_with_summary',
-            'entity_types' => array('quiz_question'),
+            'entity_types' => array('quiz_question_entity'),
         ));
       }
 
       field_create_instance(array(
           'field_name'  => 'quiz_question_body',
-          'entity_type' => 'quiz_question',
+          'entity_type' => 'quiz_question_entity',
           'bundle'      => $bundle,
           'label'       => t('Question'),
           'widget'      => array(
@@ -86,7 +86,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   }
 
   /**
-   * Returns a node form to quiz_question_form
+   * Returns a node form to quiz_question_entity_form
    *
    * Adds default form elements, and fetches question type specific elements from their
    * implementation of getCreationForm

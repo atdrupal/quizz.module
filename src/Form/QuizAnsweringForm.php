@@ -40,7 +40,7 @@ class QuizAnsweringForm {
    */
   public static function findPageQuestions(Result $result, Question $page) {
     $page_id = NULL;
-    $questions = array(quiz_question_entity_load($page->qid));
+    $questions = array(quizz_question_load($page->qid));
 
     foreach ($result->layout as $item) {
       if ($item['vid'] == $page->vid) {
@@ -51,7 +51,7 @@ class QuizAnsweringForm {
 
     foreach ($result->layout as $item) {
       if ($page_id == $item['qr_pid']) {
-        $questions[] = quiz_question_entity_load($item['qid']);
+        $questions[] = quizz_question_load($item['qid']);
       }
     }
 
@@ -90,8 +90,8 @@ class QuizAnsweringForm {
     // Element for a single question
     $element = $handler->getAnsweringForm($form_state, $this->result->result_id);
 
-    $output = entity_view('quiz_question', array($question), 'default', NULL, TRUE);
-    unset($output['quiz_question'][$question->qid]['answers']);
+    $output = entity_view('quiz_question_entity', array($question), 'default', NULL, TRUE);
+    unset($output['quiz_question_entity'][$question->qid]['answers']);
 
     $form['question'][$question->qid] = array(
         '#attributes' => array('class' => array(drupal_html_class('quiz-question-' . $question->type))),
@@ -201,7 +201,7 @@ class QuizAnsweringForm {
 
     // There was an answer submitted.
     foreach (array_keys($form_state['values']['question']) as $question_id) {
-      if ($_question = quiz_question_entity_load($question_id)) {
+      if ($_question = quizz_question_load($question_id)) {
         $_question->getHandler()->validateAnsweringForm($form, $form_state);
       }
     }

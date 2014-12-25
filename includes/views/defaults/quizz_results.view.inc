@@ -1,11 +1,11 @@
 <?php
 
 $view = new view();
-$view->name = 'quiz_results';
+$view->name = 'quizz_results';
 $view->description = '';
 $view->tag = 'default';
 $view->base_table = 'quiz_results';
-$view->human_name = 'quiz_results';
+$view->human_name = 'Quiz results';
 $view->core = 7;
 $view->api_version = '3.0';
 $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -119,7 +119,7 @@ $handler->display->display_options['fields']['is_evaluated']['id'] = 'is_evaluat
 $handler->display->display_options['fields']['is_evaluated']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['is_evaluated']['field'] = 'is_evaluated';
 $handler->display->display_options['fields']['is_evaluated']['not'] = 0;
-/* Field: Quiz result: Quiz result ID */
+/* Field: Quiz result: Label */
 $handler->display->display_options['fields']['result_id']['id'] = 'result_id';
 $handler->display->display_options['fields']['result_id']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['result_id']['field'] = 'result_id';
@@ -132,7 +132,7 @@ $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
 $handler->display->display_options['fields']['nothing']['alter']['text'] = 'View';
 $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
 $handler->display->display_options['fields']['nothing']['alter']['path'] = 'quiz-result/[result_id]';
-/* Contextual filter: Quiz result: Quiz result ID */
+/* Contextual filter: Quiz result: Label */
 $handler->display->display_options['arguments']['result_id']['id'] = 'result_id';
 $handler->display->display_options['arguments']['result_id']['table'] = 'quiz_results';
 $handler->display->display_options['arguments']['result_id']['field'] = 'result_id';

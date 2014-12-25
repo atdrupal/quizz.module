@@ -14,7 +14,7 @@
  */
 function quizz_views_handlers() {
   return array(
-      'info'     => array('path' => QUIZ_VIEWS_DIR . '/handlers'),
+      'info'     => array('path' => dirname(__FILE__) . '/handlers'),
       'handlers' => array(
           // Fields
           'quiz_views_handler_field_takes'                => array(

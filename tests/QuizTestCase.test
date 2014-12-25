@@ -166,7 +166,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
       unset($values['body']);
     }
 
-    $question = entity_create('quiz_question', $values);
+    $question = entity_create('quiz_question_entity', $values);
 
     if (isset($values['question_category']) && !is_array($values['question_category'])) {
       $question->question_category = array('und' => array(array('tid' => $values['question_category'])));

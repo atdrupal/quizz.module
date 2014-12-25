@@ -114,12 +114,12 @@ class QuizFeedbackTestCase extends QuizTestCase {
     $this->linkQuestionToQuiz($question_2, $quiz);
 
     // Set feedback.
-    $_question_1 = quiz_question_entity_load($question_1->qid, $question_1->vid);
+    $_question_1 = quizz_question_load($question_1->qid, $question_1->vid);
     $_question_1->feedback = 'Feedback for TF test.';
     $_question_1->feedback_format = filter_default_format();
     $_question_1->save();
 
-    $_question_2 = quiz_question_entity_load($question_2->qid, $question_2->vid);
+    $_question_2 = quizz_question_load($question_2->qid, $question_2->vid);
     $_question_2->feedback = 'Feedback for TF test.';
     $_question_2->feedback_format = filter_default_format();
     $_question_2->save();

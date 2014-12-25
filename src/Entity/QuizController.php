@@ -61,7 +61,7 @@ class QuizController extends EntityAPIController {
   public function getFeedbackOptions() {
     $feedback_options = array();
 
-    $entity_info = entity_get_info('quiz_question');
+    $entity_info = entity_get_info('quiz_question_entity');
     foreach ($entity_info['view modes'] as $view_mode => $info) {
       if ($view_mode === 'default' || $info['custom settings']) {
         $feedback_options["quiz_question_view_{$view_mode}"] = t('Question') . ': ' . $info['label'];

@@ -149,7 +149,7 @@ function quizz_question_admin_page($form, $form_state, QuizEntity $quiz) {
       'global_questions' => array(
           '#type'  => 'fieldset',
           '#title' => t('Question bank'),
-          '#value' => views_get_view('quiz_question_bank')->preview(),
+          '#value' => views_get_view('quizz_question_bank')->preview(),
       ),
   );
 
@@ -240,7 +240,7 @@ function quizz_question_take_page(QuizEntity $quiz, $page_number) {
 
   // Load the page that the requested question belongs to.
   if ($result && ($_layout_item = $result->getPageItem($page_number))) {
-    $layout_item = quiz_question_entity_load($_layout_item['qid'], $_layout_item['vid']);
+    $layout_item = quizz_question_load($_layout_item['qid'], $_layout_item['vid']);
   }
 
   $controller = new QuizTakeQuestionController($quiz, $result, $page_number, $layout_item);
@@ -349,12 +349,12 @@ function quizz_question_feedback_page(QuizEntity $quiz, $page_number) {
 }
 
 function quizz_results_page(QuizEntity $quiz) {
-  return views_embed_view('quiz_results', 'default', $quiz->qid);
+  return views_embed_view('quizz_results', 'default', $quiz->qid);
 }
 
 function quiz_results_user_page(QuizEntity $quiz) {
   global $user;
-  return views_embed_view('quiz_user_results', 'default', $quiz->qid, $user->uid);
+  return views_embed_view('quizz_user_results', 'default', $quiz->qid, $user->uid);
 }
 
 /**

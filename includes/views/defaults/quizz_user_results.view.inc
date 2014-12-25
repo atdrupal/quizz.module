@@ -1,7 +1,7 @@
 <?php
 
 $view = new view();
-$view->name = 'quiz_user_results';
+$view->name = 'quizz_user_results';
 $view->description = '';
 $view->tag = 'default';
 $view->base_table = 'quiz_results';

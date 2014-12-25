@@ -84,7 +84,7 @@ function quiz_question_view($node, $view_mode) {
 /**
  * Implements hook_form_alter().
  */
-function quiz_question_form_alter(&$form) {
+function quiz_question_entity_form_alter(&$form) {
   if (!isset($form['#quiz_check_revision_access'])) {
     return;
   }

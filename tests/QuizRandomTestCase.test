@@ -96,7 +96,7 @@ class QuizRandomTestCase extends QuizTestCase {
 
     field_create_instance(array(
         'field_name'  => 'question_category',
-        'entity_type' => 'quiz_question',
+        'entity_type' => 'quiz_question_entity',
         'bundle'      => 'default_truefalse',
         'label'       => 'Question category',
         'widget'      => array('active' => 1, 'module' => 'taxonomy', 'settings' => array('size' => 60), 'type' => 'options_select'),

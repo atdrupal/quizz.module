@@ -78,7 +78,7 @@ class QuestionType extends Entity {
    */
   public function getHandler(Question $question = NULL) {
     if (NULL === $question) {
-      $question = entity_create('quiz_question', array());
+      $question = entity_create('quiz_question_entity', array());
     }
     $handler_info = $this->getHandlerInfo();
     return new $handler_info['question provider']($question);

@@ -73,7 +73,7 @@ class ResultController extends EntityAPIController {
           'qid'            => $answer->question_qid,
           'vid'            => $answer->question_vid,
           'number'         => $answer->number,
-          'type'           => quiz_question_entity_load($answer->question_qid)->type,
+          'type'           => quizz_question_load($answer->question_qid)->type,
       );
 
       // @kludge
@@ -144,7 +144,7 @@ class ResultController extends EntityAPIController {
     $select->condition('answer.result_id', $result_ids);
     $answers = $select->execute()->fetchAll();
     foreach ($answers as $answer) {
-      $question_revision = quiz_question_entity_load(NULL, $answer->question_vid);
+      $question_revision = quizz_question_load(NULL, $answer->question_vid);
       if ($handler = $question_revision->getResponseHandler($answer->result_id)) {
         $handler->delete();
       }

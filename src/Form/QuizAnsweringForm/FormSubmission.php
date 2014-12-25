@@ -58,7 +58,7 @@ class FormSubmission extends QuizTakeBaseController {
   public function formBlankSubmit($form, &$form_state) {
     foreach (array_keys($form_state['input']['question']) as $question_id) {
       // Loop over all question inputs provided, and record them as skipped.
-      $question = quiz_question_entity_load($question_id);
+      $question = quizz_question_load($question_id);
 
       // Delete the user's answer.
       $question->getResponseHandler($this->result->result_id)->delete();
@@ -104,7 +104,7 @@ class FormSubmission extends QuizTakeBaseController {
         foreach ($this->result->layout as $item) {
           if ($question_id == $item['qid']) {
             $question_array = $item;
-            $current_question = quiz_question_entity_load($item['qid'], $item['vid']);
+            $current_question = quizz_question_load($item['qid'], $item['vid']);
           }
         }
 
@@ -187,7 +187,7 @@ class FormSubmission extends QuizTakeBaseController {
     // have pages of unanswered questions. Also kills a lot of the skip code that
     // was necessary before.
     foreach ($this->result->layout as $qinfo) {
-      $current_question = quiz_question_entity_load($qinfo['qid'], $qinfo['vid']);
+      $current_question = quizz_question_load($qinfo['qid'], $qinfo['vid']);
 
       foreach ($this->result->layout as $question) {
         if ($question['qid'] == $current_question->qid) {

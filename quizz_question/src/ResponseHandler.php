@@ -148,11 +148,11 @@ abstract class ResponseHandler extends ResponseHandlerBase {
 
     $output = array();
 
-    $entity_info = entity_get_info('quiz_question');
+    $entity_info = entity_get_info('quiz_question_entity');
     foreach (array_keys($entity_info['view modes']) as $view_mode) {
       if ($this->canReview("quiz_question_view_{$view_mode}")) {
-        $question_view = entity_view('quiz_question', array($this->question), $view_mode, NULL, TRUE);
-        $output['question'][$view_mode] = $question_view['quiz_question'][$this->question->qid];
+        $question_view = entity_view('quiz_question_entity', array($this->question), $view_mode, NULL, TRUE);
+        $output['question'][$view_mode] = $question_view['quiz_question_entity'][$this->question->qid];
       }
     }
 

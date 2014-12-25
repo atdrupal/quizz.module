@@ -2621,7 +2621,7 @@ class QuizQuestionDefaultQuizDirectionsMetadataWrapper extends EntityDrupalWrapp
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 
@@ -2743,7 +2743,7 @@ class QuizQuestionDefaultQuizPageMetadataWrapper extends EntityDrupalWrapper
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 
@@ -2865,7 +2865,7 @@ class QuizQuestionDefaultQuizDdlinesMetadataWrapper extends EntityDrupalWrapper
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 
@@ -2987,7 +2987,7 @@ class QuizQuestionDefaultScaleMetadataWrapper extends EntityDrupalWrapper
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 
@@ -3109,7 +3109,7 @@ class QuizQuestionDefaultShortAnswerMetadataWrapper extends EntityDrupalWrapper
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 
@@ -3231,7 +3231,7 @@ class QuizQuestionDefaultLongAnswerMetadataWrapper extends EntityDrupalWrapper
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 
@@ -3353,7 +3353,7 @@ class QuizQuestionDefaultTruefalseMetadataWrapper extends EntityDrupalWrapper
      */
     public function getControllerClass()
     {
-        return entity_get_controller('quiz_question');
+        return entity_get_controller('quiz_question_entity');
     }
 
 

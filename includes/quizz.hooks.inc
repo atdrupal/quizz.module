@@ -28,7 +28,7 @@ For more information about quiz, and resources on how to use quiz, see the <a hr
  * Implements hook_views_api().
  */
 function quizz_views_api() {
-  return array('api' => '3.0', 'path' => QUIZ_VIEWS_DIR);
+  return array('api' => '3.0', 'path' => drupal_get_path('module', 'quizz') . '/includes/views');
 }
 
 /**
@@ -95,7 +95,7 @@ function quizz_action_info() {
   $actions = array();
 
   $actions['quizz_add_qestion_to_quiz_action'] = array(
-      'type'             => 'quiz_question',
+      'type'             => 'quiz_question_entity',
       'label'            => t('Add questions to @quiz', array('@quiz' => QUIZZ_NAME)),
       'configurable'     => FALSE,
       'vbo_configurable' => FALSE,
@@ -163,15 +163,15 @@ function quizz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  */
 function quizz_theme($existing, $type, $theme, $path) {
   return array(
-      'quizz_view_stats'          => array(
+      'quizz_view_stats'               => array(
           'variables' => array('quiz' => NULL),
           'file'      => 'includes/quizz.pages.inc'
       ),
-      'quizz_categorized_form'    => array(
+      'quizz_categorized_form'         => array(
           'render element' => 'form',
           'file'           => 'includes/quizz.pages.inc'
       ),
-      'quizz_progress'            => array(
+      'quizz_progress'                 => array(
           'variables' => array(
               'quiz'            => null,
               'question_number' => NULL,
@@ -180,7 +180,7 @@ function quizz_theme($existing, $type, $theme, $path) {
               'time_limit'      => NULL),
           'file'      => 'includes/quizz.pages.inc',
       ),
-      'quizz_no_feedback'         => array(
+      'quizz_no_feedback'              => array(
           'file'      => 'includes/quizz.pages.inc',
           'variables' => array(),
       ),
@@ -188,25 +188,25 @@ function quizz_theme($existing, $type, $theme, $path) {
           'file'           => 'includes/quizz.pages.inc',
           'render element' => 'form',
       ),
-      'quizz_answer_result'       => array(
+      'quizz_answer_result'            => array(
           'file'      => 'includes/quizz.pages.inc',
           'variables' => array(),
       ),
-      'quizz_report_form'         => array(
+      'quizz_report_form'              => array(
           'render element' => 'form',
           'path'           => $path . '/theme',
           'template'       => 'quiz-report-form',
       ),
-      'quiz_browser'             => array(
+      'quiz_browser'                   => array(
           'render element' => 'form',
           'file'           => 'includes/quizz.pages.inc',
       ),
-      'quiz_question_score'      => array(
+      'quiz_question_score'            => array(
           'variables' => array('score' => NULL, 'max_score' => NULL),
           'path'      => $path . '/theme',
           'template'  => 'quiz-question-score',
       ),
-      'quizz_pager'               => array(
+      'quizz_pager'                    => array(
           'variables' => array('quiz' => null, 'total' => 0, 'current' => 0, 'siblings' => 0),
       ),
   );

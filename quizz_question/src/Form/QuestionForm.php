@@ -58,7 +58,7 @@ class QuestionForm {
       $form['actions']['delete'] = array(
           '#type'   => 'submit',
           '#value'  => t('Delete'),
-          '#submit' => array('quiz_question_form_submit_delete')
+          '#submit' => array('quiz_question_entity_form_submit_delete')
       );
     }
 
@@ -68,7 +68,7 @@ class QuestionForm {
     );
 
     // Attach custom fields
-    field_attach_form('quiz_question', $this->question, $form, $form_state);
+    field_attach_form('quiz_question_entity', $this->question, $form, $form_state);
 
     return $form;
   }

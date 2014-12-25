@@ -101,7 +101,7 @@ function quizz_question_entity_info() {
       'controller class' => 'Drupal\quizz_question\Entity\QuestionTypeController',
       'base table'       => 'quiz_question_type',
       'fieldable'        => FALSE,
-      'bundle of'        => 'quiz_question',
+      'bundle of'        => 'quiz_question_entity',
       'exportable'       => TRUE,
       'entity keys'      => array('id' => 'id', 'name' => 'type', 'label' => 'label'),
       'access callback'  => 'quizz_question_type_access',
@@ -113,7 +113,7 @@ function quizz_question_entity_info() {
       ),
   );
 
-  $info['quiz_question'] = array(
+  $info['quiz_question_entity'] = array(
       'label'                     => t('Question'),
       'plural label'              => t('Questions'),
       'description'               => t('!quiz question entity', array('!quiz' => QUIZZ_NAME)),
@@ -145,7 +145,7 @@ function quizz_question_entity_info() {
   // Add bundle info but bypass entity_load() as we cannot use it here.
   $rows = db_select('quiz_question_type', 'qt')->fields('qt')->execute()->fetchAllAssoc('type');
   foreach ($rows as $name => $row) {
-    $info['quiz_question']['bundles'][$name] = array(
+    $info['quiz_question_entity']['bundles'][$name] = array(
         'label' => $row->label,
         'admin' => array(
             'path'             => 'admin/structure/quizz-questions/manage/%quizz_question_type',
@@ -185,7 +185,7 @@ function quizz_question_quizz_question_info() {
  * Implements hook_get_report().
  */
 function quizz_question_get_report($question_id, $question_vid, $result_id) {
-  $question = quiz_question_entity_load(NULL, $question_vid);
+  $question = quizz_question_load(NULL, $question_vid);
   if (!$handler = $question->getResponseHandler($result_id)) {
     drupal_set_message(t('Unable to load question with qid %qid and vid %vid', array(
         '%qid' => $question_id,
