@@ -90,7 +90,6 @@ before_script:
   # ---------------------
   - drush vset --yes file_temporary_path /tmp
   - drush en -y simpletest quizz_question quizz_truefalse
-  - drush vset --yes simpletest_verbose FALSE
 
   # ---------------------
   # No cache data!
@@ -108,3 +107,8 @@ notifications:
   email: false
   hipchat: 76d833fa0b6bae8860f279a0e7dba0@me.Andy
   flowdock: 8e80a6538fa73fda0f7dd60bf2d44356
+
+after_failure:
+  - drush vl
+  - gem install gist
+  - gist $DRUPAL/sites/default/files/simpletest/verbose/*.html

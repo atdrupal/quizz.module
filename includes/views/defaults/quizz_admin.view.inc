@@ -1,7 +1,5 @@
 <?php
 
-$views = array();
-
 $view = new view();
 $view->name = 'quizz_admin';
 $view->description = '';
@@ -259,4 +257,5 @@ $handler->display->display_options['menu']['title'] = 'Quiz';
 $handler->display->display_options['menu']['weight'] = '0';
 $handler->display->display_options['menu']['context'] = 0;
 $handler->display->display_options['menu']['context_only_inline'] = 0;
-$views['quizz_admin'] = $view;
+
+return $view;
