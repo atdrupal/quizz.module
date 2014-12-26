@@ -20,12 +20,12 @@ function quizz_truefalse_quizz_question_info() {
  */
 function quizz_truefalse_theme() {
   return array(
-      'truefalse_answering_form' => array(
+      'truefalse_answering_form'      => array(
           'render element' => 'form',
           'path'           => drupal_get_path('module', 'truefalse') . '/theme',
           'template'       => 'truefalse-answering-form',
       ),
-      'truefalse_response'       => array(
+      'quizz_truefalse_response' => array(
           'variables' => array(
               'metadata' => array(),
               'data'     => array(),
@@ -40,7 +40,7 @@ function quizz_truefalse_theme() {
  * @param array $metadata Can be used as a table header
  * @param array $data Can be used as table rows
  */
-function theme_truefalse_response($variables) {
+function theme_quizz_truefalse_response($variables) {
   return theme('table', array(
       'header' => $variables['metadata'],
       'rows'   => $variables['data']
