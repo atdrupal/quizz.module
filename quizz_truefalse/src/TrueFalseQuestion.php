@@ -75,7 +75,7 @@ class TrueFalseQuestion extends QuestionHandler {
     $props = parent::load();
 
     $res_a = db_query('SELECT correct_answer '
-      . ' FROM {quizz_truefalse} '
+      . ' FROM {quiz_truefalse_question} '
       . ' WHERE qid = :qid AND vid = :vid', array(
         ':qid' => $this->question->qid,
         ':vid' => $this->question->vid))->fetchAssoc();
@@ -171,7 +171,11 @@ class TrueFalseQuestion extends QuestionHandler {
    * This is a utility function. It is not defined in the interface.
    */
   public function getCorrectAnswer() {
-    return db_query('SELECT correct_answer FROM {quizz_truefalse} WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchField();
+    return db_query(
+        'SELECT correct_answer FROM {quiz_truefalse_question} WHERE vid = :vid', array(
+          ':vid' => $this->question->vid
+        )
+      )->fetchField();
   }
 
 }
