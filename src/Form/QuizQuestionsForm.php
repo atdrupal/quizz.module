@@ -24,7 +24,6 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
         '#type'           => 'fieldset',
         '#title'          => t('Questions in this @quiz', array('@quiz' => QUIZZ_NAME)),
         '#theme'          => 'quizz_question_selection_table',
-        '#collapsible'    => TRUE,
         '#attributes'     => array('id' => 'mq-fieldset'),
         'question_status' => array('#tree' => TRUE),
     );
