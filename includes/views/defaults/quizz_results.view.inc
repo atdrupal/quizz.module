@@ -40,7 +40,6 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_setti
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
-$handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['skip_batching'] = 1;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
     'action::views_bulk_operations_delete_item'              => array(
         'selected'            => 1,
@@ -93,6 +92,12 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_opera
         'label'               => '',
     ),
 );
+/* Field: Quiz result: Quiz_vid */
+$handler->display->display_options['fields']['quiz_vid']['id'] = 'quiz_vid';
+$handler->display->display_options['fields']['quiz_vid']['table'] = 'quiz_results';
+$handler->display->display_options['fields']['quiz_vid']['field'] = 'quiz_vid';
+$handler->display->display_options['fields']['quiz_vid']['label'] = 'Revision #';
+$handler->display->display_options['fields']['quiz_vid']['separator'] = '';
 /* Field: User: Name */
 $handler->display->display_options['fields']['name']['id'] = 'name';
 $handler->display->display_options['fields']['name']['table'] = 'users';
@@ -132,14 +137,14 @@ $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
 $handler->display->display_options['fields']['nothing']['alter']['text'] = 'View';
 $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
 $handler->display->display_options['fields']['nothing']['alter']['path'] = 'quiz-result/[result_id]';
-/* Contextual filter: Quiz result: Label */
-$handler->display->display_options['arguments']['result_id']['id'] = 'result_id';
-$handler->display->display_options['arguments']['result_id']['table'] = 'quiz_results';
-$handler->display->display_options['arguments']['result_id']['field'] = 'result_id';
-$handler->display->display_options['arguments']['result_id']['default_action'] = 'access denied';
-$handler->display->display_options['arguments']['result_id']['default_argument_type'] = 'fixed';
-$handler->display->display_options['arguments']['result_id']['summary']['number_of_records'] = '0';
-$handler->display->display_options['arguments']['result_id']['summary']['format'] = 'default_summary';
-$handler->display->display_options['arguments']['result_id']['summary_options']['items_per_page'] = '25';
+/* Contextual filter: Quiz result: Quiz_qid */
+$handler->display->display_options['arguments']['quiz_qid']['id'] = 'quiz_qid';
+$handler->display->display_options['arguments']['quiz_qid']['table'] = 'quiz_results';
+$handler->display->display_options['arguments']['quiz_qid']['field'] = 'quiz_qid';
+$handler->display->display_options['arguments']['quiz_qid']['default_action'] = 'empty';
+$handler->display->display_options['arguments']['quiz_qid']['default_argument_type'] = 'fixed';
+$handler->display->display_options['arguments']['quiz_qid']['summary']['number_of_records'] = '0';
+$handler->display->display_options['arguments']['quiz_qid']['summary']['format'] = 'default_summary';
+$handler->display->display_options['arguments']['quiz_qid']['summary_options']['items_per_page'] = '25';
 
 return $view;
