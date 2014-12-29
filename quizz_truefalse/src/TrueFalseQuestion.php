@@ -16,7 +16,7 @@ class TrueFalseQuestion extends QuestionHandler {
    */
   public function onSave($is_new = FALSE) {
     if ($is_new || $this->question->revision == 1) {
-      db_insert('quizz_truefalse')
+      db_insert('quiz_truefalse_question')
         ->fields(array(
             'qid'            => $this->question->qid,
             'vid'            => $this->question->vid,
@@ -25,7 +25,7 @@ class TrueFalseQuestion extends QuestionHandler {
         ->execute();
     }
     else {
-      db_update('quizz_truefalse')
+      db_update('quiz_truefalse_question')
         ->fields(array(
             'correct_answer' => (int) $this->question->correct_answer
         ))
@@ -50,19 +50,19 @@ class TrueFalseQuestion extends QuestionHandler {
   public function delete($only_this_version = FALSE) {
     parent::delete($only_this_version);
 
-    $delete_ans = db_delete('quizz_truefalse_user_answers');
+    $delete_ans = db_delete('quiz_truefalse_answer');
     $delete_ans->condition('question_qid', $this->question->qid);
 
-    $delete_node = db_delete('quizz_truefalse');
-    $delete_node->condition('qid', $this->question->qid);
+    $delete_query = db_delete('quiz_truefalse_question');
+    $delete_query->condition('qid', $this->question->qid);
 
     if ($only_this_version) {
       $delete_ans->condition('question_vid', $this->question->vid);
-      $delete_node->condition('vid', $this->question->vid);
+      $delete_query->condition('vid', $this->question->vid);
     }
 
     $delete_ans->execute();
-    $delete_node->execute();
+    $delete_query->execute();
   }
 
   /**

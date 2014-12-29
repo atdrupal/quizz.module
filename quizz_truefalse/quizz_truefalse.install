@@ -5,7 +5,7 @@
  */
 function quizz_truefalse_schema() {
   // Extensions to nodes for T/F
-  $schema['quizz_truefalse'] = array(
+  $schema['quiz_truefalse_question'] = array(
       'fields'      => array(
           'qid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
           'vid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,),
@@ -15,7 +15,7 @@ function quizz_truefalse_schema() {
   );
 
   // Place to store user answers for T/F questions
-  $schema['quizz_truefalse_user_answers'] = array(
+  $schema['quiz_truefalse_answer'] = array(
       'fields'      => array(
           'question_qid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
