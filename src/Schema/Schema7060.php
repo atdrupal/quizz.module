@@ -135,7 +135,7 @@ class Schema7060 {
     /**
      * Information about a particular question in a result
      */
-    $schema['quiz_results_answers'] = array(
+    $schema['quiz_answer_entity'] = array(
         'description' => 'Table storing information about the results for the questions',
         'fields'      => array(
             'result_answer_id' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The result answer ID',),

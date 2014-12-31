@@ -172,7 +172,7 @@ class QuizReportForm {
 
     $total_score = db_query(
       'SELECT SUM(points_awarded)
-          FROM {quiz_results_answers}
+          FROM {quiz_answer_entity}
           WHERE result_id = :result_id', array(':result_id' => $result_id))->fetchField();
 
     $question_count = $properties->number_of_random_questions;
@@ -195,7 +195,7 @@ class QuizReportForm {
    *  Quiz version ID
    */
   private function updateLastTotalScore($result_id, $quiz_vid) {
-    $subq1 = db_select('quiz_results_answers', 'a');
+    $subq1 = db_select('quiz_answer_entity', 'a');
     $subq1
       ->condition('a.result_id', $result_id)
       ->addExpression('SUM(a.points_awarded)');

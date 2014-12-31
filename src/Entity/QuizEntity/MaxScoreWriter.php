@@ -80,7 +80,7 @@ class MaxScoreWriter {
       return;
     }
 
-    $points_awarded = 'SELECT COALESCE(SUM(answer.points_awarded), 0) FROM {quiz_results_answers} answer WHERE answer.result_id = {quiz_results}.result_id';
+    $points_awarded = 'SELECT COALESCE(SUM(answer.points_awarded), 0) FROM {quiz_answer_entity} answer WHERE answer.result_id = {quiz_results}.result_id';
     $points_max = 'SELECT max_score FROM {quiz_entity_revision} qnp WHERE qnp.vid = {quiz_results}.quiz_vid';
     db_update('quiz_results')
       ->expression('score', "ROUND(100 * ($points_awarded) / ($points_max))")

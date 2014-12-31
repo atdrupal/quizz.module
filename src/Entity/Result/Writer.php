@@ -39,7 +39,7 @@ class Writer {
 
   private function findAnswerId($response) {
     return db_query("SELECT result_answer_id
-        FROM {quiz_results_answers}
+        FROM {quiz_answer_entity}
         WHERE question_vid = :question_vid AND result_id = :result_id", array(
           ':question_vid' => $response->question_vid,
           ':result_id'    => $response->result_id
@@ -47,7 +47,7 @@ class Writer {
   }
 
   /**
-   * Points are stored pre-scaled in the quiz_results_answers table
+   * Points are stored pre-scaled in the quiz_answer_entity table
    *
    * @param QuizEntity $quiz
    * @param Answer $answer

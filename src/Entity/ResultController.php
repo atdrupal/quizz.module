@@ -139,7 +139,7 @@ class ResultController extends EntityAPIController {
    * @param int[] $result_ids
    */
   private function callHandlerDeleteMethod($result_ids) {
-    $select = db_select('quiz_results_answers', 'answer');
+    $select = db_select('quiz_answer_entity', 'answer');
     $select->fields('answer', array('result_id', 'question_qid', 'question_vid'));
     $select->condition('answer.result_id', $result_ids);
     $answers = $select->execute()->fetchAll();
@@ -149,7 +149,7 @@ class ResultController extends EntityAPIController {
         $handler->delete();
       }
     }
-    db_delete('quiz_results_answers')->condition('result_id', $result_ids)->execute();
+    db_delete('quiz_answer_entity')->condition('result_id', $result_ids)->execute();
   }
 
 }
