@@ -18,7 +18,7 @@ class Writer {
    */
   public function saveAnswer(QuizEntity $quiz, Answer $answer, $options) {
     if ($id = $this->findAnswerId($answer)) {
-      $answer->result_answer_id = $id;
+      $answer->id = $id;
       $answer->is_new = FALSE;
     }
 
@@ -38,7 +38,7 @@ class Writer {
   }
 
   private function findAnswerId($response) {
-    return db_query("SELECT result_answer_id
+    return db_query("SELECT id
         FROM {quiz_answer_entity}
         WHERE question_vid = :question_vid AND result_id = :result_id", array(
           ':question_vid' => $response->question_vid,

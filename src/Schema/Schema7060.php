@@ -138,7 +138,7 @@ class Schema7060 {
     $schema['quiz_answer_entity'] = array(
         'description' => 'Table storing information about the results for the questions',
         'fields'      => array(
-            'result_answer_id' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The result answer ID',),
+            'id' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The result answer ID',),
             'result_id'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
             'question_qid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
             'question_vid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
@@ -150,7 +150,7 @@ class Schema7060 {
             'number'           => array('type' => 'int', 'size' => 'small', 'unsigned' => FALSE, 'not null' => TRUE, 'default' => 1,),
             'is_doubtful'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
         ),
-        'primary key' => array('result_answer_id'),
+        'primary key' => array('id'),
         'unique keys' => array(
             'result_answer' => array('result_id', 'question_qid', 'question_vid'),
         ),

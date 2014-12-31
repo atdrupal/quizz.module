@@ -1424,7 +1424,7 @@ class QuizResultAnswerDefaultQuizDirectionsMetadataWrapper extends EntityDrupalW
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id
@@ -1562,7 +1562,7 @@ class QuizResultAnswerDefaultQuizPageMetadataWrapper extends EntityDrupalWrapper
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id
@@ -1700,7 +1700,7 @@ class QuizResultAnswerDefaultQuizDdlinesMetadataWrapper extends EntityDrupalWrap
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id
@@ -1838,7 +1838,7 @@ class QuizResultAnswerDefaultScaleMetadataWrapper extends EntityDrupalWrapper
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id
@@ -1976,7 +1976,7 @@ class QuizResultAnswerDefaultShortAnswerMetadataWrapper extends EntityDrupalWrap
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id
@@ -2114,7 +2114,7 @@ class QuizResultAnswerDefaultLongAnswerMetadataWrapper extends EntityDrupalWrapp
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id
@@ -2252,7 +2252,7 @@ class QuizResultAnswerDefaultTruefalseMetadataWrapper extends EntityDrupalWrappe
      * @property
      * @var EntityValueWrapper integer
      */
-    public $result_answer_id = null;
+    public $id = null;
 
     /**
      * Result_id

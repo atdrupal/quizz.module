@@ -34,7 +34,7 @@ class TrueFalseResponse extends ResponseHandler {
   public function save() {
     db_insert('quiz_truefalse_answer')
       ->fields(array(
-          'answer_id' => $this->loadAnswerEntity()->result_answer_id,
+          'answer_id' => $this->loadAnswerEntity()->id,
           'answer'    => (int) $this->answer,
           'score'     => (int) $this->getScore(),
       ))
@@ -53,7 +53,7 @@ class TrueFalseResponse extends ResponseHandler {
   public function onLoad(Answer $answer) {
     $input = db_select('quiz_truefalse_answer', 'input')
       ->fields('input', array('answer', 'score'))
-      ->condition('answer_id', $answer->result_answer_id)
+      ->condition('answer_id', $answer->id)
       ->execute()
       ->fetchObject();
 

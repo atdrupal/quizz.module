@@ -24,7 +24,7 @@ class AnswerController extends EntityAPIController {
    */
   public function save($answer, DatabaseTransaction $transaction = NULL) {
     $answer->bundle();
-    if (!empty($answer->result_answer_id)) {
+    if (!empty($answer->id)) {
       $answer->is_new = FALSE;
     }
     $answer->points_awarded = round($answer->points_awarded);
