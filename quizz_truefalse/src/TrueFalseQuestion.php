@@ -43,26 +43,31 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of delete
+   * {@inheritdoc}
    *
-   * @see QuizQuestion#delete($only_this_version)
+   * @TODO: We should delete answer entities instead of answer's properties.
    */
-  public function delete($only_this_version = FALSE) {
-    parent::delete($only_this_version);
+  public function delete($single_revision = FALSE) {
+    parent::delete($single_revision);
 
-    $delete_ans = db_delete('quiz_truefalse_answer');
-    $delete_ans->condition('question_qid', $this->question->qid);
 
-    $delete_query = db_delete('quiz_truefalse_question');
-    $delete_query->condition('qid', $this->question->qid);
-
-    if ($only_this_version) {
-      $delete_ans->condition('question_vid', $this->question->vid);
-      $delete_query->condition('vid', $this->question->vid);
+    $sql_q = 'DELETE q FROM {quiz_truefalse_question} q';
+    $sql_a = 'DELETE p FROM {quiz_truefalse_answer} p';
+    if ($single_revision) {
+      $id = $this->question->vid;
+      $sql_a .= " INNER JOIN {quiz_answer_entity} a ON p.question_vid = a.question_vid";
+      $sql_a .= " WHERE a.question_vid = :id";
+      $sql_q .= " WHERE q.vid = :id";
+    }
+    else {
+      $id = $this->question->qid;
+      $sql_a .= " INNER JOIN {quiz_answer_entity} a ON p.question_vid = a.question_vid";
+      $sql_a .= " WHERE a.question_qid = :id";
+      $sql_q .= " WHERE q.qid = :id";
     }
 
-    $delete_ans->execute();
-    $delete_query->execute();
+    db_query($sql_a, array(':id' => $id));
+    db_query($sql_q, array(':id' => $id));
   }
 
   /**

@@ -17,13 +17,11 @@ function quizz_truefalse_schema() {
   // Place to store user answers for T/F questions
   $schema['quiz_truefalse_answer'] = array(
       'fields'      => array(
-          'question_qid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'answer'       => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0),
-          'score'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+          'answer_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'answer'    => array('type' => 'int', 'unsigned' => TRUE, 'size' => 'tiny', 'default' => 0),
+          'score'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       ),
-      'primary key' => array('result_id', 'question_qid', 'question_vid'),
+      'primary key' => array('answer_id'),
   );
 
   return $schema;

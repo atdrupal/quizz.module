@@ -298,8 +298,8 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function delete($delete_revision) {
-
+  public function delete($single_revision) {
+    // @TODO: Should we delete answer entities?
   }
 
   /**

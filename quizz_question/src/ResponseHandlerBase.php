@@ -143,11 +143,18 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    */
   public function delete() {
     if (NULL !== $this->base_table) {
-      db_delete($this->base_table)
-        ->condition('question_qid', $this->question->qid)
-        ->condition('question_vid', $this->question->vid)
-        ->condition('result_id', $this->result_id)
-        ->execute();
+      $delete = db_delete($this->base_table);
+
+      if (db_field_exists($this->base_table, 'answer_id')) {
+        $delete->condition('answer_id', $this->loadAnswerEntity()->result_answer_id);
+      }
+      else {
+        $delete
+          ->condition('question_qid', $this->question->qid)
+          ->condition('question_vid', $this->question->vid)
+          ->condition('result_id', $this->result_id);
+      }
+      $delete->execute();
     }
   }
 
