@@ -16,8 +16,15 @@ class QuestionTypeForm {
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form, $question_type);
 
-    $fn = $question_type->handler . '_quiz_question_config';
-    if (function_exists($fn) && ($handler_form = $fn($question_type))) {
+    // @TODO: Add QuestionHandlerInterface::questionTypeConfigForm($question_type)
+    if (($handler = $question_type->getHandler()) && method_exists($handler, 'questionTypeConfigForm')) {
+      $handler_form = $handler->questionTypeConfigForm($question_type);
+    }
+    elseif (($fn = $question_type->handler . '_quiz_question_config') && function_exists($fn)) {
+      $handler_form = $fn($question_type);
+    }
+
+    if ($handler_form) {
       if (!empty($handler_form['#validate'])) {
         foreach ($handler_form['#validate'] as $validator) {
           $form['#validate'][] = $validator;
