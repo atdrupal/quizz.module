@@ -5,8 +5,8 @@ namespace Drupal\quizz_question;
 use Drupal\quizz_question\Entity\Question;
 
 /**
- * Each question type must store its own response data and be able to calculate a score for
- * that data.
+ * Each question type must store its own response data and be able to calculate
+ * a score for that data.
  */
 abstract class ResponseHandler extends ResponseHandlerBase {
 

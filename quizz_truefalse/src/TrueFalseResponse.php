@@ -42,9 +42,7 @@ class TrueFalseResponse extends ResponseHandler {
   }
 
   /**
-   * Implementation of score
-   *
-   * @see QuizQuestionResponse#score()
+   * {@inheritdoc}
    */
   public function score() {
     return $this->getResponse() == $this->question->getHandler()->getCorrectAnswer() ? 1 : 0;

@@ -76,7 +76,7 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
    * @param mixed $input
    */
   public function setAnswerInput($input) {
-    $this->answer = $input;
+    $this->answer = is_string($input) ? check_plain($input) : $input;
   }
 
   /**
@@ -149,6 +149,7 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
         $delete->condition('answer_id', $this->loadAnswerEntity()->id);
       }
       else {
+        // @TODO: Remove legacy code.
         $delete
           ->condition('question_qid', $this->question->qid)
           ->condition('question_vid', $this->question->vid)

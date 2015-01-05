@@ -25,10 +25,14 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   /** @var mixed[] */
   public $properties = NULL;
 
-  /**
-   * @var string
-   */
+  /** @var string */
   protected $body_field_title = 'Question';
+
+  /** @var string */
+  protected $base_table = 'quiz_truefalse_question';
+
+  /** @var string */
+  protected $base_answer_table = 'quiz_truefalse_answer';
 
   /**
    * QuizQuestion constructor stores the node object.
