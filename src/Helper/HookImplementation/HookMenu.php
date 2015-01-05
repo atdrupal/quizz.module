@@ -37,7 +37,7 @@ class HookMenu {
     $items = array();
 
     // Admin pages.
-    $items['admin/quiz'] = array(
+    $items['admin/quizz'] = array(
         'title'            => '@quiz',
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'View results, score answers, run reports and edit configurations.',
@@ -49,7 +49,7 @@ class HookMenu {
         'file path'        => drupal_get_path('module', 'system'),
     );
 
-    $items['admin/quiz/settings'] = array(
+    $items['admin/quizz/settings'] = array(
         'title'            => '@quiz settings',
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Change settings for the all Quiz project modules.',
@@ -60,7 +60,7 @@ class HookMenu {
         'file path'        => drupal_get_path('module', 'system'),
     );
 
-    $items['admin/quiz/settings/config'] = array(
+    $items['admin/quizz/settings/config'] = array(
         'title'            => '@quiz configuration',
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Configure the Quiz module.',
@@ -71,7 +71,7 @@ class HookMenu {
         'file'             => 'includes/quizz.pages.inc',
     );
 
-    $items['admin/quiz/settings/quiz-form'] = array(
+    $items['admin/quizz/settings/quiz-form'] = array(
         'title'            => '@quiz form configuration',
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'Configure default values for the quiz creation form.',
@@ -82,7 +82,7 @@ class HookMenu {
         'file'             => 'includes/quizz.pages.inc',
     );
 
-    $items['admin/quiz/reports'] = array(
+    $items['admin/quizz/reports'] = array(
         'title'            => '@quiz reports and scoring',
         'title arguments'  => array('@quiz' => QUIZZ_NAME),
         'description'      => 'View reports and score answers.',

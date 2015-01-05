@@ -192,7 +192,7 @@ class FormDefinition extends FormHelper {
             '#default_value' => isset($this->quiz->time_limit) ? $this->quiz->time_limit : 0,
             '#description'   => t('Set the maximum allowed time in seconds for this @quiz. Use 0 for no limit.', array('@quiz' => QUIZZ_NAME))
             . '<br/>' . t('It is recommended to install the !countdown module, and enable the option in !link to show the time left to the user.', array(
-                '!link'      => l('Quiz configuration', 'admin/quiz/settings/config'),
+                '!link'      => l('Quiz configuration', 'admin/quizz/settings/config'),
                 '!countdown' => l('jquery_countdown', 'http://drupal.org/project/jquery_countdown'),
             ))
         ),

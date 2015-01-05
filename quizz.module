@@ -87,7 +87,7 @@ function quizz_get_types() {
  */
 function quizz_type_load($name) {
   $type = entity_load_multiple_by_name('quiz_type', array($name));
-  return isset($type[$name]) ? $type[$name] : null;
+  return isset($type[$name]) ? $type[$name] : NULL;
 }
 
 /**

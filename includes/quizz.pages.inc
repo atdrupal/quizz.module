@@ -17,7 +17,7 @@ use Drupal\quizz\Form\QuizTypeForm;
 use Drupal\quizz_question\Entity\Question;
 
 /**
- * Form for /admin/quiz/settings/config.
+ * Form for /admin/quizz/settings/config.
  */
 function quizz_admin_settings_form($form, $form_state) {
   $obj = new QuizAdminSettingsController();

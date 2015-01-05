@@ -154,7 +154,7 @@ class QuizEntityTestCase extends QuizTestCase {
     $this->assertNoFieldChecked('edit-mark-doubtful');
     $this->assertFieldChecked('edit-show-passed');
 
-    $this->drupalGet('admin/quiz/settings/quiz-form');
+    $this->drupalGet('admin/quizz/settings/quiz-form');
     // Verify the same ones show up.
     $this->assertFieldChecked('edit-allow-resume');
     $this->assertFieldChecked('edit-allow-skipping');
@@ -167,7 +167,7 @@ class QuizEntityTestCase extends QuizTestCase {
 
     // Change a default.
     $this->drupalPost(NULL, array('allow_resume' => FALSE), t('Save'));
-    $this->drupalGet('admin/quiz/settings/quiz-form');
+    $this->drupalGet('admin/quizz/settings/quiz-form');
     $this->assertNoFieldChecked('edit-allow-resume');
 
     // Check that the default carried over. Check that other options remained set.
