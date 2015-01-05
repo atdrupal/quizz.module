@@ -6,11 +6,6 @@ use Drupal\quizz_question\Form\QuestionTypeForm;
 use Drupal\quizz_question\Form\RevisionActionsForm;
 
 /**
- * @file
- * User page callbacks for the quiz_question module.
- */
-
-/**
  * Form to edit question-type entity.
  */
 function quiz_question_type_form($form, $form_state, $question_type, $op) {

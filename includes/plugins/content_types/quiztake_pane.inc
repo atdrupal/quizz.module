@@ -8,7 +8,7 @@ use Drupal\quizz\Controller\QuizTakeController;
 $plugin = array(
     'title'            => t('@quiz take pane', array('@quiz' => QUIZZ_NAME)),
     'single'           => TRUE,
-    'render callback'  => 'quiz_take_pane_content_type_render',
+    'render callback'  => 'quizz_take_pane_content_type_render',
     'category'         => array(t('Quiz'), -9),
     'description'      => t('@quiz take pane description.', array('@quiz' => QUIZZ_NAME)),
     'required context' => new ctools_context_required(QUIZZ_NAME, 'quiz_entity'),
@@ -18,7 +18,7 @@ $plugin = array(
  * Run-time rendering of the body of the block (content type)
  * See ctools_plugin_examples for more advanced info
  */
-function quiz_take_pane_content_type_render($subtype, $conf, $panel_args, $context = NULL) {
+function quizz_take_pane_content_type_render($subtype, $conf, $panel_args, $context = NULL) {
   if (!empty($context) && empty($context->data)) {
     return;
   }
