@@ -303,7 +303,23 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    * {@inheritdoc}
    */
   public function delete($single_revision) {
-    // @TODO: Should we delete answer entities?
+    $id = $single_revision ? $this->question->vid : $this->question->qid;
+
+    // @TODO: We should delete answer entities instead of answer's properties.
+    if ($this->base_answer_table) {
+      $sql = 'DELETE p';
+      $sql .= ' FROM {quiz_truefalse_answer} p';
+      $sql .= ' INNER JOIN {quiz_answer_entity} a ON p.question_vid = a.question_vid';
+      $sql .= ' WHERE a.' . ($single_revision ? 'question_vid' : 'question_qid') . ' = :id';
+      db_query($sql, array(':id' => $id));
+    }
+
+    if ($this->base_table) {
+      $sql = 'DELETE q';
+      $sql .= ' FROM {' . $this->base_table . '} q';
+      $sql .= ' WHERE q.' . ($single_revision ? 'vid' : 'qid') . ' = :id';
+      db_query($sql, array(':id' => $id));
+    }
   }
 
   /**

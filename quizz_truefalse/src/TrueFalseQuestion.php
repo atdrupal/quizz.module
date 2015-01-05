@@ -10,6 +10,8 @@ use Drupal\quizz_question\QuestionHandler;
 class TrueFalseQuestion extends QuestionHandler {
 
   protected $body_field_title = 'True/false statement';
+  protected $base_table = 'quiz_truefalse_question';
+  protected $base_answer_table = 'quiz_truefalse_answer';
 
   /**
    * {@inheritdoc}
@@ -40,34 +42,6 @@ class TrueFalseQuestion extends QuestionHandler {
    */
   public function validate(array &$form) {
     // This space intentionally left blank. :)
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @TODO: We should delete answer entities instead of answer's properties.
-   */
-  public function delete($single_revision = FALSE) {
-    parent::delete($single_revision);
-
-
-    $sql_q = 'DELETE q FROM {quiz_truefalse_question} q';
-    $sql_a = 'DELETE p FROM {quiz_truefalse_answer} p';
-    if ($single_revision) {
-      $id = $this->question->vid;
-      $sql_a .= " INNER JOIN {quiz_answer_entity} a ON p.question_vid = a.question_vid";
-      $sql_a .= " WHERE a.question_vid = :id";
-      $sql_q .= " WHERE q.vid = :id";
-    }
-    else {
-      $id = $this->question->qid;
-      $sql_a .= " INNER JOIN {quiz_answer_entity} a ON p.question_vid = a.question_vid";
-      $sql_a .= " WHERE a.question_qid = :id";
-      $sql_q .= " WHERE q.qid = :id";
-    }
-
-    db_query($sql_a, array(':id' => $id));
-    db_query($sql_q, array(':id' => $id));
   }
 
   /**
