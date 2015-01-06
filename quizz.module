@@ -1,10 +1,5 @@
 <?php
 
-use Drupal\quizz\Entity\QuizType;
-use Drupal\quizz\Entity\Result;
-use Drupal\quizz\Quizz;
-use Drupal\quizz\Entity\QuizEntity;
-
 require_once dirname(__FILE__) . '/includes/quizz.hooks.inc';
 
 /**

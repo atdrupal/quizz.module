@@ -8,11 +8,8 @@
  * Implements hook_node_presave().
  */
 function quiz_node_presave($node) {
-  // Convert the action id to the actual id from the MD5 hash.
-  // Why the actions module does this I do not know? Maybe to prevent
-  // invalid values put into the options value="" field.
   if (($node->type === 'quiz') && !empty($node->aid) && $aid = actions_function_lookup($node->aid)) {
-    $node->aid = $aid;
+    $node->aid = $aid; // What's AID?
   }
 }
 
@@ -23,8 +20,7 @@ function quiz_question_node_access_records($node) {
   $grants = array();
 
   // Restricting view access to question nodes outside quizzes.
-  $question_types = array_keys(quizz_question_get_handler_info());
-  if (in_array($node->type, $question_types)) {
+  if (in_array($node->type, array_keys(quizz_question_get_handler_info()))) {
     // This grant is for users having 'view quiz question outside of a quiz'
     // permission. We set a priority of 2 because OG has a 1 priority and we
     // want to get around it.
@@ -38,17 +34,6 @@ function quiz_question_node_access_records($node) {
     );
   }
 
-  return $grants;
-}
-
-/**
- * Implements hook_node_grants().
- */
-function quiz_question_node_grants($account, $op) {
-  $grants = array();
-  if (($op === 'view') && user_access('view quiz question outside of a quiz', $account)) {
-    $grants['quiz_question'][] = 1; # Granting view access
-  }
   return $grants;
 }
 

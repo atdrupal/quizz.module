@@ -8,13 +8,6 @@ class QuizAdminSettingsController {
    * This builds the main settings form for the quiz module.
    */
   public function getForm($form, &$form_state) {
-    $form['quiz_durod'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Delete results when a user is deleted'),
-        '#default_value' => variable_get('quiz_durod', 0),
-        '#description'   => t('When a user is deleted delete any and all results for that user.'),
-    );
-
     $links = array('!userpoints' => l(t('UserPoints'), 'http://drupal.org/project/userpoints', array(
             'attributes' => array('target' => '_blank'))
     ));
