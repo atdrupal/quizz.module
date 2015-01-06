@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\quizz\Entity\QuizEntity\ResultGenerator;
+
 class QuizResultTestCase extends QuizTestCase {
 
   protected $extraModules = array('quizz_truefalse', 'text');
@@ -303,6 +305,32 @@ class QuizResultTestCase extends QuizTestCase {
     // Check the result exists now.
     $result = entity_load('quiz_result', FALSE, array('quiz_qid' => $quiz->qid, 'uid' => $this->user->uid));
     $this->assertTrue(!empty($result), 'Quiz result exists.');
+  }
+
+  public function testUserCancelAccount() {
+    $this->checkUserCancelAccount(TRUE, 'Result is deleted.');
+    $this->checkUserCancelAccount(FALSE, 'Result is kept.');
+  }
+
+  private function checkUserCancelAccount($delete, $msg) {
+    quizz_type_load('quiz')->setConfig('quiz_durod', $delete)->save();
+
+    $quiz = $this->drupalCreateQuiz();
+    $question = $this->drupalCreateQuestion(array('type' => 'truefalse', 'correct_answer' => 1, 'feedback' => 'Q1Feedback'));
+    $this->linkQuestionToQuiz($question, $quiz);
+
+    $generator = new ResultGenerator();
+    $result = $generator->generate($quiz, $this->user);
+
+    $account_1 = $this->createNormalAccount();
+    $result->uid = $account_1->uid;
+    $result->is_evaluated = TRUE;
+    $result->time_end = time() + 10;
+    $result->save();
+    quizz_user_cancel(array(), $account_1, 'user_cancel_block');
+
+    $reload = entity_load('quiz_result', FALSE, array('result_id' => $result->result_id));
+    $this->assertTrue($delete ? empty($reload) : !empty($reload), $msg);
   }
 
 }
