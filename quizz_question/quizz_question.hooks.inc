@@ -203,26 +203,6 @@ function quizz_question_get_report($question_id, $question_vid, $result_id) {
 }
 
 /**
- * Implements hook_quiz_question_score().
- */
-function quizz_question_quiz_question_score(Question $question, $result_id = NULL) {
-  if (NULL === $result_id) {
-    return $question->max_score;
-  }
-
-  $handler = $question->getResponseHandler($result_id);
-  $score = new stdClass();
-  $score->possible = $question->getHandler()->getMaximumScore();
-  $score->question_qid = $question->qid;
-  $score->question_vid = $question->vid;
-  $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
-  $score->possible = $handler->getQuestionMaxScore();
-  $score->is_evaluated = $handler->isEvaluated();
-
-  return $score;
-}
-
-/**
  * Implements hook_modules_enable().
  *
  * Create default question bundle base on new question handlers enabled.

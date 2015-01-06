@@ -58,6 +58,21 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   /**
    * {@inheritdoc}
    */
+  public function getQuestionScore(Question $question) {
+    $possible = $question->getHandler()->getMaximumScore();
+    return (object) array(
+          'possible'     => $possible,
+          'question_qid' => $question->qid,
+          'question_vid' => $question->vid,
+          'attained'     => $possible > 0 ? $this->getScore() : 0,
+          'possible'     => $this->getQuestionMaxScore(),
+          'is_evaluated' => $this->isEvaluated(),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getQuestionMaxScore($weight_adjusted = TRUE) {
     if (!isset($this->question->max_score)) {
       $this->question->max_score = $this->question->getHandler()->getMaximumScore();
