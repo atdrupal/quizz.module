@@ -114,7 +114,7 @@ class QuestionForm {
     $form['revision_information']['revision'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Create new revision'),
-        '#default_value' => FALSE,
+        '#default_value' => $this->question->getQuestionType()->getConfig('auto_revisioning', 1),
         '#state'         => array('checked' => array('textarea[name="log"]' => array('empty' => FALSE))),
     );
 
