@@ -145,7 +145,7 @@ class QuestionTypeForm {
     }
 
     $question_type->save();
-    $form_state['redirect'] = 'admin/structure/quizz-questions';
+    $form_state['redirect'] = 'admin/quizz/question-types';
   }
 
 }

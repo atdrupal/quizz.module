@@ -113,7 +113,7 @@ function quizz_question_entity_info() {
       'access callback'  => 'quizz_question_type_access',
       'module'           => 'quizz_question',
       'admin ui'         => array(
-          'path'             => 'admin/structure/quizz-questions',
+          'path'             => 'admin/quizz/question-types',
           'file'             => 'quizz_question.pages.inc',
           'controller class' => 'Drupal\quizz_question\Entity\QuestionTypeUIController',
       ),
@@ -155,8 +155,8 @@ function quizz_question_entity_info() {
     $info['quiz_question_entity']['bundles'][$name] = array(
         'label' => $row->label,
         'admin' => array(
-            'path'             => 'admin/structure/quizz-questions/manage/%quizz_question_type',
-            'real path'        => 'admin/structure/quizz-questions/manage/' . $name,
+            'path'             => 'admin/quizz/question-types/manage/%quizz_question_type',
+            'real path'        => 'admin/quizz/question-types/manage/' . $name,
             'bundle argument'  => 4,
             'access arguments' => array('administer quiz'),
         ),
