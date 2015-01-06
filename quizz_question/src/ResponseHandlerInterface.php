@@ -3,6 +3,8 @@
 namespace Drupal\quizz_question;
 
 use Drupal\quizz\Entity\Answer;
+use Drupal\quizz_question\Entity\Question;
+use stdClass;
 
 interface ResponseHandlerInterface {
 
@@ -103,4 +105,11 @@ interface ResponseHandlerInterface {
    * @return Answer
    */
   public function toBareObject();
+
+  /**
+   * Get question score.
+   *
+   * @return stdClass
+   */
+  public function getQuestionScore(Question $question);
 }
