@@ -120,6 +120,7 @@ function quizz_question_entity_info() {
       'entity class'              => 'Drupal\quizz_question\Entity\Question',
       'controller class'          => 'Drupal\quizz_question\Entity\QuestionController',
       'metadata controller class' => 'Drupal\quizz_question\Entity\QuestionMetadataController',
+      'extra fields controller class' => 'Drupal\quizz_question\Entity\QuestionExtraFieldsController',
       'views controller class'    => 'Drupal\quizz_question\Entity\QuestionViewsController',
       'base table'                => 'quiz_question_entity',
       'revision table'            => 'quiz_question_revision',
