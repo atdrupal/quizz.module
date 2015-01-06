@@ -85,8 +85,8 @@ class QuizUIController extends EntityDefaultUIController {
     $items['quiz/%quizz/results'] = $base + array(
         'title'            => 'Results',
         'type'             => MENU_LOCAL_TASK,
-        'access callback'  => 'entity_access',
-        'access arguments' => array('update', 'quiz_entity', 1),
+        'access callback'  => 'quizz_results_tab_access',
+        'access arguments' => array(1),
         'page callback'    => 'quizz_results_page',
         'page arguments'   => array(1),
         'weight'           => 6,
