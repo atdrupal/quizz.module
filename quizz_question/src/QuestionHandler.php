@@ -76,6 +76,11 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
               'full'   => array('label' => 'hidden', 'type' => 'text_default'),
           ),
       ));
+
+      // Hide question title from teaser.
+      $settings = field_bundle_settings('quiz_question_entity', $question_type->type);
+      $settings['extra_fields']['display']['title']['teaser'] = array('weight'  => 0, 'visible' => FALSE);
+      field_bundle_settings('quiz_question_entity', $question_type->type, $settings);
     }
   }
 
