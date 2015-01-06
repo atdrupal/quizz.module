@@ -13,11 +13,6 @@ class QuizAnswerTestCase extends QuizTestCase {
     );
   }
 
-  public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $admin_permissions[] = 'administer quiz questions';
-    parent::setUp($modules, $admin_permissions, $user_permissions);
-  }
-
   public function testFieldableAnswer() {
     $this->drupalLogin($this->admin);
     $this->drupalPost('admin/structure/quizz-questions/manage/default_truefalse/answer/fields', array(
