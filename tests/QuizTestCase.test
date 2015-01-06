@@ -42,6 +42,7 @@ abstract class QuizTestCase extends DrupalWebTestCase {
 
     $this->setUpFilters();
 
+    $admin_permissions[] = 'administer quiz question types';
     $admin_permissions[] = 'administer quiz configuration';
     $admin_permissions[] = 'create quiz content';
     $admin_permissions[] = 'edit any quiz content';

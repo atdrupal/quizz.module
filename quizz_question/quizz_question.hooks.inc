@@ -17,6 +17,12 @@ function quizz_question_help($path, $args) {
 function quizz_question_permission() {
   $perms = array();
 
+  $perms['administer quiz question types'] = array(
+      'title'           => t('Administer quiz question types'),
+      'description'     => t('Have all permissions on all question types.'),
+      'restrict access' => TRUE,
+  );
+
   $perms['administer quiz questions'] = array(
       'title'           => t('Administer quiz questions'),
       'description'     => t('Have all permissions on all questions.'),
@@ -307,16 +313,14 @@ function quizz_question_field_extra_fields() {
 }
 
 /**
- * @TODO: Create new permission 'manage quiz question types'
+ * Access callback for question type entity.
  * @return boolean
  */
-function quizz_question_type_access() {
-  return TRUE;
+function quizz_question_type_access($op, $question_type = NULL, $account = NULL) {
+  return user_access('administer quiz question types');
 }
 
 /**
- * @TODO: Action on own
- *
  * Access callback for question entity.
  *
  * @param string $op
@@ -324,7 +328,7 @@ function quizz_question_type_access() {
  * @param stdClass $account
  * @return bool
  */
-function quizz_question_access_callback($op, $question = NULL, $account = NULL, $entity_type = '') {
+function quizz_question_access_callback($op, $question = NULL, $account = NULL) {
   switch ($op) {
     case 'update':
       if (user_access('edit any question content', $account)) {
