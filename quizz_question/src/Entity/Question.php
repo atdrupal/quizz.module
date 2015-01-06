@@ -184,15 +184,13 @@ class Question extends Entity {
     }
 
     if (!isset($max_score)) {
-      $max_score = db_query('SELECT qt.max_score
-        FROM {quiz_results} result
-         JOIN {quiz_answer_entity} answer ON (result.result_id = answer.result_id)
-         JOIN {quiz_entity_terms} qt ON (qt.vid = result.quiz_vid AND qt.tid = answer.tid)
-         WHERE result.result_id = :rid
-          AND answer.question_qid = :question_id
-          AND answer.question_vid = :question_vid', array(
+      $max_score = db_query(
+        'SELECT qt.max_score
+         FROM {quiz_results} result
+          JOIN {quiz_answer_entity} answer ON (result.result_id = answer.result_id)
+          JOIN {quiz_entity_terms} qt ON (qt.vid = result.quiz_vid AND qt.tid = answer.tid)
+         WHERE result.result_id = :rid AND answer.question_vid = :question_vid', array(
           ':rid'          => $result->result_id,
-          ':question_id'  => $this->qid,
           ':question_vid' => $this->vid
         ))->fetchField();
     }

@@ -2,8 +2,9 @@
 
 namespace Drupal\quizz_question;
 
-use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz\Entity\Result;
+use Drupal\quizz_question\Entity\Question;
+use Drupal\quizz_question\Entity\QuestionType;
 
 interface QuestionHandlerInterface {
 
@@ -19,6 +20,17 @@ interface QuestionHandlerInterface {
    * @return array Form structure
    */
   public function getCreationForm(array &$form_state = NULL);
+
+  /**
+   * Return a result report for a question response.
+   *
+   * The retaurned value is a form array because in some contexts the scores in
+   * the form is editable
+   *
+   * @param Result $result
+   * @param Question $question
+   */
+  public function getReportForm(Result $result, Question $question);
 
   /**
    * Provides validation for question before it is created.

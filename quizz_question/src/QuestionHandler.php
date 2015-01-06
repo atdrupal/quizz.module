@@ -371,4 +371,14 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  function getReportForm(Result $result, Question $question) {
+    $question->findLegacyMaxScore($result);
+    return $question
+        ->getResponseHandler($result->result_id, isset($question->answers[0]) ? $question->answers[0] : NULL)
+        ->getReportForm();
+  }
+
 }

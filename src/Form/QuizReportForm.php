@@ -20,8 +20,8 @@ class QuizReportForm {
     $form['#tree'] = TRUE;
 
     foreach ($questions as $question) {
-      $function = $question->getModule() . '_report_form';
-      $form_to_add = $function($result, $question);
+      $form_to_add = $question->getHandler()->getReportForm($result, $question);
+
       if (isset($form_to_add['submit'])) {
         $show_submit = TRUE;
       }

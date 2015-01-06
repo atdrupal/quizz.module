@@ -2,7 +2,6 @@
 
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz_question\Entity\Question;
-use Drupal\quizz_question\Entity\QuestionType;
 
 /**
  * Quiz Question module.
@@ -99,22 +98,6 @@ function quizz_question_access_to_score($question_vid, $result_id) {
       }
     }
   }
-}
-
-/**
- * Returns a result report for a question response.
- *
- * The retaurned value is a form array because in some contexts the scores in the form
- * is editable
- *
- * @param Question $question
- * @return array
- */
-function quizz_question_report_form(Result $result, Question $question) {
-  $question->findLegacyMaxScore($result);
-  return $question
-      ->getResponseHandler($result->result_id, isset($question->answers[0]) ? $question->answers[0] : NULL)
-      ->getReportForm();
 }
 
 /**
