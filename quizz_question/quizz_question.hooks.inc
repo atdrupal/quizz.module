@@ -120,28 +120,29 @@ function quizz_question_entity_info() {
   );
 
   $info['quiz_question_entity'] = array(
-      'label'                     => t('Question'),
-      'plural label'              => t('Questions'),
-      'description'               => t('!quiz question entity', array('!quiz' => QUIZZ_NAME)),
-      'entity class'              => 'Drupal\quizz_question\Entity\Question',
-      'controller class'          => 'Drupal\quizz_question\Entity\QuestionController',
-      'metadata controller class' => 'Drupal\quizz_question\Entity\QuestionMetadataController',
-      'views controller class'    => 'Drupal\quizz_question\Entity\QuestionViewsController',
-      'base table'                => 'quiz_question_entity',
-      'revision table'            => 'quiz_question_revision',
-      'fieldable'                 => TRUE,
-      'entity keys'               => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
-      'bundle keys'               => array('bundle' => 'type'),
-      'access callback'           => 'quizz_question_access_callback',
-      'label callback'            => 'entity_class_label',
-      'uri callback'              => 'entity_class_uri',
-      'module'                    => 'quizz_question',
-      'bundles'                   => array(),
-      'view modes'                => array(
+      'label'                         => t('Question'),
+      'plural label'                  => t('Questions'),
+      'description'                   => t('!quiz question entity', array('!quiz' => QUIZZ_NAME)),
+      'entity class'                  => 'Drupal\quizz_question\Entity\Question',
+      'controller class'              => 'Drupal\quizz_question\Entity\QuestionController',
+      'metadata controller class'     => 'Drupal\quizz_question\Entity\QuestionMetadataController',
+      'extra fields controller class' => 'Drupal\quizz_question\Entity\QuestionExtraFieldsController',
+      'views controller class'        => 'Drupal\quizz_question\Entity\QuestionViewsController',
+      'base table'                    => 'quiz_question_entity',
+      'revision table'                => 'quiz_question_revision',
+      'fieldable'                     => TRUE,
+      'entity keys'                   => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
+      'bundle keys'                   => array('bundle' => 'type'),
+      'access callback'               => 'quizz_question_access_callback',
+      'label callback'                => 'entity_class_label',
+      'uri callback'                  => 'entity_class_uri',
+      'module'                        => 'quizz_question',
+      'bundles'                       => array(),
+      'view modes'                    => array(
           'teaser' => array('label' => t('Teaser'), 'custom settings' => TRUE),
           'full'   => array('label' => t('Full'), 'custom settings' => TRUE),
       ),
-      'admin ui'                  => array(
+      'admin ui'                      => array(
           'path'             => 'admin/content/quizz-questions',
           'file'             => 'quizz_question.pages.inc',
           'controller class' => 'Drupal\quizz_question\Entity\QuestionUIController',
@@ -259,57 +260,6 @@ function quizz_question_modules_disabled($modules) {
       ->execute()
     ;
   }
-}
-
-/**
- * Implements hook_field_extra_fields()
- */
-function quizz_question_field_extra_fields() {
-  $extra = array();
-
-  foreach (array_keys(quizz_question_get_types()) as $name) {
-    $extra['quiz_question_entity'][$name] = array(
-        'display' => array(
-            'title'            => array(
-                'label'       => t('Title'),
-                'description' => t("Question's title."),
-                'weight'      => -10,
-            ),
-            'question_handler' => array(
-                'label'       => t("Handler fields"),
-                'description' => t("Custom fields defined by question handler."),
-                'weight'      => -5,
-            ),
-        ),
-        'form'    => array(
-            'title'            => array(
-                'label'       => t('Title'),
-                'description' => t("Question's title."),
-                'weight'      => -10,
-            ),
-            'question_handler' => array(
-                'label'       => t("Handler fields"),
-                'description' => t("Custom fields defined by question handler."),
-                'weight'      => -5,
-            ),
-            'feedback'         => array(
-                'label'       => t('Question feedback'),
-                'description' => '',
-                'weight'      => -1,
-            ),
-        ),
-    );
-
-    if (module_exists('locale')) {
-      $extra['quiz_question_entity'][$name]['form']['language'] = array(
-          'label'       => t('Language'),
-          'description' => t('Language selector'),
-          'weight'      => -20,
-      );
-    }
-  }
-
-  return $extra;
 }
 
 /**
