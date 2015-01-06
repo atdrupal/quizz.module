@@ -168,7 +168,7 @@ class QuizUIController extends EntityDefaultUIController {
         'type'             => MENU_LOCAL_TASK,
     );
 
-    $items['quiz/%quizz/take/%quizz_question_number/feedback'] = array(
+    $items['quiz/%quizz/take/%/feedback'] = array(
         'title'            => 'Feedback',
         'file path'        => drupal_get_path('module', 'quizz'),
         'file'             => 'includes/quizz.pages.inc',
