@@ -391,6 +391,7 @@ function quizz_question_feedback_access(QuizEntity $quiz, $page_number) {
 /**
  * Access callback for /quiz/%/revisions.
  * @param QuizEntity $quiz
+ * @return boolean
  */
 function quizz_revision_tab_access(QuizEntity $quiz) {
   if ($quiz->qid == $quiz->vid) {
@@ -407,6 +408,21 @@ function quizz_revision_tab_access(QuizEntity $quiz) {
 function quizz_results_tab_access(QuizEntity $quiz) {
   $sql = 'SELECT 1 FROM {quiz_results} WHERE quiz_qid = :id AND time_end IS NOT NULL';
   if (!db_query($sql, array(':id' => $quiz->qid))->fetchColumn()) {
+    return FALSE;
+  }
+  return entity_access('update', 'quiz_entity', $quiz);
+}
+
+/**
+ * Access callback for /quiz/%/my-results.
+ * @param QuizEntity $quiz
+ * @return boolean
+ */
+function quizz_my_results_tab_access(QuizEntity $quiz) {
+  global $user;
+  $sql = 'SELECT 1 FROM {quiz_results} WHERE quiz_qid = :id AND uid = :uid AND time_end IS NOT NULL';
+  $con = array(':id' => $quiz->qid, ':uid' => $user->uid);
+  if (!db_query($sql, $con)->fetchColumn()) {
     return FALSE;
   }
   return entity_access('update', 'quiz_entity', $quiz);
