@@ -82,7 +82,7 @@ class FormDefinition {
             '#title'         => t('Explanation or submission guidelines'),
             '#description'   => t('This text will be displayed at the top of the page when creating or editing !quiz of this type.', array('!quiz' => QUIZZ_NAME)),
             '#default_value' => $this->quiz_type->help,
-        )
+        ),
     );
   }
 
@@ -103,15 +103,6 @@ class FormDefinition {
         '#description'   => t('It is strongly recommended that auto revisioning is always on. It makes sure that when a question or quiz is changed a new revision is created if the current revision has been answered. If this feature is switched off result reports might be broken because a users saved answer might be connected to a wrong version of the quiz and/or question she was answering. All sorts of errors might appear.'),
     );
 
-    $form['vtabs']['configuration']['quiz_default_close'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Default number of days before a @quiz is closed', array('@quiz' => QUIZZ_NAME)),
-        '#default_value' => isset($config['quiz_default_close']) ? $config['quiz_default_close'] : 30,
-        '#size'          => 4,
-        '#maxlength'     => 4,
-        '#description'   => t('Supply a number of days to calculate the default close date for new quizzes.'),
-    );
-
     $form['vtabs']['configuration']['quiz_use_passfail'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Allow quiz creators to set a pass/fail option when creating a @quiz.', array('@quiz' => strtolower(QUIZZ_NAME))),
@@ -119,14 +110,14 @@ class FormDefinition {
         '#description'   => t('Check this to display the pass/fail options in the @quiz form. If you want to prohibit other quiz creators from changing the default pass/fail percentage, uncheck this option.', array('@quiz' => QUIZZ_NAME)),
     );
 
-    $form['vtabs']['configuration']['quiz_max_result_options'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Maximum result options'),
-        '#description'   => t('Set the maximum number of result options (categorizations for scoring a quiz). Set to 0 to disable result options.'),
-        '#default_value' => isset($config['quiz_max_result_options']) ? $config['quiz_max_result_options'] : 5,
-        '#size'          => 2,
-        '#maxlength'     => 2,
-        '#required'      => FALSE,
+    $form['vtabs']['configuration']['quiz_has_timer'] = array(
+        '#type'          => 'checkbox',
+        '#title'         => t('Display timer'),
+        '#default_value' => $this->quiz_type->getConfig('quiz_has_timer', 0),
+        '#disabled'      => !function_exists('jquery_countdown_add'),
+        '#description'   => t("!jquery_countdown is an <strong>optional</strong> module for Quiz. It is used to display a timer when taking a quiz. Without this timer, the user will not know how much time they have left to complete the Quiz", array(
+            '!jquery_countdown' => l(t('JQuery Countdown'), 'http://drupal.org/project/jquery_countdown'),
+        )),
     );
 
     $form['vtabs']['configuration']['build_on_last'] = array(
@@ -147,6 +138,25 @@ class FormDefinition {
         '#options'       => $this->removePartialQuizRecordValue(),
         '#description'   => t('Number of days to keep incomplete quiz attempts.'),
         '#default_value' => isset($config['quiz_remove_partial_quiz_record']) ? $config['quiz_remove_partial_quiz_record'] : 604800,
+    );
+
+    $form['vtabs']['configuration']['quiz_default_close'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Default number of days before a @quiz is closed', array('@quiz' => QUIZZ_NAME)),
+        '#default_value' => isset($config['quiz_default_close']) ? $config['quiz_default_close'] : 30,
+        '#size'          => 4,
+        '#maxlength'     => 4,
+        '#description'   => t('Supply a number of days to calculate the default close date for new quizzes.'),
+    );
+
+    $form['vtabs']['configuration']['quiz_max_result_options'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Maximum result options'),
+        '#description'   => t('Set the maximum number of result options (categorizations for scoring a quiz). Set to 0 to disable result options.'),
+        '#default_value' => isset($config['quiz_max_result_options']) ? $config['quiz_max_result_options'] : 5,
+        '#size'          => 2,
+        '#maxlength'     => 2,
+        '#required'      => FALSE,
     );
 
     $form['vtabs']['configuration']['quiz_pager_start'] = array(
