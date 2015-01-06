@@ -45,11 +45,8 @@ function quizz_question_type_load($name) {
  * Get the information about various implementations of quiz questions.
  *
  * @param string $name
- *  Name of question type.
  * @param boolean $reset
- *  If this is true, the cache will be reset.
- * @return
- *  An array of information about quiz question implementations.
+ * @return array
  * @see quiz_question_quizz_question_info() for an example of a quiz question info hook.
  */
 function quizz_question_get_handler_info($name = NULL, $reset = FALSE) {

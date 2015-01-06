@@ -163,22 +163,23 @@ function quizz_question_entity_info() {
  * Implements hook_quizz_question_info().
  */
 function quizz_question_quizz_question_info() {
-  return array(
-      'quiz_directions' => array(
-          'name'              => t('@quiz directions', array('@quiz' => QUIZZ_NAME)),
-          'description'       => t('@quiz directions allow you to drop in directions anywhere in a quiz. You can also use them to insert a confirmation step at the end of the quiz.', array('@quiz' => QUIZZ_NAME)),
-          'question provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsQuestionHandler',
-          'response provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsResponseHandler',
-          'module'            => 'quizz_question', // All wrapper functions are in that module.
-      ),
-      'quiz_page'       => array(
-          'name'              => t('@quiz page', array('@quiz' => QUIZZ_NAME)),
-          'description'       => t('Quiz pages allow you display questions across multiple pages.'),
-          'question provider' => 'Drupal\quizz_question\Handler\Page\PageQuestionHandler',
-          'response provider' => 'Drupal\quizz_question\Handler\Page\PageResonseHandler',
-          'module'            => 'quizz_question', // All wrapper functions are in that module.
-      ),
+  $info['quiz_directions'] = array(
+      'name'              => t('@quiz directions', array('@quiz' => QUIZZ_NAME)),
+      'description'       => t('@quiz directions allow you to drop in directions anywhere in a quiz. You can also use them to insert a confirmation step at the end of the quiz.', array('@quiz' => QUIZZ_NAME)),
+      'question provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsQuestionHandler',
+      'response provider' => 'Drupal\quizz_question\Handler\Direction\DirectionsResponseHandler',
+      'module'            => 'quizz_question',
   );
+
+  $info['quiz_page'] = array(
+      'name'              => t('@quiz page', array('@quiz' => QUIZZ_NAME)),
+      'description'       => t('Quiz pages allow you display questions across multiple pages.'),
+      'question provider' => 'Drupal\quizz_question\Handler\Page\PageQuestionHandler',
+      'response provider' => 'Drupal\quizz_question\Handler\Page\PageResonseHandler',
+      'module'            => 'quizz_question',
+  );
+
+  return $info;
 }
 
 /**

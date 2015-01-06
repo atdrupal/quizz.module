@@ -66,6 +66,9 @@ class TrueFalseQuestion extends QuestionHandler {
     return $props;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function view() {
     $content = parent::view();
     if ($this->viewCanRevealCorrect()) {
@@ -106,7 +109,7 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Question response validator.
+   * {@inheritdoc}
    */
   public function validateAnsweringForm(array &$form, array &$form_state = NULL) {
     if (is_null($form_state['values']['question'][$this->question->qid]['answer'])) {
@@ -115,9 +118,7 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getCreationForm
-   *
-   * @see QuizQuestion#getCreationForm($form_state)
+   * {@inheritdoc}
    */
   public function getCreationForm(array &$form_state = NULL) {
     $form['correct_answer'] = array(
@@ -136,9 +137,7 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of getMaximumScore
-   *
-   * @see QuizQuestion#getMaximumScore()
+   * {@inheritdoc}
    */
   public function getMaximumScore() {
     return 1;

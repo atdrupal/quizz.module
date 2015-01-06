@@ -85,10 +85,6 @@ function quiz_question_view($node, $view_mode) {
  * Implements hook_form_alter().
  */
 function quiz_question_entity_form_alter(&$form) {
-  if (!isset($form['#quiz_check_revision_access'])) {
-    return;
-  }
-
   // Remove revision fieldset if user don't have access to revise quiz manually.
   if (!user_access('manual quiz revisioning') || variable_get('quiz_auto_revisioning', 1)) {
     $e = $form['revision_information'];
