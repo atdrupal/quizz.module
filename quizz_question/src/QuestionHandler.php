@@ -2,13 +2,13 @@
 
 namespace Drupal\quizz_question;
 
+use Drupal\quizz\Controller\QuestionFeedbackController;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 use Drupal\quizz_question\Entity\Question;
 use Drupal\quizz_question\Entity\QuestionController;
 use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_question\Form\QuestionForm;
-use Drupal\quizz\Controller\QuestionFeedbackController;
-use Drupal\quizz\Entity\QuizEntity;
-use Drupal\quizz\Entity\Result;
 
 /**
  * Question handlers are made by extending these generic methods and abstract
@@ -364,6 +364,16 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    */
   public function hasFeedback() {
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getReportForm(Result $result, Question $question) {
+    $question->findLegacyMaxScore($result);
+    return $question
+        ->getResponseHandler($result->result_id, isset($question->answers[0]) ? $question->answers[0] : NULL)
+        ->getReportForm();
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\quizz\Form;
 
+use Drupal\quizz\Entity\Result;
 use Drupal\quizz_question\Entity\Question;
 
 class QuizReportForm {
@@ -11,16 +12,16 @@ class QuizReportForm {
    *
    * @param array $form
    * @param array $form_state
-   * @param \Drupal\quizz\Entity\Result $result
+   * @param Result $result
    * @param Question[] $questions
    * @return array
    */
-  public function getForm($form, $form_state, \Drupal\quizz\Entity\Result $result, $questions) {
+  public function getForm($form, $form_state, Result $result, $questions) {
     $form['#tree'] = TRUE;
 
     foreach ($questions as $question) {
-      $function = $question->getModule() . '_report_form';
-      $form_to_add = $function($result, $question);
+      $form_to_add = $question->getHandler()->getReportForm($result, $question);
+
       if (isset($form_to_add['submit'])) {
         $show_submit = TRUE;
       }
