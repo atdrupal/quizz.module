@@ -13,6 +13,11 @@ function quiz_question_type_form($form, $form_state, $question_type, $op) {
   return $obj->get($form, $form_state, $question_type, $op);
 }
 
+function quiz_question_type_form_validate($form, &$form_state) {
+  $obj = new QuestionTypeForm();
+  return $obj->validate($form, $form_state);
+}
+
 function quiz_question_type_form_submit($form, &$form_state) {
   $obj = new QuestionTypeForm();
   return $obj->submit($form, $form_state);

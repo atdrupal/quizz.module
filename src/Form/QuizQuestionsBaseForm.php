@@ -23,7 +23,7 @@ abstract class QuizQuestionsBaseForm {
       $rev_description = t('Allow question status changes to create a new revision of the quiz?');
     }
 
-    if (user_access('manual quiz revisioning') && !variable_get('quiz_auto_revisioning', 1)) {
+    if (user_access('manual quiz revisioning') && !$quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1)) {
       $form['new_revision'] = array(
           '#type'          => 'checkbox',
           '#default_value' => $rev_default,

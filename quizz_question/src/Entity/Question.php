@@ -141,16 +141,14 @@ class Question extends Entity {
   }
 
   /**
-   * {#inheritedoc}
-   *
-   * Update created/updated/uid when needed.
-   *
-   * @global stdClass $user
+   * {@inheritedoc}
    */
   public function save() {
     global $user;
 
     $this->changed = time();
+
+    // Set author ID if it's not set yet.
     if ($this->is_new = isset($this->is_new) ? $this->is_new : 0) {
       $this->created = time();
       if (null === $this->uid) {

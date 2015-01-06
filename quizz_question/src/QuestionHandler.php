@@ -79,7 +79,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
 
       // Hide question title from teaser.
       $settings = field_bundle_settings('quiz_question_entity', $question_type->type);
-      $settings['extra_fields']['display']['title']['teaser'] = array('weight'  => 0, 'visible' => FALSE);
+      $settings['extra_fields']['display']['title']['teaser'] = array('weight' => 0, 'visible' => FALSE);
       field_bundle_settings('quiz_question_entity', $question_type->type, $settings);
     }
   }
@@ -156,7 +156,8 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     // Save what quizzes this question belongs to.
     $this->saveRelationships();
     if ($this->question->revision && !QuestionController::$disable_invoking) {
-      if (user_access('manual quiz revisioning') && !variable_get('quiz_auto_revisioning', 1)) {
+      $auto_revisioning = $this->question->getQuestionType()->getConfig('auto_revisioning', 1);
+      if (user_access('manual quiz revisioning') && !$auto_revisioning) {
         unset($_GET['destination']);
         unset($_REQUEST['edit']['destination']);
         drupal_goto("quiz-question/{$this->question->qid}/revision-actions");

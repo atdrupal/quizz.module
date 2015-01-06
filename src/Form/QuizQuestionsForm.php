@@ -330,7 +330,8 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     $quiz = quizz_load(quizz_get_id_from_url());
 
     // Update the refresh latest quizzes table so that we know what the users latest quizzes are
-    $new_revision = variable_get('quiz_auto_revisioning', 1) ? $quiz->isAnswered() : (bool) $form_state['values']['new_revision'];
+    $auto_revisioning = $quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1);
+    $new_revision = $auto_revisioning ? $quiz->isAnswered() : (bool) $form_state['values']['new_revision'];
     if ($new_revision) {
       $quiz->is_new_revision = $new_revision;
       $quiz->old_vid = $quiz->vid;

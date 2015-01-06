@@ -13,8 +13,34 @@ class QuestionTypeForm {
     }
 
     $this->getTitle($form, $question_type);
+
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form, $question_type);
+    $this->getHandlerForm($question_type, $form);
+    $this->getActions($op, $question_type, $form);
+
+    return $form;
+  }
+
+  private function getHandlerForm(QuestionType $question_type, &$form) {
+    $form['vtabs']['configuration'] = array(
+        '#type'            => 'fieldset',
+        '#title'           => t('Configuration'),
+        '#tree'            => TRUE,
+        'auto_revisioning' => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Auto revisioning'),
+            '#default_value' => $question_type->getConfig('auto_revisioning', 1),
+            '#description'   => t('It is strongly recommended that auto revisioning is always on. It makes sure that when a question or quiz is changed a new revision is created if the current revision has been answered. If this feature is switched off result reports might be broken because a users saved answer might be connected to a wrong version of the quiz and/or question she was answering. All sorts of errors might appear.'),
+        ),
+//        …
+//        'quiz_index_questions' => array(
+//            '#type'          => 'checkbox',
+//            '#title'         => t('Index questions'),
+//            '#default_value' => $question_type->getConfig('quiz_index_questions', 1),
+//            '#description'   => t('If you turn this off, questions will not show up in search results.'),
+//        ),
+    );
 
     // @TODO: Add QuestionHandlerInterface::questionTypeConfigForm($question_type)
     if (($handler = $question_type->getHandler()) && method_exists($handler, 'questionTypeConfigForm')) {
@@ -25,6 +51,8 @@ class QuestionTypeForm {
     }
 
     if (!empty($handler_form)) {
+      $form['vtabs']['configuration'] += $handler_form;
+
       if (!empty($handler_form['#validate'])) {
         foreach ($handler_form['#validate'] as $validator) {
           $form['#validate'][] = $validator;
@@ -38,14 +66,10 @@ class QuestionTypeForm {
         }
         unset($handler_form['#submit']);
       }
-
-      $form['vtabs']['configuration'] = $handler_form + array(
-          '#type'  => 'fieldset',
-          '#title' => t('Configuration'),
-          '#tree'  => TRUE,
-      );
+    }
     }
 
+  private function getActions($op, QuestionType $question_type, &$form) {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question type'), '#weight' => 40);
 
@@ -58,8 +82,6 @@ class QuestionTypeForm {
           '#submit'                  => array('quiz_question_type_form_submit_delete')
       );
     }
-
-    return $form;
   }
 
   private function getTitle(&$form, QuestionType $question_type) {
@@ -129,7 +151,11 @@ class QuestionTypeForm {
     }
   }
 
+  public function validate($form, &$form_state) {
+  }
+
   public function submit($form, &$form_state) {
+    /* @var $question_type QuestionType */
     $question_type = entity_ui_form_submit_build_entity($form, $form_state);
     $question_type->description = filter_xss_admin($question_type->description);
     $question_type->help = filter_xss_admin($question_type->help);
@@ -139,9 +165,10 @@ class QuestionTypeForm {
       unset($question_type->multilingual);
     }
 
-    if (!empty($question_type->data['configuration'])) {
-      $question_type->data['configuration'] = $question_type->configuration;
-      unset($question_type->configuration);
+    if (!empty($form_state['values']['configuration'])) {
+      foreach ($form_state['values']['configuration'] as $name => $value) {
+        $question_type->setConfig($name, $value);
+      }
     }
 
     $question_type->save();

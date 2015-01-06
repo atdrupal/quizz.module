@@ -46,16 +46,7 @@ class QuestionForm {
     );
 
     $this->getFormRevision($form);
-
-    $form['actions']['#weight'] = 50;
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question'));
-    if (!empty($this->question->qid)) {
-      $form['actions']['delete'] = array(
-          '#type'   => 'submit',
-          '#value'  => t('Delete'),
-          '#submit' => array('quiz_question_entity_form_submit_delete')
-      );
-    }
+    $this->getActions($form);
 
     $form['question_handler'] = array(
         '#weight' => 0,
@@ -66,6 +57,18 @@ class QuestionForm {
     field_attach_form('quiz_question_entity', $this->question, $form, $form_state);
 
     return $form;
+  }
+
+  private function getActions(&$form) {
+    $form['actions']['#weight'] = 50;
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question'));
+    if (!empty($this->question->qid)) {
+      $form['actions']['delete'] = array(
+          '#type'   => 'submit',
+          '#value'  => t('Delete'),
+          '#submit' => array('quiz_question_entity_form_submit_delete')
+      );
+    }
   }
 
   private function getFormTitle(&$form) {
