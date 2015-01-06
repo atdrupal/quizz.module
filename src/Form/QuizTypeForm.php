@@ -26,7 +26,7 @@ class QuizTypeForm {
 
     $quiz_type->data['configuration'] = $quiz_type->configuration;
     $quiz_type->save();
-    $form_state['redirect'] = 'admin/structure/quiz';
+    $form_state['redirect'] = 'admin/quizz/types';
   }
 
 }
