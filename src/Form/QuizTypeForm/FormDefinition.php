@@ -50,19 +50,7 @@ class FormDefinition {
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form);
     $this->configuration($form);
-
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save quiz type'), '#weight' => 40);
-
-    if (!$this->quiz_type->isLocked() && $op != 'add' && $op != 'clone') {
-      $form['actions']['delete'] = array(
-          '#type'                    => 'submit',
-          '#value'                   => t('Delete !quiz type', array('!quiz' => QUIZZ_NAME)),
-          '#weight'                  => 45,
-          '#limit_validation_errors' => array(),
-          '#submit'                  => array('quiz_type_form_submit_delete')
-      );
-    }
+    $this->getActions($op, $form);
 
     return $form;
   }
@@ -94,6 +82,12 @@ class FormDefinition {
         '#type'        => 'fieldset',
         '#title'       => t('Configuration'),
         '#description' => t('Control aspects of the Quiz module\'s display'),
+        'quiz_durod'   => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Delete results when a user is deleted'),
+            '#default_value' => $this->quiz_type->getConfig('quiz_durod', 0),
+            '#description'   => t('When a user is deleted delete any and all results for that user.'),
+        ),
     );
 
     $form['vtabs']['configuration']['quiz_auto_revisioning'] = array(
@@ -237,6 +231,21 @@ class FormDefinition {
         '9936000'  => t('!num days', array('!num' => 115)),
         '10368000' => t('!num days', array('!num' => 120)),
     );
+  }
+
+  private function getActions($op, &$form) {
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save quiz type'), '#weight' => 40);
+
+    if (!$this->quiz_type->isLocked() && $op != 'add' && $op != 'clone') {
+      $form['actions']['delete'] = array(
+          '#type'                    => 'submit',
+          '#value'                   => t('Delete !quiz type', array('!quiz' => QUIZZ_NAME)),
+          '#weight'                  => 45,
+          '#limit_validation_errors' => array(),
+          '#submit'                  => array('quiz_type_form_submit_delete')
+      );
+    }
   }
 
 }
