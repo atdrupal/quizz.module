@@ -8,7 +8,6 @@ use Drupal\quizz_question\Entity\Question;
  * This module provides the basic facilities for adding quiz question types to a quiz.
  */
 require_once dirname(__FILE__) . '/quizz_question.hooks.inc';
-require_once dirname(__FILE__) . '/quizz_question.todo.php';
 
 /**
  * Get controller for question entity.
@@ -38,6 +37,21 @@ function quizz_question_get_types() {
 function quizz_question_type_load($name) {
   $types = entity_load_multiple_by_name('quiz_question_type', array($name));
   return isset($types[$name]) ? $types[$name] : NULL;
+}
+
+/**
+ * Load question entity.
+ *
+ * @param int $id
+ * @param int $vid
+ * @param bool $reset
+ * @return \Drupal\quizz_question\Entity\Question
+ */
+function quizz_question_load($id = NULL, $vid = NULL, $reset = FALSE) {
+  $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
+  if ($results = entity_load('quiz_question_entity', FALSE, $conditions, $reset)) {
+    return reset($results);
+  }
 }
 
 /**

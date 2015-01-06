@@ -254,3 +254,103 @@ function quizz_question_modules_disabled($modules) {
     ;
   }
 }
+
+/**
+ * Implements hook_field_extra_fields()
+ */
+function quizz_question_field_extra_fields() {
+  $extra = array();
+
+  foreach (array_keys(quizz_question_get_types()) as $name) {
+    $extra['quiz_question_entity'][$name] = array(
+        'display' => array(
+            'title'            => array(
+                'label'       => t('Title'),
+                'description' => t("Question's title."),
+                'weight'      => -10,
+            ),
+            'question_handler' => array(
+                'label'       => t("Handler fields"),
+                'description' => t("Custom fields defined by question handler."),
+                'weight'      => -5,
+            ),
+        ),
+        'form'    => array(
+            'title'            => array(
+                'label'       => t('Title'),
+                'description' => t("Question's title."),
+                'weight'      => -10,
+            ),
+            'question_handler' => array(
+                'label'       => t("Handler fields"),
+                'description' => t("Custom fields defined by question handler."),
+                'weight'      => -5,
+            ),
+            'feedback'         => array(
+                'label'       => t('Question feedback'),
+                'description' => '',
+                'weight'      => -1,
+            ),
+        ),
+    );
+
+    if (module_exists('locale')) {
+      $extra['quiz_question_entity'][$name]['form']['language'] = array(
+          'label'       => t('Language'),
+          'description' => t('Language selector'),
+          'weight'      => -20,
+      );
+    }
+  }
+
+  return $extra;
+}
+
+/**
+ * @TODO: Create new permission 'manage quiz question types'
+ * @return boolean
+ */
+function quizz_question_type_access() {
+  return TRUE;
+}
+
+/**
+ * @TODO: Action on own
+ *
+ * Access callback for question entity.
+ *
+ * @param string $op
+ * @param Question|null $question
+ * @param stdClass $account
+ * @return bool
+ */
+function quizz_question_access_callback($op, $question = NULL, $account = NULL, $entity_type = '') {
+  switch ($op) {
+    case 'update':
+      if (user_access('edit any question content', $account)) {
+        return TRUE;
+      }
+
+      if ($question) {
+        return user_access('edit any ' . $question->type . ' question', $account);
+      }
+
+      return FALSE;
+
+    case 'view':
+      return user_access('view quiz question outside of a quiz', $account) || user_access('view any questions', $account);
+
+    case 'delete':
+      if (user_access('delete any question content', $account)) {
+        return TRUE;
+      }
+
+      if ($question) {
+        return user_access('delete any ' . $question->type . ' question', $account);
+      }
+
+      return FALSE;
+  }
+
+  return TRUE;
+}
