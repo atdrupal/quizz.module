@@ -38,17 +38,6 @@ function quiz_question_node_access_records($node) {
 }
 
 /**
- * Implements hook_node_grants().
- */
-function quiz_question_node_grants($account, $op) {
-  $grants = array();
-  if (($op === 'view') && user_access('view quiz question outside of a quiz', $account)) {
-    $grants['quiz_question'][] = 1;
-  }
-  return $grants;
-}
-
-/**
  * Implements hook_view().
  */
 function quiz_question_view($node, $view_mode) {
