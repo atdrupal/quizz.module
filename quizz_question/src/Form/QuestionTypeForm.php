@@ -24,7 +24,7 @@ class QuestionTypeForm {
       $handler_form = $fn($question_type);
     }
 
-    if ($handler_form) {
+    if (!empty($handler_form)) {
       if (!empty($handler_form['#validate'])) {
         foreach ($handler_form['#validate'] as $validator) {
           $form['#validate'][] = $validator;
@@ -145,7 +145,7 @@ class QuestionTypeForm {
     }
 
     $question_type->save();
-    $form_state['redirect'] = 'admin/structure/quizz-questions';
+    $form_state['redirect'] = 'admin/quizz/question-types';
   }
 
 }

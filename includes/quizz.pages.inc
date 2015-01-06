@@ -58,7 +58,7 @@ function quiz_type_form($form, &$form_state, $quiz_type, $op = 'edit') {
 }
 
 function quiz_type_form_submit_delete($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/quiz/manage/' . $form_state['quiz_type']->type . '/delete';
+  $form_state['redirect'] = 'admin/quizz/types/manage/' . $form_state['quiz_type']->type . '/delete';
 }
 
 function quiz_type_form_submit($form, &$form_state) {

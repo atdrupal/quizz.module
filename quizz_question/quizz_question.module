@@ -2,14 +2,12 @@
 
 use Drupal\quizz\Entity\Result;
 use Drupal\quizz_question\Entity\Question;
-use Drupal\quizz_question\Entity\QuestionType;
 
 /**
  * Quiz Question module.
  * This module provides the basic facilities for adding quiz question types to a quiz.
  */
 require_once dirname(__FILE__) . '/quizz_question.hooks.inc';
-require_once dirname(__FILE__) . '/quizz_question.todo.php';
 
 /**
  * Get controller for question entity.
@@ -39,6 +37,21 @@ function quizz_question_get_types() {
 function quizz_question_type_load($name) {
   $types = entity_load_multiple_by_name('quiz_question_type', array($name));
   return isset($types[$name]) ? $types[$name] : NULL;
+}
+
+/**
+ * Load question entity.
+ *
+ * @param int $id
+ * @param int $vid
+ * @param bool $reset
+ * @return \Drupal\quizz_question\Entity\Question
+ */
+function quizz_question_load($id = NULL, $vid = NULL, $reset = FALSE) {
+  $conditions = NULL === $vid ? array('qid' => $id) : array('vid' => $vid);
+  if ($results = entity_load('quiz_question_entity', FALSE, $conditions, $reset)) {
+    return reset($results);
+  }
 }
 
 /**
@@ -99,22 +112,6 @@ function quizz_question_access_to_score($question_vid, $result_id) {
       }
     }
   }
-}
-
-/**
- * Returns a result report for a question response.
- *
- * The retaurned value is a form array because in some contexts the scores in the form
- * is editable
- *
- * @param Question $question
- * @return array
- */
-function quizz_question_report_form(Result $result, Question $question) {
-  $question->findLegacyMaxScore($result);
-  return $question
-      ->getResponseHandler($result->result_id, isset($question->answers[0]) ? $question->answers[0] : NULL)
-      ->getReportForm();
 }
 
 /**

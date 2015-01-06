@@ -34,25 +34,7 @@ class ScoreIO {
         $question->max_score = $quiz->max_score_for_random;
       }
 
-      // Invoke hook_quiz_question_score().
-      // We don't use module_invoke() because
-      //  (1) we don't necessarily want to wed quiz type to module, and
-      //  (2) this is more efficient (no NULL checks).
-      if (!$module = $question->getModule()) {
-        continue;
-      }
-
-      // Allow for max score to be considered.
-      if (($fn = $module . '_quiz_question_score') && function_exists($fn)) {
-        $scores[] = $fn($question, $result->result_id);
-      }
-      else {
-        drupal_set_message(t('A @quiz question could not be scored: No scoring info is available', array('@quiz' => QUIZZ_NAME)), 'error');
-        $dummy_score = new stdClass();
-        $dummy_score->possible = 0;
-        $dummy_score->attained = 0;
-        $scores[] = $dummy_score;
-      }
+      $scores[] = $question->getResponseHandler($result->result_id)->getQuestionScore($question);
       ++$count;
     }
 

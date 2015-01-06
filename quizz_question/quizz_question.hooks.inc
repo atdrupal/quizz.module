@@ -17,6 +17,12 @@ function quizz_question_help($path, $args) {
 function quizz_question_permission() {
   $perms = array();
 
+  $perms['administer quiz question types'] = array(
+      'title'           => t('Administer quiz question types'),
+      'description'     => t('Have all permissions on all question types.'),
+      'restrict access' => TRUE,
+  );
+
   $perms['administer quiz questions'] = array(
       'title'           => t('Administer quiz questions'),
       'description'     => t('Have all permissions on all questions.'),
@@ -107,35 +113,36 @@ function quizz_question_entity_info() {
       'access callback'  => 'quizz_question_type_access',
       'module'           => 'quizz_question',
       'admin ui'         => array(
-          'path'             => 'admin/structure/quizz-questions',
+          'path'             => 'admin/quizz/question-types',
           'file'             => 'quizz_question.pages.inc',
           'controller class' => 'Drupal\quizz_question\Entity\QuestionTypeUIController',
       ),
   );
 
   $info['quiz_question_entity'] = array(
-      'label'                     => t('Question'),
-      'plural label'              => t('Questions'),
-      'description'               => t('!quiz question entity', array('!quiz' => QUIZZ_NAME)),
-      'entity class'              => 'Drupal\quizz_question\Entity\Question',
-      'controller class'          => 'Drupal\quizz_question\Entity\QuestionController',
-      'metadata controller class' => 'Drupal\quizz_question\Entity\QuestionMetadataController',
-      'views controller class'    => 'Drupal\quizz_question\Entity\QuestionViewsController',
-      'base table'                => 'quiz_question_entity',
-      'revision table'            => 'quiz_question_revision',
-      'fieldable'                 => TRUE,
-      'entity keys'               => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
-      'bundle keys'               => array('bundle' => 'type'),
-      'access callback'           => 'quizz_question_access_callback',
-      'label callback'            => 'entity_class_label',
-      'uri callback'              => 'entity_class_uri',
-      'module'                    => 'quizz_question',
-      'bundles'                   => array(),
-      'view modes'                => array(
+      'label'                         => t('Question'),
+      'plural label'                  => t('Questions'),
+      'description'                   => t('!quiz question entity', array('!quiz' => QUIZZ_NAME)),
+      'entity class'                  => 'Drupal\quizz_question\Entity\Question',
+      'controller class'              => 'Drupal\quizz_question\Entity\QuestionController',
+      'metadata controller class'     => 'Drupal\quizz_question\Entity\QuestionMetadataController',
+      'extra fields controller class' => 'Drupal\quizz_question\Entity\QuestionExtraFieldsController',
+      'views controller class'        => 'Drupal\quizz_question\Entity\QuestionViewsController',
+      'base table'                    => 'quiz_question_entity',
+      'revision table'                => 'quiz_question_revision',
+      'fieldable'                     => TRUE,
+      'entity keys'                   => array('id' => 'qid', 'bundle' => 'type', 'revision' => 'vid', 'label' => 'title'),
+      'bundle keys'                   => array('bundle' => 'type'),
+      'access callback'               => 'quizz_question_access_callback',
+      'label callback'                => 'entity_class_label',
+      'uri callback'                  => 'entity_class_uri',
+      'module'                        => 'quizz_question',
+      'bundles'                       => array(),
+      'view modes'                    => array(
           'teaser' => array('label' => t('Teaser'), 'custom settings' => TRUE),
           'full'   => array('label' => t('Full'), 'custom settings' => TRUE),
       ),
-      'admin ui'                  => array(
+      'admin ui'                      => array(
           'path'             => 'admin/content/quizz-questions',
           'file'             => 'quizz_question.pages.inc',
           'controller class' => 'Drupal\quizz_question\Entity\QuestionUIController',
@@ -148,8 +155,8 @@ function quizz_question_entity_info() {
     $info['quiz_question_entity']['bundles'][$name] = array(
         'label' => $row->label,
         'admin' => array(
-            'path'             => 'admin/structure/quizz-questions/manage/%quizz_question_type',
-            'real path'        => 'admin/structure/quizz-questions/manage/' . $name,
+            'path'             => 'admin/quizz/question-types/manage/%quizz_question_type',
+            'real path'        => 'admin/quizz/question-types/manage/' . $name,
             'bundle argument'  => 4,
             'access arguments' => array('administer quiz'),
         ),
@@ -199,26 +206,6 @@ function quizz_question_get_report($question_id, $question_vid, $result_id) {
   $handler->question->answers[$report['answer_id']] = $report;
   $handler->question->correct = $report['is_correct'];
   return $handler->question;
-}
-
-/**
- * Implements hook_quiz_question_score().
- */
-function quizz_question_quiz_question_score(Question $question, $result_id = NULL) {
-  if (NULL === $result_id) {
-    return $question->max_score;
-  }
-
-  $handler = $question->getResponseHandler($result_id);
-  $score = new stdClass();
-  $score->possible = $question->getHandler()->getMaximumScore();
-  $score->question_qid = $question->qid;
-  $score->question_vid = $question->vid;
-  $score->attained = $score->possible > 0 ? $handler->getScore() : 0;
-  $score->possible = $handler->getQuestionMaxScore();
-  $score->is_evaluated = $handler->isEvaluated();
-
-  return $score;
 }
 
 /**
@@ -273,4 +260,51 @@ function quizz_question_modules_disabled($modules) {
       ->execute()
     ;
   }
+}
+
+/**
+ * Access callback for question type entity.
+ * @return boolean
+ */
+function quizz_question_type_access($op, $question_type = NULL, $account = NULL) {
+  return user_access('administer quiz question types');
+}
+
+/**
+ * Access callback for question entity.
+ *
+ * @param string $op
+ * @param Question|null $question
+ * @param stdClass $account
+ * @return bool
+ */
+function quizz_question_access_callback($op, $question = NULL, $account = NULL) {
+  switch ($op) {
+    case 'update':
+      if (user_access('edit any question content', $account)) {
+        return TRUE;
+      }
+
+      if ($question) {
+        return user_access('edit any ' . $question->type . ' question', $account);
+      }
+
+      return FALSE;
+
+    case 'view':
+      return user_access('view quiz question outside of a quiz', $account) || user_access('view any questions', $account);
+
+    case 'delete':
+      if (user_access('delete any question content', $account)) {
+        return TRUE;
+      }
+
+      if ($question) {
+        return user_access('delete any ' . $question->type . ' question', $account);
+      }
+
+      return FALSE;
+  }
+
+  return TRUE;
 }

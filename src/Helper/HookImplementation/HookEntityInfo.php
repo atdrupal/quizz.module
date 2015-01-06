@@ -37,7 +37,7 @@ class HookEntityInfo {
         'access callback'  => 'quizz_type_access',
         'module'           => 'quizz',
         'admin ui'         => array(
-            'path'             => 'admin/structure/quiz',
+            'path'             => 'admin/quizz/types',
             'file'             => 'includes/quizz.pages.inc',
             'controller class' => 'Drupal\quizz\Entity\QuizTypeUIController',
         ),
@@ -80,8 +80,8 @@ class HookEntityInfo {
         $entity_info['bundles'][$type] = array(
             'label' => $info->label,
             'admin' => array(
-                'path'             => 'admin/structure/quiz/manage/%quizz_type',
-                'real path'        => 'admin/structure/quiz/manage/' . $type,
+                'path'             => 'admin/quizz/types/manage/%quizz_type',
+                'real path'        => 'admin/quizz/types/manage/' . $type,
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz'),
             ),
@@ -143,8 +143,8 @@ class HookEntityInfo {
         $info['bundles'][$name] = array(
             'label' => $question_type->label,
             'admin' => array(
-                'path'             => 'admin/structure/quiz/manage/%quizz_type/result',
-                'real path'        => 'admin/structure/quiz/manage/' . $name . '/result',
+                'path'             => 'admin/quizz/types/manage/%quizz_type/result',
+                'real path'        => 'admin/quizz/types/manage/' . $name . '/result',
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz'),
             ),
@@ -194,8 +194,8 @@ class HookEntityInfo {
         $info['bundles'][$name] = array(
             'label' => $row->label,
             'admin' => array(
-                'path'             => 'admin/structure/quizz-questions/manage/%quizz_question_type/answer',
-                'real path'        => 'admin/structure/quizz-questions/manage/' . $name . '/answer',
+                'path'             => 'admin/quizz/question-types/manage/%quizz_question_type/answer',
+                'real path'        => 'admin/quizz/question-types/manage/' . $name . '/answer',
                 'bundle argument'  => 4,
                 'access arguments' => array('administer quiz questions'),
             ),

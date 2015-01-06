@@ -22,7 +22,7 @@ function quiz_question_type_form_submit($form, &$form_state) {
  * Submit handler for question type form when user click 'delete' button.
  */
 function quiz_question_type_form_submit_delete($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/quizz-questions/manage/' . $form_state['quiz_question_type']->type . '/delete';
+  $form_state['redirect'] = 'admin/quizz/question-types/manage/' . $form_state['quiz_question_type']->type . '/delete';
 }
 
 /**

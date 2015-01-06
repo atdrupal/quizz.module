@@ -101,6 +101,7 @@ class ResultController extends EntityAPIController {
   }
 
   /**
+   * {@inheritdoc}
    * @param Result $result
    */
   public function buildContent($result, $view_mode = 'full', $langcode = NULL, $content = array()) {
