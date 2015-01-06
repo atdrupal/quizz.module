@@ -522,11 +522,6 @@ class FormDefinition extends FormHelper {
         ),
     );
 
-    if ($this->quiz->isAnswered() && (!user_access('manual quiz revisioning') || $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1))) {
-      $this->quiz->revision = 1;
-      $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
-    }
-
     $form['revision_information'] = array(
         '#type'   => 'fieldset',
         '#title'  => t('Revision information'),
@@ -535,10 +530,12 @@ class FormDefinition extends FormHelper {
         '#access' => TRUE,
     );
 
+    $auto_revisioning = !empty($this->quiz->is_new) ? 0 : $this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1);
+
     $form['revision_information']['revision'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Create new revision'),
-        '#default_value' => FALSE,
+        '#default_value' => $auto_revisioning,
         '#state'         => array('checked' => array('textarea[name="log"]' => array('empty' => FALSE))),
     );
 
@@ -546,11 +543,11 @@ class FormDefinition extends FormHelper {
         '#type'          => 'textarea',
         '#title'         => t('Revision log message'),
         '#row'           => 4,
-        '#default_value' => '',
+        '#default_value' => !$auto_revisioning ? '' : t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.'),
         '#description'   => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
 
-    if ($this->quiz->getQuizType()->getConfig('quiz_auto_revisioning', 1) || !user_access('manual quiz revisioning')) {
+    if ($auto_revisioning && !user_access('manual quiz revisioning')) {
       $form['revision_information']['revision']['#type'] = 'value';
       $form['revision_information']['revision']['#value'] = 1;
       $form['revision_information']['log']['#type'] = 'value';
@@ -560,6 +557,11 @@ class FormDefinition extends FormHelper {
         $this->quiz->revision = 1;
         $this->quiz->log = t('The current revision has been answered. We create a new revision so that the reports from the existing answers stays correct.');
       }
+    }
+
+    // Force create revision, even admin, if question is already answered.
+    if (!empty($this->quiz->is_new) && $this->quiz->isAnswered()) {
+      $form['revision_information']['revision']['#disabled'] = TRUE;
     }
 
     // @see QuizController::cloneRelationship()
