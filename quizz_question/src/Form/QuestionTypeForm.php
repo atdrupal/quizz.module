@@ -33,6 +33,14 @@ class QuestionTypeForm {
             '#default_value' => $question_type->getConfig('auto_revisioning', 1),
             '#description'   => t('It is strongly recommended that auto revisioning is always on. It makes sure that when a question or quiz is changed a new revision is created if the current revision has been answered. If this feature is switched off result reports might be broken because a users saved answer might be connected to a wrong version of the quiz and/or question she was answering. All sorts of errors might appear.'),
         ),
+        'autotitle_length' => array(
+            '#type'          => 'textfield',
+            '#title'         => t('Length of automatically set question titles'),
+            '#size'          => 3,
+            '#maxlength'     => 3,
+            '#description'   => t('Integer between 0 and 128. If the question creator doesn\'t set a question title the system will make a title automatically. Here you can decide how long the autotitle can be.'),
+            '#default_value' => $question_type->getConfig('autotitle_length', 50),
+        ),
 //        …
 //        'quiz_index_questions' => array(
 //            '#type'          => 'checkbox',
@@ -67,7 +75,7 @@ class QuestionTypeForm {
         unset($handler_form['#submit']);
       }
     }
-    }
+  }
 
   private function getActions($op, QuestionType $question_type, &$form) {
     $form['actions'] = array('#type' => 'actions');
@@ -152,6 +160,9 @@ class QuestionTypeForm {
   }
 
   public function validate($form, &$form_state) {
+    if (!quizz_valid_integer($form_state['values']['autotitle_length'], 0, 128)) {
+      form_set_error('autotitle_length', t('The autotitle length value must be an integer between 0 and 128.'));
+    }
   }
 
   public function submit($form, &$form_state) {

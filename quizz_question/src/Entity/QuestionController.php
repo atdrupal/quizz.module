@@ -43,7 +43,7 @@ class QuestionController extends EntityAPIController {
       // Notice: String offset cast occurred in _field_invoke_multiple() (line 325 of …/modules/field/field.attach.inc).
       $body = @field_view_field('quiz_question_entity', $question, 'quiz_question_body');
       if (!empty($body[0]['#markup'])) {
-        $max_length = variable_get('quiz_autotitle_length', 50);
+        $max_length = $question->getQuestionType()->getConfig('autotitle_length', 50);
         $question->title = truncate_utf8(strip_tags($body[0]['#markup']), $max_length, TRUE, TRUE);
       }
     }

@@ -91,7 +91,7 @@ class QuestionForm {
           array(
               'type' => 'setting',
               'data' => array(
-                  'quiz_max_length' => variable_get('quiz_autotitle_length', 50)
+                  'quiz_max_length' => $this->question->getQuestionType()->getConfig('autotitle_length', 50)
               ),
           ),
       );

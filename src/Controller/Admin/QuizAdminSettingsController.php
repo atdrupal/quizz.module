@@ -8,50 +8,18 @@ class QuizAdminSettingsController {
    * This builds the main settings form for the quiz module.
    */
   public function getForm($form, &$form_state) {
-    $form['quiz_global_settings'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Global configuration'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-        '#description' => t('Control aspects of the Quiz module\'s display'),
-    );
-
-    $form['quiz_global_settings']['quiz_durod'] = array(
+    $form['quiz_durod'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Delete results when a user is deleted'),
         '#default_value' => variable_get('quiz_durod', 0),
         '#description'   => t('When a user is deleted delete any and all results for that user.'),
     );
 
-    $form['quiz_global_settings']['quiz_index_questions'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Index questions'),
-        '#default_value' => variable_get('quiz_index_questions', 1),
-        '#description'   => t('If you turn this off, questions will not show up in search results.'),
-    );
-
-    $form['quiz_global_settings']['quiz_autotitle_length'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Length of automatically set question titles'),
-        '#size'          => 3,
-        '#maxlength'     => 3,
-        '#description'   => t('Integer between 0 and 128. If the question creator doesn\'t set a question title the system will make a title automatically. Here you can decide how long the autotitle can be.'),
-        '#default_value' => variable_get('quiz_autotitle_length', 50),
-    );
-
     $links = array('!userpoints' => l(t('UserPoints'), 'http://drupal.org/project/userpoints', array(
             'attributes' => array('target' => '_blank'))
     ));
 
-    $form['quiz_addons'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Addons configuration'),
-        '#description' => t('Quiz has built in integration with some other modules. Disabled checkboxes indicates that modules are not enabled.', $links),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-    );
-
-    $form['quiz_addons']['quiz_has_userpoints'] = array(
+    $form['quiz_has_userpoints'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('User Points'),
         '#default_value' => variable_get('quiz_has_userpoints', 0),
@@ -59,15 +27,7 @@ class QuizAdminSettingsController {
         '#disabled'      => !module_exists('userpoints'),
     );
 
-    $form['quiz_look_feel'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Look and feel'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-        '#description' => t('Control aspects of the Quiz module\'s display'),
-    );
-
-    $form['quiz_look_feel']['quiz_name'] = array(
+    $form['quiz_name'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Display name'),
         '#default_value' => QUIZZ_NAME,
@@ -76,17 +36,14 @@ class QuizAdminSettingsController {
     );
 
     $form['quiz_email_settings'] = array(
-        '#type'        => 'fieldset',
+        '#type'        => 'vertical_tabs',
         '#title'       => t('Notifications'),
         '#description' => t('Send results to quiz author/attendee via email. Configure email subject and body.'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
     );
 
     $form['quiz_email_settings']['taker'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Email for Quiz takers'),
-        '#collapsible' => FALSE,
+        '#type'  => 'fieldset',
+        '#title' => t('Email for Quiz takers'),
     );
 
     $form['quiz_email_settings']['taker']['quiz_email_results'] = array(
@@ -148,10 +105,6 @@ class QuizAdminSettingsController {
   public function validate($form, &$form_state) {
     if (!quizz_valid_integer($form_state['values']['quiz_default_close'])) {
       form_set_error('quiz_default_close', t('The default number of days before a quiz is closed must be a number greater than 0.'));
-    }
-
-    if (!quizz_valid_integer($form_state['values']['quiz_autotitle_length'], 0, 128)) {
-      form_set_error('quiz_autotitle_length', t('The autotitle length value must be an integer between 0 and 128.'));
     }
 
     if (!quizz_valid_integer($form_state['values']['quiz_max_result_options'], 0, 100)) {
