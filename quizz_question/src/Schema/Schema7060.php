@@ -27,6 +27,16 @@ class Schema7060 {
             'uid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Author ID of question.'),
         ),
         'primary key' => array('qid'),
+        'indexes'     => array(
+            'i_ids'      => array('qid', 'vid'),
+            'i_vid'      => array('vid'),
+            'i_bundle'   => array('type'),
+            'i_language' => array('language'),
+            'i_created'  => array('created'),
+            'i_changed'  => array('changed'),
+            'i_author'   => array('uid'),
+            'i_status'   => array('status'),
+        ),
     );
     return $schema;
   }
@@ -46,7 +56,11 @@ class Schema7060 {
             'feedback_format' => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
         ),
         'primary key' => array('vid'),
-        'indexes'     => array(),
+        'indexes'     => array(
+            'i_qid'     => array('qid'),
+            'i_author'  => array('revision_uid'),
+            'i_changed' => array('changed'),
+        ),
     );
 
     return $schema;
@@ -71,8 +85,10 @@ class Schema7060 {
         'primary key' => array('id'),
         'unique keys' => array('type' => array('type')),
         'indexes'     => array(
-            'handler'     => array('handler'),
-            'is_disabled' => array('disabled')
+            'i_priority' => array('weight'),
+            'i_type'     => array('type'),
+            'i_handler'  => array('handler'),
+            'i_status'   => array('disabled')
         ),
     );
     return $schema;
