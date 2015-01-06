@@ -8,33 +8,11 @@ class QuizAdminSettingsController {
    * This builds the main settings form for the quiz module.
    */
   public function getForm($form, &$form_state) {
-    $form['quiz_global_settings'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Global configuration'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-        '#description' => t('Control aspects of the Quiz module\'s display'),
-    );
-
-    $form['quiz_global_settings']['quiz_auto_revisioning'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Auto revisioning'),
-        '#default_value' => variable_get('quiz_auto_revisioning', 1),
-        '#description'   => t('It is strongly recommended that auto revisioning is always on. It makes sure that when a question or quiz is changed a new revision is created if the current revision has been answered. If this feature is switched off result reports might be broken because a users saved answer might be connected to a wrong version of the quiz and/or question she was answering. All sorts of errors might appear.'),
-    );
-
-    $form['quiz_global_settings']['quiz_durod'] = array(
+    $form['quiz_durod'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Delete results when a user is deleted'),
         '#default_value' => variable_get('quiz_durod', 0),
         '#description'   => t('When a user is deleted delete any and all results for that user.'),
-    );
-
-    $form['quiz_global_settings']['quiz_index_questions'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Index questions'),
-        '#default_value' => variable_get('quiz_index_questions', 1),
-        '#description'   => t('If you turn this off, questions will not show up in search results.'),
     );
 
     $form['quiz_global_settings']['quiz_autotitle_length'] = array(
@@ -50,15 +28,7 @@ class QuizAdminSettingsController {
             'attributes' => array('target' => '_blank'))
     ));
 
-    $form['quiz_addons'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Addons configuration'),
-        '#description' => t('Quiz has built in integration with some other modules. Disabled checkboxes indicates that modules are not enabled.', $links),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-    );
-
-    $form['quiz_addons']['quiz_has_userpoints'] = array(
+    $form['quiz_has_userpoints'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('User Points'),
         '#default_value' => variable_get('quiz_has_userpoints', 0),
@@ -66,15 +36,7 @@ class QuizAdminSettingsController {
         '#disabled'      => !module_exists('userpoints'),
     );
 
-    $form['quiz_look_feel'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Look and feel'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
-        '#description' => t('Control aspects of the Quiz module\'s display'),
-    );
-
-    $form['quiz_look_feel']['quiz_name'] = array(
+    $form['quiz_name'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Display name'),
         '#default_value' => QUIZZ_NAME,
@@ -83,17 +45,14 @@ class QuizAdminSettingsController {
     );
 
     $form['quiz_email_settings'] = array(
-        '#type'        => 'fieldset',
+        '#type'        => 'vertical_tabs',
         '#title'       => t('Notifications'),
         '#description' => t('Send results to quiz author/attendee via email. Configure email subject and body.'),
-        '#collapsible' => TRUE,
-        '#collapsed'   => TRUE,
     );
 
     $form['quiz_email_settings']['taker'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Email for Quiz takers'),
-        '#collapsible' => FALSE,
     );
 
     $form['quiz_email_settings']['taker']['quiz_email_results'] = array(

@@ -46,16 +46,7 @@ class QuestionForm {
     );
 
     $this->getFormRevision($form);
-
-    $form['actions']['#weight'] = 50;
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question'));
-    if (!empty($this->question->qid)) {
-      $form['actions']['delete'] = array(
-          '#type'   => 'submit',
-          '#value'  => t('Delete'),
-          '#submit' => array('quiz_question_entity_form_submit_delete')
-      );
-    }
+    $this->getActions($form);
 
     $form['question_handler'] = array(
         '#weight' => 0,
@@ -66,6 +57,18 @@ class QuestionForm {
     field_attach_form('quiz_question_entity', $this->question, $form, $form_state);
 
     return $form;
+  }
+
+  private function getActions(&$form) {
+    $form['actions']['#weight'] = 50;
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question'));
+    if (!empty($this->question->qid)) {
+      $form['actions']['delete'] = array(
+          '#type'   => 'submit',
+          '#value'  => t('Delete'),
+          '#submit' => array('quiz_question_entity_form_submit_delete')
+      );
+    }
   }
 
   private function getFormTitle(&$form) {
@@ -88,7 +91,7 @@ class QuestionForm {
           array(
               'type' => 'setting',
               'data' => array(
-                  'quiz_max_length' => variable_get('quiz_autotitle_length', 50)
+                  'quiz_max_length' => $this->question->getQuestionType()->getConfig('autotitle_length', 50)
               ),
           ),
       );
@@ -111,7 +114,7 @@ class QuestionForm {
     $form['revision_information']['revision'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Create new revision'),
-        '#default_value' => FALSE,
+        '#default_value' => $this->question->getQuestionType()->getConfig('auto_revisioning', 1),
         '#state'         => array('checked' => array('textarea[name="log"]' => array('empty' => FALSE))),
     );
 
