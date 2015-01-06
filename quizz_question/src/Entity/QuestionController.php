@@ -6,6 +6,7 @@ use DatabaseTransaction;
 use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Relationship;
 use EntityAPIController;
+use stdClass;
 
 class QuestionController extends EntityAPIController {
 
@@ -53,8 +54,8 @@ class QuestionController extends EntityAPIController {
   /**
    * Force save revision author ID.
    *
-   * @global \stdClass $user
-   * @param \Drupal\quizz_question\Entity\Question $question
+   * @global stdClass $user
+   * @param Question $question
    */
   protected function saveRevision($question) {
     global $user;
@@ -67,6 +68,11 @@ class QuestionController extends EntityAPIController {
   }
 
   public function load($ids = array(), $conditions = array()) {
+    // Do not load question with disabled handlers.
+    if (!isset($conditions['type'])) {
+      $conditions['type'] = array_keys(quizz_question_get_types());
+    }
+
     $questions = parent::load($ids, $conditions);
 
     /* @var $question Question */

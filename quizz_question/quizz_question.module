@@ -26,7 +26,8 @@ function quizz_question_controller() {
  * @return \Drupal\quizz_question\Entity\QuestionType[]
  */
 function quizz_question_get_types() {
-  return entity_load_multiple_by_name('quiz_question_type', FALSE, array('disabled' => 0));
+  $conditions = array('disabled' => 0, 'handler' => array_keys(quizz_question_get_handler_info()));
+  return entity_load_multiple_by_name('quiz_question_type', FALSE, $conditions);
 }
 
 /**
@@ -66,12 +67,17 @@ function quizz_question_get_handler_info($name = NULL, $reset = FALSE) {
   // Question provider must be instance of QuizQuestion class.
   foreach ($info as $handler_name => $handler_info) {
     if (!is_subclass_of($handler_info['question provider'], 'Drupal\quizz_question\QuestionHandler')) {
-      $msg = t("The question-type %name isn't a Drupal\quizz_question\QuestionHandler.", array('%name' => $handler_name));
-      drupal_set_message($msg, 'error', FALSE);
+      $msg = "The question-type %name isn't a Drupal\quizz_question\QuestionHandler.";
+      drupal_set_message(t($msg, array('%name' => $handler_name)), 'error', FALSE);
     }
   }
 
-  return NULL !== $name ? $info[$name] : $info;
+  if ($name && !isset($info[$name])) {
+    $msg = t('Question handler not found: @name', array('@name' => $name));
+    throw new RuntimeException($msg);
+  }
+
+  return $name ? $info[$name] : $info;
 }
 
 /**
