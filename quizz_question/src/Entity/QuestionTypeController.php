@@ -18,7 +18,7 @@ class QuestionTypeController extends EntityAPIControllerExportable {
 
     if (!QuestionController::$disable_invoking) {
       $question_type
-        ->getHandler()
+        ->getHandler(NULL, TRUE)
         ->onNewQuestionTypeCreated($question_type)
       ;
     }

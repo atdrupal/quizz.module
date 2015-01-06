@@ -2,6 +2,7 @@
 
 namespace Drupal\quizz_question\Entity;
 
+use Drupal\quizz_question\QuestionHandlerInterface;
 use Entity;
 
 class QuestionType extends Entity {
@@ -58,8 +59,8 @@ class QuestionType extends Entity {
     return $default;
   }
 
-  public function getHandlerInfo() {
-    return quizz_question_get_handler_info($this->handler);
+  public function getHandlerInfo($refresh = FALSE) {
+    return quizz_question_get_handler_info($this->handler, $refresh);
   }
 
   /**
@@ -73,14 +74,14 @@ class QuestionType extends Entity {
   }
 
   /**
-   * @param \Drupal\quizz_question\Entity\Question $question
-   * @return \Drupal\quizz_question\QuestionHandlerInterface
+   * @param Question $question
+   * @return QuestionHandlerInterface
    */
-  public function getHandler(Question $question = NULL) {
+  public function getHandler(Question $question = NULL, $refresh = FALSE) {
     if (NULL === $question) {
       $question = entity_create('quiz_question_entity', array());
     }
-    $handler_info = $this->getHandlerInfo();
+    $handler_info = $this->getHandlerInfo($refresh);
     return new $handler_info['question provider']($question);
   }
 
