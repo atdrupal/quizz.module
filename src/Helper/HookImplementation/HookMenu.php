@@ -20,6 +20,17 @@ class HookMenu {
     );
 
     if (module_exists('devel')) {
+      $items['quiz-result/%quizz_result/devel'] = array(
+          'title'            => 'Devel',
+          'access arguments' => array('access devel information'),
+          'page callback'    => 'devel_load_object',
+          'page arguments'   => array('quiz_result', 1),
+          'type'             => MENU_LOCAL_ACTION,
+          'file'             => 'devel.pages.inc',
+          'file path'        => drupal_get_path('module', 'devel'),
+          'weight'           => 20,
+      );
+
       $items['admin/config/development/generate/quiz'] = array(
           'title'            => 'Generate quiz',
           'description'      => 'Generate a given number of quizzes',
