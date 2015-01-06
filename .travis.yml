@@ -94,6 +94,7 @@ before_script:
   # ---------------------
   # No cache data!
   # ---------------------
+  - drush pm-updatestatus
   - drush cc all
 
 script:
