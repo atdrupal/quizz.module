@@ -15,15 +15,6 @@ class QuizAdminSettingsController {
         '#description'   => t('When a user is deleted delete any and all results for that user.'),
     );
 
-    $form['quiz_global_settings']['quiz_autotitle_length'] = array(
-        '#type'          => 'textfield',
-        '#title'         => t('Length of automatically set question titles'),
-        '#size'          => 3,
-        '#maxlength'     => 3,
-        '#description'   => t('Integer between 0 and 128. If the question creator doesn\'t set a question title the system will make a title automatically. Here you can decide how long the autotitle can be.'),
-        '#default_value' => variable_get('quiz_autotitle_length', 50),
-    );
-
     $links = array('!userpoints' => l(t('UserPoints'), 'http://drupal.org/project/userpoints', array(
             'attributes' => array('target' => '_blank'))
     ));
@@ -51,8 +42,8 @@ class QuizAdminSettingsController {
     );
 
     $form['quiz_email_settings']['taker'] = array(
-        '#type'        => 'fieldset',
-        '#title'       => t('Email for Quiz takers'),
+        '#type'  => 'fieldset',
+        '#title' => t('Email for Quiz takers'),
     );
 
     $form['quiz_email_settings']['taker']['quiz_email_results'] = array(
@@ -114,10 +105,6 @@ class QuizAdminSettingsController {
   public function validate($form, &$form_state) {
     if (!quizz_valid_integer($form_state['values']['quiz_default_close'])) {
       form_set_error('quiz_default_close', t('The default number of days before a quiz is closed must be a number greater than 0.'));
-    }
-
-    if (!quizz_valid_integer($form_state['values']['quiz_autotitle_length'], 0, 128)) {
-      form_set_error('quiz_autotitle_length', t('The autotitle length value must be an integer between 0 and 128.'));
     }
 
     if (!quizz_valid_integer($form_state['values']['quiz_max_result_options'], 0, 100)) {
