@@ -158,21 +158,14 @@ class QuizUIController extends EntityDefaultUIController {
 
   private function addQuizTakeItems(&$items, $base) {
     $items['quiz/%quizz/take'] = $base + array(
-        'title callback'   => 'entity_class_label',
-        'title arguments'  => array(1),
+        'title'            => 'Take',
+        'file path'        => drupal_get_path('module', 'quizz'),
+        'file'             => 'includes/quizz.pages.inc',
         'page callback'    => 'quizz_take_page',
         'page arguments'   => array(1),
         'access callback'  => 'entity_access',
         'access arguments' => array('view', 'quiz_entity', 1),
-    );
-
-    $items['quiz/%quizz/take/%quizz_question_number'] = $base + array(
-        'access callback'  => 'quizz_access_question',
-        'access arguments' => array(1, 3),
-        'file path'        => drupal_get_path('module', 'quizz'),
-        'file'             => 'includes/quizz.pages.inc',
-        'page callback'    => 'quizz_question_take_page',
-        'page arguments'   => array(1, 3),
+        'type'             => MENU_LOCAL_TASK,
     );
 
     $items['quiz/%quizz/take/%quizz_question_number/feedback'] = array(

@@ -245,13 +245,6 @@ function quizz_quiz_scored($quiz, $score, $result_id) {
 }
 
 /**
- * Workaround for menu_translate bug.
- */
-function quizz_question_number_to_arg() {
-  return 0;
-}
-
-/**
  * Helper function to check if the user has any of a given list of permissions.
  *
  * @param args

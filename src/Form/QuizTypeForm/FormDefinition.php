@@ -177,7 +177,6 @@ class FormDefinition {
    * number of seconds as array keys.
    *
    * @return array
-   *   array of options for when we want to delete partial quiz record values.
    */
   private function removePartialQuizRecordValue() {
     return array(

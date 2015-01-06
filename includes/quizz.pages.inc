@@ -216,7 +216,11 @@ function quizz_revisions_page(QuizEntity $quiz) {
 /**
  * Callback for quiz/%/take
  */
-function quizz_take_page(QuizEntity $quiz) {
+function quizz_take_page(QuizEntity $quiz, $page_number = NULL) {
+  if (NULL !== $page_number && is_numeric($page_number)) {
+    return !quizz_access_question($quiz, $page_number) ? drupal_access_denied() : quizz_take_question_page($quiz, $page_number);
+  }
+
   global $user;
   $obj = new QuizTakeController($quiz, $user);
   return $obj->render();
@@ -230,7 +234,7 @@ function quizz_take_page(QuizEntity $quiz) {
  *   A question number, starting at 1. Pages do not have question numbers. Quiz
  *   directions are considered part of the numbering.
  */
-function quizz_question_take_page(QuizEntity $quiz, $page_number) {
+function quizz_take_question_page(QuizEntity $quiz, $page_number) {
   $result = $layout_item = NULL;
   $quiz_id = $quiz->qid;
 
