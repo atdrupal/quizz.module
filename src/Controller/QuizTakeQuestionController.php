@@ -62,8 +62,10 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
 
     $content['progress']['#weight'] = -50;
 
-    if (function_exists('jquery_countdown_add') && variable_get('quiz_has_timer', 0) && $this->quiz->time_limit) {
-      $this->attachJs($this->result->time_start + $this->quiz->time_limit - REQUEST_TIME);
+    if ($this->quiz->getQuizType()->getConfig('quiz_has_timer', 0)) {
+      if (function_exists('jquery_countdown_add') && $this->quiz->time_limit) {
+        $this->attachJs($this->result->time_start + $this->quiz->time_limit - REQUEST_TIME);
+      }
     }
 
     $question_form = drupal_get_form('quiz_answer_form', $this->quiz, $this->question, $this->page_number, $this->result);

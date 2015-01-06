@@ -46,12 +46,9 @@ class QuizAdminSettingsController {
         '#default_value' => variable_get('quiz_autotitle_length', 50),
     );
 
-    $target = array('attributes' => array('target' => '_blank'));
-
-    $links = array(
-        '!jquery_countdown' => l(t('JQuery Countdown'), 'http://drupal.org/project/jquery_countdown', $target),
-        '!userpoints'       => l(t('UserPoints'), 'http://drupal.org/project/userpoints', $target),
-    );
+    $links = array('!userpoints' => l(t('UserPoints'), 'http://drupal.org/project/userpoints', array(
+            'attributes' => array('target' => '_blank'))
+    ));
 
     $form['quiz_addons'] = array(
         '#type'        => 'fieldset',
@@ -67,14 +64,6 @@ class QuizAdminSettingsController {
         '#default_value' => variable_get('quiz_has_userpoints', 0),
         '#description'   => t('!userpoints is an <strong>optional</strong> module for Quiz. It provides ways for users to gain or lose points for performing certain actions on your site like completing a Quiz.', $links),
         '#disabled'      => !module_exists('userpoints'),
-    );
-
-    $form['quiz_addons']['quiz_has_timer'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Display timer'),
-        '#default_value' => variable_get('quiz_has_timer', 0),
-        '#description'   => t("!jquery_countdown is an <strong>optional</strong> module for Quiz. It is used to display a timer when taking a quiz. Without this timer, the user will not know how much time they have left to complete the Quiz", $links),
-        '#disabled'      => !function_exists('jquery_countdown_add'),
     );
 
     $form['quiz_look_feel'] = array(
