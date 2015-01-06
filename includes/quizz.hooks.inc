@@ -288,7 +288,7 @@ function quizz_access_my_result($result) {
  * Helper function to determine if a user has access to the different results
  * pages.
  *
- * @param \Drupal\quizz\Entity\QuizEntity $quiz
+ * @param QuizEntity $quiz
  * @param int $result_id
  * @return boolean
  */
@@ -359,7 +359,7 @@ function quizz_entity_access_callback($op, $quiz = NULL, $account = NULL) {
 /**
  * Validate that a node is of type quiz, and that the user has access to it.
  *
- * @param \Drupal\quizz\Entity\QuizEntity $quiz
+ * @param QuizEntity $quiz
  * @param string $op
  * @return bool
  */
@@ -386,4 +386,14 @@ function quizz_question_feedback_access(QuizEntity $quiz, $page_number) {
   $question_vid = $result->layout[$page_number]['vid'];
 
   return (bool) quizz_answer_controller()->loadByResultAndQuestion($result_id, $question_vid);
+}
+
+/**
+ * @param QuizEntity $quiz
+ */
+function quizz_revision_tab_access(QuizEntity $quiz) {
+  if ($quiz->qid == $quiz->vid) {
+    return FALSE;
+  }
+  return entity_access('update', 'quiz_entity', $quiz);
 }
