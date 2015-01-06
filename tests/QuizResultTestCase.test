@@ -7,9 +7,9 @@ class QuizResultTestCase extends QuizTestCase {
 
   public static function getInfo() {
     return array(
-        'name'        => t('Quiz results'),
-        'description' => t('Test cases for Quiz results.'),
-        'group'       => t('Quiz'),
+        'name'        => 'Quiz results',
+        'description' => 'Test cases for Quiz results.',
+        'group'       => 'Quiz result',
     );
   }
 

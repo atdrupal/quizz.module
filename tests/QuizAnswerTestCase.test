@@ -9,7 +9,7 @@ class QuizAnswerTestCase extends QuizTestCase {
     return array(
         'name'        => 'Quiz answer',
         'description' => 'Test cases for Quiz answer',
-        'group'       => 'Quiz',
+        'group'       => 'Quiz result',
     );
   }
 

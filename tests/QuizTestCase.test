@@ -14,11 +14,13 @@ abstract class QuizTestCase extends DrupalWebTestCase {
   protected $extraUserPermissions = array();
   protected $questionHandler;
   protected $questionHandlers = array();
+  protected $adminPermissions = array();
+  protected $userPermissions = array();
 
-  /** @var \stdClass Normal user account. */
+  /** @var stdClass Normal user account. */
   protected $user;
 
-  /** @var \stdClass Admin account. */
+  /** @var stdClass Admin account. */
   protected $admin;
 
   /**
@@ -29,62 +31,69 @@ abstract class QuizTestCase extends DrupalWebTestCase {
    * @param string[] $user_permissions
    */
   public function setUp($modules = array(), $admin_permissions = array(), $user_permissions = array()) {
-    $this->assertTrue(TRUE, 'PHP Version: ' . phpversion());
-
-    $modules[] = 'quizz';
-    $modules[] = 'quizz_question';
-    foreach ($this->extraModules as $module) {
-      if (!in_array($module, $modules)) {
-        $modules[] = $module;
-      }
-    }
-    parent::setUp($modules);
-
+    parent::setUp(array_merge($modules, array('quizz', 'quizz_question'), $this->extraModules));
     $this->setUpFilters();
+    $this->setupHandlers();
+    $this->adminPermissions = array_merge($this->adminPermissions, $admin_permissions);
+    $this->userPermissions = array_merge($this->userPermissions, $user_permissions);
+    $this->setupAccounts();
+  }
 
-    $admin_permissions[] = 'administer quiz configuration';
-    $admin_permissions[] = 'administer quiz question types';
-    $admin_permissions[] = 'administer quiz questions';
-    $admin_permissions[] = 'create quiz content';
-    $admin_permissions[] = 'edit any quiz content';
-    $admin_permissions[] = 'edit question titles';
-    $admin_permissions[] = 'access quiz';
-    $admin_permissions[] = 'view any questions';
-    foreach ($this->extraAdminPermissions as $perm) {
-      if (!in_array($perm, $admin_permissions)) {
-        $admin_permissions[] = $perm;
-      }
-    }
-
-    $user_permissions[] = 'access quiz';
-    foreach ($this->extraUserPermissions as $perm) {
-      if (!in_array($perm, $user_permissions)) {
-        $user_permissions[] = $perm;
-      }
-    }
-
+  private function setupHandlers() {
     // Test case needs create question handler
     if (!empty($this->questionHandler) && $this->questionHandler) {
       $this->questionHandlers[] = $this->questionHandler;
     }
 
     if (!empty($this->questionHandlers)) {
-      foreach ($this->questionHandlers as $handler_name) {
-        $admin_permissions[] = "create default_{$handler_name} question";
-        $admin_permissions[] = "edit any default_{$handler_name} question";
-      }
-
       $handler_info = quizz_question_get_handler_info();
       $question_types = quizz_question_get_types();
-
       foreach ($this->questionHandlers as $handler_name) {
         $this->assertTrue(isset($handler_info[$handler_name]), "Found {$handler_name} question handler info.");
         $this->assertTrue(isset($question_types['default_' . $handler_name]), "Default question type for {$handler_name} is created.");
       }
     }
+  }
 
-    $this->admin = $this->drupalCreateUser(array_unique($admin_permissions));
-    $this->user = $this->drupalCreateUser(array_unique($user_permissions));
+  private function setupAccounts() {
+    $this->adminPermissions[] = 'administer quiz configuration';
+    $this->adminPermissions[] = 'administer quiz question types';
+    $this->adminPermissions[] = 'administer quiz questions';
+    $this->adminPermissions[] = 'create quiz content';
+    $this->adminPermissions[] = 'edit any quiz content';
+    $this->adminPermissions[] = 'edit question titles';
+    $this->adminPermissions[] = 'access quiz';
+    $this->adminPermissions[] = 'view any questions';
+    foreach ($this->extraAdminPermissions as $perm) {
+      if (!in_array($perm, $this->adminPermissions)) {
+        $this->adminPermissions[] = $perm;
+      }
+    }
+
+    if (!empty($this->questionHandlers)) {
+      foreach ($this->questionHandlers as $name) {
+        $this->adminPermissions[] = "create default_{$name} question";
+        $this->adminPermissions[] = "edit any default_{$name} question";
+      }
+    }
+
+    $this->userPermissions[] = 'access quiz';
+    foreach ($this->extraUserPermissions as $perm) {
+      if (!in_array($perm, $this->userPermissions)) {
+        $this->userPermissions[] = $perm;
+      }
+    }
+
+    $this->admin = $this->createAdminAccount();
+    $this->user = $this->createNormalAccount();
+  }
+
+  protected function createAdminAccount() {
+    return $this->drupalCreateUser(array_unique($this->adminPermissions));
+  }
+
+  protected function createNormalAccount() {
+    return $this->drupalCreateUser(array_unique($this->userPermissions));
   }
 
   /**
