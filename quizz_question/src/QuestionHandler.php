@@ -122,11 +122,7 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     if (isset($this->properties)) {
       return $this->properties;
     }
-
-    $properties['is_quiz_question'] = TRUE;
-    $this->properties = $properties;
-
-    return $properties;
+    return $this->properties = array();
   }
 
   /**

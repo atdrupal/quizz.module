@@ -16,15 +16,10 @@ class QuestionForm {
   public function getForm(array &$form_state = NULL, QuizEntity $quiz = NULL) {
     global $language;
 
-    $form = array(
-        // mark this form to be processed by quiz_form_alter. quiz_form_alter will among other things
-        // hide the revion fieldset if the user don't have permission to controll the revisioning manually.
-        '#quiz_check_revision_access' => TRUE,
-        '#quiz'                       => $quiz,
-        // Identify this node as a quiz question type so that it can be recognized
-        // by other modules effectively.
-        'is_quiz_question'            => array('#type' => 'value', '#value' => TRUE),
-    );
+    // mark this form to be processed by quiz_form_alter. quiz_form_alter will
+    // among other things hide the revion fieldset if the user don't have
+    // permission to controll the revisioning manually.
+    $form = array('#quiz' => $quiz, '#quiz_check_revision_access' => TRUE);
 
     if (module_exists('locale') && $this->question->getQuestionType()->data['multilingual']) {
       $language_options = array();
