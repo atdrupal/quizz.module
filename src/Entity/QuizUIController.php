@@ -77,7 +77,7 @@ class QuizUIController extends EntityDefaultUIController {
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_entity', 1),
         'page callback'    => 'drupal_get_form',
-        'page arguments'   => array('quizz_question_admin_page', 1),
+        'page arguments'   => array('quizz_admin_question_page', 1),
         'weight'           => 5,
     );
 

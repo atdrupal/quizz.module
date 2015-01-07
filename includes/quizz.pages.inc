@@ -106,7 +106,10 @@ function quiz_entity_form_submit($form, &$form_state) {
   return $obj->submit($form, $form_state);
 }
 
-function quizz_question_admin_page($form, $form_state, QuizEntity $quiz) {
+/**
+ * Page callback for /quiz/%quizz/questions
+ */
+function quizz_admin_question_page($form, $form_state, QuizEntity $quiz) {
   // Vertical tabs does not play well without form.
   $form['hack_prefix'] = array('#weight' => -1000, '#markup' => '</div></form>');
   $form['hack_suffix'] = array('#weight' => 1000, '#markup' => '<form><div>');
