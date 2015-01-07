@@ -26,7 +26,7 @@ class QuizEntity extends Entity {
    * @see \Drupal\quizz\Entity\QuizEntity\DefaultPropertiesIO.
    * @var int
    */
-  public $status;
+  public $status = TRUE;
 
   /** @var string */
   public $language = LANGUAGE_NONE;
@@ -85,14 +85,14 @@ class QuizEntity extends Entity {
   }
 
   /**
-   * @return \Drupal\quizz\Entity\QuizController
+   * @return QuizController
    */
   public function getController() {
     return quizz_entity_controller();
   }
 
   /**
-   * @return \Drupal\quizz\Entity\QuizType
+   * @return QuizType
    */
   public function getQuizType() {
     return quizz_type_load($this->type);

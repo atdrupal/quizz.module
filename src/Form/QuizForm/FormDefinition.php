@@ -56,6 +56,7 @@ class FormDefinition extends FormHelper {
       );
     }
 
+    $form['#attributes']['class'] = array('quiz-entity-form');
     $form['#quiz'] = $this->quiz;
 
     $form['title'] = array(

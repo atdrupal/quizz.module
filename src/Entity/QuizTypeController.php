@@ -35,7 +35,7 @@ class QuizTypeController extends EntityAPIControllerExportable {
           'label'       => t('Body'),
           'widget'      => array(
               'type'     => 'text_textarea_with_summary',
-              'weight'   => -20,
+              'weight'   => 0,
               'settings' => array('rows' => 5, 'summary_rows' => 3),
           ),
           'settings'    => array('display_summary' => TRUE),

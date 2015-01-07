@@ -49,9 +49,8 @@ class QuizExtraFieldsController extends \EntityDefaultExtraFieldsController {
 
   private function getQuizFormExtraFields() {
     $elements = array(
-        'quiz_help' => array('weight' => -25, 'label' => t('Explanation or submission guidelines')),
-        'title'     => array('weight' => -5, 'label' => t('Title')),
-        'title'     => array('weight' => 0, 'label' => t('Title')),
+        'quiz_help' => array('weight' => -50, 'label' => t('Explanation or submission guidelines')),
+        'title'     => array('weight' => -30, 'label' => t('Title')),
         'vtabs'     => array('weight' => 50, 'label' => t('Quiz options')),
         'language'  => array('weight' => -20, 'label' => t('Language')),
     );
