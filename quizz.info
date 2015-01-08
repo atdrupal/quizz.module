@@ -15,7 +15,7 @@ dependencies[] = xautoload
 test_dependencies[] = taxonomy
 test_dependencies[] = views
 
-stylesheets[all][] = misc/quiz.css
+stylesheets[all][] = misc/quizz.css
 
 files[] = includes/views/handlers/quiz_views_handler_argument_quiz_qid.inc
 files[] = includes/views/handlers/quiz_views_handler_argument_user_uid_nullable.inc
