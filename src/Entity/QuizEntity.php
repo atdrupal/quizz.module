@@ -46,6 +46,9 @@ class QuizEntity extends Entity {
   /** @var integer The Unix timestamp when the quiz was most recently saved. */
   public $changed;
 
+  /** @var int */
+  public $pass_rate;
+
   /** @var bool */
   public $allow_jumping;
 
@@ -185,10 +188,8 @@ class QuizEntity extends Entity {
    */
   public function isAvailable($account) {
     if (!$account->uid && $this->takes > 0) {
-      return t('This @quiz only allows %num_attempts attempts. Anonymous users can only access quizzes that allows an unlimited number of attempts.', array(
-          '%num_attempts' => $this->takes,
-          '@quiz'         => QUIZZ_NAME
-      ));
+      $msg = 'This @quiz only allows %num_attempts attempts. Anonymous users can only access quizzes that allows an unlimited number of attempts.';
+      return t($msg, array('@quiz' => QUIZZ_NAME, '%num_attempts' => $this->takes));
     }
 
     if (entity_access('update', 'quiz_entity', $this) || $this->quiz_always) {
@@ -201,7 +202,7 @@ class QuizEntity extends Entity {
       return t('This @quiz is closed.', array('@quiz' => QUIZZ_NAME));
     }
 
-    return TRUE;
+    return entity_access('view', 'quiz_entity', $this, $account);
   }
 
   /**
