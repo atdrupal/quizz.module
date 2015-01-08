@@ -212,6 +212,14 @@ class QuizEntity extends Entity {
   }
 
   /**
+   * @param \stdClass $account
+   * @return NULL|\Drupal\quizz\Entity\Result
+   */
+  public function findBestResult($account) {
+    $this->getController()->findBestResult($this->qid, $account);
+  }
+
+  /**
    * Finds out if a quiz has been answered or not.
    *
    * @return bool

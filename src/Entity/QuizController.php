@@ -269,4 +269,18 @@ class QuizController extends EntityAPIController {
         ->fetchColumn();
   }
 
+  /**
+   * @param int $quiz_id
+   * @param \stdClass $account
+   * @return NULL|\Drupal\quizz\Entity\Result
+   */
+  public function findBestResult($quiz_id, $account) {
+    $sql = 'SELECT result_id FROM {quiz_results}';
+    $sql .= ' WHERE quiz_qid = :qid AND uid = :uid AND archived = 0';
+    $sql .= ' ORDER BY score DESC LIMIT 1';
+    if ($result_id = db_query($sql, array(':qid' => $quiz_id, ':uid' => $account->uid))->fetchColumn()) {
+      return quizz_result_load($result_id);
+    }
+  }
+
 }
