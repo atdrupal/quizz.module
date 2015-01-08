@@ -10,37 +10,6 @@ class HookMenu {
     $items += $this->getQuizAdminMenuItems();
     $items += $this->getQuizUserMenuItems();
 
-    $items['quiz-result/%quizz_result'] = array(
-        'title'            => 'User results',
-        'access callback'  => 'quizz_access_my_result',
-        'access arguments' => array(1),
-        'page callback'    => 'quizz_result_page',
-        'page arguments'   => array(1),
-        'file'             => 'includes/quizz.pages.inc',
-    );
-
-    if (module_exists('devel')) {
-      $items['quiz-result/%quizz_result/devel'] = array(
-          'title'            => 'Devel',
-          'access arguments' => array('access devel information'),
-          'page callback'    => 'devel_load_object',
-          'page arguments'   => array('quiz_result', 1),
-          'type'             => MENU_LOCAL_ACTION,
-          'file'             => 'devel.pages.inc',
-          'file path'        => drupal_get_path('module', 'devel'),
-          'weight'           => 20,
-      );
-
-      $items['admin/config/development/generate/quiz'] = array(
-          'title'            => 'Generate quiz',
-          'description'      => 'Generate a given number of quizzes',
-          'access arguments' => array('create quiz content'),
-          'page callback'    => 'drupal_get_form',
-          'page arguments'   => array('quizz_generate_form'),
-          'file'             => 'includes/quizz.devel.inc',
-      );
-    }
-
     return $items;
   }
 

@@ -366,7 +366,7 @@ function quizz_results_page(QuizEntity $quiz) {
 }
 
 /**
- * Page callback for /quiz/%/user-results
+ * Page callback for /quiz/%/my-results
  */
 function quiz_results_user_page(QuizEntity $quiz) {
   global $user;

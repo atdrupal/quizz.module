@@ -19,6 +19,7 @@ class QuizUIController extends EntityDefaultUIController {
     $this->addQuizCRUDItems($items, $base);
     $this->addQuizTabItems($items, $base);
     $this->addQuizTakeItems($items, $base);
+    $this->addQuizResultsItems($items, $base);
 
     return $items;
   }
@@ -177,6 +178,38 @@ class QuizUIController extends EntityDefaultUIController {
         'access callback'  => 'quizz_question_feedback_access',
         'access arguments' => array(1, 3),
     );
+  }
+
+  private function addQuizResultsItems(&$items, $base) {
+    $items['quiz-result/%quizz_result'] = $base + array(
+        'title'            => 'User results',
+        'access callback'  => 'quizz_access_my_result',
+        'access arguments' => array(1),
+        'page callback'    => 'quizz_result_page',
+        'page arguments'   => array(1),
+    );
+
+    if (module_exists('devel')) {
+      $items['quiz-result/%quizz_result/devel'] = array(
+          'title'            => 'Devel',
+          'access arguments' => array('access devel information'),
+          'file'             => 'devel.pages.inc',
+          'file path'        => drupal_get_path('module', 'devel'),
+          'page callback'    => 'devel_load_object',
+          'page arguments'   => array('quiz_result', 1),
+          'type'             => MENU_LOCAL_ACTION,
+          'weight'           => 20,
+      );
+
+      $items['admin/config/development/generate/quiz'] = $base + array(
+          'title'            => 'Generate quiz',
+          'description'      => 'Generate a given number of quizzes',
+          'access arguments' => array('create quiz content'),
+          'page callback'    => 'drupal_get_form',
+          'page arguments'   => array('quizz_generate_form'),
+          'file'             => 'includes/quizz.devel.inc',
+      );
+    }
   }
 
 }
