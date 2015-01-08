@@ -13,63 +13,26 @@
  * automatically generated Entity API views definitions.
  */
 function quizz_views_handlers() {
+  $handlers = array();
+  $handlers['quiz_views_handler_field_takes']['parent'] = 'views_handler_field';
+  $handlers['quiz_views_handler_field_quiz_link_take']['parent'] = 'views_handler_field_node_link';
+  $handlers['quiz_views_handler_field_time']['parent'] = 'views_handler_field';
+  $handlers['quiz_views_handler_field_question_status']['parent'] = 'views_handler_field';
+  $handlers['quiz_views_handler_field_user_quiz_state']['parent'] = 'views_handler_field';
+  $handlers['quiz_views_handler_field_score_aggregate']['parent'] = 'views_handler_field_numeric';
+  $handlers['quiz_views_handler_field_number_questions']['parent'] = 'views_handler_field';
+  $handlers['quiz_views_handler_filter_question_status']['parent'] = 'views_handler_filter_in_operator';
+  $handlers['quiz_views_handler_filter_quiz_qid']['parent'] = 'views_handler_filter';
+  $handlers['quiz_views_handler_filter_user_quiz_state']['parent'] = 'views_handler_filter';
+  $handlers['quiz_views_handler_filter_user_nullable']['parent'] = 'views_handler_filter';
+  $handlers['quiz_views_handler_relationship_vid_from_qid']['parent'] = 'views_handler_relationship';
+  $handlers['quiz_views_handler_argument_quiz_qid']['parent'] = 'views_handler_argument_numeric';
+  $handlers['quiz_views_handler_argument_user_uid_nullable']['parent'] = 'views_handler_argument_user_uid';
+  $handlers['quiz_views_handler_filter_quiz_question_type']['parent'] = 'views_handler_filter_node_type';
+  $handlers['quiz_views_handler_filter_quiz_question']['parent'] = 'views_handler_filter_boolean_operator';
   return array(
       'info'     => array('path' => dirname(__FILE__) . '/handlers'),
-      'handlers' => array(
-          // Fields
-          'quiz_views_handler_field_takes'                => array(
-              'parent' => 'views_handler_field',
-          ),
-          'quiz_views_handler_field_quiz_link_take'       => array(
-              'parent' => 'views_handler_field_node_link',
-          ),
-          'quiz_views_handler_field_time'                 => array(
-              'parent' => 'views_handler_field',
-          ),
-          'quiz_views_handler_field_question_status'      => array(
-              'parent' => 'views_handler_field',
-          ),
-          'quiz_views_handler_field_user_quiz_state'      => array(
-              'parent' => 'views_handler_field',
-          ),
-          'quiz_views_handler_field_score_aggregate'      => array(
-              'parent' => 'views_handler_field_numeric',
-          ),
-          'quiz_views_handler_field_number_questions'     => array(
-              'parent' => 'views_handler_field',
-          ),
-          // Filters
-          'quiz_views_handler_filter_question_status'     => array(
-              'parent' => 'views_handler_filter_in_operator',
-          ),
-          'quiz_views_handler_filter_quiz_qid'            => array(
-              'parent' => 'views_handler_filter',
-          ),
-          'quiz_views_handler_filter_user_quiz_state'     => array(
-              'parent' => 'views_handler_filter',
-          ),
-          'quiz_views_handler_filter_user_nullable'       => array(
-              'parent' => 'views_handler_filter',
-          ),
-          // Relationships
-          'quiz_views_handler_relationship_vid_from_qid'  => array(
-              'parent' => 'views_handler_relationship',
-          ),
-          // Arguments
-          'quiz_views_handler_argument_quiz_qid'          => array(
-              'parent' => 'views_handler_argument_numeric',
-          ),
-          'quiz_views_handler_argument_user_uid_nullable' => array(
-              'parent' => 'views_handler_argument_user_uid',
-          ),
-          // Filters
-          'quiz_views_handler_filter_quiz_question_type'  => array(
-              'parent' => 'views_handler_filter_node_type',
-          ),
-          'quiz_views_handler_filter_quiz_question'       => array(
-              'parent' => 'views_handler_filter_boolean_operator',
-          ),
-      ),
+      'handlers' => $handlers,
   );
 }
 

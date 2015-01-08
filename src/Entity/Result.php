@@ -40,7 +40,7 @@ class Result extends Entity {
   /** @var bool */
   public $is_invalid;
 
-  /** @var bool */
+  /** @var bool Indicates whether or not a quiz result is evaluated. */
   public $is_evaluated;
 
   /** @var int */

@@ -195,8 +195,8 @@ class QuizEntity extends Entity {
       return TRUE;
     }
 
-    // Compare current GMT time to the open and close dates (which should still be
-    // in GMT time).
+    // Compare current GMT time to the open and close dates (which should still
+    // be in GMT time).
     if ((REQUEST_TIME >= $this->quiz_close) || (REQUEST_TIME < $this->quiz_open)) {
       return t('This @quiz is closed.', array('@quiz' => QUIZZ_NAME));
     }

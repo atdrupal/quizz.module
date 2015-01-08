@@ -94,7 +94,7 @@ class Quizz {
    * @param int $time_in_sec
    * @return string Time in "min : sec" format.
    */
-  function formatDuration($time_in_sec) {
+  public function formatDuration($time_in_sec) {
     $hours = intval($time_in_sec / 3600);
     $min = intval(($time_in_sec - $hours * 3600) / 60);
     $sec = $time_in_sec % 60;

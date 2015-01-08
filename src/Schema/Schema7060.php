@@ -121,7 +121,7 @@ class Schema7060 {
             'released'     => array('type' => 'int', 'unsigned' => TRUE, 'default' => 0),
             'score'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
             'is_invalid'   => array('type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-            'is_evaluated' => array('type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+            'is_evaluated' => array('type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'description' => 'Indicates whether or not a quiz result is evaluated.'),
             'time_left'    => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0),
         ),
         'primary key' => array('result_id'),
@@ -132,13 +132,11 @@ class Schema7060 {
         ),
     );
 
-    /**
-     * Information about a particular question in a result
-     */
+    // Information about a particular question in a result
     $schema['quiz_answer_entity'] = array(
         'description' => 'Table storing information about the results for the questions',
         'fields'      => array(
-            'id' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The result answer ID',),
+            'id'               => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The result answer ID',),
             'result_id'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
             'question_qid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
             'question_vid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
