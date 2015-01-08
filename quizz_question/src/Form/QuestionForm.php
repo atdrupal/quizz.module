@@ -16,10 +16,7 @@ class QuestionForm {
   public function getForm(array &$form_state = NULL, QuizEntity $quiz = NULL) {
     global $language;
 
-    // mark this form to be processed by quiz_form_alter. quiz_form_alter will
-    // among other things hide the revion fieldset if the user don't have
-    // permission to controll the revisioning manually.
-    $form = array('#quiz' => $quiz, '#quiz_check_revision_access' => TRUE);
+    $form = array('#quiz' => $quiz);
 
     if (module_exists('locale') && $this->question->getQuestionType()->data['multilingual']) {
       $language_options = array();

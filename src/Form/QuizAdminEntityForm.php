@@ -19,7 +19,6 @@ class QuizAdminEntityForm {
     );
 
     // unset values we can't or won't let the user edit default values for
-    unset($form['#quiz_check_revision_access']);
     unset($form['title']);
     unset($form['body_field']);
     unset($form['taking']['aid']);

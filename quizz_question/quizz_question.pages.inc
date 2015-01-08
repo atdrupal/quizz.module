@@ -75,25 +75,20 @@ function quiz_question_entity_form($form, &$form_state, $question, $op = 'edit')
 }
 
 function quiz_question_entity_form_validate($form, &$form_state) {
-  /* @var $question Question */
-  $question = entity_ui_controller('quiz_question_entity')->entityFormSubmitBuildEntity($form, $form_state);
-  $question->getHandler()->validate($form);
+  entity_ui_controller('quiz_question_entity')
+    ->entityFormSubmitBuildEntity($form, $form_state)
+    ->getHandler()
+    ->validate($form)
+  ;
 }
 
 function quiz_question_entity_form_submit($form, &$form_state) {
-  /* @var $question Question */
   $question = entity_ui_controller('quiz_question_entity')->entityFormSubmitBuildEntity($form, $form_state);
-
-  if (!empty($form['#quiz']) && is_null($question->qid)) {
-    $quiz = $form['#quiz'];
-  }
-
-  $question->save();
-  $form_state['redirect'] = 'quiz-question/' . $question->qid;
-
-  if (!empty($quiz)) {
+  $quiz = !empty($form['#quiz']) && is_null($question->qid) ? $form['#quiz'] : NULL;
+  if ($question->save() && $quiz) {
     $question->getHandler()->saveRelationships($quiz->qid, $quiz->vid);
   }
+  $form_state['redirect'] = "quiz-question/{$question->qid}";
 }
 
 function quiz_question_entity_form_submit_delete($form, &$form_state) {
