@@ -67,6 +67,12 @@ class QuizEntity extends Entity {
   /** @var string Revision log */
   public $log;
 
+  /** @var int */
+  public $quiz_open;
+
+  /** @var int */
+  public $quiz_close;
+
   /**
    * Enum: QUIZ_KEEP_BEST, QUIZ_KEEP_LATEST, QUIZ_KEEP_ALL.
    *
