@@ -330,6 +330,7 @@ class FormDefinition extends FormHelper {
         '#attributes'  => array('id' => 'availability-fieldset'),
         '#group'       => 'vtabs',
     );
+
     $form['quiz_availability']['quiz_always'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Always available'),
@@ -345,6 +346,9 @@ class FormDefinition extends FormHelper {
           '#title'         => t('Open date'),
           '#default_value' => date($format, isset($this->quiz->quiz_open) ? $this->quiz->quiz_open : REQUEST_TIME),
           '#description'   => t('The date this @quiz will become available.', array('@quiz' => QUIZZ_NAME)),
+          '#states'        => array(
+              'visible' => array(':input[name=quiz_always]' => array('checked' => FALSE)),
+          ),
       );
 
       $close = REQUEST_TIME + 86400 * $this->quiz->getQuizType()->getConfig('quiz_default_close', 30);
@@ -357,6 +361,7 @@ class FormDefinition extends FormHelper {
           '#title'         => t('Close date'),
           '#default_value' => date($format, $close),
           '#description'   => t('The date this @quiz will become unavailable.', array('@quiz' => QUIZZ_NAME)),
+          '#states'        => $form['quiz_availability']['quiz_open']['#states']
       );
     }
     else {
