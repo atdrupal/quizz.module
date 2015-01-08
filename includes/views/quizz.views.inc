@@ -53,4 +53,9 @@ function quizz_views_data_alter(&$data) {
       'quiz_entity'          => array('left_field' => 'vid', 'field' => 'quiz_vid', 'type' => 'INNER'),
       'quiz_entity_revision' => array('left_field' => 'vid', 'field' => 'quiz_vid', 'type' => 'INNER'),
   );
+
+  if (module_exists('date_views')) {
+    $data['quiz_results']['time_start']['filter']['handler'] = 'date_views_filter_handler_simple';
+    $data['quiz_results']['time_end']['filter']['handler'] = 'date_views_filter_handler_simple';
+  }
 }
