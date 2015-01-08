@@ -4,9 +4,9 @@ Quiz.module [![Build Status](https://travis-ci.org/atquizz/quizz.module.svg?bran
 Overview
 --------
 
-The quiz.module is a framework which allows you to create interactive quizzes 
+The quizz.module provides a framework allows you to create interactive quizzes
 for your visitors. It allows for the creation of questions of varying types, and
-to collect those questions into quizzes. 
+to collect those questions into quizzes.
 
 Features
 --------
@@ -15,10 +15,8 @@ This list isn't complete (not even close)
 
  - Administrative features:
     o Assign feedback to responses to help point out places for further study
-    o Supports multiple answers to quiz questions (on supporting question types)
+    o Supports multiple answers to questions
     o Limit the number of takes users are allowed
-    o Extensibility allows for additional question types to be added
-    o Permissions (create/edit)
     o Randomize questions during the quiz
     o Assign only specific questions from the question bank
 
@@ -26,37 +24,42 @@ This list isn't complete (not even close)
    o Can create/edit own quizzes.
    o Can take a quiz if have 'view quizzes' permissions, and receive score
 
-Installation
+Dependencies
 ------------
 
-*Before* starting, make sure that you have read at least the introduction - so
-you know at least the basic concepts. You can find it here:
+- https://www.drupal.org/project/ctools
+- https://www.drupal.org/project/entity
+- https://www.drupal.org/project/views
+- https://www.drupal.org/project/views_bulk_operations
+- https://www.drupal.org/project/xautoload
 
-                      http://drupal.org/node/298480
+Strongly recommended:
 
- * Quizz depends on ctools, entity, views, views_bulk_operations, xautoload
-  modules, download and install them from
-    http://drupal.org/project/ctools
-    http://drupal.org/project/entity
-    http://drupal.org/project/views
-    http://drupal.org/project/views_bulk_operations
-    http://drupal.org/project/xautoload
- * Copy the whole quizz directory to your modules directory
-   (e.g. DRUPAL_ROOT/sites/all/modules) and activate the quiz and quiz_question
-   modules and at least one question type module (for example, Multichoice).
- * The administrative user interface can be found at admin/config/workflow/rules
+- https://www.drupal.org/project/date (date_popup, date_views)
+- https://www.drupal.org/project/field_group
+- https://www.drupal.org/project/jquery_countdown
+
+Quizz only provides truefalse question by default. You may need download more
+question types from:
+
+- https://www.drupal.org/project/quizz_cloze
+- https://www.drupal.org/project/quizz_ddlines
+- https://www.drupal.org/project/quizz_dragdrop
+- https://www.drupal.org/project/quizz_h5p
+- https://www.drupal.org/project/quizz_matching
+- https://www.drupal.org/project/quizz_memory
+- https://www.drupal.org/project/quizz_multichoice
+- https://www.drupal.org/project/quizz_pool
+- https://www.drupal.org/project/quizz_scale
+- https://www.drupal.org/project/quizz_text (long/short answer)
 
 Configuration
 -------------
 
-1. Create a user role with the appropriate permissions.
-   The role can be created under Administer >> User management >> Roles and the
-  rights can be assigned to the role under Administer >> User management
-  >> Access control. Assigning users to this role allows users other than the
-  administrator to create questions and quizzes.
-
-2. Add the "access quiz" permission to roles under Administer >> User
-  management >> Access control that should be allowed to take the quizzes.
+1. Config for global quizz at /admin/quizz/settings
+2. Quizz provides one quiz type by default. You can add more at /admin/quizz/types
+3. For each quiz type, you can change default options.
+4. Add the "access quiz" permission to roles under Administer >> User management >> Access control
 
 How to create a quiz
 --------------------
@@ -75,4 +78,5 @@ How to create a quiz
 Credits
 -------
 
-- Original Quiz module's contributors.
+- Original quiz.module's contributors.
+- Original forker: /u/thehong. Sponsored by GO1 (http://www.go1.com.au/)
