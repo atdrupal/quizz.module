@@ -193,4 +193,17 @@ abstract class QuizTestCase extends DrupalWebTestCase {
     db_query('DELETE FROM {quiz_results}');
   }
 
+  /**
+   * Get latest quiz ID, useful for test cases.
+   *
+   * @return int|null
+   */
+  protected function getLatestQuizId() {
+    return db_select('quiz_entity', 'quiz')
+        ->fields('quiz', array('qid'))
+        ->orderBy('quiz.qid', 'DESC')
+        ->execute()
+        ->fetchColumn();
+  }
+
 }
