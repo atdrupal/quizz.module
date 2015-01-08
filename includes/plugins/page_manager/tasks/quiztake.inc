@@ -68,7 +68,7 @@ function quizz_quiztake(QuizEntity $quiz) {
   ctools_include('context-task-handler');
   $contexts = ctools_context_handler_get_task_contexts($task, '', array($quiz));
 
-  $output = ctools_context_handler_render($task, '', $contexts, array($quiz->nid));
+  $output = ctools_context_handler_render($task, '', $contexts, array($quiz->qid));
   if ($output !== FALSE) {
     return $output;
   }

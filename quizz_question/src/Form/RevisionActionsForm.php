@@ -39,7 +39,7 @@ class RevisionActionsForm {
       $answered = $quiz->isAnswered();
 
       $form['quizzes']['#tree'] = TRUE;
-      $form['quizzes'][$quiz->nid]['revise'] = array(
+      $form['quizzes'][$quiz->qid]['revise'] = array(
           '#type'          => 'radios',
           '#title'         => check_plain($quiz->title) . ' - ' . ($answered ? t('answered') : t('unanswered')) . ', ' . ($quiz->status ? t('published') : t('unpublished')),
           '#options'       => array(
