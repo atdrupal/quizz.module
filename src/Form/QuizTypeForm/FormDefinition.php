@@ -49,6 +49,7 @@ class FormDefinition {
 
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form);
+    $this->configViews($form);
     $this->configuration($form);
     $this->getActions($op, $form);
 
@@ -74,15 +75,58 @@ class FormDefinition {
     );
   }
 
+  private function configViews(&$form) {
+    $form['vtabs']['views'] = array(
+        '#tree'  => TRUE,
+        '#type'  => 'fieldset',
+        '#title' => t('Views'),
+    );
+
+    $views = views_get_all_views();
+    $bank_options = array();
+    $result_options = array();
+    foreach ($views as $name => $view) {
+      if ('quiz_results' === $view->base_table) {
+        $result_options[$name] = $view->human_name;
+      }
+      elseif ('quiz_question_entity' === $view->base_table) {
+        $bank_options[$name] = $view->human_name;
+      }
+    }
+
+    $form['vtabs']['views']['quiz_views_question_bank'] = array(
+        '#type'          => 'select',
+        '#title'         => t('Question bank'),
+        '#options'       => $bank_options,
+        '#default_value' => $this->quiz_type->getConfig('quiz_views_question_bank', 'quizz_question_bank'),
+        '#description'   => t('View is used as question bank at /quiz/%/questions'),
+    );
+
+    $form['vtabs']['views']['quiz_views_results'] = array(
+        '#type'          => 'select',
+        '#title'         => t('Quiz results'),
+        '#options'       => $result_options,
+        '#default_value' => $this->quiz_type->getConfig('quiz_views_results', 'quizz_results'),
+        '#description'   => t('Views to list all results at /quiz/%/results.'),
+    );
+
+    $form['vtabs']['views']['quiz_views_user_results'] = array(
+        '#type'          => 'select',
+        '#title'         => t('Quiz user results'),
+        '#options'       => $result_options,
+        '#default_value' => $this->quiz_type->getConfig('quiz_views_user_results', 'quizz_user_results'),
+        '#description'   => t('Views to list all results of logged-in user at /quiz/%/my-results.'),
+    );
+  }
+
   private function configuration(&$form) {
     $config = isset($this->quiz_type->data['configuration']) ? $this->quiz_type->data['configuration'] : array();
 
     $form['vtabs']['configuration'] = array(
-        '#tree'        => TRUE,
-        '#type'        => 'fieldset',
-        '#title'       => t('Configuration'),
-        '#description' => t('Control aspects of the Quiz module\'s display'),
-        'quiz_durod'   => array(
+        '#tree'      => TRUE,
+        '#type'      => 'fieldset',
+        '#title'     => t('Configuration'),
+        'quiz_durod' => array(
             '#type'          => 'checkbox',
             '#title'         => t('Delete results when a user is deleted'),
             '#default_value' => $this->quiz_type->getConfig('quiz_durod', 0),

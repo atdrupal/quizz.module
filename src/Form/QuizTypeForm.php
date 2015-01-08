@@ -24,7 +24,7 @@ class QuizTypeForm {
       unset($quiz_type->multilingual);
     }
 
-    $quiz_type->data['configuration'] = $quiz_type->configuration;
+    $quiz_type->data['configuration'] = array_merge($quiz_type->configuration, $quiz_type->views);
     $quiz_type->save();
     $form_state['redirect'] = 'admin/quizz/types';
   }

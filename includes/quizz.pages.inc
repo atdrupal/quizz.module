@@ -152,7 +152,7 @@ function quizz_admin_question_page($form, $form_state, QuizEntity $quiz) {
       'global_questions' => array(
           '#type'  => 'fieldset',
           '#title' => t('Question bank'),
-          '#value' => views_get_view('quizz_question_bank')->preview(),
+          '#value' => views_get_view($quiz->getQuizType()->getConfig('quiz_views_question_bank', 'quizz_question_bank'))->preview(),
       ),
   );
 
@@ -355,13 +355,23 @@ function quizz_question_feedback_page(QuizEntity $quiz, $page_number) {
   return $obj->render($page_number);
 }
 
+/**
+ * Page callback for /quiz/%/results.
+ * @param QuizEntity $quiz
+ * @return type
+ */
 function quizz_results_page(QuizEntity $quiz) {
-  return views_embed_view('quizz_results', 'default', $quiz->qid);
+  $view_name = $quiz->getQuizType()->getConfig('quiz_views_results', 'quizz_results');
+  return views_embed_view($view_name, 'default', $quiz->qid);
 }
 
+/**
+ * Page callback for /quiz/%/user-results
+ */
 function quiz_results_user_page(QuizEntity $quiz) {
   global $user;
-  return views_embed_view('quizz_user_results', 'default', $quiz->qid, $user->uid);
+  $view_name = $quiz->getQuizType()->getConfig('quiz_views_user_results', 'quizz_user_results');
+  return views_embed_view($view_name, 'default', $quiz->qid, $user->uid);
 }
 
 /**

@@ -112,8 +112,8 @@ class HookEntityInfo {
 
   private function getQuizResultTypeInfo() {
     return array(
-        'label'        => t('Result type'),
-        'plural label' => t('Result types'),
+        'label'        => t('Quiz result type'),
+        'plural label' => t('Quiz result types'),
         'description'  => t('Types of result.'),
         'bundle of'    => 'quiz_result',
         'admin ui'     => array(),
