@@ -1,10 +1,18 @@
 <?php
 
 /**
- * @file
- * This file provides metadata to the Views 2 API for views integration.
- *
+ * Implements hook_views_plugins().
  */
+function quizz_views_plugins() {
+  return array(
+      'argument default' => array(
+          'quiz_entity' => array(
+              'title'   => t('Quiz ID from URL'),
+              'handler' => 'Drupal\quizz\Views\Plugin\Argument\DefaultQuiz',
+          ),
+      ),
+  );
+}
 
 /**
  * Implements hook_views_handlers().
