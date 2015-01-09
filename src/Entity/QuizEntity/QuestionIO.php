@@ -26,7 +26,7 @@ class QuestionIO {
    * for a quiz attempt and NOT used to do operations on the questions inside of
    * a quiz.
    *
-   * @return array[] Array of question info.
+   * @return array[] Array of relationships.
    */
   public function getQuestionList() {
     if (QUIZZ_QUESTION_CATEGORIZED_RANDOM == $this->quiz->randomization) {

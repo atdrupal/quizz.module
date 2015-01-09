@@ -149,7 +149,6 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
       $form['question_list']['compulsories'] = array('#tree' => TRUE);
     }
 
-    // @TODO: Replace entire form with usage of question instance
     foreach ($relationships as $relationship) {
       $relationship = is_array($relationship) ? (object) $relationship : $relationship;
       $question = quizz_question_load($relationship->qid);
@@ -164,7 +163,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
           '#type'          => 'textfield',
           '#size'          => 3,
           '#maxlength'     => 4,
-          '#default_value' => isset($question->weight) ? $question->weight : 0,
+          '#default_value' => $relationship->weight,
       );
 
       $form[$fieldset]['qr_pids'][$id] = array(
