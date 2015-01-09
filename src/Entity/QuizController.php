@@ -119,6 +119,8 @@ class QuizController extends EntityAPIController {
       );
     }
 
+    $this->contextFlag("quizz_quiz_page_{$view_mode}", TRUE);
+
     return parent::buildContent($quiz, $view_mode, $langcode, $content);
   }
 
@@ -317,6 +319,12 @@ class QuizController extends EntityAPIController {
           ':qid'         => $quiz_id,
           ':uid'         => $uid
       ))->fetchField();
+  }
+
+  protected function contextFlag($name, $value) {
+    if (module_exists('context')) {
+      context_set('context', $name, $value);
+    }
   }
 
 }
