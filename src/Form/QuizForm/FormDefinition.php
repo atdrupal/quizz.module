@@ -99,7 +99,7 @@ class FormDefinition extends FormHelper {
     $this->defineAvailabilityOptionsFields($form);
     $this->definePassFailOptionsFields($form);
     $this->defineResultFeedbackFields($form);
-    $this->defineRevisionOptionsFields($form);
+    $this->definePublishingOptionsFields($form);
 
     // Attach custom fields by admin
     if ('admin' !== arg(0)) {
@@ -488,7 +488,7 @@ class FormDefinition extends FormHelper {
     }
   }
 
-  private function defineRevisionOptionsFields(&$form) {
+  private function definePublishingOptionsFields(&$form) {
     $form['publishing'] = array(
         '#type'           => 'fieldset',
         '#title'          => t('Publishing'),

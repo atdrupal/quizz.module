@@ -141,12 +141,13 @@ function quizz_admin_question_page($form, $form_state, QuizEntity $quiz) {
     );
   }
 
+  $form['links'] = array('#markup' => theme_ctools_dropdown($links));
+
   $form['vtabs'] = array(
       '#type'            => 'vertical_tabs',
       'question_admin'   => array(
           '#type'  => 'fieldset',
           '#title' => t('Manage questions'),
-          'links'  => array('#markup' => theme_ctools_dropdown($links)),
           'form'   => drupal_get_form('quizz_questions_form', $quiz),
       ),
       'global_questions' => array(
