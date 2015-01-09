@@ -2,12 +2,13 @@
 
 namespace Drupal\quizz\Controller;
 
-use Drupal\quizz\Entity\Result;
 use Drupal\quizz\Controller\QuizTakeBaseController;
+use Drupal\quizz\Entity\QuizEntity;
+use Drupal\quizz\Entity\Result;
 
 class QuizTakeQuestionController extends QuizTakeBaseController {
 
-  /** @var \Drupal\quizz\Entity\QuizEntity */
+  /** @var QuizEntity */
   private $quiz;
   private $question;
   private $page_number;
@@ -17,7 +18,7 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
   private $quiz_uri;
   private $quiz_id;
 
-  public function __construct($quiz, $result, $question_number, $question) {
+  public function __construct(QuizEntity $quiz, Result $result, $question_number, $question) {
     drupal_set_title($quiz->title);
 
     $this->quiz = $quiz;
@@ -34,6 +35,11 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
       drupal_set_message(t('Invalid session.'), 'error');
       unset($_SESSION['quiz'][$this->quiz_id]);
       drupal_goto($this->quiz_uri);
+    }
+
+    if (module_exists('context')) {
+      context_set('context', "quizz_quiz_taking", TRUE);
+      context_set('context', "quizz_quiz_taking_{$quiz->type}", TRUE);
     }
   }
 

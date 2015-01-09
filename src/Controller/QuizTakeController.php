@@ -18,9 +18,14 @@ class QuizTakeController {
   /** @var stdClass */
   private $account;
 
-  public function __construct($quiz, $account) {
+  public function __construct(QuizEntity $quiz, $account) {
     $this->quiz = $quiz;
     $this->account = $account;
+
+    if (module_exists('context')) {
+      context_set('context', "quizz_quiz_taking", TRUE);
+      context_set('context', "quizz_quiz_taking_{$quiz->type}", TRUE);
+    }
   }
 
   private function renderResultForm() {
