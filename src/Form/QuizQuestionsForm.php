@@ -21,7 +21,7 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
   public function formGet(&$form, $form_state, QuizEntity $quiz) {
     // Display questions in this quiz.
     $form['question_list'] = array(
-        '#type'           => 'fieldset',
+        '#type'           => 'container',
         '#title'          => t('Questions in this @quiz', array('@quiz' => QUIZZ_NAME)),
         '#theme'          => 'quizz_question_selection_table',
         '#attributes'     => array('id' => 'mq-fieldset'),
@@ -39,13 +39,11 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
     }
 
     // We add the questions to the form array
-    $types = quizz_question_get_handler_info();
-    $this->addQuestionsToForm($form, $relationships, $quiz, $types);
+    $this->addQuestionsToForm($form, $relationships, $quiz);
 
     // Show the number of questions in the table header.
-    $always_count = isset($form['question_list']['titles']) ? count($form['question_list']['titles']) : 0;
-    $form['question_list']['#title'] .= ' (' . $always_count . ')';
-
+    # $always_count = isset($form['question_list']['titles']) ? count($form['question_list']['titles']) : 0;
+    # $form['question_list']['#title'] .= ' (' . $always_count . ')';
     // Give the user the option to create a new revision of the quiz
     $this->addRevisionCheckbox($form, $quiz);
 
@@ -128,16 +126,11 @@ class QuizQuestionsForm extends QuizQuestionsBaseForm {
   /**
    * Adds the questions in the $questions array to the form
    *
-   * @param $form
-   *   FAPI form(array)
-   * @param $relationships
-   *   The questions to be added to the question list(array)
+   * @param array $form
+   * @param array[] $relationships
    * @param QuizEntity $quiz
-   *   The quiz entity
-   * @param $question_types
-   *   array of all available question types
    */
-  private function addQuestionsToForm(&$form, $relationships, &$quiz, &$question_types) {
+  private function addQuestionsToForm(&$form, $relationships, $quiz) {
     $form['question_list']['weights'] = array('#tree' => TRUE);
     $form['question_list']['qr_ids'] = array('#tree' => TRUE);
     $form['question_list']['qr_pids'] = array('#tree' => TRUE);
