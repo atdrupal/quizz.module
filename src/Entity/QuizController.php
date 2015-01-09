@@ -159,6 +159,7 @@ class QuizController extends EntityAPIController {
 
     if ($return = parent::save($quiz, $transaction)) {
       $this->saveResultOptions($quiz);
+      isset($quiz->path) && $this->savePath($quiz);
       return $return;
     }
   }
@@ -199,6 +200,21 @@ class QuizController extends EntityAPIController {
           $relationship->save();
         }
       }
+    }
+  }
+
+  private function savePath(QuizEntity $quiz) {
+    $path = $quiz->path;
+
+    // Ensure fields for programmatic executions.
+    if ($path['alias'] = trim($path['alias'])) {
+      $langcode = entity_language('quiz_entity', $quiz);
+      $uri = entity_uri('quiz_entity', $quiz);
+
+      $path['language'] = isset($langcode) ? $langcode : LANGUAGE_NONE;
+      $path['source'] = $uri['path'];
+
+      path_save($path);
     }
   }
 
