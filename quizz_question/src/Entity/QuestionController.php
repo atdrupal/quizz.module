@@ -127,7 +127,7 @@ class QuestionController extends EntityAPIController {
    * @param string $content
    */
   public function buildContent($question, $view_mode = 'full', $langcode = NULL, $content = array()) {
-    if (!static::$disable_invoking && ('teaser' !== $view_mode)) {
+    if (!static::$disable_invoking && ('full' === $view_mode)) {
       $content += $question->getHandler()->view();
     }
     return parent::buildContent($question, $view_mode, $langcode, $content);
