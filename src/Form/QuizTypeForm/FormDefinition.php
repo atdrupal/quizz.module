@@ -17,6 +17,8 @@ class FormDefinition {
       $this->quiz_type->type = '';
     }
 
+    $form['#quiz_type'] = $this->quiz_type;
+
     $form['label'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Label'),
