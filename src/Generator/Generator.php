@@ -56,7 +56,7 @@ class Generator {
 
   private function generateQuiz($quiz_type) {
     $quiz = $this->quiz_generator->generate($quiz_type);
-    drupal_set_message('Geneated quiz: ' . l($quiz->title, 'quiz/' . $quiz->qid));
+    drupal_set_message('Geneated quiz: ' . $quiz->link());
 
     $this->generateQuizQuestions($quiz);
     $this->generateQuizResults($quiz);
