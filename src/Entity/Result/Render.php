@@ -16,7 +16,7 @@ class Render extends ResultBaseController {
 
   public function render(array &$output) {
     $bc = drupal_get_breadcrumb();
-    $bc[] = l($this->quiz->title, 'quiz/' . $this->quiz_id);
+    $bc[] = $this->quiz->link();
     drupal_set_breadcrumb($bc);
 
     if (!$this->score['is_evaluated']) {

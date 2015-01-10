@@ -141,6 +141,15 @@ class QuizEntity extends Entity {
     return array('path' => 'quiz/' . $this->identifier());
   }
 
+  public function url() {
+    $uri = $this->defaultUri();
+    return $uri['path'];
+  }
+
+  public function link() {
+    return l($this->title, $this->url());
+  }
+
   /**
    * @return QuestionIO
    */
