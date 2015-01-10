@@ -63,7 +63,7 @@ class QuizController extends EntityAPIController {
 
     $entity_info = entity_get_info('quiz_question_entity');
     foreach ($entity_info['view modes'] as $view_mode => $info) {
-      if ($view_mode === 'default' || $info['custom settings']) {
+      if ($view_mode !== 'full' && $info['custom settings']) {
         $feedback_options["quiz_question_view_{$view_mode}"] = t('Question') . ': ' . $info['label'];
       }
     }

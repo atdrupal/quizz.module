@@ -85,7 +85,13 @@ class DefaultPropertiesIO extends FormHelper {
         'quiz_open'                  => 0,
         'randomization'              => 0,
         'repeat_until_correct'       => 0,
-        'review_options'             => array('question' => array(), 'end' => array('quiz_question_view_full' => 'quiz_question_view_full', 'choice' => 'choice')),
+        'review_options'             => array(
+            'question' => array(),
+            'end'      => array(
+                'choice'                     => 'choice',
+                'quiz_question_view_default' => 'quiz_question_view_default',
+            )
+        ),
         'show_attempt_stats'         => 1,
         'show_passed'                => 1,
         'summary_default'            => '',
