@@ -32,6 +32,19 @@ function quizz_views_api() {
 }
 
 /**
+ * Implements hook_views_default_views().
+ */
+function quizz_views_default_views() {
+  $files = file_scan_directory(drupal_get_path('module', 'quizz') . '/includes/views/defaults', '/\.view\.inc/');
+  $views = array();
+  foreach (array_keys($files) as $path) {
+    $view = require $path;
+    $views[$view->name] = $view;
+  }
+  return $views;
+}
+
+/**
  * Implements hook_ctools_plugin_directory() to let the system know
  * where our task and task_handler plugins are.
  */
