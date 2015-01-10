@@ -84,7 +84,7 @@ function quiz_question_entity_form_validate($form, &$form_state) {
 
 function quiz_question_entity_form_submit($form, &$form_state) {
   $question = entity_ui_controller('quiz_question_entity')->entityFormSubmitBuildEntity($form, $form_state);
-  $quiz = !empty($form['#quiz']) && is_null($question->qid) ? $form['#quiz'] : NULL;
+  $quiz = !empty($form_state['storage']['quiz']) && is_null($question->qid) ? $form_state['storage']['quiz'] : NULL;
   if ($question->save() && $quiz) {
     $question->getHandler()->saveRelationships($quiz->qid, $quiz->vid);
   }

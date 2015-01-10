@@ -16,7 +16,9 @@ class QuestionForm {
   public function getForm(array &$form_state = NULL, QuizEntity $quiz = NULL) {
     global $language;
 
-    $form = array('#quiz' => $quiz);
+    if (!isset($form_state['storage']['quiz']) && NULL !== $quiz) {
+      $form_state['storage']['quiz'] = $quiz;
+    }
 
     if (module_exists('locale') && $this->question->getQuestionType()->data['multilingual']) {
       $language_options = array();
