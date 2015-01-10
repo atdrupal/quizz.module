@@ -19,11 +19,6 @@ class QuestionExtraFieldsController extends EntityDefaultExtraFieldsController {
   private function defineExtraFields($type, &$extra) {
     $extra['quiz_question_entity'][$type] = array(
         'display' => array(
-            'title'            => array(
-                'label'       => t('Title'),
-                'description' => t("Question's title."),
-                'weight'      => -10,
-            ),
             'question_handler' => array(
                 'label'       => t("Handler fields"),
                 'description' => t("Custom fields defined by question handler."),
