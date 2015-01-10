@@ -120,6 +120,20 @@ class QuestionController extends EntityAPIController {
   }
 
   /**
+   * Implements EntityAPIControllerInterface.
+   * @param Question $question
+   * @param string $view_mode
+   * @param string $langcode
+   * @param string $content
+   */
+  public function buildContent($question, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    if (!static::$disable_invoking && ('teaser' !== $view_mode)) {
+      $content += $question->getHandler()->view();
+    }
+    return parent::buildContent($question, $view_mode, $langcode, $content);
+  }
+
+  /**
    * Find relationship object between a quiz and a question.
    * @param QuizEntity $quiz
    * @param Question $question
