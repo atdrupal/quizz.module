@@ -203,7 +203,7 @@ function quizz_categorized_form_submit($form, &$form_state) {
 /**
  * Callback for quiz/%quiz
  */
-function quizz_page(QuizEntity $quiz, $view_mode = 'default', $langcode = NULL) {
+function quizz_page(QuizEntity $quiz, $view_mode = 'full', $langcode = NULL) {
   return entity_view('quiz_entity', array($quiz), $view_mode, $langcode);
 }
 
