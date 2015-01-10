@@ -119,7 +119,7 @@ function quiz_question_revision_actions_form_submit($form, &$form_state) {
  * @param string $langcode
  * @return string|array
  */
-function quiz_question_page(Question $question, $view_mode = 'default', $langcode = NULL) {
+function quiz_question_page(Question $question, $view_mode = 'full', $langcode = NULL) {
   return entity_view('quiz_question_entity', array($question), $view_mode, $langcode, TRUE);
 }
 
