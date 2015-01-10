@@ -146,6 +146,10 @@ class QuizEntity extends Entity {
     return $uri['path'];
   }
 
+  public function link() {
+    return l($this->title, $this->url());
+  }
+
   /**
    * @return QuestionIO
    */
