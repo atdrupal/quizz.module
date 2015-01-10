@@ -64,7 +64,8 @@ class HookEntityInfo {
         'module'                        => 'quizz',
         'bundles'                       => array(),
         'view modes'                    => array(
-            'question' => array('label' => t('Question'), 'custom settings' => TRUE),
+            'teaser' => array('label' => t('Teaser'), 'custom settings' => TRUE),
+            'full'   => array('label' => t('Full'), 'custom settings' => TRUE),
         ),
         'admin ui'                      => array(
             'path'             => 'admin/content/quizz',
