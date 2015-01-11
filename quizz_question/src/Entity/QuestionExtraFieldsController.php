@@ -41,6 +41,10 @@ class QuestionExtraFieldsController extends EntityDefaultExtraFieldsController {
                 'description' => '',
                 'weight'      => -1,
             ),
+            'publishing'       => array(
+                'label'  => t('Publishing options'),
+                'weight' => 99,
+            ),
         ),
     );
 

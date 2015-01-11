@@ -56,7 +56,7 @@ class QuestionForm {
   }
 
   private function getActions(&$form) {
-    $form['actions']['#weight'] = 50;
+    $form['actions']['#weight'] = 100;
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save question'));
     if (!empty($this->question->qid)) {
       $form['actions']['delete'] = array(
