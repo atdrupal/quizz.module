@@ -617,9 +617,9 @@ class FormDefinition extends FormHelper {
             '#maxlength'     => 255,
             '#description'   => t('Optionally specify an alternative URL by which this content can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
         ),
-        'pid'               => array('#type' => 'value', '#value' => ''),
-        'source'            => array('#type' => 'value', '#value' => ''),
-        'language'          => array('#type' => 'value', '#value' => ''),
+        'pid'               => array('#type' => 'value', '#value' => $path['pid']),
+        'source'            => array('#type' => 'value', '#value' => $path['source']),
+        'language'          => array('#type' => 'value', '#value' => $path['language']),
     );
   }
 

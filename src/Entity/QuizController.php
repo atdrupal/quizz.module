@@ -210,6 +210,19 @@ class QuizController extends EntityAPIController {
     }
   }
 
+  /**
+   * Delete path aliases.
+   *
+   * @param int[] $quiz_ids
+   */
+  private function deletePath(array $quiz_ids) {
+    foreach ($quiz_ids as $quiz_id) {
+      if ($path = path_load(array('source' => "quiz/{$quiz_id}"))) {
+        path_delete($path['pid']);
+      }
+    }
+  }
+
   private function savePath(QuizEntity $quiz) {
     $path = $quiz->path;
 
@@ -220,6 +233,11 @@ class QuizController extends EntityAPIController {
 
       $path['language'] = isset($langcode) ? $langcode : LANGUAGE_NONE;
       $path['source'] = $uri['path'];
+
+      // Delete old alias if user erased it.
+      if (!empty($path['pid']) && empty($path['alias'])) {
+        path_delete($path['pid']);
+      }
 
       path_save($path);
     }
@@ -263,6 +281,9 @@ class QuizController extends EntityAPIController {
 
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
     $return = parent::delete($ids, $transaction);
+
+    // Delete path aliases
+    $this->deletePath($ids);
 
     // Delete quiz results
     $query = db_select('quiz_results');
