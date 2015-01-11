@@ -44,13 +44,10 @@ class QuestionForm {
         '#description'   => t('This feedback will show when configured and the user answers a question, regardless of correctness.'),
     );
 
-    $this->getFormRevision($form);
+    $this->getPublishingOptions($form);
     $this->getActions($form);
 
-    $form['question_handler'] = array(
-        '#weight' => 0,
-        $this->question->getHandler()->getCreationForm($form_state)
-    );
+    $form['question_handler'] = array('#weight' => 0, $this->question->getHandler()->getCreationForm($form_state));
 
     // Attach custom fields
     field_attach_form('quiz_question_entity', $this->question, $form, $form_state);

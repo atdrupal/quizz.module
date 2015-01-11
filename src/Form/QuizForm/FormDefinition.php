@@ -526,50 +526,7 @@ class FormDefinition extends FormHelper {
         ),
     );
 
-    if (module_exists('path')) {
-      $path = array();
-
-      if (!empty($this->quiz->qid)) {
-        $uri = entity_uri('quiz_entity', $this->quiz);
-        $conditions = array('source' => $uri['path']);
-        if (($langcode = entity_language('quiz_entity', $this->quiz)) && ($langcode != LANGUAGE_NONE)) {
-          $conditions['language'] = $langcode;
-        }
-
-        if (!$path = path_load($conditions)) {
-          $path = array();
-        }
-      }
-
-      $path += array(
-          'pid'      => NULL,
-          'source'   => !empty($uri['path']) ? $uri['path'] : NULL,
-          'alias'    => '',
-          'language' => isset($langcode) ? $langcode : LANGUAGE_NONE,
-      );
-
-      $form['path'] = array(
-          '#tree'       => TRUE,
-          '#type'       => 'fieldset',
-          '#title'      => t('URL path settings'),
-          '#group'      => 'publishing_tabs',
-          '#attributes' => array('class' => array('path-form')),
-          '#attached'   => array('js' => array(drupal_get_path('module', 'path') . '/path.js')),
-          '#access'           => user_access('create url aliases') || user_access('administer url aliases'),
-          '#weight'           => 30,
-          '#element_validate' => array('path_form_element_validate'),
-          'alias'             => array(
-              '#type'          => 'textfield',
-              '#title'         => t('URL alias'),
-              '#default_value' => $path['alias'],
-              '#maxlength'     => 255,
-              '#description'   => t('Optionally specify an alternative URL by which this content can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
-          ),
-          'pid'               => array('#type' => 'value', '#value' => ''),
-          'source'            => array('#type' => 'value', '#value' => ''),
-          'language'          => array('#type' => 'value', '#value' => ''),
-      );
-    }
+    $this->definePathAliasFields($form);
 
     $form['revision_information'] = array(
         '#type'   => 'fieldset',
@@ -615,6 +572,55 @@ class FormDefinition extends FormHelper {
 
     // @see QuizController::cloneRelationship()
     $form['clone_relationships'] = array('#type' => 'hidden', '#value' => TRUE);
+  }
+
+  private function definePathAliasFields(&$form) {
+    if (!module_exists('path')) {
+      return;
+    }
+
+    $path = array();
+
+    if (!empty($this->quiz->qid)) {
+      $uri = entity_uri('quiz_entity', $this->quiz);
+      $conditions = array('source' => $uri['path']);
+      if (($langcode = entity_language('quiz_entity', $this->quiz)) && ($langcode != LANGUAGE_NONE)) {
+        $conditions['language'] = $langcode;
+      }
+
+      if (!$path = path_load($conditions)) {
+        $path = array();
+      }
+    }
+
+    $path += array(
+        'pid'      => NULL,
+        'source'   => !empty($uri['path']) ? $uri['path'] : NULL,
+        'alias'    => '',
+        'language' => isset($langcode) ? $langcode : LANGUAGE_NONE,
+    );
+
+    $form['path'] = array(
+        '#tree'             => TRUE,
+        '#type'             => 'fieldset',
+        '#title'            => t('URL path settings'),
+        '#group'            => 'publishing_tabs',
+        '#attributes'       => array('class' => array('path-form')),
+        '#attached'         => array('js' => array(drupal_get_path('module', 'path') . '/path.js')),
+        '#access'           => user_access('create url aliases') || user_access('administer url aliases'),
+        '#weight'           => 30,
+        '#element_validate' => array('path_form_element_validate'),
+        'alias'             => array(
+            '#type'          => 'textfield',
+            '#title'         => t('URL alias'),
+            '#default_value' => $path['alias'],
+            '#maxlength'     => 255,
+            '#description'   => t('Optionally specify an alternative URL by which this content can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
+        ),
+        'pid'               => array('#type' => 'value', '#value' => ''),
+        'source'            => array('#type' => 'value', '#value' => ''),
+        'language'          => array('#type' => 'value', '#value' => ''),
+    );
   }
 
 }

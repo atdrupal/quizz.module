@@ -12,8 +12,9 @@ class QuestionTypeForm {
       $question_type->type = '';
     }
 
-    $this->getTitle($form, $question_type);
+    $form['#question_type'] = $question_type;
 
+    $this->getTitle($form, $question_type);
     $form['vtabs'] = array('#type' => 'vertical_tabs', '#weight' => 5);
     $this->basicInformation($form, $question_type);
     $this->getHandlerForm($question_type, $form);
