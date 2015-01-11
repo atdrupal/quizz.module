@@ -106,7 +106,12 @@ class QuizController extends EntityAPIController {
 
     // Render take button
     if ($extra_fields['take']['visible']) {
-      $markup = l(t('Start @quiz', array('@quiz' => QUIZZ_NAME)), 'quiz/' . $quiz->qid . '/take');
+      $markup = l(t('Start @quiz', array('@quiz' => QUIZZ_NAME)), 'quiz/' . $quiz->qid . '/take', array(
+          'attributes' => array(
+              'class' => array('quiz-start-link', 'btn', 'btn-success')
+          ),
+      ));
+
       if (TRUE !== $checking = $quiz->isAvailable($user)) {
         $markup = $checking;
       }
