@@ -66,7 +66,7 @@ class QuestionUIController extends EntityDefaultUIController {
 
     $items['quiz-question/%quizz_question/revisions'] = array(
         'title'            => 'Revisions',
-        'type'             => MENU_LOCAL_ACTION,
+        'type'             => MENU_LOCAL_TASK,
         'access callback'  => 'entity_access',
         'access arguments' => array('update', 'quiz_question_entity', 1),
         'file path'        => drupal_get_path('module', 'quizz_question'),

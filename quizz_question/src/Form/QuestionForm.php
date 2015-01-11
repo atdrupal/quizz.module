@@ -94,27 +94,47 @@ class QuestionForm {
     }
   }
 
-  private function getFormRevision(&$form) {
-    $form['revision_information'] = array(
+  private function getPublishingOptions(&$form) {
+    $form['publishing'] = array(
+        '#type'           => 'fieldset',
+        '#title'          => t('Publishing'),
+        '#collapsible'    => TRUE,
+        '#group'          => 'vtabs',
+        'publishing_tabs' => array('#type' => 'vertical_tabs'),
+        'publishing'      => array(
+            '#type'  => 'fieldset',
+            '#title' => t('Publishing options'),
+            '#group' => 'publishing_tabs',
+            'status' => array(
+                '#type'          => 'checkbox',
+                '#title'         => t('Published'),
+                '#default_value' => isset($this->question->status) ? $this->question->status : TRUE,
+                '#tree'          => TRUE,
+                # '#parents'       => array('configuration', 'status'),
+            ),
+        ),
+    );
+
+    $form['publishing']['revision_information'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Revision information'),
         '#collapsible' => TRUE,
         '#collapsed'   => TRUE,
-        '#group'       => 'vtabs',
+        '#group'       => 'publishing_tabs',
         '#attributes'  => array('class' => array('node-form-revision-information')),
         '#attached'    => array('js' => array(drupal_get_path('module', 'node') . '/node.js')),
         '#weight'      => 20,
         '#access'      => TRUE,
     );
 
-    $form['revision_information']['revision'] = array(
+    $form['publishing']['revision_information']['revision'] = array(
         '#type'          => 'checkbox',
         '#title'         => t('Create new revision'),
         '#default_value' => $this->question->getQuestionType()->getConfig('auto_revisioning', 1),
         '#state'         => array('checked' => array('textarea[name="log"]' => array('empty' => FALSE))),
     );
 
-    $form['revision_information']['log'] = array(
+    $form['publishing']['revision_information']['log'] = array(
         '#type'          => 'textarea',
         '#title'         => t('Revision log message'),
         '#row'           => 4,
