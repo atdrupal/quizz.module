@@ -98,7 +98,7 @@ class QuizController extends EntityAPIController {
       $quiz->number_of_questions = $quiz->number_of_random_questions;
       $quiz->number_of_questions += $this->getStats()->countAlwaysQuestions($quiz->vid);
 
-      $content['quiz_entity'][$quiz->qid]['stats'] = array(
+      $content['stats'] = array(
           '#markup' => theme('quizz_view_stats', array('quiz' => $quiz)),
           '#weight' => $extra_fields['stats']['weight'],
       );
@@ -111,7 +111,7 @@ class QuizController extends EntityAPIController {
         $markup = $checking;
       }
 
-      $content['quiz_entity'][$quiz->qid]['take'] = array(
+      $content['take'] = array(
           '#prefix' => '<div class="quiz-not-available">',
           '#suffix' => '</div>',
           '#weight' => $extra_fields['take']['weight'],
