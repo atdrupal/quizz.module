@@ -63,6 +63,11 @@ function quizz_views_data_alter(&$data) {
   );
 
   if (module_exists('date_views')) {
+    $data['quiz_question']['created']['filter']['handler'] = 'date_views_filter_handler_simple';
+    $data['quiz_question']['changed']['filter']['handler'] = 'date_views_filter_handler_simple';
+    $data['quiz_question_entity']['created']['filter']['handler'] = 'date_views_filter_handler_simple';
+    $data['quiz_question_entity']['changed']['filter']['handler'] = 'date_views_filter_handler_simple';
+    $data['quiz_results']['time_start']['filter']['handler'] = 'date_views_filter_handler_simple';
     $data['quiz_results']['time_start']['filter']['handler'] = 'date_views_filter_handler_simple';
     $data['quiz_results']['time_end']['filter']['handler'] = 'date_views_filter_handler_simple';
   }
