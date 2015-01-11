@@ -51,6 +51,10 @@ class QuestionTypeForm {
 //        ),
     );
 
+    if (!empty($question_type->is_new)) {
+      return;
+    }
+
     // @TODO: Add QuestionHandlerInterface::questionTypeConfigForm($question_type)
     if (($handler = $question_type->getHandler()) && method_exists($handler, 'questionTypeConfigForm')) {
       $handler_form = $handler->questionTypeConfigForm($question_type);
