@@ -165,8 +165,9 @@ class QuestionTypeForm {
   }
 
   public function validate($form, &$form_state) {
-    if (!quizz_valid_integer($form_state['values']['autotitle_length'], 0, 128)) {
-      form_set_error('autotitle_length', t('The autotitle length value must be an integer between 0 and 128.'));
+    if (!quizz_valid_integer($form_state['values']['configuration']['autotitle_length'], 0, 128)) {
+      $msg = t('The autotitle length value must be an integer between 0 and 128.');
+      form_set_error('configuration][autotitle_length', $msg);
     }
   }
 
