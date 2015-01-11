@@ -1,19 +1,11 @@
 (function ($, Drupal) {
-  var maxLength = Drupal.settings.quiz_max_length;
   var body_query = '#edit-body textarea:eq(1), #edit-quiz-question-body-und-0-value';
 
-  function quizStripTags(str) {
-    return str.replace(/<\/?[^>]+>/gi, '');
-  }
-
   function quizUpdateTitle() {
-    var body = $(body_query).val();
-    if (quizStripTags(body).length > maxLength) {
-      $('#edit-title').val(quizStripTags(body).substring(0, maxLength - 3) + "…");
-    }
-    else {
-      $('#edit-title').val(quizStripTags(body).substring(0, maxLength));
-    }
+    var body = $(body_query).val().replace(/<\/?[^>]+>/gi, '');
+    var max_length = parseInt(Drupal.settings.quiz_max_length);
+    var title = body.length <= max_length ? body.substring(0, max_length) : body.substring(0, max_length - 3) + "…";
+    $('#edit-title').val(title);
   }
 
   $(document).ready(function () {
