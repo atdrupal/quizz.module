@@ -99,7 +99,7 @@ class QuestionForm {
         '#type'           => 'fieldset',
         '#title'          => t('Publishing'),
         '#collapsible'    => TRUE,
-        '#group'          => 'vtabs',
+        '#weight'         => 49,
         'publishing_tabs' => array('#type' => 'vertical_tabs'),
         'publishing'      => array(
             '#type'  => 'fieldset',
@@ -110,7 +110,6 @@ class QuestionForm {
                 '#title'         => t('Published'),
                 '#default_value' => isset($this->question->status) ? $this->question->status : TRUE,
                 '#tree'          => TRUE,
-                # '#parents'       => array('configuration', 'status'),
             ),
         ),
     );
