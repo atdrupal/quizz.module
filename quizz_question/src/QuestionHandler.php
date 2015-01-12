@@ -180,7 +180,9 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
     }
 
     $input = $form_state['values']['question'][$this->question->qid]['answer'];
-    if (!$this->question->getResponseHandler($result->result_id, $input)->isCorrect()) {
+    $handler = $this->question->getResponseHandler($result->result_id);
+    $handler->setAnswerInput($input);
+    if (!$handler->isCorrect()) {
       $this->onRepeatUntiCorrect($result, $element);
     }
   }
