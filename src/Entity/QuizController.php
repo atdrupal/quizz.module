@@ -204,6 +204,7 @@ class QuizController extends EntityAPIController {
         $term->vid = $quiz->vid;
         drupal_write_record('quiz_entity_terms', $term);
       }
+      return;
     }
 
     foreach ($revision->getQuestionIO()->getQuestionList() as $relationship) {
