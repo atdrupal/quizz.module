@@ -88,8 +88,8 @@ class DefaultPropertiesIO extends FormHelper {
         'review_options'             => array(
             'question' => array(),
             'end'      => array(
-                'choice'                     => 'choice',
-                'quiz_question_view_default' => 'quiz_question_view_default',
+                'choice'                    => 'choice',
+                'quiz_question_view_teaser' => 'quiz_question_view_teaser',
             )
         ),
         'show_attempt_stats'         => 1,
