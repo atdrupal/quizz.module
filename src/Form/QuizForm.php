@@ -73,6 +73,9 @@ class QuizForm {
       drupal_set_message(t('You just created a new @quiz. Now you have to add questions to it. This page is for adding and managing questions. Here you can create new questions or add some of your already created questions. If you want to change the quiz settings, you can use the "edit" tab.'), array('@quiz' => QUIZZ_NAME));
       $form_state['redirect'] = "quiz/" . $quiz->qid . "/questions";
     }
+    else {
+      $form_state['redirect'] = $quiz->url();
+    }
 
     // If the quiz don't have any questions jump to the manage questions tab.
     $sql = 'SELECT 1 FROM {quiz_relationship} WHERE quiz_vid = :vid LIMIT 1';
