@@ -119,16 +119,25 @@ class QuestionTypeForm {
   }
 
   private function basicInformation(&$form, QuestionType $question_type) {
+    $has_category = !empty($question_type->type) && NULL !== field_info_instance('quiz_question_entity', 'field_question_category', $question_type->type);
+
     $form['vtabs']['basic_information'] = array(
-        '#type'       => 'fieldset',
-        '#title'      => t('Basic informations'),
-        'description' => array(
+        '#type'           => 'fieldset',
+        '#title'          => t('Basic informations'),
+        'create_category' => array(
+            '#type'          => 'checkbox',
+            '#title'         => t('Include question category field'),
+            '#description'   => t('Quiz queries for random categorized questions using this field.'),
+            '#default_value' => $has_category,
+            '#disabled'      => $has_category,
+        ),
+        'description'     => array(
             '#type'          => 'textarea',
             '#title'         => t('Description'),
             '#description'   => t('Describe this question type. The text will be displayed on the Add new question page.'),
             '#default_value' => $question_type->description,
         ),
-        'help'        => array(
+        'help'            => array(
             '#type'          => 'textarea',
             '#title'         => t('Explanation or submission guidelines'),
             '#description'   => t('This text will be displayed at the top of the page when creating or editing question of this type.'),

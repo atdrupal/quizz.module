@@ -6,7 +6,7 @@ class QuestionCategoryFieldInfo {
 
   private $name;
 
-  public function __construct($field_name = 'question_category') {
+  public function __construct($field_name = 'quizz_question_category') {
     $this->name = $field_name;
   }
 

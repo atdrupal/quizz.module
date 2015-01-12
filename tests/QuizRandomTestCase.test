@@ -83,45 +83,32 @@ class QuizRandomTestCase extends QuizTestCase {
   }
 
   private function setupCategorizedRandomQuestions() {
-    $v1 = new stdClass;
-    $v1->name = "Vocab 1";
-    $v1->machine_name = "vocab1";
-    taxonomy_vocabulary_save($v1);
+    $question_type = quizz_question_type_load('default_truefalse');
+    $question_type->create_category = TRUE;
+    $question_type->save();
 
-    // Add a field to quiz result and make it required for starting.
-    field_create_field(array(
-        'field_name' => 'question_category',
-        'type'       => 'taxonomy_term_reference',
-    ));
-
-    field_create_instance(array(
-        'field_name'  => 'question_category',
-        'entity_type' => 'quiz_question_entity',
-        'bundle'      => 'default_truefalse',
-        'label'       => 'Question category',
-        'widget'      => array('active' => 1, 'module' => 'taxonomy', 'settings' => array('size' => 60), 'type' => 'options_select'),
-    ));
+    $vocab = taxonomy_vocabulary_machine_name_load('quiz_question_category');
 
     // Terms.
     $term1 = new stdClass;
-    $term1->vid = $v1->vid;
+    $term1->vid = $vocab->vid;
     $term1->name = 'Vocab 1 Term 1';
     taxonomy_term_save($term1);
 
     $term2 = new stdClass;
-    $term2->vid = $v1->vid;
+    $term2->vid = $vocab->vid;
     $term2->name = 'Vocab 1 Term 2';
     taxonomy_term_save($term2);
 
-    $base1 = array('type' => 'truefalse', 'correct_answer' => 1, 'question_category' => $term1->tid);
-    $base2 = array('type' => 'truefalse', 'correct_answer' => 1, 'question_category' => $term2->tid);
+    $base1 = array('type' => 'truefalse', 'correct_answer' => 1, 'quizz_question_category' => $term1->tid);
+    $base2 = array('type' => 'truefalse', 'correct_answer' => 1, 'quizz_question_category' => $term2->tid);
 
-    $questions[] = $this->drupalCreateQuestion($base1 + array('title' => 'tf 1 v1t1', 'body' => 'TF 1 body text'));
-    $questions[] = $this->drupalCreateQuestion($base1 + array('title' => 'tf 2 v1t1', 'body' => 'TF 1 body text'));
-    $questions[] = $this->drupalCreateQuestion($base1 + array('title' => 'tf 3 v1t1', 'body' => 'TF 1 body text'));
-    $questions[] = $this->drupalCreateQuestion($base2 + array('title' => 'tf 4 v1t2', 'body' => 'TF 1 body text'));
-    $questions[] = $this->drupalCreateQuestion($base2 + array('title' => 'tf 5 v1t2', 'body' => 'TF 1 body text'));
-    $questions[] = $this->drupalCreateQuestion($base2 + array('title' => 'tf 6 v1t2', 'body' => 'TF 1 body text'));
+    $this->drupalCreateQuestion($base1 + array('title' => 'tf 1 v1t1', 'body' => 'TF 1 body text'));
+    $this->drupalCreateQuestion($base1 + array('title' => 'tf 2 v1t1', 'body' => 'TF 1 body text'));
+    $this->drupalCreateQuestion($base1 + array('title' => 'tf 3 v1t1', 'body' => 'TF 1 body text'));
+    $this->drupalCreateQuestion($base2 + array('title' => 'tf 4 v1t2', 'body' => 'TF 1 body text'));
+    $this->drupalCreateQuestion($base2 + array('title' => 'tf 5 v1t2', 'body' => 'TF 1 body text'));
+    $this->drupalCreateQuestion($base2 + array('title' => 'tf 6 v1t2', 'body' => 'TF 1 body text'));
 
     return array($term1, $term2);
   }
@@ -141,7 +128,6 @@ class QuizRandomTestCase extends QuizTestCase {
 
     $list = $quiz->getQuestionIO()->getQuestionList();
     $this->assertEqual(count($list), 4, 'Quiz had 4 questions.');
-    $this->verbose(json_encode($list));
 
     // Start the quiz.
     $this->drupalLogin($this->user);
