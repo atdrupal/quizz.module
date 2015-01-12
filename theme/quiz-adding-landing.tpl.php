@@ -1,9 +1,9 @@
 <ul class="admin-list quiz-type-list">
   <?php foreach ($quiz_types as $name => $quiz_type): ?>
     <li>
-      <span class="label">
+      <div class="name">
         <?php echo l($quiz_type->label, "quiz/add/{$name}"); ?>
-      </span>
+      </div>
 
       <?php if ($quiz_type->description): ?>
         <div class="description">
