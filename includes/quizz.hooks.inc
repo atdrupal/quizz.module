@@ -125,11 +125,10 @@ function quizz_action_info() {
 function quizz_cron() {
   foreach (quizz_get_types() as $name => $quiz_type) {
     if ($rm_time = $quiz_type->getConfig('quiz_remove_partial_quiz_record', 0)) { // time = 0 for never.
-      $sql = 'DELETE FROM {quiz_results} result';
+      $sql = 'DELETE result FROM {quiz_results} result';
       $sql .= ' INNER JOIN {quiz_entity} quiz ON result.quiz_qid = quiz.qid';
-      $sql .= ' WHERE (result.time_end = 0) AND (result.time_start < :timestamp) AND (quiz.type = :quiz_type)';
-      db_query($sql, array(':quiz_type' => $name, ':timestamp' => TIME - $rm_time))
-        ->execute();
+      $sql .= ' WHERE (result.time_end = 0) AND (result.time_start < :time) AND (quiz.type = :type)';
+      db_query($sql, array(':type' => $name, ':time' => time() - $rm_time));
     }
   }
 }
