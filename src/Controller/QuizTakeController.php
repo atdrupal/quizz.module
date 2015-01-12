@@ -189,7 +189,7 @@ class QuizTakeController {
     }
 
     // Check to see if the user is registered, and user alredy passed this quiz.
-    if ($this->quiz->show_passed && $this->account->uid && quizz()->getQuizHelper()->isPassed($this->account->uid, $this->quiz->qid, $this->quiz->vid)) {
+    if ($this->quiz->show_passed && $this->account->uid && $this->quiz->isPassed($this->account->uid)) {
       $msg = t('You have already passed this @quiz.', array('@quiz' => QUIZZ_NAME));
       drupal_set_message($msg, 'status');
     }

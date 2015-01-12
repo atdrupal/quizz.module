@@ -215,7 +215,7 @@ class FormSubmission extends QuizTakeBaseController {
     $this->result->time_end = REQUEST_TIME;
     entity_save('quiz_result', $this->result);
     if ($user->uid) {
-      $score['passing'] = quizz()->getQuizHelper()->isPassed($user->uid, $this->quiz->qid, $this->quiz->vid);
+      $score['passing'] = $this->quiz->isPassed($user->uid);
     }
     else {
       $score['passing'] = $score['percentage_score'] >= $this->quiz->pass_rate;

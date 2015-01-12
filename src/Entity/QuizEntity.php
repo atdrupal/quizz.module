@@ -220,6 +220,10 @@ class QuizEntity extends Entity {
     return entity_access('view', 'quiz_entity', $this, $account);
   }
 
+  public function isPassed($uid) {
+    return $this->getController()->isPassed($uid, $this->vid);
+  }
+
   /**
    * @param \stdClass $account
    * @return NULL|\Drupal\quizz\Entity\Result
