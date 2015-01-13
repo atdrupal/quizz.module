@@ -23,8 +23,7 @@ class QuizTakeController {
     $this->account = $account;
 
     if (module_exists('context')) {
-      context_set('context', "quizz_quiz_taking", TRUE);
-      context_set('context', "quizz_quiz_taking_{$quiz->type}", TRUE);
+      context_set('context', "quizz_quiz_taking", $quiz->type);
     }
   }
 

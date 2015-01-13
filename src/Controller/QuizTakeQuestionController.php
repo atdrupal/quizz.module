@@ -38,8 +38,8 @@ class QuizTakeQuestionController extends QuizTakeBaseController {
     }
 
     if (module_exists('context')) {
-      context_set('context', "quizz_quiz_taking", TRUE);
-      context_set('context', "quizz_quiz_taking_{$quiz->type}", TRUE);
+      context_set('context', "quizz_taking", $quiz->type);
+      context_set('context', "quizz_taking_question", $question->type);
     }
   }
 
