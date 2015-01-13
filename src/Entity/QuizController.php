@@ -108,6 +108,7 @@ class QuizController extends EntityAPIController {
     if ($extra_fields['take']['visible']) {
       $markup = l(t('Start @quiz', array('@quiz' => QUIZZ_NAME)), 'quiz/' . $quiz->qid . '/take', array(
           'attributes' => array(
+              'rel'   => 'nofollow',
               'class' => array('quiz-start-link', 'btn', 'btn-success')
           ),
       ));
