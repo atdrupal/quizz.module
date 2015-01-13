@@ -5,6 +5,11 @@
   font-style: italic;
 }
 
+/* Icon for quizz item displayed in navbar.module */
+#navbar-link-admin-quizz:before {
+  background-image: url("images/puzzlepiece.svg");
+}
+
 /**
  * Definitions that apply while taking the quiz.
  */
