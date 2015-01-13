@@ -32,6 +32,35 @@ function quizz_views_api() {
 }
 
 /**
+ * Implements hook_context_plugins().
+ */
+function quizz_context_plugins() {
+  $plugins = array();
+
+  $plugins['quizz_quiz_entity']['handler'] = array(
+      'class'  => 'Drupal\quizz\Context\Condition\QuizTypeCondition',
+      'parent' => 'context_condition',
+  );
+
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry().
+ */
+function quizz_context_registry() {
+  $registry = array();
+
+  $registry['conditions']['quizz_quiz_entity'] = array(
+      'title'       => t('Quiz type'),
+      'description' => t('Set this context when viewing a quiz entity page or using the add/edit form of one of these types.'),
+      'plugin'      => 'quizz_quiz_entity',
+  );
+
+  return $registry;
+}
+
+/**
  * Implements hook_views_default_views().
  */
 function quizz_views_default_views() {

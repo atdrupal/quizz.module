@@ -125,7 +125,12 @@ class QuizController extends EntityAPIController {
       );
     }
 
-    $this->contextFlag('quizz_quiz_page', $view_mode);
+    if (module_exists('context')) {
+      context_set('context', 'quizz_quiz_page', $view_mode);
+      if ($plugin = context_get_plugin('condition', 'quizz_quiz_entity')) {
+        $plugin->execute($quiz, 'view');
+      }
+    }
 
     return parent::buildContent($quiz, $view_mode, $langcode, $content);
   }
@@ -391,12 +396,6 @@ class QuizController extends EntityAPIController {
          INNER JOIN {taxonomy_term_data} term_data ON term.tid = term_data.tid
          WHERE term.vid = :vid ORDER BY term.weight', array(':vid' => $quiz_vid)
       )->fetchAll();
-  }
-
-  protected function contextFlag($name, $value) {
-    if (module_exists('context')) {
-      context_set('context', $name, $value);
-    }
   }
 
 }
