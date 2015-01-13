@@ -46,7 +46,7 @@ class QuestionIO {
     $questions = array();
     $question_ids = array();
     $total_count = 0;
-    foreach ($this->quiz->getTermsByVid() as $term) {
+    foreach ($this->quiz->getTerms() as $term) {
       $select = db_select('quiz_question_entity', 'question');
       if (!empty($question_ids)) {
         $select->condition('question.qid', $question_ids, 'NOT IN');

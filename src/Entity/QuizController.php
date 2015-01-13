@@ -199,6 +199,14 @@ class QuizController extends EntityAPIController {
       return;
     }
 
+    if (QUIZZ_QUESTION_CATEGORIZED_RANDOM == $quiz->randomization) {
+      foreach ($revision->getTerms() as $term) {
+        $term->vid = $quiz->vid;
+        drupal_write_record('quiz_entity_terms', $term);
+      }
+      return;
+    }
+
     foreach ($revision->getQuestionIO()->getQuestionList() as $relationship) {
       if (empty($relationship['random'])) {
         if ($relationship = quizz_relationship_load($relationship['qr_id'])) {
@@ -369,6 +377,19 @@ class QuizController extends EntityAPIController {
           ':qid'         => $quiz_id,
           ':uid'         => $uid
       ))->fetchField();
+  }
+
+  /**
+   * Get data for all terms belonging to a Quiz with categorized random questions
+   * @param int $quiz_vid
+   */
+  public function getTerms($quiz_vid) {
+    return db_query(
+        'SELECT term_data.name, term.*
+         FROM {quiz_entity_terms} term
+         INNER JOIN {taxonomy_term_data} term_data ON term.tid = term_data.tid
+         WHERE term.vid = :vid ORDER BY term.weight', array(':vid' => $quiz_vid)
+      )->fetchAll();
   }
 
   protected function contextFlag($name, $value) {
