@@ -125,7 +125,7 @@ class QuizController extends EntityAPIController {
       );
     }
 
-    $this->contextFlag("quizz_quiz_page_{$view_mode}", TRUE);
+    $this->contextFlag('quizz_quiz_page', $view_mode);
 
     return parent::buildContent($quiz, $view_mode, $langcode, $content);
   }
