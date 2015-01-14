@@ -1,10 +1,11 @@
 <?php
 
-/*
+/**
  * @file
  * Handles filter nullable user.
  */
 class quiz_views_handler_filter_user_nullable extends views_handler_filter {
+
   function option_definition() {
     $options = parent::option_definition();
 

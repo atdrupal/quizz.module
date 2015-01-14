@@ -1,10 +1,9 @@
 <?php
 
-/*
+/**
  * @file
  * Handles field question number.
  */
-
 class quiz_views_handler_field_number_questions extends views_handler_field {
 
   function option_definition() {
@@ -32,7 +31,7 @@ class quiz_views_handler_field_number_questions extends views_handler_field {
       $properties_alias = $this->query->ensure_table('quiz_entity_revision');
       $formula .= " + (SELECT number_of_random_questions FROM {quiz_entity_revision} WHERE vid = $this->table_alias.quiz_vid)";
     }
-    $this->query->add_field(NULL, "$formula", $this->field_alias);
+    $this->query->add_field(NULL, $formula, $this->field_alias);
   }
 
 }

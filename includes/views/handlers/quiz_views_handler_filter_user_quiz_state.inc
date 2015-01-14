@@ -1,10 +1,11 @@
 <?php
 
-/*
+/**
  * @file
  * Handles filter user quiz state.
  */
 class quiz_views_handler_filter_user_quiz_state extends views_handler_filter {
+
   var $states = array();
   var $no_operator = TRUE; // for nicer formatting of the form
   var $no_single = TRUE; // always only a single value, at least for now
@@ -12,10 +13,10 @@ class quiz_views_handler_filter_user_quiz_state extends views_handler_filter {
   function init(&$view, &$options) {
     parent::init($view, $options);
     $this->states = array(
-      'any' => t('All Results (Do not filter)'),
-      'not_started' => t('Not Started'),
-      'in_progress' => t('In Progress'),
-      'finished' => t('Finished'),
+        'any'         => t('All Results (Do not filter)'),
+        'not_started' => t('Not Started'),
+        'in_progress' => t('In Progress'),
+        'finished'    => t('Finished'),
     );
   }
 
@@ -32,11 +33,11 @@ class quiz_views_handler_filter_user_quiz_state extends views_handler_filter {
 
   function base_form_item() {
     return array(
-      '#type' => 'radios',
-      '#title' => t('Quiz State'),
-      '#description' => t('Output will be limited to only include quiz results in this state. If the filter is exposed, the value set here will be used as the default. Note that "Any" is only useful for exposed filters.'),
-      '#options' => $this->states,
-      '#default_value' => !empty($this->value['quiz_state']) ? $this->value['quiz_state'] : 'any',
+        '#type'          => 'radios',
+        '#title'         => t('Quiz State'),
+        '#description'   => t('Output will be limited to only include quiz results in this state. If the filter is exposed, the value set here will be used as the default. Note that "Any" is only useful for exposed filters.'),
+        '#options'       => $this->states,
+        '#default_value' => !empty($this->value['quiz_state']) ? $this->value['quiz_state'] : 'any',
     );
   }
 
@@ -70,4 +71,5 @@ class quiz_views_handler_filter_user_quiz_state extends views_handler_filter {
       $this->query->add_where($this->options['group'], "$this->table_alias.time_end", 0, $operator);
     }
   }
+
 }

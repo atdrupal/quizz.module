@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * @file
  * Handles field user quiz state.
  */
@@ -8,9 +8,11 @@ class quiz_views_handler_field_user_quiz_state extends views_handler_field {
 
   function construct() {
     parent::construct();
+
     // TODO: what to do with $this->real_field in this situation?
     // $this->real_field = REQUEST_TIME . 'BETWEEN '
   }
+
   // Note that the native field is time_start, and time_end is added as an
   // additional field in the handler declaration
   function query() {
@@ -27,4 +29,5 @@ class quiz_views_handler_field_user_quiz_state extends views_handler_field {
       return t('In Progress');
     }
   }
+
 }

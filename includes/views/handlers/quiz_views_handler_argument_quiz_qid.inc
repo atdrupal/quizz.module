@@ -1,10 +1,9 @@
 <?php
 
-/*
+/**
  * @file
  * Handles argument quiz qid.
  */
-
 class quiz_views_handler_argument_quiz_qid extends views_handler_argument_numeric {
 
   /**
