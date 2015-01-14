@@ -33,6 +33,10 @@ class QuizViewsController extends EntityDefaultViewsController {
         'handler' => 'Drupal\quizz\Views\Handler\Field\QuizEntityResultsLink',
     );
 
+    $data['quiz_entity']['take_link']['field'] = array(
+        'title'   => t('Take link'),
+        'help'    => t('Provide "Take" link for user to start taking the quiz'),
+        'handler' => 'Drupal\quizz\Views\Handler\Field\QuizEntityTakeLink',
     );
 
     return $data;
