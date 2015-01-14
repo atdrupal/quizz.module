@@ -267,11 +267,7 @@ function quizz_quiz_scored($quiz, $score, $result_id) {
 
 /**
  * Helper function to check if the user has any of a given list of permissions.
- *
- * @param args
- *   Any number of permissions.
- * @return
- *   TRUE if the user has access to any of the arguments given.
+ * @return bool
  */
 function quizz_access_multi_or() {
   foreach (func_get_args() as $perm) {
@@ -279,14 +275,14 @@ function quizz_access_multi_or() {
       return TRUE;
     }
   }
+  return FALSE;
 }
 
 /**
  * Helper function to determine if a user has access to view a specific quiz result.
- *
+ * 
  * @param Result|int $result
  * @return boolean
- *  True if access, false otherwise
  */
 function quizz_access_my_result($result) {
   global $user;
