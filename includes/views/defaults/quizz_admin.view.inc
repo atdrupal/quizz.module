@@ -29,83 +29,75 @@ $handler->display->display_options['pager']['options']['expose']['items_per_page
 $handler->display->display_options['pager']['options']['expose']['items_per_page_options'] = '5, 10, 20, 40, 50, 75, 100';
 $handler->display->display_options['style_plugin'] = 'table';
 $handler->display->display_options['style_options']['columns'] = array(
-    'qid'         => 'qid',
-    'url'         => 'url',
-    'title'       => 'title',
-    'name'        => 'name',
-    'type'        => 'type',
-    'changed'     => 'changed',
-    'created'     => 'created',
-    'view_node'   => 'view_node',
-    'delete_node' => 'view_node',
-    'edit_node'   => 'view_node',
-    'nothing'     => 'view_node',
+    'views_bulk_operations' => 'views_bulk_operations',
+    'title'                 => 'title',
+    'name'                  => 'name',
+    'type'                  => 'type',
+    'changed'               => 'changed',
+    'created'               => 'created',
+    'view_link'             => 'view_link',
+    'results_link'          => 'view_link',
+    'edit_link'             => 'view_link',
+    'delete_link'           => 'view_link',
 );
-$handler->display->display_options['style_options']['default'] = '-1';
+$handler->display->display_options['style_options']['default'] = 'changed';
 $handler->display->display_options['style_options']['info'] = array(
-    'qid'         => array(
-        'sortable'           => 0,
-        'default_sort_order' => 'asc',
-        'align'              => '',
-        'separator'          => '',
-        'empty_column'       => 0,
-    ),
-    'url'         => array(
+    'views_bulk_operations' => array(
         'align'        => '',
         'separator'    => '',
         'empty_column' => 0,
     ),
-    'title'       => array(
-        'sortable'           => 0,
+    'title'                 => array(
+        'sortable'           => 1,
         'default_sort_order' => 'asc',
         'align'              => '',
         'separator'          => '',
         'empty_column'       => 0,
     ),
-    'name'        => array(
-        'sortable'           => 0,
+    'name'                  => array(
+        'sortable'           => 1,
         'default_sort_order' => 'asc',
         'align'              => '',
         'separator'          => '',
         'empty_column'       => 0,
     ),
-    'type'        => array(
-        'sortable'           => 0,
+    'type'                  => array(
+        'sortable'           => 1,
         'default_sort_order' => 'asc',
         'align'              => '',
         'separator'          => '',
         'empty_column'       => 0,
     ),
-    'changed'     => array(
-        'sortable'           => 0,
+    'changed'               => array(
+        'sortable'           => 1,
+        'default_sort_order' => 'desc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'created'               => array(
+        'sortable'           => 1,
         'default_sort_order' => 'asc',
         'align'              => '',
         'separator'          => '',
         'empty_column'       => 0,
     ),
-    'created'     => array(
-        'sortable'           => 0,
-        'default_sort_order' => 'asc',
-        'align'              => '',
-        'separator'          => '',
-        'empty_column'       => 0,
-    ),
-    'view_node'   => array(
+    'view_link'             => array(
         'align'        => '',
         'separator'    => ' | ',
         'empty_column' => 0,
     ),
-    'delete_node' => array(
+    'results_link'          => array(
         'align'        => '',
         'separator'    => '',
         'empty_column' => 0,
     ),
-    'edit_node'   => array(
+    'edit_link'             => array(
         'align'        => '',
         'separator'    => '',
         'empty_column' => 0,
     ),
-    'nothing'     => array(
+    'delete_link'           => array(
         'align'        => '',
         'separator'    => '',
         'empty_column' => 0,
@@ -176,19 +168,6 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_opera
         'label'               => '',
     ),
 );
-/* Field: Quiz: Quiz ID */
-$handler->display->display_options['fields']['qid']['id'] = 'qid';
-$handler->display->display_options['fields']['qid']['table'] = 'quiz_entity';
-$handler->display->display_options['fields']['qid']['field'] = 'qid';
-$handler->display->display_options['fields']['qid']['exclude'] = TRUE;
-$handler->display->display_options['fields']['qid']['separator'] = '';
-/* Field: Quiz: URL */
-$handler->display->display_options['fields']['url']['id'] = 'url';
-$handler->display->display_options['fields']['url']['table'] = 'views_entity_quiz_entity';
-$handler->display->display_options['fields']['url']['field'] = 'url';
-$handler->display->display_options['fields']['url']['exclude'] = TRUE;
-$handler->display->display_options['fields']['url']['display_as_link'] = FALSE;
-$handler->display->display_options['fields']['url']['link_to_entity'] = 0;
 /* Field: Quiz: Label */
 $handler->display->display_options['fields']['title']['id'] = 'title';
 $handler->display->display_options['fields']['title']['table'] = 'quiz_entity';
@@ -204,35 +183,34 @@ $handler->display->display_options['fields']['name']['relationship'] = 'uid';
 $handler->display->display_options['fields']['type']['id'] = 'type';
 $handler->display->display_options['fields']['type']['table'] = 'quiz_entity';
 $handler->display->display_options['fields']['type']['field'] = 'type';
-/* Field: Quiz: Changed */
-$handler->display->display_options['fields']['changed']['id'] = 'changed';
-$handler->display->display_options['fields']['changed']['table'] = 'quiz_entity';
-$handler->display->display_options['fields']['changed']['field'] = 'changed';
 /* Field: Quiz: Created */
 $handler->display->display_options['fields']['created']['id'] = 'created';
 $handler->display->display_options['fields']['created']['table'] = 'quiz_entity';
 $handler->display->display_options['fields']['created']['field'] = 'created';
+$handler->display->display_options['fields']['created']['date_format'] = 'short';
+$handler->display->display_options['fields']['created']['second_date_format'] = 'long';
+/* Field: Quiz: Changed */
+$handler->display->display_options['fields']['changed']['id'] = 'changed';
+$handler->display->display_options['fields']['changed']['table'] = 'quiz_entity';
+$handler->display->display_options['fields']['changed']['field'] = 'changed';
+$handler->display->display_options['fields']['changed']['date_format'] = 'short';
+$handler->display->display_options['fields']['changed']['second_date_format'] = 'long';
 /* Field: Quiz: Link */
-$handler->display->display_options['fields']['view_node']['id'] = 'view_node';
-$handler->display->display_options['fields']['view_node']['table'] = 'quiz_entity';
-$handler->display->display_options['fields']['view_node']['field'] = 'view_node';
-/* Field: Quiz: Delete link */
-$handler->display->display_options['fields']['delete_node']['id'] = 'delete_node';
-$handler->display->display_options['fields']['delete_node']['table'] = 'quiz_entity';
-$handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
+$handler->display->display_options['fields']['view_link']['id'] = 'view_link';
+$handler->display->display_options['fields']['view_link']['table'] = 'quiz_entity';
+$handler->display->display_options['fields']['view_link']['field'] = 'view_link';
+/* Field: Quiz: Result link */
+$handler->display->display_options['fields']['results_link']['id'] = 'results_link';
+$handler->display->display_options['fields']['results_link']['table'] = 'quiz_entity';
+$handler->display->display_options['fields']['results_link']['field'] = 'results_link';
 /* Field: Quiz: Edit link */
-$handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
-$handler->display->display_options['fields']['edit_node']['table'] = 'quiz_entity';
-$handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
-/* Field: Result link */
-$handler->display->display_options['fields']['nothing']['id'] = 'nothing';
-$handler->display->display_options['fields']['nothing']['table'] = 'views';
-$handler->display->display_options['fields']['nothing']['field'] = 'nothing';
-$handler->display->display_options['fields']['nothing']['ui_name'] = 'Result link';
-$handler->display->display_options['fields']['nothing']['label'] = 'Results';
-$handler->display->display_options['fields']['nothing']['alter']['text'] = 'results';
-$handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
-$handler->display->display_options['fields']['nothing']['alter']['path'] = 'quiz/[qid]/results';
+$handler->display->display_options['fields']['edit_link']['id'] = 'edit_link';
+$handler->display->display_options['fields']['edit_link']['table'] = 'quiz_entity';
+$handler->display->display_options['fields']['edit_link']['field'] = 'edit_link';
+/* Field: Quiz: Delete link */
+$handler->display->display_options['fields']['delete_link']['id'] = 'delete_link';
+$handler->display->display_options['fields']['delete_link']['table'] = 'quiz_entity';
+$handler->display->display_options['fields']['delete_link']['field'] = 'delete_link';
 /* Filter criterion: Quiz: Type */
 $handler->display->display_options['filters']['type']['id'] = 'type';
 $handler->display->display_options['filters']['type']['table'] = 'quiz_entity';
@@ -256,6 +234,7 @@ $handler->display->display_options['menu']['type'] = 'tab';
 $handler->display->display_options['menu']['title'] = 'Quiz';
 $handler->display->display_options['menu']['weight'] = '0';
 $handler->display->display_options['menu']['context'] = 0;
+$handler->display->display_options['menu']['context_only_inline'] = 0;
 $handler->display->display_options['menu']['context_only_inline'] = 0;
 
 return $view;

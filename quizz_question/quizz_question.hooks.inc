@@ -213,6 +213,11 @@ function quizz_question_modules_enabled($modules) {
     }
 
     foreach ($info as $handler_name => $handler_info) {
+      // Don't create default bundle.
+      if (isset($handler_info['create default bundle']) && !$handler_info['create default bundle']) {
+        continue;
+      }
+
       // Do not create if already have one
       $sql = 'SELECT 1 FROM {quiz_question_type} WHERE handler = :handler';
       if (db_query($sql, array(':handler' => $handler_name))->fetchColumn()) {

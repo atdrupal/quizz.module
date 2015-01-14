@@ -21,6 +21,77 @@ $handler->display->display_options['exposed_form']['type'] = 'basic';
 $handler->display->display_options['pager']['type'] = 'full';
 $handler->display->display_options['pager']['options']['items_per_page'] = '10';
 $handler->display->display_options['style_plugin'] = 'table';
+$handler->display->display_options['style_options']['columns'] = array(
+    'views_bulk_operations' => 'views_bulk_operations',
+    'quiz_vid'              => 'quiz_vid',
+    'name'                  => 'name',
+    'time_start'            => 'time_start',
+    'spent_time_1'          => 'spent_time_1',
+    'score'                 => 'score',
+    'is_evaluated'          => 'is_evaluated',
+    'result_id'             => 'result_id',
+    'nothing'               => 'nothing',
+);
+$handler->display->display_options['style_options']['default'] = 'time_start';
+$handler->display->display_options['style_options']['info'] = array(
+    'views_bulk_operations' => array(
+        'align'        => '',
+        'separator'    => '',
+        'empty_column' => 0,
+    ),
+    'quiz_vid'              => array(
+        'sortable'           => 1,
+        'default_sort_order' => 'asc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'name'                  => array(
+        'sortable'           => 1,
+        'default_sort_order' => 'asc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'time_start'            => array(
+        'sortable'           => 1,
+        'default_sort_order' => 'asc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'spent_time_1'          => array(
+        'align'        => '',
+        'separator'    => '',
+        'empty_column' => 0,
+    ),
+    'score'                 => array(
+        'sortable'           => 1,
+        'default_sort_order' => 'asc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'is_evaluated'          => array(
+        'sortable'           => 1,
+        'default_sort_order' => 'asc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'result_id'             => array(
+        'sortable'           => 0,
+        'default_sort_order' => 'asc',
+        'align'              => '',
+        'separator'          => '',
+        'empty_column'       => 0,
+    ),
+    'nothing'               => array(
+        'align'        => '',
+        'separator'    => '',
+        'empty_column' => 0,
+    ),
+);
 /* No results behavior: Global: Text area */
 $handler->display->display_options['empty']['area']['id'] = 'area';
 $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -104,17 +175,15 @@ $handler->display->display_options['fields']['name']['table'] = 'users';
 $handler->display->display_options['fields']['name']['field'] = 'name';
 $handler->display->display_options['fields']['name']['relationship'] = 'uid';
 $handler->display->display_options['fields']['name']['label'] = 'Username';
-$handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
 /* Field: Quiz result: Date started */
 $handler->display->display_options['fields']['time_start']['id'] = 'time_start';
 $handler->display->display_options['fields']['time_start']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['time_start']['field'] = 'time_start';
 $handler->display->display_options['fields']['time_start']['date_format'] = 'short';
-/* Field: Quiz result: Date finished */
-$handler->display->display_options['fields']['time_end']['id'] = 'time_end';
-$handler->display->display_options['fields']['time_end']['table'] = 'quiz_results';
-$handler->display->display_options['fields']['time_end']['field'] = 'time_end';
-$handler->display->display_options['fields']['time_end']['date_format'] = 'short';
+/* Field: Quiz result: Spent time */
+$handler->display->display_options['fields']['spent_time_1']['id'] = 'spent_time_1';
+$handler->display->display_options['fields']['spent_time_1']['table'] = 'quiz_results';
+$handler->display->display_options['fields']['spent_time_1']['field'] = 'spent_time';
 /* Field: Quiz result: Score */
 $handler->display->display_options['fields']['score']['id'] = 'score';
 $handler->display->display_options['fields']['score']['table'] = 'quiz_results';
@@ -124,7 +193,7 @@ $handler->display->display_options['fields']['is_evaluated']['id'] = 'is_evaluat
 $handler->display->display_options['fields']['is_evaluated']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['is_evaluated']['field'] = 'is_evaluated';
 $handler->display->display_options['fields']['is_evaluated']['not'] = 0;
-/* Field: Quiz result: Label */
+/* Field: Quiz result: ID */
 $handler->display->display_options['fields']['result_id']['id'] = 'result_id';
 $handler->display->display_options['fields']['result_id']['table'] = 'quiz_results';
 $handler->display->display_options['fields']['result_id']['field'] = 'result_id';
@@ -146,5 +215,48 @@ $handler->display->display_options['arguments']['quiz_qid']['default_argument_ty
 $handler->display->display_options['arguments']['quiz_qid']['summary']['number_of_records'] = '0';
 $handler->display->display_options['arguments']['quiz_qid']['summary']['format'] = 'default_summary';
 $handler->display->display_options['arguments']['quiz_qid']['summary_options']['items_per_page'] = '25';
+/* Filter criterion: Quiz result: Evaluated */
+$handler->display->display_options['filters']['is_evaluated']['id'] = 'is_evaluated';
+$handler->display->display_options['filters']['is_evaluated']['table'] = 'quiz_results';
+$handler->display->display_options['filters']['is_evaluated']['field'] = 'is_evaluated';
+$handler->display->display_options['filters']['is_evaluated']['value'] = 'All';
+$handler->display->display_options['filters']['is_evaluated']['exposed'] = TRUE;
+$handler->display->display_options['filters']['is_evaluated']['expose']['operator_id'] = '';
+$handler->display->display_options['filters']['is_evaluated']['expose']['label'] = 'Evaluated';
+$handler->display->display_options['filters']['is_evaluated']['expose']['operator'] = 'is_evaluated_op';
+$handler->display->display_options['filters']['is_evaluated']['expose']['identifier'] = 'is_evaluated';
+$handler->display->display_options['filters']['is_evaluated']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+);
+/* Filter criterion: Quiz result: Score */
+$handler->display->display_options['filters']['score']['id'] = 'score';
+$handler->display->display_options['filters']['score']['table'] = 'quiz_results';
+$handler->display->display_options['filters']['score']['field'] = 'score';
+$handler->display->display_options['filters']['score']['exposed'] = TRUE;
+$handler->display->display_options['filters']['score']['expose']['operator_id'] = 'score_op';
+$handler->display->display_options['filters']['score']['expose']['label'] = 'Score';
+$handler->display->display_options['filters']['score']['expose']['use_operator'] = TRUE;
+$handler->display->display_options['filters']['score']['expose']['operator'] = 'score_op';
+$handler->display->display_options['filters']['score']['expose']['identifier'] = 'score';
+$handler->display->display_options['filters']['score']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+);
+/* Filter criterion: User: Name */
+$handler->display->display_options['filters']['uid']['id'] = 'uid';
+$handler->display->display_options['filters']['uid']['table'] = 'users';
+$handler->display->display_options['filters']['uid']['field'] = 'uid';
+$handler->display->display_options['filters']['uid']['relationship'] = 'uid';
+$handler->display->display_options['filters']['uid']['value'] = '';
+$handler->display->display_options['filters']['uid']['exposed'] = TRUE;
+$handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
+$handler->display->display_options['filters']['uid']['expose']['label'] = 'Name';
+$handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
+$handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
+$handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+);
 
 return $view;

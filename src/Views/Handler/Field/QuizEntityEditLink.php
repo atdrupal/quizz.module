@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quizz\Entity\Views;
+namespace Drupal\quizz\Views\Handler\Field;
 
 class QuizEntityEditLink extends QuizEntityLink {
 
@@ -9,8 +9,7 @@ class QuizEntityEditLink extends QuizEntityLink {
       $uri = entity_uri('quiz_entity', $quiz);
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = $uri['path'] . '/edit';
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
-      return $text;
+      return !empty($this->options['text']) ? $this->options['text'] : t('edit');
     }
   }
 
