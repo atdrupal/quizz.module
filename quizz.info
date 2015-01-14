@@ -29,7 +29,6 @@ files[] = includes/views/handlers/quiz_views_handler_filter_question_status.inc
 files[] = includes/views/handlers/quiz_views_handler_filter_quiz_qid.inc
 files[] = includes/views/handlers/quiz_views_handler_filter_user_nullable.inc
 files[] = includes/views/handlers/quiz_views_handler_filter_user_quiz_state.inc
-files[] = includes/views/handlers/quiz_views_handler_relationship_quiz_qid.inc
 files[] = includes/views/handlers/quiz_views_handler_filter_quiz_question_type.inc
 files[] = includes/views/handlers/quiz_views_handler_filter_quiz_question.inc
 
