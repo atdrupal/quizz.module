@@ -9,22 +9,30 @@ class QuizViewsController extends EntityDefaultViewsController {
   public function views_data() {
     $data = parent::views_data();
 
-    $data['quiz_entity']['view_node']['field'] = array(
+    $data['quiz_entity']['view_link']['field'] = array(
         'title'   => t('Link'),
         'help'    => t('Provide a simple link to the !quiz.', array('!quiz' => QUIZZ_NAME)),
-        'handler' => 'Drupal\quizz\Entity\Views\QuizEntityLink',
+        'handler' => 'Drupal\quizz\Views\Handler\Field\QuizEntityLink',
     );
 
-    $data['quiz_entity']['edit_node']['field'] = array(
+    $data['quiz_entity']['edit_link']['field'] = array(
         'title'   => t('Edit link'),
         'help'    => t('Provide a simple link to edit the !quiz.', array('!quiz' => QUIZZ_NAME)),
-        'handler' => 'Drupal\quizz\Entity\Views\QuizEntityEditLink',
+        'handler' => 'Drupal\quizz\Views\Handler\Field\QuizEntityEditLink',
     );
 
-    $data['quiz_entity']['delete_node']['field'] = array(
+    $data['quiz_entity']['delete_link']['field'] = array(
         'title'   => t('Delete link'),
         'help'    => t('Provide a simple link to delete the !quiz.', array('!quiz' => QUIZZ_NAME)),
-        'handler' => 'Drupal\quizz\Entity\Views\QuizEntityDeleteLink',
+        'handler' => 'Drupal\quizz\Views\Handler\Field\QuizEntityDeleteLink',
+    );
+
+    $data['quiz_entity']['results_link']['field'] = array(
+        'title'   => t('Result link'),
+        'help'    => t('Provide a simple link to delete the !quiz.', array('!quiz' => QUIZZ_NAME)),
+        'handler' => 'Drupal\quizz\Views\Handler\Field\QuizEntityResultsLink',
+    );
+
     );
 
     return $data;

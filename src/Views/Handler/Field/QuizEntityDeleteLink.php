@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quizz\Entity\Views;
+namespace Drupal\quizz\Views\Handler\Field;
 
 class QuizEntityDeleteLink extends QuizEntityLink {
 
@@ -9,8 +9,7 @@ class QuizEntityDeleteLink extends QuizEntityLink {
       $uri = entity_uri('quiz_entity', $quiz);
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = $uri['path'] . '/delete';
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-      return $text;
+      return !empty($this->options['text']) ? $this->options['text'] : t('delete');
     }
   }
 
