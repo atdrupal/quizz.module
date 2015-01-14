@@ -152,15 +152,17 @@ function quizz_menu() {
  * Implements hook_menu_alter()
  */
 function quizz_menu_alter(&$items) {
-  $items['admin/quizz/types/manage/%quizz_type/result/fields']['title'] = 'Result fields';
-  $items['admin/quizz/types/manage/%quizz_type/result/fields']['weight'] = 3;
-  $items['admin/quizz/types/manage/%quizz_type/result/display']['title'] = 'Result display';
-  $items['admin/quizz/types/manage/%quizz_type/result/display']['weight'] = 4;
+  if (module_exists('field_ui')) {
+    $items['admin/quizz/types/manage/%quizz_type/result/fields']['title'] = 'Result fields';
+    $items['admin/quizz/types/manage/%quizz_type/result/fields']['weight'] = 3;
+    $items['admin/quizz/types/manage/%quizz_type/result/display']['title'] = 'Result display';
+    $items['admin/quizz/types/manage/%quizz_type/result/display']['weight'] = 4;
 
-  $items['admin/quizz/question-types/manage/%quizz_question_type/answer/fields']['title'] = 'Answer fields';
-  $items['admin/quizz/question-types/manage/%quizz_question_type/answer/fields']['weight'] = 5;
-  $items['admin/quizz/question-types/manage/%quizz_question_type/answer/display']['title'] = 'Answer display';
-  $items['admin/quizz/question-types/manage/%quizz_question_type/answer/display']['weight'] = 7;
+    $items['admin/quizz/question-types/manage/%quizz_question_type/answer/fields']['title'] = 'Answer fields';
+    $items['admin/quizz/question-types/manage/%quizz_question_type/answer/fields']['weight'] = 5;
+    $items['admin/quizz/question-types/manage/%quizz_question_type/answer/display']['title'] = 'Answer display';
+    $items['admin/quizz/question-types/manage/%quizz_question_type/answer/display']['weight'] = 7;
+  }
 }
 
 /**
