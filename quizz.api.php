@@ -45,11 +45,12 @@ use Drupal\quizz\Entity\QuizEntity;
 function hook_quizz_question_info() {
   return array(
       'truefalse' => array(
-          'name'              => t('Example question type'),
-          'description'       => t('An example question type that does something.'),
-          'question provider' => 'ExampleAnswerQuestion',
-          'response provider' => 'ExampleAnswerResponse',
-          'module'            => 'quizz_question',
+          'name'                  => t('Example question type'),
+          'description'           => t('An example question type that does something.'),
+          'question provider'     => 'ExampleAnswerQuestion',
+          'response provider'     => 'ExampleAnswerResponse',
+          'module'                => 'quizz_question',
+          'create default bundle' => FALSE, // Optional, default is TRUE
       ),
   );
 }
