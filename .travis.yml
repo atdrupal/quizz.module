@@ -13,22 +13,9 @@ env:
   - SUITE=question
   - SUITE=taking
   - SUITE=result
-  - SUITE=quizz_cloze
-  - SUITE=quizz_matching
-  - SUITE=quizz_multichoice
-  - SUITE=quizz_pool
-  - SUITE=quizz_scale
-  - SUITE=quizz_text
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: SUITE=quizz_cloze
-    - env: SUITE=quizz_matching
-    - env: SUITE=quizz_multichoice
-    - env: SUITE=quizz_pool
-    - env: SUITE=quizz_scale
-    - env: SUITE=quizz_text
 
 mysql:
   database: drupal
@@ -73,7 +60,7 @@ before_script:
   - sh -c "if [ ! -f "$CACHE/drupal.tar.gz" ];    then wget https://github.com/drupal/drupal/archive/7.34.tar.gz -O $CACHE/drupal.tar.gz; fi"
   - sh -c "if [ ! -f "$CACHE/2189345-39.patch" ]; then wget https://www.drupal.org/files/issues/2189345-39.patch -O $CACHE/2189345-39.patch; fi"
   - sh -c "if [ ! -d "$DRUPAL" ];                 then mkdir $DRUPAL;  fi"
-
+  
   # ---------------------
   # Install apache server
   # ---------------------
@@ -107,28 +94,10 @@ before_script:
 
 script:
   - sh -c "
-      if [ '$SUITE' = 'quiz' ];             then drush test-run --dirty --field-labels=0 'Quiz' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'question' ];       then drush test-run --dirty --field-labels=0 'Quiz question' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'taking' ];         then drush test-run --dirty --field-labels=0 'Quiz taking' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'result' ];         then drush test-run --dirty --field-labels=0 'Quiz result' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'quizz_cloze']; then
-          drush dl --package-handler=git_drupalorg quizz_cloze-7.x-6.x;
-          drush test-run --dirty --field-labels=0 '' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'quizz_matching']; then
-          drush dl --package-handler=git_drupalorg quizz_matching-7.x-6.x;
-          drush test-run --dirty --field-labels=0 '' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'quizz_multichoice']; then
-          drush dl --package-handler=git_drupalorg quizz_multichoice-7.x-6.x;
-          drush test-run --dirty --field-labels=0 '' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'quizz_pool']; then
-          drush dl --package-handler=git_drupalorg quizz_pool-7.x-6.x;
-          drush test-run --dirty --field-labels=0 '' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'quizz_scale']; then
-          drush dl --package-handler=git_drupalorg quizz_scale-7.x-6.x;
-          drush test-run --dirty --field-labels=0 '' --uri=http://localhost:80;
-      elif [ '$SUITE' = 'quizz_text']; then
-          drush dl --package-handler=git_drupalorg quizz_text-7.x-6.x;
-          drush test-run --dirty --field-labels=0 '' --uri=http://localhost:80;
+      if [ '$SUITE' = 'quiz' ];        then drush test-run --dirty --field-labels=0 'Quiz' --uri=http://localhost:80;
+      elif [ '$SUITE' = 'question' ];  then drush test-run --dirty --field-labels=0 'Quiz question' --uri=http://localhost:80;
+      elif [ '$SUITE' = 'taking' ];    then drush test-run --dirty --field-labels=0 'Quiz taking' --uri=http://localhost:80;
+      elif [ '$SUITE' = 'result' ];    then drush test-run --dirty --field-labels=0 'Quiz result' --uri=http://localhost:80;
       fi"
 
 notifications:
