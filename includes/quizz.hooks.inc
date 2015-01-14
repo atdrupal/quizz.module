@@ -4,27 +4,6 @@ use Drupal\quizz\Entity\QuizEntity;
 use Drupal\quizz\Entity\Result;
 
 /**
- * @file
- * Quiz hook implementations and helper functions (not API).
- */
-
-/**
- * Implements hook_help().
- */
-function quizz_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#quiz':
-      return _filter_autop(t('The quiz module allows users to administer a quiz, as a sequence of questions, and track the answers given. It allows for the creation of questions (and their answers), and organizes these questions into a quiz. Its target audience includes educational institutions, online training programs, employers, and people who just want to add a fun activity for their visitors to their Drupal site.
-
-The quiz module has a plethora of permission options. Unless you take care setting your permissions, the quiz module might not do everything you want it to do.
-
-For more information about quiz, and resources on how to use quiz, see the <a href="http://drupal.org/project/quiz">Quiz project website</a>'));
-    case 'quiz/add#quiz':
-      return t('A collection of questions designed to create interactive tests');
-  }
-}
-
-/**
  * Implements hook_views_api().
  */
 function quizz_views_api() {
@@ -81,6 +60,7 @@ function quizz_ctools_plugin_directory($owner, $plugin_type) {
   if ($owner === 'page_manager') {
     return 'includes/plugins/page_manager/' . $plugin_type;
   }
+
   if ($owner === 'ctools' && $plugin_type === 'content_types') {
     return 'includes/plugins/content_types';
   }
@@ -148,12 +128,11 @@ function quizz_action_info() {
 
 /**
  * Implements hook_cron().
- *
- * Remove old quiz results that haven't been finished.
  */
 function quizz_cron() {
   foreach (quizz_get_types() as $name => $quiz_type) {
     if ($rm_time = $quiz_type->getConfig('quiz_remove_partial_quiz_record', 0)) { // time = 0 for never.
+      // Remove old quiz results that haven't been finished.
       $sql = 'DELETE result FROM {quiz_results} result';
       $sql .= ' INNER JOIN {quiz_entity} quiz ON result.quiz_qid = quiz.qid';
       $sql .= ' WHERE (result.time_end = 0) AND (result.time_start < :time) AND (quiz.type = :type)';
@@ -186,12 +165,11 @@ function quizz_menu_alter(&$items) {
 
 /**
  * Implements hook_menu_local_tasks_alter().
- *
- * Add action link to 'quiz/add' on 'admin/content/quizz' page.
  */
 function quizz_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   switch ($root_path) {
     case 'admin/content/quizz':
+      // Add action link to 'quiz/add' on 'admin/content/quizz' page.
       if (($item = menu_get_item('quiz/add')) && $item['access']) {
         $data['actions']['output'][] = array('#theme' => 'menu_local_action', '#link' => $item);
       }

@@ -168,7 +168,7 @@ class Question extends Entity {
   }
 
   /**
-   * @TODO The method name maybe wrong, I (Andy) not really know what doest this
+   * @TODO The method name maybe wrong, I (@thehong) not really know what doest this
    * function do. Moved to here from quizz_question_report_form() function.
    */
   public function findLegacyMaxScore(Result $result) {

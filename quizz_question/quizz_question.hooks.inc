@@ -3,15 +3,6 @@
 use Drupal\quizz_question\Entity\Question;
 
 /**
- * Implements hook_help().
- */
-function quizz_question_help($path, $args) {
-  if ($path == 'admin/help#quizz_quesion') {
-    return t('Support for Quiz question types.');
-  }
-}
-
-/**
  * Implements hook_permission()
  */
 function quizz_question_permission() {
