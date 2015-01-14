@@ -14,7 +14,7 @@ class QuizForm {
   public function __construct(QuizEntity $quiz) {
     $this->quiz = $quiz;
 
-    if ($plugin = context_get_plugin('condition', 'quizz_quiz_entity')) {
+    if (module_exists('context') && ($plugin = context_get_plugin('condition', 'quizz_quiz_entity'))) {
       $plugin->execute($quiz, 'form');
     }
   }
