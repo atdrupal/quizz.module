@@ -50,6 +50,7 @@ function hook_quizz_question_info() {
           'question provider'     => 'ExampleAnswerQuestion',
           'response provider'     => 'ExampleAnswerResponse',
           'module'                => 'quizz_question',
+          'create default bundle' => FALSE, // Optional, default is TRUE
       ),
   );
 }
