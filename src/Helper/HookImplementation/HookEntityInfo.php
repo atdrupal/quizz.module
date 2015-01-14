@@ -14,7 +14,7 @@ class HookEntityInfo {
     return array(
         'quiz_type'          => $this->getQuizTypeInfo(),
         'quiz_entity'        => $this->getQuizInfo(),
-        'quiz_relationship'  => $this->getQuizQuestionRelationshipInfo(),
+        'quiz_relationship'  => $this->getQuizRelationshipInfo(),
         'quiz_result_type'   => $this->getQuizResultTypeInfo(),
         'quiz_result'        => $this->getQuizResultInfo(),
         'quiz_answer_type'   => $this->getQuizAnswerTypeInfo(),
@@ -99,7 +99,7 @@ class HookEntityInfo {
     return $entity_info;
   }
 
-  private function getQuizQuestionRelationshipInfo() {
+  private function getQuizRelationshipInfo() {
     return array(
         'label'                     => t('Quiz question relationship'),
         'entity class'              => 'Drupal\quizz\Entity\Relationship',

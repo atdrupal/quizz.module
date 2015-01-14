@@ -44,12 +44,12 @@ use Drupal\quizz\Entity\QuizEntity;
  */
 function hook_quizz_question_info() {
   return array(
-      'long_answer' => array(
-          'name'              => t('Example question type'),
-          'description'       => t('An example question type that does something.'),
-          'question provider' => 'ExampleAnswerQuestion',
-          'response provider' => 'ExampleAnswerResponse',
-          'module'            => 'quizz_question',
+      'truefalse' => array(
+          'name'                  => t('Example question type'),
+          'description'           => t('An example question type that does something.'),
+          'question provider'     => 'ExampleAnswerQuestion',
+          'response provider'     => 'ExampleAnswerResponse',
+          'module'                => 'quizz_question',
       ),
   );
 }

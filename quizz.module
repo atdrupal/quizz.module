@@ -9,7 +9,7 @@ if (!defined('QUIZZ_NAME')) {
   define('QUIZZ_NAME', t(variable_get('quiz_name', 'Quiz')));
 }
 
-/*
+/**
  * Define question statuses…
  */
 define('QUIZZ_QUESTION_RANDOM', 0);

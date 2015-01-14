@@ -1,10 +1,9 @@
 <?php
 
-/*
+/**
  * @file
  * Handles argument quiz qid.
  */
-
 class quiz_views_handler_argument_quiz_qid extends views_handler_argument_numeric {
 
   /**
@@ -33,11 +32,10 @@ class quiz_views_handler_argument_quiz_qid extends views_handler_argument_numeri
 
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
+
     // Set weighting so that our element can sanely ordered
     $form['title']['#weight'] = -2;
-    //    $form['default_action']['#weight'] = -3;
-    //    $form['wildcard']['#weight'] = -4;
-    //    $form['wildcard_substitution']['#weight'] = -4;
+
     $form['which_vid'] = array(
         '#type'          => 'select',
         '#title'         => t('Quiz revision(s) to use'),
@@ -53,13 +51,12 @@ class quiz_views_handler_argument_quiz_qid extends views_handler_argument_numeri
   }
 
   function title_query() {
-    $titles = array();
-
-    $result = db_query("SELECT n.title FROM {node_revision} n WHERE n.vid IN (:vids)", array(':vids' => implode(', ', $this->corresponding_vids)));
+    $sql = "SELECT revision.title FROM {quiz_entity_revision} revision WHERE revision.vid IN (:vids)";
+    $result = db_query($sql, array(':vids' => implode(', ', $this->corresponding_vids)));
     while ($term = $result->fetch()) {
       $titles[] = check_plain($term->title);
     }
-    return $titles;
+    return !empty($titles) ? $titles : array();
   }
 
   /**

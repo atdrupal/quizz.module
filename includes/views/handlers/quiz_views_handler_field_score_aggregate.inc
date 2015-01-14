@@ -1,10 +1,9 @@
 <?php
 
-/*
+/**
  * @file
  *  Handler for field score.
  */
-
 class quiz_views_handler_field_score_aggregate extends views_handler_field_numeric {
 
   function construct() {
@@ -22,9 +21,11 @@ class quiz_views_handler_field_score_aggregate extends views_handler_field_numer
     $this->ensure_my_table();
     $this->query->add_field($this->table_alias, $this->group_field);
     $this->field_alias = $this->query->add_field(
-      NULL, "AVG($this->table_alias.$this->real_field)",
-      $this->table_alias . '__average', array('aggregate' => TRUE)
+      NULL, "AVG($this->table_alias.$this->real_field)", $this->table_alias . '__average', array('aggregate' => TRUE)
     );
-    $this->query->add_groupby("$this->table_alias.$this->group_field"); // qid is OK for average. Others maybe not so much
+
+    // qid is OK for average. Others maybe not so much
+    $this->query->add_groupby("$this->table_alias.$this->group_field");
   }
+
 }

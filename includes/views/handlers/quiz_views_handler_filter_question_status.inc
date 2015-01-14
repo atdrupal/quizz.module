@@ -1,10 +1,9 @@
 <?php
 
-/*
+/**
  * @file
  * Handles filter question status.
  */
-
 class quiz_views_handler_filter_question_status extends views_handler_filter_in_operator {
 
   function get_value_options() {

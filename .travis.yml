@@ -92,12 +92,6 @@ before_script:
   - drush vset --yes file_temporary_path /tmp
   - drush en -y simpletest quizz_question quizz_truefalse
 
-  # ---------------------
-  # No cache data!
-  # ---------------------
-  - drush pm-updatestatus
-  - drush cc all
-
 script:
   - sh -c "
       if [ '$SUITE' = 'quiz' ];        then drush test-run --dirty --field-labels=0 'Quiz' --uri=http://localhost:80;
@@ -108,7 +102,6 @@ script:
 
 notifications:
   email: false
-  hipchat: 76d833fa0b6bae8860f279a0e7dba0@me.Andy
   flowdock: 8e80a6538fa73fda0f7dd60bf2d44356
 
 after_failure:
