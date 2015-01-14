@@ -17,6 +17,11 @@ class ResultViewsController extends EntityDefaultViewsController {
 
     $data['quiz_results']['result_state'] = array(
         'real field' => 'time_end',
+        'field'      => array(
+            'title'   => t('State'),
+            'help'    => t('State of result'),
+            'handler' => 'Drupal\quizz\Views\Handler\Field\ResultState',
+        ),
         'filter'     => array(
             'title'   => t('State'),
             'help'    => t('State of result'),
