@@ -129,7 +129,7 @@ class HookEntityInfo {
         'base table'                => 'quiz_results',
         'entity keys'               => array('id' => 'result_id', 'bundle' => 'type', 'label' => 'result_id'),
         'bundle keys'               => array('bundle' => 'type'),
-        'views controller class'    => 'EntityDefaultViewsController',
+        'views controller class'    => 'Drupal\quizz\Entity\ResultViewsController',
         'metadata controller class' => 'Drupal\quizz\Entity\ResultMetadataController',
         'fieldable'                 => TRUE,
         'view modes'                => array(

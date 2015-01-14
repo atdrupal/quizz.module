@@ -24,7 +24,6 @@ function quizz_views_handlers() {
   $handlers = array();
   $handlers['quiz_views_handler_field_takes']['parent'] = 'views_handler_field';
 
-  $handlers['quiz_views_handler_field_time']['parent'] = 'views_handler_field';
   $handlers['quiz_views_handler_field_question_status']['parent'] = 'views_handler_field';
   $handlers['quiz_views_handler_field_user_quiz_state']['parent'] = 'views_handler_field';
   $handlers['quiz_views_handler_field_score_aggregate']['parent'] = 'views_handler_field_numeric';
