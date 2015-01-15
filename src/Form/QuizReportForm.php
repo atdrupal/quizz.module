@@ -18,15 +18,17 @@ class QuizReportForm {
    */
   public function getForm($form, $form_state, Result $result, $questions) {
     $form['#tree'] = TRUE;
+    $show_submit = FALSE;
 
     foreach ($questions as $question) {
-      if ($question->getResponseHandler($result->result_id)->isManualScoring()) {
-        $show_submit = TRUE;
-      }
-
       $form_to_add = $question->getHandler()->getReportForm($result, $question);
       if (empty($form_to_add['#no_report'])) {
         $form_to_add['#element_validate'][] = 'quizz_report_form_element_validate';
+
+        if ($question->getResponseHandler($result->result_id)->isManualScoring()) {
+          $show_submit = $show_submit || !empty($form_to_add['score']);
+        }
+
         $form[] = $form_to_add;
       }
     }
