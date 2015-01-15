@@ -10,9 +10,6 @@ use Drupal\quizz_question\Entity\Question;
  */
 abstract class ResponseHandler extends ResponseHandlerBase {
 
-  /** @var bool */
-  protected $allow_feedback = FALSE;
-
   public function __construct($result_id, Question $question, $input = NULL) {
     parent::__construct($result_id, $question, $input);
 

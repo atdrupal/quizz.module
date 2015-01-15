@@ -45,6 +45,9 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   /** @var Answer */
   private $answer_entity;
 
+  /** @var bool */
+  protected $allow_feedback = FALSE;
+
   /**
    * @param int $result_id
    * @param Question $question
@@ -161,6 +164,10 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
 
   public function onLoad(Answer $answer) {
 
+  }
+
+  public function isFeedbackable() {
+    return $this->allow_feedback;
   }
 
 }
