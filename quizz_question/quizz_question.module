@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\quizz\Entity\Result;
-use Drupal\quizz_question\Entity\Question;
 
 /**
  * Quiz Question module.
@@ -82,14 +81,14 @@ function quizz_question_get_handler_info($name = NULL, $reset = FALSE) {
  * Figure out if a user has access to score a certain result
  *
  * @param int $question_vid
- * @param int $result_id
+ * @param Result $result
  * @return bool
  *  True if the user has access to score the result
  */
-function quizz_question_access_to_score($question_vid, $result_id) {
+function quizz_question_access_to_score($question_vid, Result $result) {
   global $user;
 
-  if (!$answers = entity_load('quiz_result_answer', FALSE, array('result_id' => $result_id, 'question_vid' => $question_vid))) {
+  if (!$answers = entity_load('quiz_result_answer', FALSE, array('result_id' => $result->result_id, 'question_vid' => $question_vid))) {
     return FALSE;
   }
 
@@ -98,7 +97,7 @@ function quizz_question_access_to_score($question_vid, $result_id) {
   }
 
   if (user_access('score taken quiz answer')) {
-    if ($result = quizz_result_load($result_id)) {
+    if ($result = quizz_result_load($result->result_id)) {
       if ($user->uid == $result->uid) {
         return TRUE;
       }
@@ -106,7 +105,7 @@ function quizz_question_access_to_score($question_vid, $result_id) {
   }
 
   if (user_access('score own quiz')) {
-    if ($result = quizz_result_load($result_id)) {
+    if ($result = quizz_result_load($result->result_id)) {
       if ($quiz = quizz_load(NULL, $result->quiz_vid)) {
         return $user->uid == $quiz->uid;
       }

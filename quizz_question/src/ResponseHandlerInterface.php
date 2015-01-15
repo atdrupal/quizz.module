@@ -82,19 +82,16 @@ interface ResponseHandlerInterface {
   public function getReportForm();
 
   /**
+   * If question type allows manual scoring or giving feedback, this method will
+   * be executed when user submit the scoring/feedback form.
+   * @param array $form_element_values
+   */
+  public function submitReportForm(array $form_element_values);
+
+  /**
    * @return array
    */
   public function getReportFormScore();
-
-  /**
-   * Get the submit function for the report Form.
-   *
-   * @TODO: Should be a direct callback, ref to a global function, not cool.
-   *
-   * @return string
-   *  Submit function as a string, empty string if no submit function
-   */
-  public function getReportFormSubmit();
 
   /**
    * Represent the response as a stdClass object.

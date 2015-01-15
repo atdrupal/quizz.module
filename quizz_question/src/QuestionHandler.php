@@ -16,10 +16,7 @@ use Drupal\quizz_question\Form\QuestionForm;
  */
 abstract class QuestionHandler implements QuestionHandlerInterface {
 
-  /**
-   * @var \Drupal\quizz_question\Entity\Question
-   * The current question entity.
-   */
+  /** @var Question The current question entity. */
   public $question = NULL;
 
   /** @var mixed[] */
