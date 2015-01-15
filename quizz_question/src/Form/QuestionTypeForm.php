@@ -24,7 +24,10 @@ class QuestionTypeForm {
   }
 
   private function getHandlerForm(QuestionType $question_type, &$form) {
-    $max_score = $question_type->getHandler()->default_max_score;
+    $default_max_score = 0;
+    if (empty($question_type->is_new)) {
+      $default_max_score = $question_type->getHandler()->default_max_score;
+    }
 
     $form['vtabs']['configuration'] = array(
         '#type'             => 'fieldset',
@@ -48,8 +51,8 @@ class QuestionTypeForm {
             '#type'          => 'textfield',
             '#title'         => t('Default maximum score'),
             '#description'   => t('Choose the default maximum score for a this question.'),
-            '#default_value' => $question_type->getConfig('default_max_score', $max_score),
-            '#access'        => $max_score > 0,
+            '#default_value' => $question_type->getConfig('default_max_score', $default_max_score),
+            '#access'        => $default_max_score > 0,
         ),
 //        'quiz_index_questions' => array(
 //            '#type'          => 'checkbox',
