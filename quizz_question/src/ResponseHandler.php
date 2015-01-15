@@ -152,6 +152,13 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function submitReportForm(array $form_element_values) {
+
+  }
+
   protected function getFeedback() {
     global $user;
 

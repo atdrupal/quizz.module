@@ -83,8 +83,16 @@ class QuizReportForm {
 
 
     foreach ($form_state['values'] as $key => $question_values) {
-      // We call the submit function provided by the question
-      is_numeric($key) && call_user_func($question_values['submit'], $question_values);
+      if (is_numeric($key)) {
+        /* @var $question Question */
+        $question = $form_state['values'][0]['question_entity'];
+
+        // We call the submit function provided by the question
+        $question
+          ->getResponseHandler($result->result_id)
+          ->submitReportForm($question_values)
+        ;
+      }
     }
 
     // Scores may have been changed. We take the necessary actions
@@ -175,11 +183,11 @@ class QuizReportForm {
   private function updateLastTotalScore(Result $result) {
     $select = db_select('quiz_answer_entity', 'a');
     $select
-      ->condition('a.result_id', $result_id)
+      ->condition('a.result_id', $result->result_id)
       ->addExpression('SUM(a.points_awarded)');
 
     $score = $select->execute()->fetchColumn();
-    $max_score = $result->getQuiz()->max_scor;
+    $max_score = $result->getQuiz()->max_score;
 
     $result->score = round(100 * ($score / $max_score));
     $result->save();
