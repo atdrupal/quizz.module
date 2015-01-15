@@ -13,6 +13,9 @@ class TrueFalseQuestion extends QuestionHandler {
   protected $base_table = 'quiz_truefalse_question';
   protected $base_answer_table = 'quiz_truefalse_answer';
 
+  /** @var int */
+  public $default_max_score = 1;
+
   /**
    * {@inheritdoc}
    */
@@ -137,23 +140,13 @@ class TrueFalseQuestion extends QuestionHandler {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getMaximumScore() {
-    return 1;
-  }
-
-  /**
    * Get the answer to this question.
    *
    * This is a utility function. It is not defined in the interface.
    */
   public function getCorrectAnswer() {
-    return db_query(
-        'SELECT correct_answer FROM {quiz_truefalse_question} WHERE vid = :vid', array(
-          ':vid' => $this->question->vid
-        )
-      )->fetchField();
+    $sql = 'SELECT correct_answer FROM {quiz_truefalse_question} WHERE vid = :vid';
+    return db_query($sql, array(':vid' => $this->question->vid))->fetchField();
   }
 
 }

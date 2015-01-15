@@ -6,7 +6,11 @@ use Drupal\quizz_question\QuestionHandler;
 
 class PageQuestionHandler extends QuestionHandler {
 
+  /** @var string */
   protected $body_field_title = 'Page';
+
+  /** @var int */
+  public $default_max_score = 0;
 
   /**
    * {@inheritdoc}
@@ -18,18 +22,20 @@ class PageQuestionHandler extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function getMaximumScore() {
-    return 0;
-  }
-
   public function isGraded() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function getAnsweringForm(array $form_state = NULL, $result_id) {
     return array('#type' => 'hidden');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasFeedback() {
     return FALSE;
   }
