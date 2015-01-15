@@ -77,9 +77,11 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     if (!isset($this->question->max_score)) {
       $this->question->max_score = $this->question->getHandler()->getMaximumScore();
     }
+
     if ($weight_adjusted && isset($this->question->score_weight)) {
       return round($this->question->max_score * $this->question->score_weight);
     }
+
     return $this->question->max_score;
   }
 
