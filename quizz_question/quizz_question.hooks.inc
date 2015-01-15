@@ -177,6 +177,15 @@ function quizz_question_quizz_question_info() {
       'module'            => 'quizz_question',
   );
 
+  $info['vanilla'] = array(
+      'name'                  => t('Vanilla'),
+      'description'           => t('Question type with no fields by default, do it yourself.'),
+      'question provider'     => 'Drupal\quizz_question\Handler\Vanilla\VanillaQuestionHandler',
+      'response provider'     => 'Drupal\quizz_question\Handler\Vanilla\VanillaResonseHandler',
+      'create default bundle' => FALSE,
+      'module'                => 'quizz_question',
+  );
+
   return $info;
 }
 

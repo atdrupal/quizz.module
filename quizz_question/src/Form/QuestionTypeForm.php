@@ -25,16 +25,16 @@ class QuestionTypeForm {
 
   private function getHandlerForm(QuestionType $question_type, &$form) {
     $form['vtabs']['configuration'] = array(
-        '#type'            => 'fieldset',
-        '#title'           => t('Configuration'),
-        '#tree'            => TRUE,
-        'auto_revisioning' => array(
+        '#type'             => 'fieldset',
+        '#title'            => t('Configuration'),
+        '#tree'             => TRUE,
+        'auto_revisioning'  => array(
             '#type'          => 'checkbox',
             '#title'         => t('Auto revisioning'),
             '#default_value' => $question_type->getConfig('auto_revisioning', 1),
             '#description'   => t('It is strongly recommended that auto revisioning is always on. It makes sure that when a question or quiz is changed a new revision is created if the current revision has been answered. If this feature is switched off result reports might be broken because a users saved answer might be connected to a wrong version of the quiz and/or question she was answering. All sorts of errors might appear.'),
         ),
-        'autotitle_length' => array(
+        'autotitle_length'  => array(
             '#type'          => 'textfield',
             '#title'         => t('Length of automatically set question titles'),
             '#size'          => 3,
@@ -42,7 +42,12 @@ class QuestionTypeForm {
             '#description'   => t('Integer between 0 and 128. If the question creator doesn\'t set a question title the system will make a title automatically. Here you can decide how long the autotitle can be.'),
             '#default_value' => $question_type->getConfig('autotitle_length', 50),
         ),
-//        …
+        'default_max_score' => array(
+            '#type'          => 'textfield',
+            '#title'         => t('Default maximum score'),
+            '#description'   => t('Choose the default maximum score for a this question.'),
+            '#default_value' => $question_type->getConfig('default_max_score', $question_type->getHandler()->default_max_score),
+        ),
 //        'quiz_index_questions' => array(
 //            '#type'          => 'checkbox',
 //            '#title'         => t('Index questions'),
