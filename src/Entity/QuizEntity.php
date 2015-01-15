@@ -83,6 +83,12 @@ class QuizEntity extends Entity {
   /** @var int */
   public $randomization;
 
+  /** @var int */
+  public $max_score;
+
+  /** @var int */
+  public $number_of_random_questions;
+
   /** @var QuestionIO */
   private $question_io;
 
