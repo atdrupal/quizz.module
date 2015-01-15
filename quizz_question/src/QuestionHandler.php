@@ -34,6 +34,9 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
   /** @var string */
   protected $base_answer_table = 'quiz_truefalse_answer';
 
+  /** @var int */
+  public $default_max_score = 1;
+
   /**
    * QuizQuestion constructor stores the node object.
    *
@@ -272,12 +275,10 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
       return FALSE;
     }
 
-    $answered = db_query_range('SELECT 1 '
-      . ' FROM {quiz_results} qnres '
-      . ' JOIN {quiz_relationship} qrel ON (qnres.quiz_vid = qrel.quiz_vid) '
-      . ' WHERE qrel.question_vid = :question_vid', 0, 1, array(':question_vid' => $this->question->vid))->fetch();
-
-    return $answered ? TRUE : FALSE;
+    $sql = 'SELECT 1 FROM {quiz_results} result'
+      . ' INNER JOIN {quiz_relationship} relationship ON (result.quiz_vid = relationship.quiz_vid)'
+      . ' WHERE relationship.question_vid = :id';
+    return db_query_range($sql, 0, 1, array(':id' => $this->question->vid))->fetch() ? TRUE : FALSE;
   }
 
   /**
@@ -367,6 +368,13 @@ abstract class QuestionHandler implements QuestionHandlerInterface {
    */
   public function hasFeedback() {
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMaximumScore() {
+    return $this->question->getQuestionType()->getConfig('default_max_score', $this->default_max_score);
   }
 
   /**

@@ -11,6 +11,9 @@ class DirectionsQuestionHandler extends QuestionHandler {
 
   protected $body_field_title = 'Direction';
 
+  /** @var int */
+  public $default_max_score = 0;
+
   /**
    * {@inheritdoc}
    */
@@ -26,13 +29,6 @@ class DirectionsQuestionHandler extends QuestionHandler {
    */
   public function getCreationForm(array &$form_state = NULL) {
     return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getMaximumScore() {
-    return 0;
   }
 
   /**

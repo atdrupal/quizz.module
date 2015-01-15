@@ -6,8 +6,4 @@ use Drupal\quizz_question\QuestionHandler;
 
 class VanillaQuestionHandler extends QuestionHandler {
 
-  public function getMaximumScore() {
-
-  }
-
 }
