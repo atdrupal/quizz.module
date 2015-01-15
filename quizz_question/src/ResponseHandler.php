@@ -130,26 +130,21 @@ abstract class ResponseHandler extends ResponseHandlerBase {
   public function getReportForm(array $form = array()) {
     global $user;
 
-    // Add general data, and data from the question type implementation
-    $form['qid'] = array('#type' => 'value', '#value' => $this->question->qid);
-    $form['vid'] = array('#type' => 'value', '#value' => $this->question->vid);
-    $form['result_id'] = array('#type' => 'value', '#value' => $this->result_id);
-    $form['max_score'] = array('#type' => 'value', '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?');
+    $form += array(
+        'question_entity' => array('#type' => 'value', '#value' => $this->question),
+        'result'          => array('#type' => 'value', '#value' => $this->result),
+        'max_score'       => array('#type' => 'value', '#value' => $this->canReview('score') ? $this->getQuestionMaxScore() : '?'),
+    );
 
-    if ($this->result->canAccessOwnScore($user)) {
-      if ($submit = $this->getReportFormSubmit()) {
-        $form['submit'] = array('#type' => 'value', '#value' => $submit);
-      }
-
-      if ($answer_feedback = $this->getReportFormAnswerFeedback()) {
-        $form['answer_feedback'] = $answer_feedback;
-      }
+    if ($this->isFeedbackable() && $this->result->canAccessOwnScore($user)) {
+      $form['answer_feedback'] = $this->getReportFormAnswerFeedback();
     }
 
-    if (quizz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user) && $submit) {
+    if ($this->isManualScoring() && quizz()->getQuizHelper()->getAccessHelper()->canAccessQuizScore($user)) {
       $form['score'] = $this->getReportFormScore();
     }
 
+    // Add general data, and data from the question type implementation.
     foreach ($this->getFeedback() as $type => $render) {
       $form[$type] = $render;
     }
@@ -254,20 +249,6 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     );
   }
 
-  public function getReportFormAnswerFeedback() {
-    $feedback = isset($this->answer_feedback) ? $this->answer_feedback : '';
-    $format = isset($this->answer_feedback_format) ? $this->answer_feedback_format : filter_default_format();
-    if ($this->allow_feedback) {
-      return array(
-          '#title'         => t('Enter feedback'),
-          '#type'          => 'text_format',
-          '#default_value' => filter_xss_admin($feedback),
-          '#format'        => $format,
-          '#attributes'    => array('class' => array('quiz-report-score')),
-      );
-    }
-  }
-
   /**
    * Callback method to validate report form.
    */
@@ -289,12 +270,21 @@ abstract class ResponseHandler extends ResponseHandlerBase {
     return $perms[$op];
   }
 
+  public function getReportFormAnswerFeedback() {
+    return array(
+        '#title'         => t('Enter feedback'),
+        '#type'          => 'text_format',
+        '#default_value' => isset($this->answer_feedback) ? filter_xss_admin($this->answer_feedback) : '',
+        '#format'        => isset($this->answer_feedback_format) ? $this->answer_feedback_format : filter_default_format(),
+        '#attributes'    => array('class' => array('quiz-report-score')),
+    );
+  }
+
   public function getReportFormScore() {
-    $score = ($this->isEvaluated()) ? $this->getScore() : '';
     return array(
         '#title'            => 'Enter score',
         '#type'             => 'textfield',
-        '#default_value'    => $score,
+        '#default_value'    => ($this->isEvaluated()) ? $this->getScore() : '',
         '#size'             => 3,
         '#maxlength'        => 3,
         '#attributes'       => array('class' => array('quiz-report-score')),

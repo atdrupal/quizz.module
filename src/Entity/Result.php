@@ -49,6 +49,15 @@ class Result extends Entity {
   /** @var array */
   public $layout = array();
 
+  protected function defaultUri() {
+    return array('path' => 'quiz-result/' . $this->identifier());
+  }
+
+  public function getUrl() {
+    $uri = $this->defaultUri();
+    return $uri['path'];
+  }
+
   /**
    * Get quiz entity.
    *

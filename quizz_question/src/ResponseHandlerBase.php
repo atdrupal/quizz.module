@@ -48,6 +48,9 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
   /** @var bool */
   protected $allow_feedback = FALSE;
 
+  /** @var bool */
+  protected $manual_scoring = FALSE;
+
   /**
    * @param int $result_id
    * @param Question $question
@@ -168,6 +171,10 @@ abstract class ResponseHandlerBase implements ResponseHandlerInterface {
 
   public function isFeedbackable() {
     return $this->allow_feedback;
+  }
+
+  public function isManualScoring() {
+    return $this->manual_scoring;
   }
 
 }

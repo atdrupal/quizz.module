@@ -10,4 +10,12 @@ class VanillaResonseHandler extends ResponseHandler {
 
   }
 
+  public function isFeedbackable() {
+    return $this->question->getQuestionType()->getConfig('allow_feedback', 0);
+  }
+
+  public function isManualScoring() {
+    return $this->question->getQuestionType()->getConfig('manual_scoring', 0);
+  }
+
 }
