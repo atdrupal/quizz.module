@@ -169,7 +169,7 @@ class FormDefinition {
         ),
         '#title'         => t('Each attempt builds on the last'),
         '#default_value' => isset($config['build_on_last']) ? $config['build_on_last'] : '',
-        '#description'   => t('Instead of starting a fresh @quiz, users can base a new attempt on the last attempt, with correct answers prefilled. Set the default selection users will see. Selecting "fresh attempt every time" will not allow the user to choose.', array('@quiz' => QUIZ_NAME)),
+        '#description'   => t('Instead of starting a fresh @quiz, users can base a new attempt on the last attempt, with correct answers prefilled. Set the default selection users will see. Selecting "fresh attempt every time" will not allow the user to choose.', array('@quiz' => QUIZZ_NAME)),
     );
 
     $form['vtabs']['configuration']['quiz_remove_partial_quiz_record'] = array(
