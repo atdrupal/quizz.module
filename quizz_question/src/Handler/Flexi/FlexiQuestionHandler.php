@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\quizz_question\Handler\Vanilla;
+namespace Drupal\quizz_question\Handler\Flexi;
 
 use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_question\QuestionHandler;
 
-class VanillaQuestionHandler extends QuestionHandler {
+class FlexiQuestionHandler extends QuestionHandler {
 
   /**
    * {@inheritdoc}

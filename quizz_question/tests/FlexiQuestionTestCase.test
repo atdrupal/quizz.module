@@ -1,0 +1,35 @@
+<?php
+
+class FlexiQuestionTestCase extends QuizTestCase {
+
+  public function testCRUD() {
+    $this->checkCreateQuestionType();
+    $this->checkUpdateQuestionType();
+    $this->checkDeleteQuestionType();
+  }
+
+  private function checkCreateQuestionType() {
+
+  }
+
+  private function checkUpdateQuestionType() {
+
+  }
+
+  public function checkDeleteQuestionType() {
+
+  }
+
+  public function testDefaultMaximumScore() {
+
+  }
+
+  public function testAllowFeedback() {
+
+  }
+
+  public function testManualScoring() {
+
+  }
+
+}

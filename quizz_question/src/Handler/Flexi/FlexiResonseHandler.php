@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\quizz_question\Handler\Vanilla;
+namespace Drupal\quizz_question\Handler\Flexi;
 
 use Drupal\quizz_question\ResponseHandler;
 
-class VanillaResonseHandler extends ResponseHandler {
+class FlexiResonseHandler extends ResponseHandler {
 
   public function score() {
 
