@@ -9,6 +9,8 @@ class QuizViewsController extends EntityDefaultViewsController {
   public function views_data() {
     $data = parent::views_data();
 
+    $data['quiz_entity']['title']['field']['handler'] = 'Drupal\quizz\Views\Handler\Field\QuizEntityTitle';
+
     $data['quiz_entity']['view_link']['field'] = array(
         'title'   => t('Link'),
         'help'    => t('Provide a simple link to the !quiz.', array('!quiz' => QUIZZ_NAME)),
